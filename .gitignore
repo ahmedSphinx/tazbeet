@@ -1,0 +1,50 @@
+# Flutter
+.dart_tool/
+.packages
+.pub/
+build/
+flutter_*.log
+
+# Android
+android/app/build/
+android/.gradle/
+android/local.properties
+
+# iOS
+ios/Pods/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Firebase
+google-services.json
+GoogleService-Info.plist
+
+# Environment variables
+.env
+.env.local
+
+# Generated files
+lib/l10n/generated/
+
+# Test coverage
+coverage/
+
+# Temporary files
+*.tmp
+*.bak
+
+# Logs
+*.log
+
+# Pub cache (optional, but recommended for clean repos)
+.pub-cache/

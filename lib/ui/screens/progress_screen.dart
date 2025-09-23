@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:tazbeet/l10n/generated/app_localizations.dart';
 import '../../blocs/task/task_bloc.dart';
 import '../../blocs/task/task_state.dart';
 import '../../blocs/category/category_bloc.dart';
@@ -87,7 +88,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Overview',
+              AppLocalizations.of(context).overview,
               style: Theme.of(
                 context,
               ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
@@ -97,7 +98,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
               children: [
                 Expanded(
                   child: _buildProgressMetric(
-                    'Today',
+                    AppLocalizations.of(context).today,
                     '${(todayProgress * 100).round()}%',
                     todayProgress,
                     Icons.today,
@@ -106,7 +107,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildProgressMetric(
-                    'This Week',
+                    AppLocalizations.of(context).week,
                     '${(weekProgress * 100).round()}%',
                     weekProgress,
                     Icons.calendar_view_week,
@@ -119,7 +120,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
               children: [
                 Expanded(
                   child: _buildProgressMetric(
-                    'This Month',
+                    AppLocalizations.of(context).month,
                     '${(monthProgress * 100).round()}%',
                     monthProgress,
                     Icons.calendar_month,
@@ -128,8 +129,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildProgressMetric(
-                    'Streak',
-                    '$streak days',
+                    AppLocalizations.of(context).streak,
+                    '$streak ${AppLocalizations.of(context).days(streak)}',
                     streak / 30.0, // Normalize to 0-1 scale
                     Icons.local_fire_department,
                     color: Colors.orange,
@@ -178,7 +179,9 @@ class _ProgressScreenState extends State<ProgressScreen> {
         const SizedBox(height: 8),
         LinearProgressIndicator(
           value: progress.clamp(0.0, 1.0),
-          backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+          backgroundColor: Theme.of(
+            context,
+          ).colorScheme.surfaceContainerHighest,
           valueColor: AlwaysStoppedAnimation<Color>(
             color ?? Theme.of(context).colorScheme.primary,
           ),
@@ -200,7 +203,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
             ),
             const SizedBox(width: 8),
             Text(
-              'Productivity Score',
+              AppLocalizations.of(context).productivityScore,
               style: Theme.of(
                 context,
               ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
@@ -213,7 +216,9 @@ class _ProgressScreenState extends State<ProgressScreen> {
             Expanded(
               child: LinearProgressIndicator(
                 value: score,
-                backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+                backgroundColor: Theme.of(
+                  context,
+                ).colorScheme.surfaceContainerHighest,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   Theme.of(context).colorScheme.secondary,
                 ),
@@ -245,7 +250,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Weekly Progress',
+              AppLocalizations.of(context).weeklyProgress,
+              /* 'Weekly Progress' */
               style: Theme.of(
                 context,
               ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
@@ -310,7 +316,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Category Progress',
+              AppLocalizations.of(context).categoryProgress,
+              /* 'Category Progress', */
               style: Theme.of(
                 context,
               ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
@@ -381,7 +388,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Statistics',
+              AppLocalizations.of(context).statistics,
+              /* 'Statistics', */
               style: Theme.of(
                 context,
               ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
@@ -391,7 +399,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
               children: [
                 Expanded(
                   child: _buildStatItem(
-                    'Total Tasks',
+                    AppLocalizations.of(context).totaltasks,
+                    /* 'Total Tasks', */
                     totalTasks.toString(),
                     Icons.assignment,
                   ),
@@ -399,7 +408,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildStatItem(
-                    'Completed',
+                    AppLocalizations.of(context).completedLabel,
                     completedTasks.toString(),
                     Icons.check_circle,
                     color: Colors.green,
@@ -412,7 +421,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
               children: [
                 Expanded(
                   child: _buildStatItem(
-                    'Due Today',
+                    AppLocalizations.of(context).dueDate,
                     dueTodayCount.toString(),
                     Icons.today,
                     color: dueTodayCount > 0 ? Colors.orange : null,
@@ -421,7 +430,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildStatItem(
-                    'Overdue',
+                    AppLocalizations.of(context).overdue,
+                    /* 'Overdue', */
                     overdueCount.toString(),
                     Icons.warning,
                     color: overdueCount > 0 ? Colors.red : null,
@@ -431,7 +441,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
             ),
             const SizedBox(height: 16),
             _buildStatItem(
-              'Due This Week',
+              AppLocalizations.of(context).dueThisWeek,
+             /*  'Due This Week', */
               dueThisWeekCount.toString(),
               Icons.calendar_view_week,
               color: dueThisWeekCount > 0 ? Colors.blue : null,

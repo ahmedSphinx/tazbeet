@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tazbeet/l10n/generated/app_localizations.dart';
 import '../../models/task.dart';
 import '../../blocs/category/category_bloc.dart';
 import '../../blocs/category/category_state.dart';
@@ -44,7 +45,9 @@ class TaskItem extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  task.isCompleted ? 'Mark Incomplete' : 'Complete',
+                  task.isCompleted
+                      ? 'Mark Incomplete'
+                      : AppLocalizations.of(context).completedLabel,
                   style: const TextStyle(fontSize: 12),
                 ),
               ],
@@ -58,26 +61,35 @@ class TaskItem extends StatelessWidget {
           CustomSlidableAction(
             onPressed: (_) => onEdit(),
             backgroundColor: Colors.blue,
-            foregroundColor: Colors.white,
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            foregroundColor: Colors
+                .white, // L10n: Methods can't be invoked in constant expressions.
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment
+                  .center, // L10n: Methods can't be invoked in constant expressions.
               children: [
-                Icon(Icons.edit, size: 28),
-                SizedBox(height: 4),
-                Text('Edit', style: TextStyle(fontSize: 12)),
+                const Icon(Icons.edit, size: 28),
+                const SizedBox(height: 4),
+                Text(
+                  AppLocalizations.of(context).editButton,
+                  style: const TextStyle(fontSize: 12),
+                ),
               ],
             ),
           ),
           CustomSlidableAction(
             onPressed: (_) => onDelete(),
             backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
-            child: const Column(
+            foregroundColor: Colors
+                .white, // L10n: Methods can't be invoked in constant expressions.
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.delete, size: 28),
-                SizedBox(height: 4),
-                Text('Delete', style: TextStyle(fontSize: 12)),
+                const Icon(Icons.delete, size: 28),
+                const SizedBox(height: 4),
+                Text(
+                  AppLocalizations.of(context).deleteButton,
+                  style: const TextStyle(fontSize: 12),
+                ),
               ],
             ),
           ),
@@ -90,13 +102,17 @@ class TaskItem extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: task.isCompleted
-              ? Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3)
+              ? Theme.of(
+                  context,
+                ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3)
               : Theme.of(context).colorScheme.surface,
           boxShadow: task.isCompleted
               ? []
               : [
                   BoxShadow(
-                    color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.1),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.shadow.withValues(alpha: 0.1),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),
@@ -129,9 +145,13 @@ class TaskItem extends StatelessWidget {
                   ? TextDecoration.lineThrough
                   : TextDecoration.none,
               color: task.isCompleted
-                  ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)
+                  ? Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.6)
                   : Theme.of(context).colorScheme.onSurface,
-              fontWeight: task.isCompleted ? FontWeight.normal : FontWeight.w500,
+              fontWeight: task.isCompleted
+                  ? FontWeight.normal
+                  : FontWeight.w500,
             ),
             child: Text(task.title),
           ),
@@ -144,7 +164,9 @@ class TaskItem extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface.withAlpha(180),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
               if (task.dueDate != null)
@@ -155,7 +177,9 @@ class TaskItem extends StatelessWidget {
                     style: TextStyle(
                       color: DateFormatter.isOverdue(task.dueDate!)
                           ? Colors.redAccent
-                          : Theme.of(context).colorScheme.onSurface.withAlpha(160),
+                          : Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: 0.63),
                       fontWeight: DateFormatter.isOverdue(task.dueDate!)
                           ? FontWeight.bold
                           : FontWeight.normal,
@@ -173,11 +197,7 @@ class TaskItem extends StatelessWidget {
                       if (category != null) {
                         return Row(
                           children: [
-                            Icon(
-                              Icons.folder,
-                              size: 14,
-                              color: category.color,
-                            ),
+                            Icon(Icons.folder, size: 14, color: category.color),
                             const SizedBox(width: 4),
                             Text(
                               category.name,
@@ -202,6 +222,4 @@ class TaskItem extends StatelessWidget {
       ),
     );
   }
-
-
 }

@@ -1,6 +1,6 @@
 {
   "@@locale": "ar",
-  "appTitle": "تطبيق قائمة المهام",
+  "appTitle": "تظبيت",
   "homeScreenTitle": "الرئيسية",
   "settingsScreenTitle": "الإعدادات",
   "languageLabel": "اللغة",
@@ -11,7 +11,7 @@
   "saveButton": "حفظ",
   "cancelButton": "إلغاء",
   "taskTitleLabel": "عنوان المهمة",
-  "taskDescriptionLabel": "الوصف",
+  "taskDescriptionLabel": "الوصف (اختياري)",
   "addTaskButton": "إضافة مهمة",
   "editTaskButton": "تعديل المهمة",
   "deleteTaskButton": "حذف المهمة",
@@ -32,10 +32,6 @@
   "dataBackupSection": "البيانات والنسخ الاحتياطي",
   "privacyAnalyticsSection": "الخصوصية والتحليلات",
   "regionalSection": "الإقليمي",
-  "themeLabel": "السمة",
-  "languageLabel": "اللغة",
-  "saveButton": "حفظ",
-  "cancelButton": "إلغاء",
   "deleteButton": "حذف",
   "editButton": "تعديل",
   "addButton": "إضافة",
@@ -75,7 +71,7 @@
   "analyticsDisabled": "تم تعطيل التحليلات",
   "crashReportingEnabled": "تم تفعيل تقارير الأعطال",
   "crashReportingDisabled": "تم تعطيل تقارير الأعطال",
-  "allCategories": "الكل الفئات",
+  "allCategories": "جميع الفئات",
   "tapToAddFirstTask": "اضغط على زر + لإضافة مهمتك الأولى",
   "addTaskTitle": "إضافة مهمة جديدة",
   "editTaskTitle": "تعديل المهمة",
@@ -99,5 +95,241 @@
   "birthdayLabel": "تاريخ الميلاد",
   "selectBirthday": "اختر تاريخ الميلاد",
   "profileSaved": "تم حفظ الملف الشخصي بنجاح",
-  "pleaseFixErrors": "يرجى إصلاح الأخطاء أعلاه"
+  "pleaseFixErrors": "يرجى إصلاح الأخطاء أعلاه",
+  "splashAppName": "تظبيت",
+  "splashTagline": "مدير المهام الشخصي الخاص بك",
+  "splashBranding": "ابق منظماً، ابق منتجاً",
+  "splashVersion": "الإصدار 1.0.0",
+  "loginSubtitle": "نظم مهامك وزد من إنتاجيتك",
+  "signInWithGoogle": "تسجيل الدخول باستخدام جوجل",
+  "termsAndPrivacy": "بتسجيل الدخول، أنت توافق على شروط الخدمة وسياسة الخصوصية الخاصة بنا",
+  "dueDateLabel": "تاريخ الاستحقاق (اختياري)",
+  "selectDueDate": "حدد تاريخ الاستحقاق",
+  "categoryLabel": "الفئة (اختياري)",
+  "moodTracking": "تتبع الحالة المزاجية",
+  "ambientMode": "الوضع المحيط",
+  "emergency": "حالة الطوارئ",
+  "profile": "الحساب الشخصي",
+  "signOut": "تسجيل الخروج",
+  "noTasksYet": "لا توجد مهام بعد",
+  "error": "خطأ: {message}",
+  "@error": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "editProfileInfo": "تعديل معلومات الملف الشخصي",
+  "theme": "السمة",
+  "system": "النظام",
+  "light": "فاتح",
+  "dark": "داكن",
+  "highContrast": "تباين عالي",
+  "increaseContrast": "زيادة التباين لسهولة القراءة",
+  "largeText": "نص كبير",
+  "useLargerFontSizes": "استخدام أحجام خطوط أكبر للنص",
+  "screenReader": "قارئ الشاشة",
+  "enableScreenReaderSupport": "تفعيل دعم قارئ الشاشة",
+  "enableNotifications": "تفعيل الإشعارات",
+  "notificationFrequency": "تكرار الإشعارات",
+  "immediate": "فوري",
+  "hourly": "كل ساعة",
+  "daily": "يومي",
+  "weekly": "أسبوعي",
+  "sound": "الصوت",
+  "vibration": "الاهتزاز",
+  "pomodoroPreset": "إعدادات بومودورو",
+  "classicPreset": "كلاسيكي (25/5/15)",
+  "shortPreset": "قصير (15/3/10)",
+  "longPreset": "طويل (50/10/30)",
+  "custom": "مخصص",
+  "customDurations": "الأوقات المخصصة (بالدقائق)",
+  "work": "عمل",
+  "shortBreak": "استراحة قصيرة",
+  "longBreak": "استراحة طويلة",
+  "sessionsToLongBreak": "الجلسات حتى الاستراحة الطويلة",
+  "autoBackup": "النسخ الاحتياطي التلقائي",
+  "automaticallyBackupData": "النسخ التلقائي لبياناتك",
+  "backupFrequency": "تكرار النسخ الاحتياطي",
+  "days": "{count} يوم",
+  "@days": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "analytics": "التحليلات",
+  "helpImproveApp": "مساعدة في تحسين التطبيق من خلال بيانات الاستخدام",
+  "crashReporting": "تقارير الأعطال",
+  "sendCrashReports": "إرسال تقارير الأعطال للمساعدة في إصلاح المشكلات",
+  "language": "اللغة",
+  "dateFormat": "تنسيق التاريخ",
+  "timeFormat": "تنسيق الوقت",
+  "twelveHour": "12 ساعة",
+  "twentyFourHour": "24 ساعة",
+  "today": "اليوم",
+  "history": "التاريخ",
+  "insights": "الإحصائيات",
+  "howAreYouFeeling": "كيف تشعر اليوم؟",
+  "tapToLogMood": "اضغط على زر + لتسجيل حالتك المزاجية",
+  "yourMoodInsights": "إحصائيات حالتك المزاجية",
+  "totalEntries": "إجمالي الإدخالات",
+  "averageMood": "متوسط المزاج",
+  "mostCommonMood": "المزاج الأكثر شيوعًا",
+  "currentStreak": "السلسلة الحالية",
+  "averageEnergy": "متوسط الطاقة",
+  "averageFocus": "متوسط التركيز",
+  "averageStress": "متوسط التوتر",
+  "veryBad": "سيء جدًا",
+  "bad": "سيء",
+  "neutral": "محايد",
+  "good": "جيد",
+  "veryGood": "جيد جدًا",
+  "energy": "الطاقة",
+  "focus": "التركيز",
+  "stress": "التوتر",
+  "metricValue": "{label}: {value}/10",
+  "@metricValue": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "emergencyControls": "عناصر تحكم الطوارئ",
+  "emergencyMode": "وضع الطوارئ",
+  "activateEmergencyMode": "تفعيل وضع الطوارئ لتعليق جميع التذكيرات والمؤقتات",
+  "emergencyModeActive": "وضع الطوارئ نشط",
+  "allRemindersSuspended": "تم تعليق جميع التذكيرات والمؤقتات",
+  "emergencyModeInactive": "وضع الطوارئ غير نشط",
+  "suspendRemindersTimers": "تعليق جميع التذكيرات والمؤقتات فورًا",
+  "quickControls": "عناصر تحكم سريعة",
+  "fifteenMinPause": "إيقاف مؤقت 15 دقيقة",
+  "oneHourPause": "إيقاف مؤقت ساعة واحدة",
+  "resumeAll": "استئناف الكل",
+  "remindersSuspended": "تم تعليق التذكيرات",
+  "timeRemaining": "الوقت المتبقي: {time}",
+  "@timeRemaining": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "resumeNow": "استئناف الآن",
+  "moodHistory": "تاريخ المزاج",
+  "noMoodEntriesYet": "لا توجد إدخالات مزاجية بعد",
+  "startLoggingMoods": "ابدأ في تسجيل مزاجك لرؤية تاريخك",
+  "ambientSounds": "الأصوات المحيطة",
+  "focusAndRelaxation": "التركيز والاسترخاء",
+  "chooseBackgroundSound": "اختر صوت خلفية لمساعدتك على التركيز أو الاسترخاء",
+  "volume": "مستوى الصوت",
+  "percent": "{value}%",
+  "@percent": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "fadeIn": "زيادة الصوت تدريجياً",
+  "fadeOut": "خفض الصوت تدريجياً",
+  "noCategoriesYet": "لا توجد فئات بعد",
+  "createCategoriesToOrganize": "قم بإنشاء فئات لتنظيم مهامك",
+  "createCategory": "إنشاء فئة",
+  "tapToManage": "اضغط لإدارة",
+  "edit": "تعديل",
+  "addCategory": "إضافة فئة",
+  "editCategory": "تعديل فئة",
+  "categoryName": "اسم الفئة",
+  "enterCategoryName": "أدخل اسم الفئة",
+  "color": "اللون:",
+  "pickAColor": "اختر لونًا",
+  "select": "اختر",
+  "deleteCategory": "حذف فئة",
+  "confirmDeleteCategory": "هل أنت متأكد من حذف \"{categoryName}\"؟ سيؤدي هذا إلى إزالة الفئة من جميع المهام المرتبطة.",
+  "@confirmDeleteCategory": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "rain": "مطر",
+  "oceanWaves": "أمواج المحيط",
+  "forest": "غابة",
+  "whiteNoise": "ضوضاء بيضاء",
+  "coffeeShop": "مقهى",
+  "fireplace": "موقد",
+  "wind": "رياح",
+  "thunderstorm": "عاصفة رعدية",
+  "noCategoriesYetDescription": "قم بإنشاء فئات لتنظيم مهامك",
+  "tasksCount": "{count} مهمة",
+  "@tasksCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectButton": "اختيار",
+  "pause": "إيقاف مؤقت",
+  "start": "بدء",
+  "stop": "إيقاف",
+  "skip": "تخطي",
+  "next": "التالي",
+  "statistics": "الإحصائيات",
+  "overview": "نظرة عامة",
+  "week": "أسبوع",
+  "month": "شهر",
+  "streak": "سلسلة",
+  "productivityScore": "درجة الإنتاجية",
+  "weeklyProgress": "التقدم الأسبوعي",
+  "categoryProgress": "تقدم الفئة",
+  "totaltasks": "إجمالي المهام",
+  "dueDate": "تاريخ الاستحقاق",
+  "overdue": "متأخر",
+  "dueThisWeek": "مستحق هذا الأسبوع",
+  "logMood": "سجل مزاجك",
+  "notesOptional": "ملاحظات (اختيارية)",
+  "energyLevel": "مستوى الطاقة",
+  "focusLevel": "مستوى التركيز",
+  "stressLevel": "مستوى التوتر",
+  "saveMood": "حفظ المزاج",
+  "veryBad": "سيء جداً",
+  "bad": "سيء",
+  "neutral": "محايد",
+  "good": "جيد",
+  "veryGood": "جيد جداً",
+  "work": "عمل",
+  "shortBreak": "استراحة قصيرة",
+  "longBreak": "استراحة طويلة",
+  "paused": "متوقف مؤقتاً",
+  "idle": "خامل",
+  "pomodoroSessionCompleted": "انتهت جلسة بومودورو",
+  "appUpdates": "تحديثات التطبيق",
+  "checkForUpdates": "البحث عن تحديثات",
+  "currentVersion": "الإصدار الحالي",
+  "latestVersion": "أحدث إصدار",
+  "updateAvailable": "تحديث متاح",
+  "updateDownloaded": "تم تحميل التحديث",
+  "installUpdate": "تثبيت التحديث",
+  "downloadingUpdate": "جاري تحميل التحديث...",
+  "installingUpdate": "جاري تثبيت التحديث...",
+  "noUpdatesAvailable": "لا توجد تحديثات متاحة",
+  "updateError": "خطأ في التحديث",
+  "retry": "إعادة المحاولة",
+  "version": "الإصدار {version}",
+  "@version": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  }
 }

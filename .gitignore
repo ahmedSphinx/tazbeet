@@ -47,4 +47,7 @@ coverage/
 *.log
 
 # Pub cache (optional, but recommended for clean repos)
-.pub-cache/
+
+# Keystore files (keep these secure and private)
+android/keystore/
+android/key.properties

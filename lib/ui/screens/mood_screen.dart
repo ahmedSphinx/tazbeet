@@ -4,6 +4,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../blocs/mood/mood_bloc.dart';
 import '../../blocs/mood/mood_event.dart';
 import '../../blocs/mood/mood_state.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../models/mood.dart';
 import '../../utils/date_formatter.dart';
 import '../utils/page_transitions.dart';
@@ -17,38 +18,27 @@ class MoodScreen extends StatefulWidget {
   State<MoodScreen> createState() => _MoodScreenState();
 }
 
-class _MoodScreenState extends State<MoodScreen> with TickerProviderStateMixin {
-  late TabController _tabController;
+late TabController moodTabController;
 
+class _MoodScreenState extends State<MoodScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    moodTabController = TabController(length: 3, vsync: this);
     context.read<MoodBloc>().add(LoadMoods());
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    moodTabController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mood Tracking'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Today', icon: Icon(Icons.today)),
-            Tab(text: 'History', icon: Icon(Icons.history)),
-            Tab(text: 'Insights', icon: Icon(Icons.insights)),
-          ],
-        ),
-      ),
       body: TabBarView(
-        controller: _tabController,
+        controller: moodTabController,
         children: [
           _buildTodayTab(),
           const MoodHistoryScreen(),
@@ -73,7 +63,9 @@ class _MoodScreenState extends State<MoodScreen> with TickerProviderStateMixin {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.3),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                   ),
@@ -81,7 +73,9 @@ class _MoodScreenState extends State<MoodScreen> with TickerProviderStateMixin {
               ),
               child: FloatingActionButton(
                 onPressed: () {
-                  Navigator.of(context).push(FadePageRoute(page: const MoodLoggingScreen()));
+                  Navigator.of(
+                    context,
+                  ).push(FadePageRoute(page: const MoodLoggingScreen()));
                 },
                 backgroundColor: Colors.transparent,
                 elevation: 0,
@@ -101,10 +95,14 @@ class _MoodScreenState extends State<MoodScreen> with TickerProviderStateMixin {
           return const Center(child: CircularProgressIndicator());
         } else if (state is MoodLoaded) {
           final today = DateTime.now();
-          final todayMoods = state.moods.where((mood) =>
-              mood.date.year == today.year &&
-              mood.date.month == today.month &&
-              mood.date.day == today.day).toList();
+          final todayMoods = state.moods
+              .where(
+                (mood) =>
+                    mood.date.year == today.year &&
+                    mood.date.month == today.month &&
+                    mood.date.day == today.day,
+              )
+              .toList();
 
           if (todayMoods.isEmpty) {
             return _buildEmptyTodayState();
@@ -133,7 +131,9 @@ class _MoodScreenState extends State<MoodScreen> with TickerProviderStateMixin {
                 child: Icon(
                   Icons.sentiment_satisfied,
                   size: 80,
-                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.primary.withValues(alpha: 0.5),
                 ),
               ),
             ),
@@ -141,7 +141,7 @@ class _MoodScreenState extends State<MoodScreen> with TickerProviderStateMixin {
             FadeInAnimation(
               delay: const Duration(milliseconds: 400),
               child: Text(
-                'How are you feeling today?',
+                AppLocalizations.of(context).howAreYouFeeling,
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
             ),
@@ -149,10 +149,12 @@ class _MoodScreenState extends State<MoodScreen> with TickerProviderStateMixin {
             FadeInAnimation(
               delay: const Duration(milliseconds: 600),
               child: Text(
-                'Tap the + button to log your mood',
+                AppLocalizations.of(context).tapToLogMood,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
             ),
@@ -201,7 +203,8 @@ class _MoodScreenState extends State<MoodScreen> with TickerProviderStateMixin {
                               ),
                             ],
                           ),
-                          if (moods[index].note != null && moods[index].note!.isNotEmpty) ...[
+                          if (moods[index].note != null &&
+                              moods[index].note!.isNotEmpty) ...[
                             const SizedBox(height: 8),
                             Text(
                               moods[index].note!,
@@ -213,9 +216,18 @@ class _MoodScreenState extends State<MoodScreen> with TickerProviderStateMixin {
                             spacing: 8,
                             runSpacing: 4,
                             children: [
-                              _buildMetricChip('Energy', moods[index].energyLevel),
-                              _buildMetricChip('Focus', moods[index].focusLevel),
-                              _buildMetricChip('Stress', moods[index].stressLevel),
+                              _buildMetricChip(
+                                AppLocalizations.of(context).energy,
+                                moods[index].energyLevel,
+                              ),
+                              _buildMetricChip(
+                                AppLocalizations.of(context).focus,
+                                moods[index].focusLevel,
+                              ),
+                              _buildMetricChip(
+                                AppLocalizations.of(context).stress,
+                                moods[index].stressLevel,
+                              ),
                             ],
                           ),
                         ],
@@ -254,23 +266,44 @@ class _MoodScreenState extends State<MoodScreen> with TickerProviderStateMixin {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Your Mood Insights',
+            AppLocalizations.of(context).yourMoodInsights,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 24),
-          _buildStatCard('Total Entries', stats['totalEntries'].toString()),
+          _buildStatCard(
+            AppLocalizations.of(context).totalEntries,
+            stats['totalEntries'].toString(),
+          ),
           const SizedBox(height: 16),
-          _buildStatCard('Average Mood', _getMoodText(MoodLevel.values[stats['averageMood'].round()])),
+          _buildStatCard(
+            AppLocalizations.of(context).averageMood,
+            _getMoodText(MoodLevel.values[stats['averageMood'].round()]),
+          ),
           const SizedBox(height: 16),
-          _buildStatCard('Most Common Mood', _getMoodText(stats['mostCommonMood'])),
+          _buildStatCard(
+            AppLocalizations.of(context).mostCommonMood,
+            _getMoodText(stats['mostCommonMood']),
+          ),
           const SizedBox(height: 16),
-          _buildStatCard('Current Streak', '${stats['streakDays']} days'),
+          _buildStatCard(
+            AppLocalizations.of(context).currentStreak,
+            '${stats['streakDays']} days',
+          ),
           const SizedBox(height: 16),
-          _buildStatCard('Average Energy', '${stats['averageEnergy'].round()}/10'),
+          _buildStatCard(
+            AppLocalizations.of(context).averageEnergy,
+            '${stats['averageEnergy'].round()}/10',
+          ),
           const SizedBox(height: 16),
-          _buildStatCard('Average Focus', '${stats['averageFocus'].round()}/10'),
+          _buildStatCard(
+            AppLocalizations.of(context).averageFocus,
+            '${stats['averageFocus'].round()}/10',
+          ),
           const SizedBox(height: 16),
-          _buildStatCard('Average Stress', '${stats['averageStress'].round()}/10'),
+          _buildStatCard(
+            AppLocalizations.of(context).averageStress,
+            '${stats['averageStress'].round()}/10',
+          ),
         ],
       ),
     );
@@ -324,15 +357,15 @@ class _MoodScreenState extends State<MoodScreen> with TickerProviderStateMixin {
   String _getMoodText(MoodLevel level) {
     switch (level) {
       case MoodLevel.very_bad:
-        return 'Very Bad';
+        return AppLocalizations.of(context).veryBad;
       case MoodLevel.bad:
-        return 'Bad';
+        return AppLocalizations.of(context).bad;
       case MoodLevel.neutral:
-        return 'Neutral';
+        return AppLocalizations.of(context).neutral;
       case MoodLevel.good:
-        return 'Good';
+        return AppLocalizations.of(context).good;
       case MoodLevel.very_good:
-        return 'Very Good';
+        return AppLocalizations.of(context).veryGood;
     }
   }
 

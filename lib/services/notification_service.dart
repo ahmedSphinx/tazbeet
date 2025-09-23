@@ -24,15 +24,16 @@ class NotificationService {
 
     const DarwinInitializationSettings initializationSettingsIOS =
         DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
+          requestAlertPermission: true,
+          requestBadgePermission: true,
+          requestSoundPermission: true,
+        );
 
-    const InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-    );
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+          android: initializationSettingsAndroid,
+          iOS: initializationSettingsIOS,
+        );
 
     await _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
@@ -57,13 +58,13 @@ class NotificationService {
       // Fallback to local notifications for iOS
       const AndroidNotificationDetails androidPlatformChannelSpecifics =
           AndroidNotificationDetails(
-        'task_reminders',
-        'Task Reminders',
-        channelDescription: 'Reminders for upcoming tasks',
-        importance: Importance.max,
-        priority: Priority.high,
-        showWhen: true,
-      );
+            'task_reminders',
+            'Task Reminders',
+            channelDescription: 'Reminders for upcoming tasks',
+            importance: Importance.max,
+            priority: Priority.high,
+            showWhen: true,
+          );
 
       const DarwinNotificationDetails iOSPlatformChannelSpecifics =
           DarwinNotificationDetails();
@@ -96,13 +97,13 @@ class NotificationService {
   Future<void> showTaskDueNotification(Task task) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'task_due',
-      'Task Due',
-      channelDescription: 'Notifications for due tasks',
-      importance: Importance.max,
-      priority: Priority.high,
-      showWhen: true,
-    );
+          'task_due',
+          'Task Due',
+          channelDescription: 'Notifications for due tasks',
+          importance: Importance.max,
+          priority: Priority.high,
+          showWhen: true,
+        );
 
     const DarwinNotificationDetails iOSPlatformChannelSpecifics =
         DarwinNotificationDetails();
@@ -124,13 +125,13 @@ class NotificationService {
   Future<void> showTaskCompletedNotification(Task task) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'task_completed',
-      'Task Completed',
-      channelDescription: 'Celebration notifications for completed tasks',
-      importance: Importance.defaultImportance,
-      priority: Priority.defaultPriority,
-      showWhen: true,
-    );
+          'task_completed',
+          'Task Completed',
+          channelDescription: 'Celebration notifications for completed tasks',
+          importance: Importance.defaultImportance,
+          priority: Priority.defaultPriority,
+          showWhen: true,
+        );
 
     const DarwinNotificationDetails iOSPlatformChannelSpecifics =
         DarwinNotificationDetails();

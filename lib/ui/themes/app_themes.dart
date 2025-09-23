@@ -17,7 +17,7 @@ class AppThemes {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      fontFamily: 'NotoSans',
+      fontFamily: 'TajawalR',
       colorScheme: ColorScheme.fromSeed(
         seedColor: _primaryLight,
         brightness: Brightness.light,
@@ -93,7 +93,7 @@ class AppThemes {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      fontFamily: 'NotoSans',
+      fontFamily: 'TajawalR',
       colorScheme: ColorScheme.fromSeed(
         seedColor: _primaryDark,
         brightness: Brightness.dark,
@@ -176,7 +176,7 @@ class AppThemes {
     return ThemeData(
       useMaterial3: true,
       brightness: isDark ? Brightness.dark : Brightness.light,
-      fontFamily: 'NotoSans',
+      fontFamily: 'TajawalR',
       colorScheme: ColorScheme.fromSeed(
         seedColor: primaryColor,
         brightness: isDark ? Brightness.dark : Brightness.light,

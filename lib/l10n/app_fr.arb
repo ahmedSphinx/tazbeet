@@ -92,5 +92,249 @@
   "incompleteLabel": "Incomplète",
   "completedLabel": "Terminée",
   "applyButton": "Appliquer",
-  "clearAllButton": "Tout Effacer"
+  "clearAllButton": "Tout Effacer",
+  "profileScreenTitle": "Profil",
+  "nameLabel": "Nom",
+  "nameRequired": "Le nom est requis",
+  "birthdayLabel": "Anniversaire",
+  "selectBirthday": "Sélectionner l'anniversaire",
+  "profileSaved": "Profil enregistré avec succès",
+  "pleaseFixErrors": "Veuillez corriger les erreurs ci-dessus",
+  "splashAppName": "Application de Liste de Tâches",
+  "splashTagline": "Votre Gestionnaire de Tâches Personnel",
+  "splashBranding": "Restez Organisé, Restez Productif",
+  "splashVersion": "Version 1.0.0",
+  "loginSubtitle": "Organisez vos tâches et boostez votre productivité",
+  "signInWithGoogle": "Se connecter avec Google",
+  "termsAndPrivacy": "En vous connectant, vous acceptez nos Conditions d'utilisation et notre Politique de confidentialité",
+  "taskDescriptionLabel": "Description (Optional)",
+  "dueDateLabel": "Due Date (Optional)",
+  "selectDueDate": "Select due date",
+  "categoryLabel": "Category (Optional)",
+  "moodTracking": "Mood Tracking",
+  "ambientMode": "Ambient Mode",
+  "emergency": "Emergency",
+  "profile": "Profile",
+  "signOut": "Sign Out",
+  "noTasksYet": "No tasks yet",
+  "error": "Error: {message}",
+  "@error": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "editProfileInfo": "Edit your profile information",
+  "theme": "Theme",
+  "system": "System",
+  "light": "Light",
+  "dark": "Dark",
+  "highContrast": "High Contrast",
+  "increaseContrast": "Increase contrast for better visibility",
+  "largeText": "Large Text",
+  "useLargerFontSizes": "Use larger font sizes",
+  "screenReader": "Screen Reader",
+  "enableScreenReaderSupport": "Enable screen reader support",
+  "enableNotifications": "Enable Notifications",
+  "notificationFrequency": "Notification Frequency",
+  "immediate": "Immediate",
+  "hourly": "Hourly",
+  "daily": "Daily",
+  "weekly": "Weekly",
+  "sound": "Sound",
+  "vibration": "Vibration",
+  "pomodoroPreset": "Pomodoro Preset",
+  "classicPreset": "Classic (25/5/15)",
+  "shortPreset": "Short (15/3/10)",
+  "longPreset": "Long (50/10/30)",
+  "custom": "Custom",
+  "customDurations": "Custom Durations (minutes)",
+  "work": "Work",
+  "shortBreak": "Short Break",
+  "longBreak": "Long Break",
+  "sessionsToLongBreak": "Sessions to Long Break",
+  "autoBackup": "Auto Backup",
+  "automaticallyBackupData": "Automatically backup your data",
+  "backupFrequency": "Backup Frequency",
+  "days": "{count} days",
+  "@days": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "analytics": "Analytics",
+  "helpImproveApp": "Help improve the app with usage data",
+  "crashReporting": "Crash Reporting",
+  "sendCrashReports": "Send crash reports to help fix issues",
+  "language": "Language",
+  "dateFormat": "Date Format",
+  "timeFormat": "Time Format",
+  "twelveHour": "12h",
+  "twentyFourHour": "24h",
+  "today": "Today",
+  "history": "History",
+  "insights": "Insights",
+  "howAreYouFeeling": "How are you feeling today?",
+  "tapToLogMood": "Tap the + button to log your mood",
+  "yourMoodInsights": "Your Mood Insights",
+  "totalEntries": "Total Entries",
+  "averageMood": "Average Mood",
+  "mostCommonMood": "Most Common Mood",
+  "currentStreak": "Current Streak",
+  "averageEnergy": "Average Energy",
+  "averageFocus": "Average Focus",
+  "averageStress": "Average Stress",
+  "veryBad": "Very Bad",
+  "bad": "Bad",
+  "neutral": "Neutral",
+  "good": "Good",
+  "veryGood": "Very Good",
+  "energy": "Energy",
+  "focus": "Focus",
+  "stress": "Stress",
+  "metricValue": "{label}: {value}/10",
+  "@metricValue": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "emergencyControls": "Emergency Controls",
+  "emergencyMode": "Emergency Mode",
+  "activateEmergencyMode": "Activate emergency mode to suspend all reminders and timers",
+  "emergencyModeActive": "Emergency Mode Active",
+  "allRemindersSuspended": "All reminders and timers are suspended",
+  "emergencyModeInactive": "Emergency Mode",
+  "suspendRemindersTimers": "Suspend all reminders and timers immediately",
+  "quickControls": "Quick Controls",
+  "fifteenMinPause": "15 Min Pause",
+  "oneHourPause": "1 Hour Pause",
+  "resumeAll": "Resume All",
+  "remindersSuspended": "Reminders Suspended",
+  "timeRemaining": "Time remaining: {time}",
+  "@timeRemaining": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "resumeNow": "Resume Now",
+  "moodHistory": "Mood History",
+  "noMoodEntriesYet": "No mood entries yet",
+  "startLoggingMoods": "Start logging your moods to see your history",
+  "ambientSounds": "Ambient Sounds",
+  "focusAndRelaxation": "Focus & Relaxation",
+  "chooseBackgroundSound": "Choose a background sound to help you concentrate or relax",
+  "volume": "Volume",
+  "percent": "{value}%",
+  "@percent": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "fadeIn": "Fade In",
+  "fadeOut": "Fade Out",
+  "noCategoriesYet": "No categories yet",
+  "createCategoriesToOrganize": "Create categories to organize your tasks",
+  "createCategory": "Create Category",
+  "tapToManage": "Tap to manage",
+  "edit": "Edit",
+  "addCategory": "Add Category",
+  "editCategory": "Edit Category",
+  "categoryName": "Category Name",
+  "enterCategoryName": "Enter category name",
+  "color": "Color:",
+  "pickAColor": "Pick a color",
+  "select": "Select",
+  "deleteCategory": "Delete Category",
+  "confirmDeleteCategory": "Are you sure you want to delete \"{categoryName}\"? This will remove the category from all associated tasks.",
+  "@confirmDeleteCategory": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "rain": "Rain",
+  "oceanWaves": "Ocean Waves",
+  "forest": "Forest",
+  "whiteNoise": "White Noise",
+  "coffeeShop": "Coffee Shop",
+  "fireplace": "Fireplace",
+  "wind": "Wind",
+  "thunderstorm": "Thunderstorm",
+  "noCategoriesYetDescription": "Créez des catégories pour organiser vos tâches",
+  "tasksCount": "{count} tâches",
+  "@tasksCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectButton": "Sélectionner",
+  "pause": "Pause",
+  "start": "Démarrer",
+  "stop": "Arrêter",
+  "skip": "Ignorer",
+  "next": "Suivant",
+  "statistics": "Statistiques",
+  "overview": "Aperçu",
+  "week": "Semaine",
+  "month": "Mois",
+  "streak": "Série",
+  "productivityScore": "Score de Productivité",
+  "weeklyProgress": "Progrès Hebdomadaire",
+  "categoryProgress": "Progrès de Catégorie",
+  "totaltasks": "Tâches Totales",
+  "dueDate": "Date d'Échéance",
+  "overdue": "En Retard",
+  "dueThisWeek": "Dû Cette Semaine",
+  "logMood": "Enregistrer Votre Humeur",
+  "notesOptional": "Notes (optionnel)",
+  "energyLevel": "Niveau d'Énergie",
+  "focusLevel": "Niveau de Concentration",
+  "stressLevel": "Niveau de Stress",
+  "saveMood": "Sauvegarder l'Humeur",
+  "veryBad": "Très Mauvais",
+  "bad": "Mauvais",
+  "neutral": "Neutre",
+  "good": "Bon",
+  "veryGood": "Très Bon",
+  "work": "Travail",
+  "shortBreak": "Pause Courte",
+  "longBreak": "Pause Longue",
+  "paused": "En Pause",
+  "idle": "Inactif",
+  "pomodoroSessionCompleted": "Session Pomodoro Terminée",
+  "appUpdates": "Mises à Jour de l'App",
+  "checkForUpdates": "Rechercher des Mises à Jour",
+  "currentVersion": "Version Actuelle",
+  "latestVersion": "Dernière Version",
+  "updateAvailable": "Mise à Jour Disponible",
+  "updateDownloaded": "Mise à Jour Téléchargée",
+  "installUpdate": "Installer la Mise à Jour",
+  "downloadingUpdate": "Téléchargement de la Mise à Jour...",
+  "installingUpdate": "Installation de la Mise à Jour...",
+  "noUpdatesAvailable": "Aucune Mise à Jour Disponible",
+  "updateError": "Erreur de Mise à Jour",
+  "retry": "Réessayer",
+  "version": "Version {version}",
+  "@version": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  }
 }

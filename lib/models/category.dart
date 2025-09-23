@@ -8,6 +8,7 @@ class Category extends Equatable {
   final String icon;
   final DateTime createdAt;
   final bool isDefault;
+  final int tasksCount;
 
   const Category({
     required this.id,
@@ -16,6 +17,7 @@ class Category extends Equatable {
     required this.icon,
     required this.createdAt,
     this.isDefault = false,
+    this.tasksCount = 0,
   });
 
   Category copyWith({
@@ -25,6 +27,7 @@ class Category extends Equatable {
     String? icon,
     DateTime? createdAt,
     bool? isDefault,
+    int? tasksCount,
   }) {
     return Category(
       id: id ?? this.id,
@@ -33,6 +36,7 @@ class Category extends Equatable {
       icon: icon ?? this.icon,
       createdAt: createdAt ?? this.createdAt,
       isDefault: isDefault ?? this.isDefault,
+      tasksCount: tasksCount ?? this.tasksCount,
     );
   }
 
@@ -44,6 +48,7 @@ class Category extends Equatable {
       'icon': icon,
       'createdAt': createdAt.toIso8601String(),
       'isDefault': isDefault,
+      'tasksCount': tasksCount,
     };
   }
 
@@ -55,9 +60,10 @@ class Category extends Equatable {
       icon: json['icon'] ?? 'folder',
       createdAt: DateTime.parse(json['createdAt']),
       isDefault: json['isDefault'] ?? false,
+      tasksCount: json['tasksCount'] ?? 0,
     );
   }
 
   @override
-  List<Object?> get props => [id, name, color, icon, createdAt, isDefault];
+  List<Object?> get props => [id, name, color, icon, createdAt, isDefault, tasksCount];
 }

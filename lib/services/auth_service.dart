@@ -1,6 +1,7 @@
 import 'dart:developer' as dev;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -71,12 +72,60 @@ class AuthService {
     }
   }
 
+  // Sign in with Facebook
+  Future<UserCredential?> signInWithFacebook() async {
+    dev.log('Starting Facebook Sign-In process', name: 'AuthService');
+    try {
+      // Trigger the sign-in flow
+      dev.log('Requesting Facebook login', name: 'AuthService');
+      final LoginResult loginResult = await FacebookAuth.instance.login(
+        permissions: ['email', 'public_profile'],
+      );
+
+      if (loginResult.status != LoginStatus.success) {
+        dev.log('Facebook login failed or was cancelled', name: 'AuthService');
+        return null;
+      }
+
+      dev.log('Facebook login successful', name: 'AuthService');
+
+      // Create a credential from the access token
+      final OAuthCredential facebookAuthCredential =
+          FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
+
+      dev.log('Signing in with Firebase using Facebook credential', name: 'AuthService');
+      // Once signed in, return the UserCredential
+      final userCredential = await _auth.signInWithCredential(facebookAuthCredential);
+      dev.log('Successfully signed in user: ${userCredential.user?.uid}', name: 'AuthService');
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      dev.log('Firebase Auth error during Facebook Sign-In', name: 'AuthService', error: e);
+      switch (e.code) {
+        case 'account-exists-with-different-credential':
+          throw Exception('Account exists with different sign-in method');
+        case 'invalid-credential':
+          throw Exception('Invalid Facebook credential');
+        case 'user-disabled':
+          throw Exception('User account has been disabled');
+        case 'user-not-found':
+          throw Exception('User not found');
+        default:
+          throw Exception('Authentication failed: ${e.message}');
+      }
+    } catch (e) {
+      dev.log('Unexpected error during Facebook Sign-In', name: 'AuthService', error: e);
+      throw Exception('Failed to sign in with Facebook: $e');
+    }
+  }
+
   // Sign out
   Future<void> signOut() async {
     dev.log('Starting sign out process', name: 'AuthService');
     try {
       dev.log('Signing out from Google', name: 'AuthService');
       await _googleSignIn.signOut();
+      dev.log('Signing out from Facebook', name: 'AuthService');
+      await FacebookAuth.instance.logOut();
       dev.log('Signing out from Firebase', name: 'AuthService');
       await _auth.signOut();
       dev.log('Successfully signed out', name: 'AuthService');

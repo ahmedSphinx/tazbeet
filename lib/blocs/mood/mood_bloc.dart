@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' show log;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../repositories/mood_repository.dart';
@@ -41,7 +42,7 @@ class MoodBloc extends Bloc<MoodEvent, MoodState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          print('Failed to sync mood addition to Firestore: $e');
+          log('Failed to sync mood addition to Firestore: $e');
         }
       }
     } catch (e) {
@@ -61,7 +62,7 @@ class MoodBloc extends Bloc<MoodEvent, MoodState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          print('Failed to sync mood update to Firestore: $e');
+          log('Failed to sync mood update to Firestore: $e');
         }
       }
     } catch (e) {
@@ -81,7 +82,7 @@ class MoodBloc extends Bloc<MoodEvent, MoodState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          print('Failed to sync mood deletion to Firestore: $e');
+          log('Failed to sync mood deletion to Firestore: $e');
         }
       }
     } catch (e) {

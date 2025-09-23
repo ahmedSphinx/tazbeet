@@ -20,13 +20,14 @@ class CategoryAdapter extends TypeAdapter<Category> {
       icon: fields[3] as String,
       createdAt: fields[4] as DateTime,
       isDefault: fields[5] as bool,
+      tasksCount: fields[6] as int? ?? 0,
     );
   }
 
   @override
   void write(BinaryWriter writer, Category obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class CategoryAdapter extends TypeAdapter<Category> {
       ..writeByte(4)
       ..write(obj.createdAt)
       ..writeByte(5)
-      ..write(obj.isDefault);
+      ..write(obj.isDefault)
+      ..writeByte(6)
+      ..write(obj.tasksCount);
   }
 }
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart' hide ThemeMode;
 import 'package:provider/provider.dart';
 import '../../services/settings_service.dart' as settings;
 import '../../services/color_customization_service.dart';
+import '../../services/task_sound_service.dart';
+import '../../services/update_service.dart';
 import '../../ui/widgets/color_customization_widget.dart';
 import '../../l10n/generated/app_localizations.dart';
 import 'profile_screen.dart';
@@ -25,7 +27,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     
+     appBar: AppBar(
+        title: Text(AppLocalizations.of(context).settingsScreenTitle),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
+        elevation: 0,
+        actions: [
+                TextButton(
+                  onPressed: () {
+                    context.read<settings.SettingsService>().resetToDefaults();
+                    context.read<ColorCustomizationService>().resetToDefault();
+                  },
+                  child: Text(AppLocalizations.of(context).resetButton),
+                ),
+              ]
+            ,
+      ),
       body: Consumer2<settings.SettingsService, ColorCustomizationService>(
         builder: (context, settingsService, colorService, child) {
           return ListView(
@@ -47,6 +64,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildNotificationSettings(settingsService),
               const SizedBox(height: 24),
 
+              _buildSectionHeader('Task Completion Sounds'),
+              _buildTaskSoundSettings(),
+              const SizedBox(height: 24),
+
               _buildSectionHeader(AppLocalizations.of(context).pomodoroSection),
               _buildPomodoroSettings(settingsService),
               const SizedBox(height: 24),
@@ -61,6 +82,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
               _buildSectionHeader(AppLocalizations.of(context).regionalSection),
               _buildRegionalSettings(settingsService),
+              const SizedBox(height: 24),
+
+              _buildSectionHeader(AppLocalizations.of(context).appUpdates),
+              _buildUpdateSettings(),
             ],
           );
         },
@@ -72,8 +97,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Card(
       child: ListTile(
         leading: const Icon(Icons.person),
-        title: const Text('Profile'),
-        subtitle: const Text('Edit your profile information'),
+        title: Text(AppLocalizations.of(context).profile),
+        subtitle: Text(AppLocalizations.of(context).editProfileInfo),
         trailing: const Icon(Icons.arrow_forward_ios),
         onTap: () {
           Navigator.of(context).push(
@@ -102,11 +127,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     String getThemeModeName(settings.ThemeMode mode) {
       switch (mode) {
         case settings.ThemeMode.system:
-          return 'System';
+          return AppLocalizations.of(context).systemTheme;
         case settings.ThemeMode.light:
-          return 'Light';
+          return AppLocalizations.of(context).lightTheme;
         case settings.ThemeMode.dark:
-          return 'Dark';
+          return AppLocalizations.of(context).darkTheme;
       }
     }
 
@@ -114,7 +139,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Column(
         children: [
           ListTile(
-            title: const Text('Theme'),
+            title: Text(AppLocalizations.of(context).themeLabel),
             subtitle: Text(
               getThemeModeName(settingsService.settings.themeMode),
             ),
@@ -246,6 +271,73 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ],
         ],
       ),
+    );
+  }
+
+  Widget _buildTaskSoundSettings() {
+    return Consumer<TaskSoundService>(
+      builder: (context, taskSoundService, child) {
+        return Card(
+          child: Column(
+            children: [
+              SwitchListTile(
+                title: const Text('Enable Task Completion Sound'),
+                subtitle: const Text('Play sound when tasks are completed'),
+                value: taskSoundService.soundEnabled,
+                onChanged: (value) {
+                  taskSoundService.setSoundEnabled(value);
+                },
+              ),
+              if (taskSoundService.soundEnabled) ...[
+                ListTile(
+                  title: const Text('Sound Selection'),
+                  subtitle: Text(taskSoundService.availableSounds[taskSoundService.selectedSound] ?? 'Unknown'),
+                  trailing: DropdownButton<String>(
+                    value: taskSoundService.selectedSound,
+                    onChanged: (value) {
+                      if (value != null) {
+                        taskSoundService.setSelectedSound(value);
+                      }
+                    },
+                    items: taskSoundService.availableSounds.entries.map((entry) {
+                      return DropdownMenuItem(
+                        value: entry.key,
+                        child: Text(entry.value),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                ListTile(
+                  title: const Text('Volume'),
+                  subtitle: Slider(
+                    value: taskSoundService.volume,
+                    onChanged: (value) {
+                      taskSoundService.setVolume(value);
+                    },
+                    min: 0.0,
+                    max: 1.0,
+                    divisions: 10,
+                    label: '${(taskSoundService.volume * 100).round()}%',
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      taskSoundService.playTaskCompletionSound();
+                    },
+                    icon: const Icon(Icons.play_arrow),
+                    label: const Text('Test Sound'),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 40),
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -585,6 +677,91 @@ class _SettingsScreenState extends State<SettingsScreen> {
         return 'Deutsch';
       default:
         return code;
+    }
+  }
+
+  Widget _buildUpdateSettings() {
+    return Consumer<UpdateService>(
+      builder: (context, updateService, child) {
+        return Card(
+          child: Column(
+            children: [
+              ListTile(
+                title: Text(AppLocalizations.of(context).currentVersion),
+                subtitle: Text(AppLocalizations.of(context).version(updateService.currentVersion)),
+              ),
+              const Divider(),
+              ListTile(
+                title: Text(AppLocalizations.of(context).checkForUpdates),
+                subtitle: Text(_getUpdateStatusText(updateService)),
+                trailing: updateService.isChecking
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : IconButton(
+                        icon: const Icon(Icons.refresh),
+                        onPressed: () => _checkForUpdates(updateService),
+                      ),
+                onTap: () => _checkForUpdates(updateService),
+              ),
+              if (updateService.isUpdateAvailable) ...[
+                const Divider(),
+                ListTile(
+                  title: Text(AppLocalizations.of(context).updateAvailable),
+                  subtitle: Text(AppLocalizations.of(context).version(updateService.updateInfo?.version ?? '')),
+                  trailing: updateService.isDownloading
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : ElevatedButton(
+                          onPressed: () => _startUpdate(updateService),
+                          child: Text(AppLocalizations.of(context).installUpdate),
+                        ),
+                ),
+              ],
+              if (updateService.hasError) ...[
+                const Divider(),
+                ListTile(
+                  title: Text(AppLocalizations.of(context).updateError),
+                  subtitle: const Text('Failed to check for updates'),
+                  trailing: TextButton(
+                    onPressed: () => _checkForUpdates(updateService),
+                    child: Text(AppLocalizations.of(context).retry),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  String _getUpdateStatusText(UpdateService updateService) {
+    if (updateService.isChecking) {
+      return AppLocalizations.of(context).downloadingUpdate;
+    } else if (updateService.isUpdateAvailable) {
+      return AppLocalizations.of(context).updateAvailable;
+    } else if (updateService.hasError) {
+      return AppLocalizations.of(context).updateError;
+    } else {
+      return AppLocalizations.of(context).noUpdatesAvailable;
+    }
+  }
+
+  Future<void> _checkForUpdates(UpdateService updateService) async {
+    await updateService.checkForUpdates();
+  }
+
+  Future<void> _startUpdate(UpdateService updateService) async {
+    if (updateService.updateInfo?.isImmediateUpdate == true) {
+      await updateService.startImmediateUpdate();
+    } else {
+      await updateService.startFlexibleUpdate();
     }
   }
 }

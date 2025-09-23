@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import '../models/task.dart';
 import 'notification_service.dart';
+import 'localization_service.dart';
 
 enum PomodoroState {
   idle,
@@ -67,29 +68,29 @@ class PomodoroTimer extends ChangeNotifier {
   String get currentStateLabel {
     switch (_state) {
       case PomodoroState.work:
-        return 'Work Session';
+        return LocalizationService.work;
       case PomodoroState.shortBreak:
-        return 'Short Break';
+        return LocalizationService.shortBreak;
       case PomodoroState.longBreak:
-        return 'Long Break';
+        return LocalizationService.longBreak;
       case PomodoroState.paused:
-        return 'Paused';
+        return LocalizationService.paused;
       case PomodoroState.idle:
-      return 'Ready to Start';
+        return LocalizationService.idle;
     }
   }
 
   String get nextStateLabel {
     switch (_state) {
       case PomodoroState.work:
-        return _shouldTakeLongBreak() ? 'Long Break' : 'Short Break';
+        return _shouldTakeLongBreak() ? LocalizationService.longBreak : LocalizationService.shortBreak;
       case PomodoroState.shortBreak:
       case PomodoroState.longBreak:
-        return 'Work Session';
+        return LocalizationService.work;
       case PomodoroState.paused:
         return currentStateLabel;
       case PomodoroState.idle:
-      return 'Work Session';
+        return LocalizationService.shortBreak;
     }
   }
 
@@ -185,7 +186,7 @@ class PomodoroTimer extends ChangeNotifier {
           NotificationService().showTaskCompletedNotification(
             Task(
               id: 'pomodoro',
-              title: 'Pomodoro Session Completed',
+              title: LocalizationService.pomodoroSessionCompleted,
               createdAt: DateTime.now(),
               updatedAt: DateTime.now(),
             ),

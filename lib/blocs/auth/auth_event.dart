@@ -15,4 +15,6 @@ class AuthLoggedOut extends AuthEvent {}
 
 class AuthSignInRequested extends AuthEvent {}
 
+class AuthFacebookSignInRequested extends AuthEvent {}
+
 class AuthSignOutRequested extends AuthEvent {}

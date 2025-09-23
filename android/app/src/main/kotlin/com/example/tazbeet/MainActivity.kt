@@ -1,4 +1,4 @@
-package com.ahmedz.tazbeet
+package com.company.tazbeet
 
 import io.flutter.embedding.android.FlutterActivity
 

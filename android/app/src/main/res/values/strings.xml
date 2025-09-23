@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tazbeet</string>
+    
+    <!-- Facebook App Configuration -->
+    <!-- Replace these with your actual Facebook App ID and Client Token -->
+    <string name="facebook_app_id">1532810721494581</string>
+    <string name="facebook_login_protocol_scheme">fb1532810721494581</string>
+    <string name="facebook_client_token">7b6fef228ec0552b1c4179b37e6f67cd</string>
+</resources>

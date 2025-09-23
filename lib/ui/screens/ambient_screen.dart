@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../services/ambient_service.dart';
 
 class AmbientScreen extends StatefulWidget {
@@ -21,9 +22,7 @@ class _AmbientScreenState extends State<AmbientScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Ambient Sounds'),
-      ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).ambientSounds)),
       body: Consumer<AmbientService>(
         builder: (context, ambientService, child) {
           return Padding(
@@ -31,26 +30,23 @@ class _AmbientScreenState extends State<AmbientScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Focus & Relaxation',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Text(
+                  AppLocalizations.of(context).focusAndRelaxation,
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Choose a background sound to help you concentrate or relax',
+                  AppLocalizations.of(context).chooseBackgroundSound,
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
                 const SizedBox(height: 24),
                 _buildVolumeControl(ambientService),
                 const SizedBox(height: 24),
-                Expanded(
-                  child: _buildSoundGrid(ambientService),
-                ),
+                Expanded(child: _buildSoundGrid(ambientService)),
                 const SizedBox(height: 16),
                 _buildPlaybackControls(ambientService),
               ],
@@ -75,12 +71,9 @@ class _AmbientScreenState extends State<AmbientScreen> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 const SizedBox(width: 12),
-                const Text(
-                  'Volume',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
+                Text(
+                  AppLocalizations.of(context).volume,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
                 const Spacer(),
                 Text('${(ambientService.volume * 100).round()}%'),
@@ -142,7 +135,9 @@ class _AmbientScreenState extends State<AmbientScreen> {
                     ambientService.getSoundName(sound),
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.normal,
                       color: isSelected
                           ? Theme.of(context).colorScheme.primary
                           : Theme.of(context).colorScheme.onSurface,
@@ -184,8 +179,8 @@ class _AmbientScreenState extends State<AmbientScreen> {
               onPressed: ambientService.isPlaying
                   ? () => ambientService.pause()
                   : ambientService.currentSound != null
-                      ? () => ambientService.playSound(ambientService.currentSound!)
-                      : null,
+                  ? () => ambientService.playSound(ambientService.currentSound!)
+                  : null,
               icon: Icon(
                 ambientService.isPlaying ? Icons.pause : Icons.play_arrow,
               ),
@@ -203,7 +198,7 @@ class _AmbientScreenState extends State<AmbientScreen> {
                   ? null
                   : () => ambientService.fadeIn(),
               icon: const Icon(Icons.volume_up),
-              tooltip: 'Fade In',
+              tooltip: AppLocalizations.of(context).fadeIn,
             ),
             const SizedBox(width: 16),
             IconButton.filledTonal(
@@ -211,7 +206,7 @@ class _AmbientScreenState extends State<AmbientScreen> {
                   ? null
                   : () => ambientService.fadeOut(),
               icon: const Icon(Icons.volume_down),
-              tooltip: 'Fade Out',
+              tooltip: AppLocalizations.of(context).fadeOut,
             ),
           ],
         ),

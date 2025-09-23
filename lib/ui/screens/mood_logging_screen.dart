@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tazbeet/l10n/generated/app_localizations.dart';
 import 'package:uuid/uuid.dart';
 import '../../blocs/mood/mood_bloc.dart';
 import '../../blocs/mood/mood_event.dart';
@@ -52,14 +53,14 @@ class _MoodLoggingScreenState extends State<MoodLoggingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Log Your Mood'),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
-            const Text('How are you feeling?', style: TextStyle(fontSize: 18)),
+            Text(
+              AppLocalizations.of(context).howAreYouFeeling,
+              style: TextStyle(fontSize: 18),
+            ),
             const SizedBox(height: 12),
             Wrap(
               spacing: 12,
@@ -79,33 +80,47 @@ class _MoodLoggingScreenState extends State<MoodLoggingScreen> {
             TextField(
               controller: _noteController,
               maxLines: 3,
-              decoration: const InputDecoration(
-                labelText: 'Notes (optional)',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).notesOptional,
+
+                /* 'Notes (optional)' */
                 border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 24),
-            _buildSlider('Energy Level', _energyLevel, (value) {
-              setState(() {
-                _energyLevel = value.toInt();
-              });
-            }),
+            _buildSlider(
+              AppLocalizations.of(context).energyLevel,
+              /* 'Energy Level', */ _energyLevel,
+              (value) {
+                setState(() {
+                  _energyLevel = value.toInt();
+                });
+              },
+            ),
             const SizedBox(height: 16),
-            _buildSlider('Focus Level', _focusLevel, (value) {
-              setState(() {
-                _focusLevel = value.toInt();
-              });
-            }),
+            _buildSlider(
+              AppLocalizations.of(context).focusLevel,
+              /* 'Focus Level', */ _focusLevel,
+              (value) {
+                setState(() {
+                  _focusLevel = value.toInt();
+                });
+              },
+            ),
             const SizedBox(height: 16),
-            _buildSlider('Stress Level', _stressLevel, (value) {
-              setState(() {
-                _stressLevel = value.toInt();
-              });
-            }),
+            _buildSlider(
+              AppLocalizations.of(context).stressLevel,
+              /* 'Stress Level', */ _stressLevel,
+              (value) {
+                setState(() {
+                  _stressLevel = value.toInt();
+                });
+              },
+            ),
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: _submitMood,
-              child: const Text('Save Mood'),
+              child: Text(AppLocalizations.of(context).saveMood),
             ),
           ],
         ),
@@ -133,15 +148,16 @@ class _MoodLoggingScreenState extends State<MoodLoggingScreen> {
   String _getMoodText(MoodLevel level) {
     switch (level) {
       case MoodLevel.very_bad:
-        return 'Very Bad';
+        return AppLocalizations.of(context).veryBad;
       case MoodLevel.bad:
-        return 'Bad';
+        return AppLocalizations.of(context).bad;
       case MoodLevel.neutral:
-        return 'Neutral';
+        return AppLocalizations.of(context).neutral;
       case MoodLevel.good:
-        return 'Good';
+        return AppLocalizations.of(context).good;
+
       case MoodLevel.very_good:
-        return 'Very Good';
+        return AppLocalizations.of(context).veryGood;
     }
   }
 }

@@ -99,5 +99,242 @@
   "birthdayLabel": "Birthday",
   "selectBirthday": "Select birthday",
   "profileSaved": "Profile saved successfully",
-  "pleaseFixErrors": "Please fix the errors above"
+  "pleaseFixErrors": "Please fix the errors above",
+  "splashAppName": "Tazbeet",
+  "splashTagline": "Your Personal Task Manager",
+  "splashBranding": "Stay Organized, Stay Productive",
+  "splashVersion": "Version 1.0.0",
+  "loginSubtitle": "Organize your tasks and boost productivity",
+  "signInWithGoogle": "Sign in with Google",
+  "termsAndPrivacy": "By signing in, you agree to our Terms of Service and Privacy Policy",
+  "taskDescriptionLabel": "Description (Optional)",
+  "dueDateLabel": "Due Date (Optional)",
+  "selectDueDate": "Select due date",
+  "categoryLabel": "Category (Optional)",
+  "moodTracking": "Mood Tracking",
+  "ambientMode": "Ambient Mode",
+  "emergency": "Emergency",
+  "profile": "Profile",
+  "signOut": "Sign Out",
+  "noTasksYet": "No tasks yet",
+  "error": "Error: {message}",
+  "@error": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "editProfileInfo": "Edit your profile information",
+  "theme": "Theme",
+  "system": "System",
+  "light": "Light",
+  "dark": "Dark",
+  "highContrast": "High Contrast",
+  "increaseContrast": "Increase contrast for better visibility",
+  "largeText": "Large Text",
+  "useLargerFontSizes": "Use larger font sizes",
+  "screenReader": "Screen Reader",
+  "enableScreenReaderSupport": "Enable screen reader support",
+  "enableNotifications": "Enable Notifications",
+  "notificationFrequency": "Notification Frequency",
+  "immediate": "Immediate",
+  "hourly": "Hourly",
+  "daily": "Daily",
+  "weekly": "Weekly",
+  "sound": "Sound",
+  "vibration": "Vibration",
+  "pomodoroPreset": "Pomodoro Preset",
+  "classicPreset": "Classic (25/5/15)",
+  "shortPreset": "Short (15/3/10)",
+  "longPreset": "Long (50/10/30)",
+  "custom": "Custom",
+  "customDurations": "Custom Durations (minutes)",
+  "work": "Work",
+  "shortBreak": "Short Break",
+  "longBreak": "Long Break",
+  "sessionsToLongBreak": "Sessions to Long Break",
+  "autoBackup": "Auto Backup",
+  "automaticallyBackupData": "Automatically backup your data",
+  "backupFrequency": "Backup Frequency",
+  "days": "{count} days",
+  "@days": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "analytics": "Analytics",
+  "helpImproveApp": "Help improve the app with usage data",
+  "crashReporting": "Crash Reporting",
+  "sendCrashReports": "Send crash reports to help fix issues",
+  "language": "Language",
+  "dateFormat": "Date Format",
+  "timeFormat": "Time Format",
+  "twelveHour": "12h",
+  "twentyFourHour": "24h",
+  "today": "Today",
+  "history": "History",
+  "insights": "Insights",
+  "howAreYouFeeling": "How are you feeling today?",
+  "tapToLogMood": "Tap the + button to log your mood",
+  "yourMoodInsights": "Your Mood Insights",
+  "totalEntries": "Total Entries",
+  "averageMood": "Average Mood",
+  "mostCommonMood": "Most Common Mood",
+  "currentStreak": "Current Streak",
+  "averageEnergy": "Average Energy",
+  "averageFocus": "Average Focus",
+  "averageStress": "Average Stress",
+  "veryBad": "Very Bad",
+  "bad": "Bad",
+  "neutral": "Neutral",
+  "good": "Good",
+  "veryGood": "Very Good",
+  "energy": "Energy",
+  "focus": "Focus",
+  "stress": "Stress",
+  "metricValue": "{label}: {value}/10",
+  "@metricValue": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "emergencyControls": "Emergency Controls",
+  "emergencyMode": "Emergency Mode",
+  "activateEmergencyMode": "Activate emergency mode to suspend all reminders and timers",
+  "emergencyModeActive": "Emergency Mode Active",
+  "allRemindersSuspended": "All reminders and timers are suspended",
+  "emergencyModeInactive": "Emergency Mode",
+  "suspendRemindersTimers": "Suspend all reminders and timers immediately",
+  "quickControls": "Quick Controls",
+  "fifteenMinPause": "15 Min Pause",
+  "oneHourPause": "1 Hour Pause",
+  "resumeAll": "Resume All",
+  "remindersSuspended": "Reminders Suspended",
+  "timeRemaining": "Time remaining: {time}",
+  "@timeRemaining": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "resumeNow": "Resume Now",
+  "moodHistory": "Mood History",
+  "noMoodEntriesYet": "No mood entries yet",
+  "startLoggingMoods": "Start logging your moods to see your history",
+  "ambientSounds": "Ambient Sounds",
+  "focusAndRelaxation": "Focus & Relaxation",
+  "chooseBackgroundSound": "Choose a background sound to help you concentrate or relax",
+  "volume": "Volume",
+  "percent": "{value}%",
+  "@percent": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "fadeIn": "Fade In",
+  "fadeOut": "Fade Out",
+  "noCategoriesYet": "No categories yet",
+  "createCategoriesToOrganize": "Create categories to organize your tasks",
+  "createCategory": "Create Category",
+  "tapToManage": "Tap to manage",
+  "edit": "Edit",
+  "addCategory": "Add Category",
+  "editCategory": "Edit Category",
+  "categoryName": "Category Name",
+  "enterCategoryName": "Enter category name",
+  "color": "Color:",
+  "pickAColor": "Pick a color",
+  "select": "Select",
+  "deleteCategory": "Delete Category",
+  "confirmDeleteCategory": "Are you sure you want to delete \"{categoryName}\"? This will remove the category from all associated tasks.",
+  "@confirmDeleteCategory": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "rain": "Rain",
+  "oceanWaves": "Ocean Waves",
+  "forest": "Forest",
+  "whiteNoise": "White Noise",
+  "coffeeShop": "Coffee Shop",
+  "fireplace": "Fireplace",
+  "wind": "Wind",
+  "thunderstorm": "Thunderstorm",
+  "noCategoriesYetDescription": "Create categories to organize your tasks",
+  "tasksCount": "{count} tasks",
+  "@tasksCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectButton": "Select",
+  "pause": "Pause",
+  "start": "Start",
+  "stop": "Stop",
+  "skip": "Skip",
+  "next": "Next",
+  "statistics": "Statistics",
+  "overview": "Overview",
+  "week": "Week",
+  "month": "Month",
+  "streak": "Streak",
+  "productivityScore": "Productivity Score",
+  "weeklyProgress": "Weekly Progress",
+  "categoryProgress": "Category Progress",
+  "totaltasks": "Total Tasks",
+  "dueDate": "Due Date",
+  "overdue": "Overdue",
+  "dueThisWeek": "Due This Week",
+  "logMood": "Log Your Mood",
+  "notesOptional": "Notes (optional)",
+  "energyLevel": "Energy Level",
+  "focusLevel": "Focus Level",
+  "stressLevel": "Stress Level",
+  "saveMood": "Save Mood",
+  "veryBad": "Very Bad",
+  "bad": "Bad",
+  "neutral": "Neutral",
+  "good": "Good",
+  "veryGood": "Very Good",
+  "work": "Work",
+  "shortBreak": "Short Break",
+  "longBreak": "Long Break",
+  "paused": "Paused",
+  "idle": "Idle",
+  "pomodoroSessionCompleted": "Pomodoro Session Completed",
+  "appUpdates": "App Updates",
+  "checkForUpdates": "Check for Updates",
+  "currentVersion": "Current Version",
+  "latestVersion": "Latest Version",
+  "updateAvailable": "Update Available",
+  "updateDownloaded": "Update Downloaded",
+  "installUpdate": "Install Update",
+  "downloadingUpdate": "Downloading Update...",
+  "installingUpdate": "Installing Update...",
+  "noUpdatesAvailable": "No Updates Available",
+  "updateError": "Update Error",
+  "retry": "Retry",
+  "version": "Version {version}",
+  "@version": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  }
 }

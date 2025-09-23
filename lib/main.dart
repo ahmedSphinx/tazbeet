@@ -11,6 +11,9 @@ import 'package:tazbeet/blocs/mood/mood_bloc.dart';
 import 'package:tazbeet/blocs/user/user_bloc.dart';
 import 'package:tazbeet/services/auth_service.dart';
 import 'package:tazbeet/services/color_customization_service.dart';
+import 'package:tazbeet/services/task_sound_service.dart';
+import 'package:tazbeet/services/ambient_service.dart';
+import 'package:tazbeet/services/update_service.dart';
 import 'l10n/generated/app_localizations.dart';
 import 'models/mood.dart';
 import 'models/user.dart';
@@ -22,11 +25,11 @@ import 'repositories/mood_repository.dart';
 import 'repositories/user_repository.dart';
 import 'services/notification_service.dart';
 import 'services/background_service.dart';
-import 'services/ambient_service.dart';
 import 'services/emergency_service.dart';
 import 'services/settings_service.dart' as settings;
-import 'ui/screens/home_screen.dart';
-import 'ui/screens/login_screen.dart';
+import 'services/localization_service.dart';
+
+import 'ui/screens/splash_screen.dart';
 import 'ui/themes/app_themes.dart';
 
 void main() async {
@@ -58,6 +61,16 @@ void main() async {
   // Initialize auth service
   final authService = AuthService();
 
+  // Initialize task sound service
+  final taskSoundService = TaskSoundService();
+  await taskSoundService.initialize();
+
+  // Initialize update service
+  final updateService = UpdateService();
+
+  // Perform automatic update check
+  await updateService.checkForUpdatesAutomatically();
+
   // Initialize repositories
   final taskRepository = TaskRepository();
   final categoryRepository = CategoryRepository();
@@ -70,9 +83,8 @@ void main() async {
   await moodRepository.init();
   await colorCustomizationService.initialize();
 
-  // Create default categories if they don't exist
-  await categoryRepository.createDefaultCategories();
-  /* d */
+  // Create default categories if they don't exist  await categoryRepository.createDefaultCategories();
+
   runApp(
     MyApp(
       taskRepository: taskRepository,
@@ -83,6 +95,8 @@ void main() async {
       userRepository: userRepository,
       colorCustomizationService: colorCustomizationService,
       authService: authService,
+      taskSoundService: taskSoundService,
+      updateService: updateService,
     ),
   );
 }
@@ -96,6 +110,8 @@ class MyApp extends StatelessWidget {
   final UserRepository userRepository;
   final ColorCustomizationService colorCustomizationService;
   final AuthService authService;
+  final TaskSoundService taskSoundService;
+  final UpdateService updateService;
 
   const MyApp({
     super.key,
@@ -107,6 +123,8 @@ class MyApp extends StatelessWidget {
     required this.userRepository,
     required this.colorCustomizationService,
     required this.authService,
+    required this.taskSoundService,
+    required this.updateService,
   });
 
   ThemeMode _getThemeMode(settings.ThemeMode customThemeMode) {
@@ -149,11 +167,16 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider.value(value: settingsService),
           ChangeNotifierProvider.value(value: colorCustomizationService),
           ChangeNotifierProvider.value(value: AmbientService()),
-          Provider<EmergencyService>(create: (context) => EmergencyService()),
+          ChangeNotifierProvider.value(value: EmergencyService()),
+          ChangeNotifierProvider.value(value: taskSoundService),
+          ChangeNotifierProvider.value(value: updateService),
         ],
         child: Consumer2<settings.SettingsService, ColorCustomizationService>(
           builder:
               (context, settingsService, colorCustomizationService, child) {
+                // Initialize localization service
+                LocalizationService.initialize(context);
+
                 return BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, authState) {
                     return MaterialApp(
@@ -188,9 +211,7 @@ class MyApp extends StatelessWidget {
                         GlobalCupertinoLocalizations.delegate,
                       ],
                       supportedLocales: AppLocalizations.supportedLocales,
-                      home: authState is AuthAuthenticated
-                          ? const HomeScreen()
-                          : const LoginScreen(),
+                      home: const SplashScreen(),
                     );
                   },
                 );

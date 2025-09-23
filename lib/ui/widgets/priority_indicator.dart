@@ -13,7 +13,6 @@ class PriorityIndicator extends StatelessWidget {
       case TaskPriority.medium:
         return Colors.orangeAccent;
       case TaskPriority.low:
-      default:
         return Colors.greenAccent;
     }
   }
@@ -25,7 +24,6 @@ class PriorityIndicator extends StatelessWidget {
       case TaskPriority.medium:
         return Icons.label_important;
       case TaskPriority.low:
-      default:
         return Icons.low_priority;
     }
   }

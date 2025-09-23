@@ -5,6 +5,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../blocs/category/category_bloc.dart';
 import '../../blocs/category/category_event.dart';
 import '../../blocs/category/category_state.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../models/category.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -92,12 +93,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            'No categories yet',
+            AppLocalizations.of(context).noCategoriesYet,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 8),
           Text(
-            'Create categories to organize your tasks',
+            AppLocalizations.of(context).noCategoriesYetDescription,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Theme.of(
                 context,
@@ -108,7 +109,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           ElevatedButton.icon(
             onPressed: _showAddCategoryDialog,
             icon: const Icon(Icons.add),
-            label: const Text('Create Category'),
+            label: Text(AppLocalizations.of(context).createCategory),
           ),
         ],
       ),
@@ -133,7 +134,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
               ),
             ),
             title: Text(category.name),
-            subtitle: const Text('Tap to manage'),
+            subtitle: Text(
+              AppLocalizations.of(context).tasksCount(category.tasksCount),
+            ),
             trailing: PopupMenuButton<String>(
               onSelected: (value) {
                 switch (value) {
@@ -146,23 +149,26 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 }
               },
               itemBuilder: (context) => [
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'edit',
                   child: Row(
                     children: [
                       Icon(Icons.edit),
                       SizedBox(width: 8),
-                      Text('Edit'),
+                      Text(AppLocalizations.of(context).editButton),
                     ],
                   ),
                 ),
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'delete',
                   child: Row(
                     children: [
                       Icon(Icons.delete, color: Colors.red),
                       SizedBox(width: 8),
-                      Text('Delete', style: TextStyle(color: Colors.red)),
+                      Text(
+                        AppLocalizations.of(context).deleteButton,
+                        style: TextStyle(color: Colors.red),
+                      ),
                     ],
                   ),
                 ),
@@ -186,140 +192,201 @@ class _CategoryScreenState extends State<CategoryScreen> {
     final nameController = TextEditingController(text: category?.name ?? '');
     Color selectedColor = category?.color ?? Colors.blue;
 
-    showDialog(
+    showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (context) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: Text(category == null ? 'Add Category' : 'Edit Category'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
+        builder: (context, setState) => Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Wrap(
             children: [
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Category Name',
-                  hintText: 'Enter category name',
+              ListTile(
+                title: Text(
+                  category == null
+                      ? AppLocalizations.of(context).addCategory
+                      : AppLocalizations.of(context).editCategory,
                 ),
-                autofocus: true,
               ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  const Text('Color:'),
-                  const SizedBox(width: 16),
-                  GestureDetector(
-                    onTap: () async {
-                      final color = await showDialog<Color>(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Pick a color'),
-                          content: SingleChildScrollView(
-                            child: ColorPicker(
-                              pickerColor: selectedColor,
-                              onColorChanged: (color) {
-                                setState(() {
-                                  selectedColor = color;
-                                });
-                              },
-                              pickerAreaHeightPercent: 0.8,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context).categoryName,
+                        hintText: AppLocalizations.of(
+                          context,
+                        ).enterCategoryName,
+                      ),
+                      autofocus: true,
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Text(AppLocalizations.of(context).color),
+                        const SizedBox(width: 16),
+                        GestureDetector(
+                          onTap: () async {
+                            final color = await showModalBottomSheet<Color>(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (context) => Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: MediaQuery.of(
+                                    context,
+                                  ).viewInsets.bottom,
+                                ),
+                                child: Wrap(
+                                  children: [
+                                    ListTile(
+                                      title: Text(
+                                        AppLocalizations.of(context).pickAColor,
+                                      ),
+                                    ),
+                                    SingleChildScrollView(
+                                      child: ColorPicker(
+                                        pickerColor: selectedColor,
+                                        onColorChanged: (color) {
+                                          setState(() {
+                                            selectedColor = color;
+                                          });
+                                        },
+                                        pickerAreaHeightPercent: 0.8,
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
+                                          child: Text(
+                                            AppLocalizations.of(
+                                              context,
+                                            ).cancelButton,
+                                          ),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () => Navigator.of(
+                                            context,
+                                          ).pop(selectedColor),
+                                          child: Text(
+                                            AppLocalizations.of(
+                                              context,
+                                            ).selectButton,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                            if (color != null) {
+                              setState(() {
+                                selectedColor = color;
+                              });
+                            }
+                          },
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: selectedColor,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Theme.of(context).colorScheme.outline,
+                                width: 2,
+                              ),
                             ),
                           ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              child: const Text('Cancel'),
-                            ),
-                            ElevatedButton(
-                              onPressed: () =>
-                                  Navigator.of(context).pop(selectedColor),
-                              child: const Text('Select'),
-                            ),
-                          ],
                         ),
-                      );
-                      if (color != null) {
-                        setState(() {
-                          selectedColor = color;
-                        });
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              OverflowBar(
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(AppLocalizations.of(context).cancelButton),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (nameController.text.trim().isNotEmpty) {
+                        if (category == null) {
+                          // Add new category
+                          final newCategory = Category(
+                            id: DateTime.now().millisecondsSinceEpoch
+                                .toString(),
+                            name: nameController.text.trim(),
+                            color: selectedColor,
+                            icon: 'folder',
+                            createdAt: DateTime.now(),
+                          );
+                          context.read<CategoryBloc>().add(
+                            AddCategory(newCategory),
+                          );
+                        } else {
+                          // Update existing category
+                          final updatedCategory = category.copyWith(
+                            name: nameController.text.trim(),
+                            color: selectedColor,
+                          );
+                          context.read<CategoryBloc>().add(
+                            UpdateCategory(updatedCategory),
+                          );
+                        }
+                        Navigator.of(context).pop();
                       }
                     },
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: selectedColor,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.outline,
-                          width: 2,
-                        ),
-                      ),
+                    child: Text(
+                      category == null
+                          ? AppLocalizations.of(context).addButton
+                          : AppLocalizations.of(context).updateButton,
                     ),
                   ),
                 ],
               ),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (nameController.text.trim().isNotEmpty) {
-                  if (category == null) {
-                    // Add new category
-                    final newCategory = Category(
-                      id: DateTime.now().millisecondsSinceEpoch.toString(),
-                      name: nameController.text.trim(),
-                      color: selectedColor,
-                      icon: 'folder',
-                      createdAt: DateTime.now(),
-                    );
-                    context.read<CategoryBloc>().add(AddCategory(newCategory));
-                  } else {
-                    // Update existing category
-                    final updatedCategory = category.copyWith(
-                      name: nameController.text.trim(),
-                      color: selectedColor,
-                    );
-                    context.read<CategoryBloc>().add(
-                      UpdateCategory(updatedCategory),
-                    );
-                  }
-                  Navigator.of(context).pop();
-                }
-              },
-              child: Text(category == null ? 'Add' : 'Update'),
-            ),
-          ],
         ),
       ),
     );
   }
 
   void _showDeleteConfirmation(Category category) {
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Category'),
-        content: Text(
-          'Are you sure you want to delete "${category.name}"? '
-          'This will remove the category from all associated tasks.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+      builder: (context) => Wrap(
+        children: [
+          ListTile(title: Text(AppLocalizations.of(context).deleteCategory)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              AppLocalizations.of(context).confirmDeleteCategory(category.name),
+            ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              context.read<CategoryBloc>().add(DeleteCategory(category.id));
-              Navigator.of(context).pop();
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Delete'),
+          OverflowBar(
+            children: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(AppLocalizations.of(context).cancelButton),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  context.read<CategoryBloc>().add(DeleteCategory(category.id));
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                child: Text(AppLocalizations.of(context).deleteButton),
+              ),
+            ],
           ),
         ],
       ),

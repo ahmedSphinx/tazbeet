@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tazbeet/l10n/generated/app_localizations.dart';
 import '../../services/pomodoro_service.dart';
 
 class PomodoroScreen extends StatefulWidget {
@@ -9,7 +10,8 @@ class PomodoroScreen extends StatefulWidget {
   State<PomodoroScreen> createState() => _PomodoroScreenState();
 }
 
-class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStateMixin {
+class _PomodoroScreenState extends State<PomodoroScreen>
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
 
@@ -36,7 +38,6 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
     return ChangeNotifierProvider(
       create: (context) => PomodoroTimer(),
       child: Scaffold(
-        
         body: Consumer<PomodoroTimer>(
           builder: (context, timer, child) {
             return Container(
@@ -88,33 +89,33 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
         Text(
           timer.currentStateLabel,
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w300,
-              ),
+            color: Colors.white,
+            fontWeight: FontWeight.w300,
+          ),
         ),
         const SizedBox(height: 16),
         AnimatedBuilder(
           animation: _scaleAnimation,
           builder: (context, child) {
             return Transform.scale(
-              scale: timer.isRunning ? _scaleAnimation.value : 1.0,
+              scale: timer.isRunning ? _scaleAnimation.value : 1.2,
               child: Container(
                 padding: const EdgeInsets.all(32),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white.withValues(alpha: 0.2),
                   border: Border.all(
-                    color: Colors.white.withValues(alpha:0.3),
+                    color: Colors.white.withValues(alpha: 0.3),
                     width: 2,
                   ),
                 ),
                 child: Text(
                   '${timer.remainingMinutes.toString().padLeft(2, '0')}:${timer.remainingSecondsInMinute.toString().padLeft(2, '0')}',
                   style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontFeatures: [const FontFeature.tabularFigures()],
-                      ),
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontFeatures: [const FontFeature.tabularFigures()],
+                  ),
                 ),
               ),
             );
@@ -122,10 +123,10 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
         ),
         const SizedBox(height: 16),
         Text(
-          'Next: ${timer.nextStateLabel}',
+          '${AppLocalizations.of(context).next}: ${timer.nextStateLabel}',
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: Colors.white.withValues(alpha:0.8),
-              ),
+            color: Colors.white.withValues(alpha: 0.8),
+          ),
         ),
       ],
     );
@@ -138,7 +139,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
           height: 8,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
-            color: Colors.white.withValues(alpha:0.3),
+            color: Colors.white.withValues(alpha: 0.3),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(4),
@@ -146,7 +147,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
               value: timer.progress,
               backgroundColor: Colors.transparent,
               valueColor: AlwaysStoppedAnimation<Color>(
-                Colors.white.withValues(alpha:0.8),
+                Colors.white.withValues(alpha: 0.8),
               ),
             ),
           ),
@@ -164,7 +165,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
                 shape: BoxShape.circle,
                 color: index < timer.completedSessions % 4
                     ? Colors.white
-                    : Colors.white.withValues(alpha:0.3),
+                    : Colors.white.withValues(alpha: 0.3),
               ),
             ),
           ),
@@ -179,7 +180,9 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
       children: [
         _buildControlButton(
           icon: timer.isRunning ? Icons.pause : Icons.play_arrow,
-          label: timer.isRunning ? 'Pause' : 'Start',
+          label: timer.isRunning
+              ? AppLocalizations.of(context).pause
+              : AppLocalizations.of(context).start,
           onPressed: () {
             if (timer.isRunning) {
               timer.pause();
@@ -190,26 +193,26 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
             }
           },
           color: Colors.white,
-          backgroundColor: Colors.white.withValues(alpha:0.2),
+          backgroundColor: Colors.white.withValues(alpha: 0.2),
         ),
         const SizedBox(width: 24),
         _buildControlButton(
           icon: Icons.stop,
-          label: 'Stop',
+          label: AppLocalizations.of(context).stop,
           onPressed: () {
             timer.stop();
             _animationController.reverse();
           },
           color: Colors.white,
-          backgroundColor: Colors.red.withValues(alpha:0.3),
+          backgroundColor: Colors.red.withValues(alpha: 0.3),
         ),
         const SizedBox(width: 24),
         _buildControlButton(
           icon: Icons.skip_next,
-          label: 'Skip',
+          label: AppLocalizations.of(context).skip,
           onPressed: timer.skip,
           color: Colors.white,
-          backgroundColor: Colors.white.withValues(alpha:0.2),
+          backgroundColor: Colors.white.withValues(alpha: 0.2),
         ),
       ],
     );
@@ -239,9 +242,9 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
         const SizedBox(height: 8),
         Text(
           label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.white,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: Colors.white),
         ),
       ],
     );
@@ -251,37 +254,35 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha:0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Colors.white.withValues(alpha:0.2),
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
           Text(
-            'Session Stats',
+            AppLocalizations.of(context).statistics,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                ),
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildStatItem(
-                'Completed',
+                AppLocalizations.of(context).completedLabel,
                 '${timer.completedSessions}',
                 Icons.check_circle,
               ),
               _buildStatItem(
-                'Work Time',
+                AppLocalizations.of(context).workTime,
                 '${timer.getTotalWorkTime().inMinutes}m',
                 Icons.work,
               ),
               _buildStatItem(
-                'Break Time',
+                AppLocalizations.of(context).breakTime,
                 '${timer.getTotalBreakTime().inMinutes}m',
                 Icons.coffee,
               ),
@@ -295,20 +296,20 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
   Widget _buildStatItem(String label, String value, IconData icon) {
     return Column(
       children: [
-        Icon(icon, color: Colors.white.withValues(alpha:0.8), size: 24),
+        Icon(icon, color: Colors.white.withValues(alpha: 0.8), size: 24),
         const SizedBox(height: 4),
         Text(
           value,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         Text(
           label,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.white.withValues(alpha:0.7),
-              ),
+            color: Colors.white.withValues(alpha: 0.7),
+          ),
         ),
       ],
     );
@@ -317,31 +318,16 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
   List<Color> _getBackgroundColors(PomodoroState state) {
     switch (state) {
       case PomodoroState.work:
-        return [
-          const Color(0xFF667EEA),
-          const Color(0xFF764BA2),
-        ];
+        return [const Color(0xFF667EEA), const Color(0xFF764BA2)];
       case PomodoroState.shortBreak:
-        return [
-          const Color(0xFF11998E),
-          const Color(0xFF38EF7D),
-        ];
+        return [const Color(0xFF11998E), const Color(0xFF38EF7D)];
       case PomodoroState.longBreak:
-        return [
-          const Color(0xFF667EEA),
-          const Color(0xFF764BA2),
-        ];
+        return [const Color(0xFF667EEA), const Color(0xFF764BA2)];
       case PomodoroState.paused:
-        return [
-          const Color(0xFF2C3E50),
-          const Color(0xFF34495E),
-        ];
+        return [const Color(0xFF2C3E50), const Color(0xFF34495E)];
       case PomodoroState.idle:
       default:
-        return [
-          const Color(0xFF667EEA),
-          const Color(0xFF764BA2),
-        ];
+        return [const Color(0xFF667EEA), const Color(0xFF764BA2)];
     }
   }
 }

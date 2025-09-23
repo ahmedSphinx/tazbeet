@@ -24,9 +24,6 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mood History'),
-      ),
       body: BlocBuilder<MoodBloc, MoodState>(
         builder: (context, state) {
           if (state is MoodLoading) {
@@ -65,7 +62,9 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
             'Start logging your moods to see your history',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
         ],
@@ -112,7 +111,8 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
                               ),
                             ],
                           ),
-                          if (moods[index].note != null && moods[index].note!.isNotEmpty) ...[
+                          if (moods[index].note != null &&
+                              moods[index].note!.isNotEmpty) ...[
                             const SizedBox(height: 8),
                             Text(
                               moods[index].note!,
@@ -124,11 +124,20 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               children: [
-                                _buildMetricChip('Energy', moods[index].energyLevel),
+                                _buildMetricChip(
+                                  'Energy',
+                                  moods[index].energyLevel,
+                                ),
                                 const SizedBox(width: 8),
-                                _buildMetricChip('Focus', moods[index].focusLevel),
+                                _buildMetricChip(
+                                  'Focus',
+                                  moods[index].focusLevel,
+                                ),
                                 const SizedBox(width: 8),
-                                _buildMetricChip('Stress', moods[index].stressLevel),
+                                _buildMetricChip(
+                                  'Stress',
+                                  moods[index].stressLevel,
+                                ),
                               ],
                             ),
                           ),

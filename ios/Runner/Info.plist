@@ -53,10 +53,38 @@
 	</array>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>com.tazbeet.taskReminder</string>
-		<string>com.tazbeet.pomodoroTimer</string>
+	<string>com.company.tazbeet.taskReminder</string>
+		<string>com.company.tazbeet.pomodoroTimer</string>
 	</array>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>This app needs notification permissions to remind you of tasks and Pomodoro sessions.</string>
+
+	<!-- Facebook App Configuration -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>1532810721494581</string>
+			</array>
+		</dict>
+	</array>
+
+	<key>FacebookAppID</key>
+	<string>1532810721494581</string>
+
+	<key>FacebookClientToken</key>
+	<string>7b6fef228ec0552b1c4179b37e6f67cd</string>
+
+	<key>FacebookDisplayName</key>
+	<string>Tazbeet</string>
+
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
 </dict>
 </plist>

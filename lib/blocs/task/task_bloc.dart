@@ -4,6 +4,7 @@ import '../../models/task.dart';
 import '../../repositories/task_repository.dart';
 import '../../services/notification_service.dart';
 import '../../services/data_sync_service.dart';
+import '../../services/task_sound_service.dart';
 import 'task_event.dart';
 import 'task_state.dart';
 
@@ -11,8 +12,10 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   final TaskRepository taskRepository;
   final NotificationService notificationService;
   final DataSyncService _dataSyncService = DataSyncService();
+  final TaskSoundService _taskSoundService = TaskSoundService();
 
-  TaskBloc({required this.taskRepository, required this.notificationService}) : super(TaskInitial()) {
+  TaskBloc({required this.taskRepository, required this.notificationService})
+    : super(TaskInitial()) {
     on<LoadTasks>(_onLoadTasks);
     on<AddTask>(_onAddTask);
     on<UpdateTask>(_onUpdateTask);
@@ -75,8 +78,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
   Future<void> _onDeleteTask(DeleteTask event, Emitter<TaskState> emit) async {
     if (state is TaskLoaded) {
-      final List<Task> updatedTasks = (state as TaskLoaded)
-          .tasks
+      final List<Task> updatedTasks = (state as TaskLoaded).tasks
           .where((task) => task.id != event.taskId)
           .toList();
       emit(TaskLoaded(updatedTasks));
@@ -96,7 +98,9 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   }
 
   Future<void> _onToggleTaskCompletion(
-      ToggleTaskCompletion event, Emitter<TaskState> emit) async {
+    ToggleTaskCompletion event,
+    Emitter<TaskState> emit,
+  ) async {
     if (state is TaskLoaded) {
       final List<Task> updatedTasks = (state as TaskLoaded).tasks.map((task) {
         if (task.id == event.taskId) {
@@ -105,9 +109,15 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         return task;
       }).toList();
       emit(TaskLoaded(updatedTasks));
-      final toggledTask =
-          updatedTasks.firstWhere((task) => task.id == event.taskId);
+      final toggledTask = updatedTasks.firstWhere(
+        (task) => task.id == event.taskId,
+      );
       await taskRepository.updateTask(toggledTask);
+
+      // Play completion sound if task was just completed (not uncompleted)
+      if (toggledTask.isCompleted) {
+        await _taskSoundService.playTaskCompletionSound();
+      }
 
       // Sync to Firestore if user is signed in
       final user = FirebaseAuth.instance.currentUser;
@@ -123,12 +133,16 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   }
 
   Future<void> _onScheduleTaskReminder(
-      ScheduleTaskReminder event, Emitter<TaskState> emit) async {
+    ScheduleTaskReminder event,
+    Emitter<TaskState> emit,
+  ) async {
     await notificationService.scheduleTaskReminder(event.task);
   }
 
   Future<void> _onCancelTaskReminder(
-      CancelTaskReminder event, Emitter<TaskState> emit) async {
+    CancelTaskReminder event,
+    Emitter<TaskState> emit,
+  ) async {
     await notificationService.cancelTaskReminder(event.taskId);
   }
 }

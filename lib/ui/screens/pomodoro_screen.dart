@@ -5,7 +5,6 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/services.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
 
 import '../../services/pomodoro_service.dart';
@@ -15,7 +14,6 @@ import '../../repositories/category_repository.dart';
 import '../../services/notification_service.dart';
 import '../../blocs/task_list/task_list_bloc.dart';
 import '../../blocs/task_list/task_list_event.dart';
-import '../../blocs/task_list/task_list_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PomodoroScreen extends StatefulWidget {
@@ -89,9 +87,9 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Customize Pomodoro Session', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.customizePomodoroSession, /* 'Customize Pomodoro Session' */ style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 24),
-            Text('Work Duration: $_workDuration minutes', style: Theme.of(context).textTheme.titleMedium),
+            Text(AppLocalizations.of(context)!.workDurationLabel, /* 'Work Duration: $_workDuration minutes' */ style: Theme.of(context).textTheme.titleMedium),
             Slider(
               value: _workDuration.toDouble(),
               min: 15,
@@ -105,7 +103,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
               },
             ),
             const SizedBox(height: 16),
-            Text('Short Break: $_breakDuration minutes', style: Theme.of(context).textTheme.titleMedium),
+            Text(AppLocalizations.of(context)!.shortBreakLabel, /* 'Short Break: $_breakDuration minutes', */ style: Theme.of(context).textTheme.titleMedium),
             Slider(
               value: _breakDuration.toDouble(),
               min: 3,
@@ -119,7 +117,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
               },
             ),
             const SizedBox(height: 16),
-            Text('Long Break: $_longBreakDuration minutes', style: Theme.of(context).textTheme.titleMedium),
+            Text(AppLocalizations.of(context)!.longBreakLabel, /* 'Long Break: $_longBreakDuration minutes' */ style: Theme.of(context).textTheme.titleMedium),
             Slider(
               value: _longBreakDuration.toDouble(),
               min: 10,
@@ -136,7 +134,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
             Row(
               children: [
                 Expanded(
-                  child: OutlinedButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+                  child: OutlinedButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancelButton)),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -145,7 +143,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
                       Navigator.pop(context);
                       setState(() => _showCustomization = false);
                     },
-                    child: const Text('Start Session'),
+                    child: Text(AppLocalizations.of(context)!.startSession),
                   ),
                 ),
               ],
@@ -166,20 +164,22 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
             Icon(Icons.timer, size: 80, color: Colors.white),
             const SizedBox(height: 24),
             Text(
-              'Pomodoro Focus',
+              AppLocalizations.of(context)!.pomodoroFocus,
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             Text(
-              'Choose a task to focus on and customize your session',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white.withValues(alpha: 0.8)),
+              AppLocalizations.of(context)!.pomodoroDescription,
+              /*               'Choose a task to focus on and customize your session',
+ */
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white.withOpacity(0.8)),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () => _showCustomizationSheet(context),
               style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16), backgroundColor: Colors.white, foregroundColor: Theme.of(context).primaryColor),
-              child: const Text('Start Pomodoro Session'),
+              child: Text(AppLocalizations.of(context)!.startSession /* 'Start Pomodoro Session' */),
             ),
           ],
         ),
@@ -196,7 +196,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
           if (timer.selectedTask != null) ...[
             Container(
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
               child: Row(
                 children: [
                   Icon(Icons.task, color: Colors.white),
@@ -223,7 +223,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
                     maximum: math.max((timer.remainingMinutes * 60 + timer.remainingSecondsInMinute).toDouble(), 1.0),
                     showLabels: false,
                     showTicks: false,
-                    axisLineStyle: AxisLineStyle(thickness: 20, color: Colors.white.withValues(alpha: 0.2)),
+                    axisLineStyle: AxisLineStyle(thickness: 20, color: Colors.white.withOpacity(0.2)),
                     pointers: <GaugePointer>[
                       RangePointer(value: (timer.remainingMinutes * 60 + timer.remainingSecondsInMinute).toDouble(), width: 20, color: Colors.white, enableAnimation: true, animationDuration: 1000),
                     ],
@@ -237,7 +237,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
                               style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 8),
-                            Text(timer.currentStateLabel, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white.withValues(alpha: 0.8))),
+                            Text(timer.currentStateLabel, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white.withOpacity(0.8))),
                           ],
                         ),
                         angle: 90,
@@ -253,12 +253,12 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
           // Progress indicator
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
             child: Column(
               children: [
-                Text('Session Progress', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
+                Text(AppLocalizations.of(context)!.sessionProgress, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
                 const SizedBox(height: 8),
-                LinearProgressIndicator(value: timer.progress, backgroundColor: Colors.white.withValues(alpha: 0.3), valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
+                LinearProgressIndicator(value: timer.progress, backgroundColor: Colors.white.withOpacity(0.3), valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
               ],
             ),
           ),
@@ -271,7 +271,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
             children: [
               _buildControlButton(
                 icon: timer.isRunning ? Icons.pause : Icons.play_arrow,
-                label: timer.isRunning ? 'Pause' : 'Start',
+                label: timer.isRunning ? AppLocalizations.of(context)!.pause : AppLocalizations.of(context)!.start,
                 onPressed: () {
                   if (timer.isRunning) {
                     timer.pause();
@@ -285,16 +285,16 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
               const SizedBox(width: 24),
               _buildControlButton(
                 icon: Icons.stop,
-                label: 'Stop',
+                label: AppLocalizations.of(context)!.stop,
                 onPressed: () {
                   timer.stop();
                   _animationController.reverse();
                   setState(() => _showCustomization = true);
                 },
-                backgroundColor: Colors.red.withValues(alpha: 0.3),
+                backgroundColor: Colors.red.withOpacity(0.3),
               ),
               const SizedBox(width: 24),
-              _buildControlButton(icon: Icons.skip_next, label: 'Skip', onPressed: timer.skip),
+              _buildControlButton(icon: Icons.skip_next, label: AppLocalizations.of(context)!.skip, onPressed: timer.skip),
             ],
           ),
 
@@ -314,12 +314,6 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
       child: ChangeNotifierProvider(
         create: (context) => PomodoroTimer(taskRepository: TaskRepository()),
         child: Scaffold(
-          appBar: AppBar(
-            title: Text(widget.initialTask == null ? AppLocalizations.of(context)!.pomodoroSection : widget.initialTask!.title),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            actions: [IconButton(icon: const Icon(Icons.settings), onPressed: () => _showCustomizationSheet(context), tooltip: 'Customize Session')],
-          ),
           body: Stack(
             children: [
               Consumer<PomodoroTimer>(
@@ -361,9 +355,9 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.1),
+        color: Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+        border: Border.all(color: Colors.white.withOpacity(0.2)),
       ),
       child: Column(
         children: [
@@ -388,13 +382,13 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
   Widget _buildStatItem(String label, String value, IconData icon) {
     return Column(
       children: [
-        Icon(icon, color: Colors.white.withValues(alpha: 0.8), size: 24),
+        Icon(icon, color: Colors.white.withOpacity(0.8), size: 24),
         const SizedBox(height: 4),
         Text(
           value,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        Text(label, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white.withValues(alpha: 0.7))),
+        Text(label, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white.withOpacity(0.7))),
       ],
     );
   }
@@ -405,7 +399,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
         Container(
           width: 64,
           height: 64,
-          decoration: BoxDecoration(shape: BoxShape.circle, color: backgroundColor ?? Colors.white.withValues(alpha: 0.2)),
+          decoration: BoxDecoration(shape: BoxShape.circle, color: backgroundColor ?? Colors.white.withOpacity(0.2)),
           child: IconButton(
             icon: Icon(icon, color: Colors.white),
             onPressed: onPressed,

@@ -117,9 +117,7 @@ class DataSyncService {
         subtasks: [], // Will be populated separately by subtask sync
         maxSubtaskDepth: data['maxSubtaskDepth'] ?? 3,
         strictCompletionMode: data['strictCompletionMode'] ?? true,
-        reminderIntervals: data['reminderIntervals'] is List
-            ? List<int>.from(data['reminderIntervals'])
-            : [30, 60],
+        reminderIntervals: data['reminderIntervals'] is List ? List<int>.from(data['reminderIntervals']) : [30, 60],
         repeatRule: data['repeatRule'] != null ? RepeatRule.fromJson(data['repeatRule']) : null,
         isRecurringInstance: data['isRecurringInstance'] ?? false,
         originalTaskId: data['originalTaskId'],
@@ -202,12 +200,25 @@ class DataSyncService {
   Future<void> _syncTasksToFirestore(String userId) async {
     dev.log('Syncing tasks to Firestore', name: 'DataSyncService');
 
-    final tasks = await _taskRepository.getAllTasks();
+    final localTasks = await _taskRepository.getAllTasks();
+    final localTaskIds = localTasks.map((task) => task.id).toSet();
 
     final batch = _firestore!.batch();
     final tasksRef = _firestore.collection('users').doc(userId).collection('tasks');
 
-    for (final task in tasks) {
+    // Get all tasks currently in Firestore
+    final firestoreSnapshot = await tasksRef.get();
+    final firestoreTaskIds = firestoreSnapshot.docs.map((doc) => doc.id).toSet();
+
+    // Delete tasks from Firestore that don't exist locally (handles deletions)
+    final tasksToDelete = firestoreTaskIds.difference(localTaskIds);
+    for (final taskId in tasksToDelete) {
+      batch.delete(tasksRef.doc(taskId));
+      dev.log('Deleting task $taskId from Firestore', name: 'DataSyncService');
+    }
+
+    // Add/update tasks that exist locally
+    for (final task in localTasks) {
       final taskRef = tasksRef.doc(task.id);
       batch.set(taskRef, {
         'title': task.title,
@@ -235,30 +246,37 @@ class DataSyncService {
     }
 
     await batch.commit();
-    dev.log('Synced ${tasks.length} tasks to Firestore', name: 'DataSyncService');
+    dev.log('Synced ${localTasks.length} tasks to Firestore, deleted ${tasksToDelete.length} tasks', name: 'DataSyncService');
   }
 
   Future<void> _syncCategoriesToFirestore(String userId) async {
     dev.log('Syncing categories to Firestore', name: 'DataSyncService');
 
-    final categoryBox = await Hive.openBox<Category>('categories');
-    final categories = categoryBox.values.toList();
+    final localCategories = await _categoryRepository.getAllCategories();
+    final localCategoryIds = localCategories.map((category) => category.id).toSet();
 
     final batch = _firestore!.batch();
     final categoriesRef = _firestore.collection('users').doc(userId).collection('categories');
 
-    for (final category in categories) {
+    // Get all categories currently in Firestore
+    final firestoreSnapshot = await categoriesRef.get();
+    final firestoreCategoryIds = firestoreSnapshot.docs.map((doc) => doc.id).toSet();
+
+    // Delete categories from Firestore that don't exist locally (handles deletions)
+    final categoriesToDelete = firestoreCategoryIds.difference(localCategoryIds);
+    for (final categoryId in categoriesToDelete) {
+      batch.delete(categoriesRef.doc(categoryId));
+      dev.log('Deleting category $categoryId from Firestore', name: 'DataSyncService');
+    }
+
+    // Add/update categories that exist locally
+    for (final category in localCategories) {
       final categoryRef = categoriesRef.doc(category.id);
-      batch.set(categoryRef, {
-        'name': category.name,
-        'color': category.color.value,
-        'icon': category.icon,
-        'createdAt': category.createdAt.toIso8601String(),
-      });
+      batch.set(categoryRef, {'name': category.name, 'color': category.color.value, 'icon': category.icon, 'createdAt': category.createdAt.toIso8601String()});
     }
 
     await batch.commit();
-    dev.log('Synced ${categories.length} categories to Firestore', name: 'DataSyncService');
+    dev.log('Synced ${localCategories.length} categories to Firestore, deleted ${categoriesToDelete.length} categories', name: 'DataSyncService');
   }
 
   Future<void> _syncMoodsToFirestore(String userId) async {
@@ -271,13 +289,7 @@ class DataSyncService {
 
     for (final mood in moods) {
       final moodRef = moodsRef.doc(mood.id);
-      batch.set(moodRef, {
-        'level': mood.level.index,
-        'note': mood.note,
-        'date': mood.date.toIso8601String(),
-        'createdAt': mood.createdAt.toIso8601String(),
-        'updatedAt': mood.updatedAt.toIso8601String(),
-      });
+      batch.set(moodRef, {'level': mood.level.index, 'note': mood.note, 'date': mood.date.toIso8601String(), 'createdAt': mood.createdAt.toIso8601String(), 'updatedAt': mood.updatedAt.toIso8601String()});
     }
 
     await batch.commit();
@@ -328,12 +340,7 @@ class DataSyncService {
   }
 
   Future<void> _syncTaskSubtasksFromFirestore(String userId, Task parentTask) async {
-    final subtasksRef = _firestore!
-        .collection('users')
-        .doc(userId)
-        .collection('tasks')
-        .doc(parentTask.id)
-        .collection('subtasks');
+    final subtasksRef = _firestore!.collection('users').doc(userId).collection('tasks').doc(parentTask.id).collection('subtasks');
 
     final snapshot = await subtasksRef.get();
 
@@ -377,12 +384,7 @@ class DataSyncService {
 
   Future<void> _syncTaskSubtasksToFirestore(String userId, Task parentTask) async {
     final batch = _firestore!.batch();
-    final subtasksRef = _firestore!
-        .collection('users')
-        .doc(userId)
-        .collection('tasks')
-        .doc(parentTask.id)
-        .collection('subtasks');
+    final subtasksRef = _firestore.collection('users').doc(userId).collection('tasks').doc(parentTask.id).collection('subtasks');
 
     // Clear existing subtasks
     final existingSubtasks = await subtasksRef.get();

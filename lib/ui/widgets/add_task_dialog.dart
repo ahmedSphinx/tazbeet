@@ -211,6 +211,9 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
       updatedAt: DateTime.now(),
     );
     widget.onTaskAdded(task);
+    if (!widget.isSubtask) {
+      Navigator.of(context).pop();
+    }
   }
 
   String _getPriorityLabel(TaskPriority priority, BuildContext context) {

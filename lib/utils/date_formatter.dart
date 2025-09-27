@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tazbeet/l10n/app_localizations.dart';
 
 class DateFormatter {
   static final DateFormat _dateFormat = DateFormat('MMM dd, yyyy');
@@ -6,7 +8,7 @@ class DateFormatter {
   static final DateFormat _dateTimeFormat = DateFormat('MMM dd, yyyy HH:mm');
 
   /// Formats a date to a user-friendly string
-  static String formatDate(DateTime date) {
+  static String formatDate(DateTime date, BuildContext context) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final tomorrow = today.add(const Duration(days: 1));
@@ -14,11 +16,11 @@ class DateFormatter {
     final dateOnly = DateTime(date.year, date.month, date.day);
 
     if (dateOnly == today) {
-      return 'Today';
+      return AppLocalizations.of(context)!.today;
     } else if (dateOnly == tomorrow) {
-      return 'Tomorrow';
+      return AppLocalizations.of(context)!.tomorrow;
     } else if (dateOnly == yesterday) {
-      return 'Yesterday';
+      return AppLocalizations.of(context)!.yesterday;
     } else {
       return _dateFormat.format(date);
     }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../models/task.dart';
@@ -18,8 +20,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
   final TaskSoundService _taskSoundService = TaskSoundService();
   final RepeatService _repeatService = RepeatService();
 
-  TaskListBloc({required this.taskRepository, required this.categoryRepository, required this.notificationService})
-    : super(TaskListInitial()) {
+  TaskListBloc({required this.taskRepository, required this.categoryRepository, required this.notificationService}) : super(TaskListInitial()) {
     on<LoadTasks>(_onLoadTasks);
     on<AddTask>(_onAddTask);
     on<UpdateTask>(_onUpdateTask);
@@ -51,8 +52,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
 
   Future<void> _onAddTask(AddTask event, Emitter<TaskListState> emit) async {
     if (state is TaskListLoaded) {
-      final List<Task> updatedTasks = List.from((state as TaskListLoaded).tasks)
-        ..add(event.task);
+      final List<Task> updatedTasks = List.from((state as TaskListLoaded).tasks)..add(event.task);
       emit(TaskListLoaded(updatedTasks));
       await taskRepository.addTask(event.task);
 
@@ -66,7 +66,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
           // Log error but don't fail the operation
-          print('Failed to sync task addition to Firestore: $e');
+          log('Failed to sync task addition to Firestore: $e');
         }
       }
     }
@@ -90,7 +90,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
           // Log error but don't fail the operation
-          print('Failed to sync task update to Firestore: $e');
+          log('Failed to sync task update to Firestore: $e');
         }
       }
     }
@@ -98,9 +98,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
 
   Future<void> _onDeleteTask(DeleteTask event, Emitter<TaskListState> emit) async {
     if (state is TaskListLoaded) {
-      final List<Task> updatedTasks = (state as TaskListLoaded).tasks
-          .where((task) => task.id != event.taskId)
-          .toList();
+      final List<Task> updatedTasks = (state as TaskListLoaded).tasks.where((task) => task.id != event.taskId).toList();
       emit(TaskListLoaded(updatedTasks));
       await taskRepository.deleteTask(event.taskId);
 
@@ -114,16 +112,13 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
           // Log error but don't fail the operation
-          print('Failed to sync task deletion to Firestore: $e');
+          log('Failed to sync task deletion to Firestore: $e');
         }
       }
     }
   }
 
-  Future<void> _onToggleTaskCompletion(
-    ToggleTaskCompletion event,
-    Emitter<TaskListState> emit,
-  ) async {
+  Future<void> _onToggleTaskCompletion(ToggleTaskCompletion event, Emitter<TaskListState> emit) async {
     if (state is TaskListLoaded) {
       final List<Task> updatedTasks = (state as TaskListLoaded).tasks.map((task) {
         if (task.id == event.taskId) {
@@ -132,9 +127,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
         return task;
       }).toList();
       emit(TaskListLoaded(updatedTasks));
-      final toggledTask = updatedTasks.firstWhere(
-        (task) => task.id == event.taskId,
-      );
+      final toggledTask = updatedTasks.firstWhere((task) => task.id == event.taskId);
       await taskRepository.updateTask(toggledTask);
 
       // Play completion sound if task was just completed (not uncompleted)
@@ -149,23 +142,17 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
           // Log error but don't fail the operation
-          print('Failed to sync task completion toggle to Firestore: $e');
+          log('Failed to sync task completion toggle to Firestore: $e');
         }
       }
     }
   }
 
-  Future<void> _onScheduleTaskReminder(
-    ScheduleTaskReminder event,
-    Emitter<TaskListState> emit,
-  ) async {
+  Future<void> _onScheduleTaskReminder(ScheduleTaskReminder event, Emitter<TaskListState> emit) async {
     await notificationService.scheduleTaskReminder(event.task);
   }
 
-  Future<void> _onCancelTaskReminder(
-    CancelTaskReminder event,
-    Emitter<TaskListState> emit,
-  ) async {
+  Future<void> _onCancelTaskReminder(CancelTaskReminder event, Emitter<TaskListState> emit) async {
     await notificationService.cancelTaskReminder(event.taskId);
   }
 
@@ -174,10 +161,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     if (state is TaskListLoaded) {
       final List<Task> updatedTasks = (state as TaskListLoaded).tasks.map((task) {
         if (task.id == event.taskId) {
-          return task.copyWith(
-            repeatRule: event.repeatRule,
-            updatedAt: DateTime.now(),
-          );
+          return task.copyWith(repeatRule: event.repeatRule, updatedAt: DateTime.now());
         }
         return task;
       }).toList();
@@ -192,7 +176,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          print('Failed to sync repeat rule addition to Firestore: $e');
+          log('Failed to sync repeat rule addition to Firestore: $e');
         }
       }
     }
@@ -202,10 +186,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     if (state is TaskListLoaded) {
       final List<Task> updatedTasks = (state as TaskListLoaded).tasks.map((task) {
         if (task.id == event.taskId) {
-          return task.copyWith(
-            repeatRule: event.repeatRule,
-            updatedAt: DateTime.now(),
-          );
+          return task.copyWith(repeatRule: event.repeatRule, updatedAt: DateTime.now());
         }
         return task;
       }).toList();
@@ -220,7 +201,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          print('Failed to sync repeat rule update to Firestore: $e');
+          log('Failed to sync repeat rule update to Firestore: $e');
         }
       }
     }
@@ -230,10 +211,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     if (state is TaskListLoaded) {
       final List<Task> updatedTasks = (state as TaskListLoaded).tasks.map((task) {
         if (task.id == event.taskId) {
-          return task.copyWith(
-            repeatRule: null,
-            updatedAt: DateTime.now(),
-          );
+          return task.copyWith(repeatRule: null, updatedAt: DateTime.now());
         }
         return task;
       }).toList();
@@ -248,26 +226,20 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          print('Failed to sync repeat rule removal to Firestore: $e');
+          log('Failed to sync repeat rule removal to Firestore: $e');
         }
       }
     }
   }
 
-  Future<void> _onGenerateRecurringInstances(
-    GenerateRecurringInstances event,
-    Emitter<TaskListState> emit,
-  ) async {
+  Future<void> _onGenerateRecurringInstances(GenerateRecurringInstances event, Emitter<TaskListState> emit) async {
     if (state is TaskListLoaded) {
-      final originalTask = (state as TaskListLoaded).tasks.firstWhere(
-        (task) => task.id == event.taskId,
-      );
+      final originalTask = (state as TaskListLoaded).tasks.firstWhere((task) => task.id == event.taskId);
 
       if (originalTask.repeatRule != null) {
         final nextInstance = await _repeatService.generateNextRecurringTask(originalTask);
         if (nextInstance != null) {
-          final List<Task> updatedTasks = List.from((state as TaskListLoaded).tasks)
-            ..add(nextInstance);
+          final List<Task> updatedTasks = List.from((state as TaskListLoaded).tasks)..add(nextInstance);
           emit(TaskListLoaded(updatedTasks));
           await taskRepository.addTask(nextInstance);
 
@@ -277,7 +249,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
             try {
               await _dataSyncService.syncToFirestore(user.uid);
             } catch (e) {
-              print('Failed to sync recurring instance to Firestore: $e');
+              log('Failed to sync recurring instance to Firestore: $e');
             }
           }
         }
@@ -285,10 +257,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     }
   }
 
-  Future<void> _onProcessCompletedRecurringTask(
-    ProcessCompletedRecurringTask event,
-    Emitter<TaskListState> emit,
-  ) async {
+  Future<void> _onProcessCompletedRecurringTask(ProcessCompletedRecurringTask event, Emitter<TaskListState> emit) async {
     await _repeatService.processCompletedRecurringTask(event.task);
 
     // Reload tasks to reflect any new recurring instances

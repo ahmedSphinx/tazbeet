@@ -387,5 +387,16 @@
   "duplicateTask": "Dupliquer la Tâche",
   "subtaskTitle": "Titre de la Sous-tâche",
   "subtaskDescription": "Description (optionnel)",
-  "pleaseEnterSubtaskTitle": "Veuillez saisir un titre de sous-tâche"
+  "pleaseEnterSubtaskTitle": "Veuillez saisir un titre de sous-tâche",
+  "customizePomodoroSession": "Personnaliser la Session Pomodoro",
+  "workDurationLabel": "Durée de Travail",
+  "shortBreakLabel": "Pause Courte",
+  "longBreakLabel": "Pause Longue",
+  "startSession": "Démarrer la Session",
+  "pomodoroFocus": "Focus Pomodoro",
+  "pomodoroDescription": "Choisissez une tâche sur laquelle vous concentrer et personnalisez votre session",
+  "sessionProgress": "Progrès de la Session",
+  "settingsButton": "Paramètres",
+  "tomorrow": "Demain",
+  "yesterday": "Hier"
 }

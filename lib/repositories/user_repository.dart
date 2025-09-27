@@ -1,3 +1,5 @@
+import 'dart:developer' show log;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/user.dart';
@@ -36,7 +38,7 @@ class UserRepository {
       }
     } catch (e) {
       // If Firestore fails, return null or handle error
-      print('Error fetching user from Firestore: $e');
+      log('Error fetching user from Firestore: $e');
     }
 
     return null;
@@ -50,7 +52,7 @@ class UserRepository {
     try {
       await _firestore.collection('users').doc(user.id).set(user.toJson());
     } catch (e) {
-      print('Error saving user to Firestore: $e');
+      log('Error saving user to Firestore: $e');
       // Could throw or handle differently
     }
   }
@@ -68,7 +70,7 @@ class UserRepository {
     try {
       await _firestore.collection('users').doc(userId).delete();
     } catch (e) {
-      print('Error deleting user from Firestore: $e');
+      log('Error deleting user from Firestore: $e');
     }
   }
 }

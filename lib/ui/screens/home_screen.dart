@@ -8,6 +8,7 @@ import 'package:tazbeet/blocs/task_list/task_list_event.dart';
 import 'package:tazbeet/blocs/task_list/task_list_state.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
 import 'package:tazbeet/ui/screens/notifications_dashboard.dart';
+import 'package:tazbeet/ui/screens/recurring_tasks_screen.dart';
 import 'dart:async';
 
 import '../../blocs/category/category_bloc.dart';
@@ -203,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
           ? CustomSearchBar(controller: _searchController, onChanged: _onSearchChanged, hintText: AppLocalizations.of(context)!.searchHint)
           : Text(_getAppBarTitle(), style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
       actions: _buildAppBarActions(),
-      bottom: _selectedIndex == 3 ? _buildTabBar() : null,
+      bottom: _selectedIndex == 4 ? _buildTabBar() : null,
       elevation: 0,
       backgroundColor: Colors.transparent,
       flexibleSpace: Container(
@@ -219,13 +220,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
       case 0:
         return AppLocalizations.of(context)!.appTitle;
       case 1:
-        return AppLocalizations.of(context)!.allCategories;
+        return AppLocalizations.of(context)!.progressSaved;
       case 2:
         return AppLocalizations.of(context)!.pomodoroSection;
       case 3:
-        return AppLocalizations.of(context)!.progressSaved;
+        return AppLocalizations.of(context)!.allCategories;
       default:
-        return AppLocalizations.of(context)!.appTitle;
+        return AppLocalizations.of(context)!.moodTracking;
     }
   }
 
@@ -261,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
         IconButton(
           icon: const Icon(Icons.settings, color: Colors.white),
           onPressed: () {
-            // TODO: Open pomodoro settings
+            //    showCustomizationSheet(context) ;
           },
           tooltip: AppLocalizations.of(context)!.settingsScreenTitle,
         ),
@@ -272,9 +273,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
 
   PreferredSizeWidget _buildTabBar() {
     return TabBar(
+      indicatorColor: Colors.white,
+
       controller: _moodTabController,
       tabs: [
-        Tab(text: AppLocalizations.of(context)!.today, icon: const Icon(Icons.today)),
+        Tab(
+          text: AppLocalizations.of(context)!.today,
+          icon: const Icon(Icons.today, color: Colors.white),
+        ),
         Tab(text: AppLocalizations.of(context)!.history, icon: const Icon(Icons.history)),
         Tab(text: AppLocalizations.of(context)!.insights, icon: const Icon(Icons.insights)),
       ],
@@ -408,6 +414,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
           onTap: () {
             Navigator.pop(context);
             Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsScreen()));
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.replay),
+          title: Text(AppLocalizations.of(context)!.recurringTasksManager),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const RecurringTasksScreen()));
           },
         ),
         ListTile(

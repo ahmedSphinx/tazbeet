@@ -952,4 +952,37 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get pleaseEnterSubtaskTitle => 'يرجى إدخال عنوان المهمة الفرعية';
+
+  @override
+  String get customizePomodoroSession => 'تخصيص جلسة بومودورو';
+
+  @override
+  String get workDurationLabel => 'مدة العمل';
+
+  @override
+  String get shortBreakLabel => 'استراحة قصيرة';
+
+  @override
+  String get longBreakLabel => 'استراحة طويلة';
+
+  @override
+  String get startSession => 'بدء الجلسة';
+
+  @override
+  String get pomodoroFocus => 'تركيز بومودورو';
+
+  @override
+  String get pomodoroDescription => 'اختر مهمة للتركيز عليها وتخصيص جلستك';
+
+  @override
+  String get sessionProgress => 'تقدم الجلسة';
+
+  @override
+  String get settingsButton => 'الإعدادات';
+
+  @override
+  String get tomorrow => 'غداً';
+
+  @override
+  String get yesterday => 'أمس';
 }

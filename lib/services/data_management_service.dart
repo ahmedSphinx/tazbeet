@@ -6,10 +6,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../models/task.dart';
 import '../repositories/task_repository.dart';
-import '../repositories/category_repository.dart';
 class DataManagementService {
   final TaskRepository _taskRepository = TaskRepository();
-  final CategoryRepository _categoryRepository = CategoryRepository();
 
   Future<String> exportTasksToCSV() async {
     final tasks = await _taskRepository.getAllTasks();

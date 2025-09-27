@@ -7,8 +7,7 @@ class ProgressService {
     final dayEnd = dayStart.add(const Duration(days: 1));
 
     final dayTasks = tasks.where((task) {
-      return task.isCompleted != null &&
-          task.createdAt.isAfter(dayStart) &&
+      return task.createdAt.isAfter(dayStart) &&
           task.createdAt.isBefore(dayEnd);
     }).toList();
 
@@ -23,8 +22,7 @@ class ProgressService {
     final weekEnd = weekStart.add(const Duration(days: 7));
 
     final weekTasks = tasks.where((task) {
-      return task.isCompleted != null &&
-          task.createdAt.isAfter(weekStart) &&
+      return task.createdAt.isAfter(weekStart) &&
           task.createdAt.isBefore(weekEnd);
     }).toList();
 
@@ -43,8 +41,7 @@ class ProgressService {
     );
 
     final monthTasks = tasks.where((task) {
-      return task.isCompleted != null &&
-          task.createdAt.isAfter(monthStart) &&
+      return task.createdAt.isAfter(monthStart) &&
           task.createdAt.isBefore(monthEnd);
     }).toList();
 

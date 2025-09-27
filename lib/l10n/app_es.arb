@@ -527,5 +527,16 @@
   "refreshRecurringTasks": "Actualizar Tareas Recurrentes",
   "subtaskTitle": "Título de Subtarea",
   "subtaskDescription": "Descripción (opcional)",
-  "pleaseEnterSubtaskTitle": "Por favor ingresa un título de subtarea"
+  "pleaseEnterSubtaskTitle": "Por favor ingresa un título de subtarea",
+  "customizePomodoroSession": "Personalizar Sesión Pomodoro",
+  "workDurationLabel": "Duración del Trabajo",
+  "shortBreakLabel": "Descanso Corto",
+  "longBreakLabel": "Descanso Largo",
+  "startSession": "Iniciar Sesión",
+  "pomodoroFocus": "Enfoque Pomodoro",
+  "pomodoroDescription": "Elige una tarea en la que enfocarte y personaliza tu sesión",
+  "sessionProgress": "Progreso de la Sesión",
+  "settingsButton": "Configuración",
+  "tomorrow": "Mañana",
+  "yesterday": "Ayer"
 }

@@ -1952,6 +1952,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter a subtask title'**
   String get pleaseEnterSubtaskTitle;
+
+  /// No description provided for @customizePomodoroSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize Pomodoro Session'**
+  String get customizePomodoroSession;
+
+  /// No description provided for @workDurationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Duration'**
+  String get workDurationLabel;
+
+  /// No description provided for @shortBreakLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Short Break'**
+  String get shortBreakLabel;
+
+  /// No description provided for @longBreakLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Long Break'**
+  String get longBreakLabel;
+
+  /// No description provided for @startSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Session'**
+  String get startSession;
+
+  /// No description provided for @pomodoroFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro Focus'**
+  String get pomodoroFocus;
+
+  /// No description provided for @pomodoroDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a task to focus on and customize your session'**
+  String get pomodoroDescription;
+
+  /// No description provided for @sessionProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Session Progress'**
+  String get sessionProgress;
+
+  /// No description provided for @settingsButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsButton;
+
+  /// No description provided for @tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get tomorrow;
+
+  /// No description provided for @yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

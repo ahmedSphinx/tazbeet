@@ -388,5 +388,16 @@
   "refreshRecurringTasks": "Refresh Recurring Tasks",
   "subtaskTitle": "Subtask Title",
   "subtaskDescription": "Description (optional)",
-  "pleaseEnterSubtaskTitle": "Please enter a subtask title"
+  "pleaseEnterSubtaskTitle": "Please enter a subtask title",
+  "customizePomodoroSession": "Customize Pomodoro Session",
+  "workDurationLabel": "Work Duration",
+  "shortBreakLabel": "Short Break",
+  "longBreakLabel": "Long Break",
+  "startSession": "Start Session",
+  "pomodoroFocus": "Pomodoro Focus",
+  "pomodoroDescription": "Choose a task to focus on and customize your session",
+  "sessionProgress": "Session Progress",
+  "settingsButton": "Settings",
+  "tomorrow": "Tomorrow",
+  "yesterday": "Yesterday"
 }

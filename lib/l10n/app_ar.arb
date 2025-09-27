@@ -751,5 +751,16 @@
   "duplicateTask": "تكرار المهمة",
   "subtaskTitle": "عنوان المهمة الفرعية",
   "subtaskDescription": "الوصف (اختياري)",
-  "pleaseEnterSubtaskTitle": "يرجى إدخال عنوان المهمة الفرعية"
+  "pleaseEnterSubtaskTitle": "يرجى إدخال عنوان المهمة الفرعية",
+  "customizePomodoroSession": "تخصيص جلسة بومودورو",
+  "workDurationLabel": "مدة العمل",
+  "shortBreakLabel": "استراحة قصيرة",
+  "longBreakLabel": "استراحة طويلة",
+  "startSession": "بدء الجلسة",
+  "pomodoroFocus": "تركيز بومودورو",
+  "pomodoroDescription": "اختر مهمة للتركيز عليها وتخصيص جلستك",
+  "sessionProgress": "تقدم الجلسة",
+  "settingsButton": "الإعدادات",
+  "tomorrow": "غداً",
+  "yesterday": "أمس"
 }

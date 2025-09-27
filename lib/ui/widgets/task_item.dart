@@ -26,10 +26,14 @@ class TaskItem extends StatelessWidget {
     void count(Task t) {
       total++;
       if (t.isCompleted) completed++;
-      for (var s in t.subtasks) count(s);
+      for (var s in t.subtasks) {
+        count(s);
+      }
     }
 
-    for (var s in task.subtasks) count(s);
+    for (var s in task.subtasks) {
+      count(s);
+    }
     return total > 0 ? completed / total : 0.0;
   }
 
@@ -142,7 +146,7 @@ class TaskItem extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: AppSpacing.xs),
                   child: Text(
-                    DateFormatter.formatDate(task.dueDate!),
+                    DateFormatter.formatDate(task.dueDate!, context),
                     style: context.bodySmall.copyWith(
                       color: DateFormatter.isOverdue(task.dueDate!) ? AppColors.overdue : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.63),
                       fontWeight: DateFormatter.isOverdue(task.dueDate!) ? FontWeight.bold : FontWeight.normal,

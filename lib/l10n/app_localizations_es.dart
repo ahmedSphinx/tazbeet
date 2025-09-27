@@ -952,4 +952,37 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get pleaseEnterSubtaskTitle => 'Por favor ingresa un título de subtarea';
+
+  @override
+  String get customizePomodoroSession => 'Personalizar Sesión Pomodoro';
+
+  @override
+  String get workDurationLabel => 'Duración del Trabajo';
+
+  @override
+  String get shortBreakLabel => 'Descanso Corto';
+
+  @override
+  String get longBreakLabel => 'Descanso Largo';
+
+  @override
+  String get startSession => 'Iniciar Sesión';
+
+  @override
+  String get pomodoroFocus => 'Enfoque Pomodoro';
+
+  @override
+  String get pomodoroDescription => 'Elige una tarea en la que enfocarte y personaliza tu sesión';
+
+  @override
+  String get sessionProgress => 'Progreso de la Sesión';
+
+  @override
+  String get settingsButton => 'Configuración';
+
+  @override
+  String get tomorrow => 'Mañana';
+
+  @override
+  String get yesterday => 'Ayer';
 }

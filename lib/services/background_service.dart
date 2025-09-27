@@ -80,7 +80,7 @@ class BackgroundService {
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   wm.Workmanager().executeTask((task, inputData) async {
-    log('Native called background task: $task');
+    log('Native called background task: $task',name: 'BackgroundService');
 
     // Initialize Hive for background isolate
     await Hive.initFlutter();
@@ -128,7 +128,7 @@ extension BackgroundServicePrivate on BackgroundService {
         await _notificationService.showTaskDueNotification(task);
       }
     } catch (e) {
-      log('Error checking due tasks: $e');
+      log('Error checking due tasks: $e', name: 'BackgroundService');
     }
   }
 

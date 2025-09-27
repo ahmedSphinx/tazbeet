@@ -22,9 +22,17 @@ class UserRepository {
     try {
       final doc = await _firestore.collection('users').doc(userId).get();
       if (doc.exists) {
-        final user = User.fromJson(doc.data()!);
-        await _box.put(userId, user);
-        return user;
+        final data = doc.data();
+        if (data != null) {
+          // Convert Map<dynamic, dynamic> to Map<String, dynamic> safely
+          final Map<String, dynamic> convertedData = {};
+          data.forEach((key, value) {
+            convertedData[key.toString()] = value;
+          });
+          final user = User.fromJson(convertedData);
+          await _box.put(userId, user);
+          return user;
+        }
       }
     } catch (e) {
       // If Firestore fails, return null or handle error

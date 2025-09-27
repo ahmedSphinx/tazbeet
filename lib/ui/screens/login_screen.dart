@@ -6,7 +6,8 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:tazbeet/blocs/auth/auth_bloc.dart';
 import 'package:tazbeet/blocs/auth/auth_event.dart';
 import 'package:tazbeet/blocs/auth/auth_state.dart';
-import 'package:tazbeet/l10n/generated/app_localizations.dart';
+import 'package:tazbeet/l10n/app_localizations.dart';
+
 import 'package:tazbeet/ui/themes/app_themes.dart';
 import 'package:tazbeet/ui/screens/home_screen.dart';
 
@@ -17,8 +18,7 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen>
-    with SingleTickerProviderStateMixin {
+class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
@@ -27,22 +27,13 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 2000),
-      vsync: this,
-    );
+    _animationController = AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
-    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOut));
 
-    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.elasticOut),
-    );
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(CurvedAnimation(parent: _animationController, curve: Curves.elasticOut));
 
-    _slideAnimation = Tween<double>(begin: 50.0, end: 0.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic),
-    );
+    _slideAnimation = Tween<double>(begin: 50.0, end: 0.0).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic));
 
     _animationController.forward();
   }
@@ -64,17 +55,7 @@ class _LoginScreenState extends State<LoginScreen>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: isDark
-                ? [
-                    const Color(0xFF0F172A),
-                    const Color(0xFF1E293B),
-                    const Color(0xFF334155),
-                  ]
-                : [
-                    const Color(0xFFF8FAFC),
-                    const Color(0xFFE2E8F0),
-                    const Color(0xFFCBD5E1),
-                  ],
+            colors: isDark ? [const Color(0xFF0F172A), const Color(0xFF1E293B), const Color(0xFF334155)] : [const Color(0xFFF8FAFC), const Color(0xFFE2E8F0), const Color(0xFFCBD5E1)],
           ),
         ),
         child: BlocBuilder<AuthBloc, AuthState>(
@@ -84,10 +65,7 @@ class _LoginScreenState extends State<LoginScreen>
             // Handle successful authentication
             if (state is AuthAuthenticated) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  (Route<dynamic> route) => false,
-                );
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const HomeScreen()), (Route<dynamic> route) => false);
               });
               return _buildLoadingScreen(context);
             }
@@ -111,11 +89,7 @@ class _LoginScreenState extends State<LoginScreen>
 
   Widget _buildLoadingScreen(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        gradient: AppThemes.getPrimaryGradient(
-          Theme.of(context).brightness == Brightness.dark,
-        ),
-      ),
+      decoration: BoxDecoration(gradient: AppThemes.getPrimaryGradient(Theme.of(context).brightness == Brightness.dark)),
       child: Center(
         child: AnimationConfiguration.staggeredList(
           position: 0,
@@ -131,42 +105,18 @@ class _LoginScreenState extends State<LoginScreen>
                     height: 80,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      gradient: AppThemes.getAccentGradient(
-                        Theme.of(context).brightness == Brightness.dark,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.primary.withValues(alpha: 0.3),
-                          blurRadius: 20,
-                          spreadRadius: 5,
-                        ),
-                      ],
+                      gradient: AppThemes.getAccentGradient(Theme.of(context).brightness == Brightness.dark),
+                      boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3), blurRadius: 20, spreadRadius: 5)],
                     ),
-                    child: const Icon(
-                      Icons.task_alt,
-                      size: 40,
-                      color: Colors.white,
-                    ),
+                    child: const Icon(Icons.task_alt, size: 40, color: Colors.white),
                   ),
                   const SizedBox(height: 24),
                   Text(
                     'Signing you in..',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(height: 32),
-                  SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      strokeWidth: 3,
-                    ),
-                  ),
+                  SizedBox(width: 40, height: 40, child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white), strokeWidth: 3)),
                 ],
               ),
             ),
@@ -181,11 +131,7 @@ class _LoginScreenState extends State<LoginScreen>
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight:
-                MediaQuery.of(context).size.height -
-                MediaQuery.of(context).padding.top,
-          ),
+          constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
@@ -204,23 +150,11 @@ class _LoginScreenState extends State<LoginScreen>
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           gradient: AppThemes.getPrimaryGradient(isDark),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.primary.withValues(alpha: 0.3),
-                              blurRadius: 25,
-                              spreadRadius: 5,
-                            ),
-                          ],
+                          boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3), blurRadius: 25, spreadRadius: 5)],
                         ),
                         child: ScaleTransition(
                           scale: _scaleAnimation,
-                          child: const Icon(
-                            Icons.task_alt,
-                            size: 60,
-                            color: Colors.white,
-                          ),
+                          child: const Icon(Icons.task_alt, size: 60, color: Colors.white),
                         ),
                       ),
                     ),
@@ -238,52 +172,23 @@ class _LoginScreenState extends State<LoginScreen>
                       child: Column(
                         children: [
                           Text(
-                            AppLocalizations.of(context).appTitle,
-                            style: Theme.of(context).textTheme.displaySmall
-                                ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  foreground: Paint()
-                                    ..shader =
-                                        AppThemes.getPrimaryGradient(
-                                          isDark,
-                                        ).createShader(
-                                          const Rect.fromLTWH(
-                                            0.0,
-                                            0.0,
-                                            200.0,
-                                            70.0,
-                                          ),
-                                        ),
-                                ),
+                            AppLocalizations.of(context)!.appTitle,
+                            style: Theme.of(
+                              context,
+                            ).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold, foreground: Paint()..shader = AppThemes.getPrimaryGradient(isDark).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0))),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 16),
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 8,
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                             decoration: BoxDecoration(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.primary.withValues(alpha: 0.1),
+                              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.primary.withValues(alpha: 0.2),
-                                width: 1,
-                              ),
+                              border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2), width: 1),
                             ),
                             child: Text(
                               'Your Personal Task Manager',
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500),
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -301,15 +206,7 @@ class _LoginScreenState extends State<LoginScreen>
                   child: SlideAnimation(
                     verticalOffset: 30.0,
                     child: FadeInAnimation(
-                      child: Column(
-                        children: [
-                          _buildGoogleSignInButton(context),
-                          const SizedBox(height: 16),
-                          _buildDivider(context),
-                          const SizedBox(height: 16),
-                          _buildFacebookSignInButton(context),
-                        ],
-                      ),
+                      child: Column(children: [_buildGoogleSignInButton(context), const SizedBox(height: 16), _buildDivider(context), const SizedBox(height: 16), _buildFacebookSignInButton(context)]),
                     ),
                   ),
                 ),
@@ -324,12 +221,7 @@ class _LoginScreenState extends State<LoginScreen>
                     child: FadeInAnimation(
                       child: Text(
                         'By signing in, you agree to our Terms of Service and Privacy Policy',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withValues(alpha: 0.6),
-                          height: 1.4,
-                        ),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), height: 1.4),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -350,13 +242,7 @@ class _LoginScreenState extends State<LoginScreen>
       height: 56,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 5))],
       ),
       child: ElevatedButton(
         onPressed: () {
@@ -365,9 +251,7 @@ class _LoginScreenState extends State<LoginScreen>
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
           foregroundColor: Theme.of(context).colorScheme.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         ),
@@ -377,16 +261,13 @@ class _LoginScreenState extends State<LoginScreen>
             Container(
               width: 24,
               height: 24,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-              ),
+              decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
               child: Image.asset(
                 'assets/images/google.png',
                 width: 20,
                 height: 20,
                 fit: BoxFit.contain,
-               /*  errorBuilder: (context, error, stackTrace) {
+                /*  errorBuilder: (context, error, stackTrace) {
                   return Icon(
                     Icons.login,
                     size: 20,
@@ -398,10 +279,7 @@ class _LoginScreenState extends State<LoginScreen>
             const SizedBox(width: 12),
             Text(
               'Continue with Google',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.primary,
-              ),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.primary),
             ),
           ],
         ),
@@ -415,13 +293,7 @@ class _LoginScreenState extends State<LoginScreen>
       height: 56,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF1877F2).withValues(alpha: 0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: const Color(0xFF1877F2).withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 5))],
       ),
       child: ElevatedButton(
         onPressed: () {
@@ -430,9 +302,7 @@ class _LoginScreenState extends State<LoginScreen>
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF1877F2),
           foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         ),
@@ -442,31 +312,21 @@ class _LoginScreenState extends State<LoginScreen>
             Container(
               width: 24,
               height: 24,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-              ),
+              decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
               child: Image.asset(
                 'assets/images/facebook.png',
                 width: 20,
                 height: 20,
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
-                  return const Icon(
-                    Icons.facebook,
-                    size: 20,
-                    color: Color(0xFF1877F2),
-                  );
+                  return const Icon(Icons.facebook, size: 20, color: Color(0xFF1877F2));
                 },
               ),
             ),
             const SizedBox(width: 12),
             Text(
               'Continue with Facebook',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: Colors.white),
             ),
           ],
         ),
@@ -480,47 +340,20 @@ class _LoginScreenState extends State<LoginScreen>
         Expanded(
           child: Container(
             height: 1,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.0),
-                  Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.3),
-                ],
-              ),
-            ),
+            decoration: BoxDecoration(gradient: LinearGradient(colors: [Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.0), Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)])),
           ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'or',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.6),
-              fontWeight: FontWeight.w500,
-            ),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontWeight: FontWeight.w500),
           ),
         ),
         Expanded(
           child: Container(
             height: 1,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.3),
-                  Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.0),
-                ],
-              ),
-            ),
+            decoration: BoxDecoration(gradient: LinearGradient(colors: [Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.0)])),
           ),
         ),
       ],

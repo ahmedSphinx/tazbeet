@@ -123,4 +123,26 @@ class CategoryRepository {
       }
     }
   }
+
+  Future<void> updateCategoryTaskCounts(List<dynamic> tasks) async {
+    final allCategories = await getAllCategories();
+    final categoryCounts = <String, int>{};
+
+    // Count tasks per category
+    for (final task in tasks) {
+      final categoryId = task.categoryId;
+      if (categoryId != null) {
+        categoryCounts[categoryId] = (categoryCounts[categoryId] ?? 0) + 1;
+      }
+    }
+
+    // Update each category with the correct count
+    for (final category in allCategories) {
+      final newCount = categoryCounts[category.id] ?? 0;
+      if (category.tasksCount != newCount) {
+        final updatedCategory = category.copyWith(tasksCount: newCount);
+        await updateCategory(updatedCategory);
+      }
+    }
+  }
 }

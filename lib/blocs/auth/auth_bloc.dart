@@ -26,29 +26,48 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _onAuthStarted(AuthStarted event, Emitter<AuthState> emit) {
-    dev.log('Auth started - initializing authentication state monitoring', name: 'AuthBloc');
+    dev.log(
+      'Auth started - initializing authentication state monitoring',
+      name: 'AuthBloc',
+    );
     emit(AuthLoading());
-    _authSubscription = _authService.authStateChanges.listen((user) {
-      dev.log('Auth state changed - user: ${user?.uid ?? 'null'}', name: 'AuthBloc');
-      if (user != null) {
-        add(AuthLoggedIn());
-      } else {
-        add(AuthLoggedOut());
-      }
-    }, onError: (error) {
-      dev.log('Error in auth state changes stream', name: 'AuthBloc', error: error);
-      emit(AuthError('Authentication state monitoring failed: $error'));
-    });
+    _authSubscription = _authService.authStateChanges!.listen(
+      (user) {
+        dev.log(
+          'Auth state changed - user: ${user?.uid ?? 'null'}',
+          name: 'AuthBloc',
+        );
+        if (user != null) {
+          add(AuthLoggedIn());
+        } else {
+          add(AuthLoggedOut());
+        }
+      },
+      onError: (error) {
+        dev.log(
+          'Error in auth state changes stream',
+          name: 'AuthBloc',
+          error: error,
+        );
+        emit(AuthError('Authentication state monitoring failed: $error'));
+      },
+    );
   }
 
-  void _onSignInRequested(AuthSignInRequested event, Emitter<AuthState> emit) async {
+  void _onSignInRequested(
+    AuthSignInRequested event,
+    Emitter<AuthState> emit,
+  ) async {
     dev.log('Sign-in requested', name: 'AuthBloc');
     emit(AuthLoading());
     try {
       dev.log('Calling AuthService.signInWithGoogle()', name: 'AuthBloc');
       final userCredential = await _authService.signInWithGoogle();
       if (userCredential != null) {
-        dev.log('Sign-in successful for user: ${userCredential.user!.uid}', name: 'AuthBloc');
+        dev.log(
+          'Sign-in successful for user: ${userCredential.user!.uid}',
+          name: 'AuthBloc',
+        );
 
         // Save user data to Firestore after successful sign-in
         try {
@@ -63,9 +82,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             updatedAt: DateTime.now(),
           );
           await _dataSyncService.saveUserData(userModel);
-          dev.log('User data saved to Firestore successfully', name: 'AuthBloc');
+          dev.log(
+            'User data saved to Firestore successfully',
+            name: 'AuthBloc',
+          );
         } catch (saveError) {
-          dev.log('Failed to save user data to Firestore', name: 'AuthBloc', error: saveError);
+          dev.log(
+            'Failed to save user data to Firestore',
+            name: 'AuthBloc',
+            error: saveError,
+          );
           // Continue authentication even if saving fails
         }
 
@@ -74,7 +100,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           await _dataSyncService.syncFromFirestore(userCredential.user!.uid);
           dev.log('Data sync completed successfully', name: 'AuthBloc');
         } catch (syncError) {
-          dev.log('Data sync failed, but continuing with authentication', name: 'AuthBloc', error: syncError);
+          dev.log(
+            'Data sync failed, but continuing with authentication',
+            name: 'AuthBloc',
+            error: syncError,
+          );
           // Don't fail authentication if sync fails, just log it
         }
 
@@ -82,7 +112,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         try {
           await _handleFirstTimeUserSetup(userCredential.user!.uid);
         } catch (setupError) {
-          dev.log('First-time user setup failed, but continuing with authentication', name: 'AuthBloc', error: setupError);
+          dev.log(
+            'First-time user setup failed, but continuing with authentication',
+            name: 'AuthBloc',
+            error: setupError,
+          );
         }
 
         emit(AuthAuthenticated(userCredential.user!));
@@ -96,14 +130,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  void _onFacebookSignInRequested(AuthFacebookSignInRequested event, Emitter<AuthState> emit) async {
+  void _onFacebookSignInRequested(
+    AuthFacebookSignInRequested event,
+    Emitter<AuthState> emit,
+  ) async {
     dev.log('Facebook sign-in requested', name: 'AuthBloc');
     emit(AuthLoading());
     try {
       dev.log('Calling AuthService.signInWithFacebook()', name: 'AuthBloc');
       final userCredential = await _authService.signInWithFacebook();
       if (userCredential != null) {
-        dev.log('Facebook sign-in successful for user: ${userCredential.user!.uid}', name: 'AuthBloc');
+        dev.log(
+          'Facebook sign-in successful for user: ${userCredential.user!.uid}',
+          name: 'AuthBloc',
+        );
 
         // Save user data to Firestore after successful sign-in
         try {
@@ -118,9 +158,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             updatedAt: DateTime.now(),
           );
           await _dataSyncService.saveUserData(userModel);
-          dev.log('User data saved to Firestore successfully', name: 'AuthBloc');
+          dev.log(
+            'User data saved to Firestore successfully',
+            name: 'AuthBloc',
+          );
         } catch (saveError) {
-          dev.log('Failed to save user data to Firestore', name: 'AuthBloc', error: saveError);
+          dev.log(
+            'Failed to save user data to Firestore',
+            name: 'AuthBloc',
+            error: saveError,
+          );
           // Continue authentication even if saving fails
         }
 
@@ -129,7 +176,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           await _dataSyncService.syncFromFirestore(userCredential.user!.uid);
           dev.log('Data sync completed successfully', name: 'AuthBloc');
         } catch (syncError) {
-          dev.log('Data sync failed, but continuing with authentication', name: 'AuthBloc', error: syncError);
+          dev.log(
+            'Data sync failed, but continuing with authentication',
+            name: 'AuthBloc',
+            error: syncError,
+          );
           // Don't fail authentication if sync fails, just log it
         }
 
@@ -137,7 +188,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         try {
           await _handleFirstTimeUserSetup(userCredential.user!.uid);
         } catch (setupError) {
-          dev.log('First-time user setup failed, but continuing with authentication', name: 'AuthBloc', error: setupError);
+          dev.log(
+            'First-time user setup failed, but continuing with authentication',
+            name: 'AuthBloc',
+            error: setupError,
+          );
         }
 
         emit(AuthAuthenticated(userCredential.user!));
@@ -161,19 +216,31 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final existingUser = await userRepository.getUser(userId);
 
     if (existingUser == null) {
-      dev.log('First-time user detected, creating default categories', name: 'AuthBloc');
+      dev.log(
+        'First-time user detected, creating default categories',
+        name: 'AuthBloc',
+      );
 
       // Initialize category repository and create default categories
       await _categoryRepository.init();
       await _categoryRepository.createDefaultCategories();
 
-      dev.log('Default categories created successfully for first-time user', name: 'AuthBloc');
+      dev.log(
+        'Default categories created successfully for first-time user',
+        name: 'AuthBloc',
+      );
     } else {
-      dev.log('Returning user detected, skipping default categories creation', name: 'AuthBloc');
+      dev.log(
+        'Returning user detected, skipping default categories creation',
+        name: 'AuthBloc',
+      );
     }
   }
 
-  void _onSignOutRequested(AuthSignOutRequested event, Emitter<AuthState> emit) async {
+  void _onSignOutRequested(
+    AuthSignOutRequested event,
+    Emitter<AuthState> emit,
+  ) async {
     emit(AuthLoading());
     try {
       await _authService.signOut();

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tazbeet/blocs/auth/auth_state.dart';
 import 'package:tazbeet/blocs/auth/auth_bloc.dart';
+import 'package:tazbeet/l10n/app_localizations.dart';
 import 'package:tazbeet/ui/screens/home_screen.dart';
 import 'package:tazbeet/ui/screens/login_screen.dart';
-import 'package:tazbeet/l10n/generated/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,8 +13,7 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with TickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
   late AnimationController _logoController;
   late AnimationController _textController;
   late AnimationController _fadeController;
@@ -28,63 +27,24 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    _logoController = AnimationController(
-      duration: const Duration(milliseconds: 2000),
-      vsync: this,
-    );
+    _logoController = AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
 
-    _textController = AnimationController(
-      duration: const Duration(milliseconds: 1500),
-      vsync: this,
-    );
+    _textController = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
 
-    _fadeController = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      vsync: this,
-    );
+    _fadeController = AnimationController(duration: const Duration(milliseconds: 1000), vsync: this);
 
     // Logo animations
-    _logoScaleAnimation = Tween<double>(
-      begin: 0.3,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _logoController,
-      curve: Curves.elasticOut,
-    ));
+    _logoScaleAnimation = Tween<double>(begin: 0.3, end: 1.0).animate(CurvedAnimation(parent: _logoController, curve: Curves.elasticOut));
 
-    _logoRotationAnimation = Tween<double>(
-      begin: -0.5,
-      end: 0.0,
-    ).animate(CurvedAnimation(
-      parent: _logoController,
-      curve: Curves.elasticOut,
-    ));
+    _logoRotationAnimation = Tween<double>(begin: -0.5, end: 0.0).animate(CurvedAnimation(parent: _logoController, curve: Curves.elasticOut));
 
     // Text animations
-    _textOpacityAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _textController,
-      curve: Curves.easeIn,
-    ));
+    _textOpacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _textController, curve: Curves.easeIn));
 
-    _textSlideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.5),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _textController,
-      curve: Curves.easeOutCubic,
-    ));
+    _textSlideAnimation = Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero).animate(CurvedAnimation(parent: _textController, curve: Curves.easeOutCubic));
 
     // Fade animation
-    _fadeAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.0,
-    ).animate(CurvedAnimation(
-      parent: _fadeController,
-      curve: Curves.easeInOut,
-    ));
+    _fadeAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut));
 
     // Start animations
     _logoController.forward();
@@ -114,24 +74,16 @@ class _SplashScreenState extends State<SplashScreen>
             if (mounted) {
               Navigator.of(context).pushReplacement(
                 PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      state is AuthAuthenticated
-                          ? const HomeScreen()
-                          : const LoginScreen(),
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) {
+                  pageBuilder: (context, animation, secondaryAnimation) => state is AuthAuthenticated ? const HomeScreen() : const LoginScreen(),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
                     const begin = Offset(1.0, 0.0);
                     const end = Offset.zero;
                     const curve = Curves.easeInOutCubic;
 
-                    var tween = Tween(begin: begin, end: end)
-                        .chain(CurveTween(curve: curve));
+                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
                     var offsetAnimation = animation.drive(tween);
 
-                    return SlideTransition(
-                      position: offsetAnimation,
-                      child: child,
-                    );
+                    return SlideTransition(position: offsetAnimation, child: child);
                   },
                   transitionDuration: const Duration(milliseconds: 800),
                 ),
@@ -151,11 +103,7 @@ class _SplashScreenState extends State<SplashScreen>
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                      Theme.of(context).colorScheme.primary.withValues(alpha:0.8),
-                      Theme.of(context).colorScheme.secondary.withValues(alpha:0.6),
-                      Theme.of(context).colorScheme.tertiary.withValues(alpha:0.4),
-                    ],
+                    colors: [Theme.of(context).colorScheme.primary.withValues(alpha: 0.8), Theme.of(context).colorScheme.secondary.withValues(alpha: 0.6), Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.4)],
                   ),
                 ),
                 child: Stack(
@@ -171,10 +119,7 @@ class _SplashScreenState extends State<SplashScreen>
                           child: Container(
                             width: 4 + (index % 3) * 2.0,
                             height: 4 + (index % 3) * 2.0,
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha:0.2),
-                              shape: BoxShape.circle,
-                            ),
+                            decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), shape: BoxShape.circle),
                           ),
                         ),
                       );
@@ -195,25 +140,10 @@ class _SplashScreenState extends State<SplashScreen>
                                 height: 120,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.white.withValues(alpha:0.9),
-                                      Colors.white.withValues(alpha:0.7),
-                                    ],
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withValues(alpha:0.2),
-                                      blurRadius: 20,
-                                      spreadRadius: 5,
-                                    ),
-                                  ],
+                                  gradient: LinearGradient(colors: [Colors.white.withValues(alpha: 0.9), Colors.white.withValues(alpha: 0.7)]),
+                                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 20, spreadRadius: 5)],
                                 ),
-                                child: Icon(
-                                  Icons.task_alt,
-                                  size: 60,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
+                                child: Icon(Icons.task_alt, size: 60, color: Theme.of(context).colorScheme.primary),
                               ),
                             ),
                           ),
@@ -232,13 +162,7 @@ class _SplashScreenState extends State<SplashScreen>
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                   letterSpacing: 2,
-                                  shadows: [
-                                    Shadow(
-                                      color: Colors.black.withValues(alpha: 0.3),
-                                      offset: const Offset(2, 2),
-                                      blurRadius: 4,
-                                    ),
-                                  ],
+                                  shadows: [Shadow(color: Colors.black.withValues(alpha: 0.3), offset: const Offset(2, 2), blurRadius: 4)],
                                 ),
                               ),
                             ),
@@ -248,29 +172,24 @@ class _SplashScreenState extends State<SplashScreen>
 
                           // Tagline
                           SlideTransition(
-                            position: Tween<Offset>(
-                              begin: const Offset(0, 0.3),
-                              end: Offset.zero,
-                            ).animate(CurvedAnimation(
-                              parent: _textController,
-                              curve: const Interval(0.3, 1.0, curve: Curves.easeOutCubic),
-                            )),
-                            child: Opacity(
-                              opacity: Tween<double>(
-                                begin: 0.0,
-                                end: 1.0,
-                              ).animate(CurvedAnimation(
+                            position: Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+                              CurvedAnimation(
                                 parent: _textController,
-                                curve: const Interval(0.3, 1.0, curve: Curves.easeIn),
-                              )).value,
+                                curve: const Interval(0.3, 1.0, curve: Curves.easeOutCubic),
+                              ),
+                            ),
+                            child: Opacity(
+                              opacity: Tween<double>(begin: 0.0, end: 1.0)
+                                  .animate(
+                                    CurvedAnimation(
+                                      parent: _textController,
+                                      curve: const Interval(0.3, 1.0, curve: Curves.easeIn),
+                                    ),
+                                  )
+                                  .value,
                               child: Text(
-                                AppLocalizations.of(context).splashTagline,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white.withValues(alpha: 0.9),
-                                  fontWeight: FontWeight.w300,
-                                  letterSpacing: 1,
-                                ),
+                                AppLocalizations.of(context)!.splashTagline,
+                                style: TextStyle(fontSize: 18, color: Colors.white.withValues(alpha: 0.9), fontWeight: FontWeight.w300, letterSpacing: 1),
                               ),
                             ),
                           ),
@@ -279,31 +198,24 @@ class _SplashScreenState extends State<SplashScreen>
 
                           // Loading indicator
                           Opacity(
-                            opacity: Tween<double>(
-                              begin: 0.0,
-                              end: 1.0,
-                            ).animate(CurvedAnimation(
-                              parent: _textController,
-                              curve: const Interval(0.6, 1.0, curve: Curves.easeIn),
-                            )).value,
-                            child: Transform.scale(
-                              scale: Tween<double>(
-                                begin: 0.5,
-                                end: 1.0,
-                              ).animate(CurvedAnimation(
-                                parent: _textController,
-                                curve: const Interval(0.6, 1.0, curve: Curves.elasticOut),
-                              )).value,
-                              child: SizedBox(
-                                width: 40,
-                                height: 40,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 3,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    Colors.white.withValues(alpha:0.8),
+                            opacity: Tween<double>(begin: 0.0, end: 1.0)
+                                .animate(
+                                  CurvedAnimation(
+                                    parent: _textController,
+                                    curve: const Interval(0.6, 1.0, curve: Curves.easeIn),
                                   ),
-                                ),
-                              ),
+                                )
+                                .value,
+                            child: Transform.scale(
+                              scale: Tween<double>(begin: 0.5, end: 1.0)
+                                  .animate(
+                                    CurvedAnimation(
+                                      parent: _textController,
+                                      curve: const Interval(0.6, 1.0, curve: Curves.elasticOut),
+                                    ),
+                                  )
+                                  .value,
+                              child: SizedBox(width: 40, height: 40, child: CircularProgressIndicator(strokeWidth: 3, valueColor: AlwaysStoppedAnimation<Color>(Colors.white.withValues(alpha: 0.8)))),
                             ),
                           ),
                         ],
@@ -311,48 +223,40 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
 
                     // Bottom branding
-                          Positioned(
-                            bottom: 40,
-                            left: 0,
-                            right: 0,
-                            child: Column(
-                              children: [
-                                Opacity(
-                                  opacity: Tween<double>(
-                                    begin: 0.0,
-                                    end: 1.0,
-                                  ).animate(CurvedAnimation(
+                    Positioned(
+                      bottom: 40,
+                      left: 0,
+                      right: 0,
+                      child: Column(
+                        children: [
+                          Opacity(
+                            opacity: Tween<double>(begin: 0.0, end: 1.0)
+                                .animate(
+                                  CurvedAnimation(
                                     parent: _textController,
                                     curve: const Interval(0.7, 1.0, curve: Curves.easeIn),
-                                  )).value,
-                                  child: Text(
-                                    AppLocalizations.of(context).splashBranding,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white.withValues(alpha: 0.7),
-                                      fontWeight: FontWeight.w300,
-                                    ),
                                   ),
-                                ),
+                                )
+                                .value,
+                            child: Text(
+                              AppLocalizations.of(context)!.splashBranding,
+                              style: TextStyle(fontSize: 14, color: Colors.white.withValues(alpha: 0.7), fontWeight: FontWeight.w300),
+                            ),
+                          ),
 
                           const SizedBox(height: 8),
 
-                                Opacity(
-                                  opacity: Tween<double>(
-                                    begin: 0.0,
-                                    end: 1.0,
-                                  ).animate(CurvedAnimation(
+                          Opacity(
+                            opacity: Tween<double>(begin: 0.0, end: 1.0)
+                                .animate(
+                                  CurvedAnimation(
                                     parent: _textController,
                                     curve: const Interval(0.8, 1.0, curve: Curves.easeIn),
-                                  )).value,
-                                  child: Text(
-                                    AppLocalizations.of(context).splashVersion,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.white.withValues(alpha: 0.5),
-                                    ),
                                   ),
-                                ),
+                                )
+                                .value,
+                            child: Text(AppLocalizations.of(context)!.splashVersion, style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.5))),
+                          ),
                         ],
                       ),
                     ),

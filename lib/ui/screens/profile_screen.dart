@@ -4,8 +4,9 @@ import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../l10n/generated/app_localizations.dart';
+
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:tazbeet/l10n/app_localizations.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../../blocs/user/user_event.dart';
 import '../../blocs/user/user_state.dart';
@@ -59,8 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
-    final pickedFile =
-        await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
     if (pickedFile != null) {
       setState(() {
         _profileImageFile = File(pickedFile.path);
@@ -71,12 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _selectBirthday() async {
     final now = DateTime.now();
-    final pickedDate = await showDatePicker(
-      context: context,
-      initialDate: _birthday ?? DateTime(now.year - 20),
-      firstDate: DateTime(1900),
-      lastDate: now,
-    );
+    final pickedDate = await showDatePicker(context: context, initialDate: _birthday ?? DateTime(now.year - 20), firstDate: DateTime(1900), lastDate: now);
     if (pickedDate != null) {
       setState(() {
         _birthday = pickedDate;
@@ -98,49 +93,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
         dev.log('Saving user profile: ${updatedUser.toJson()}');
         context.read<UserBloc>().add(UpdateUser(updatedUser));
-       
+
         Navigator.of(context).pop();
       }
     } else {
       dev.log('Profile form validation failed');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).pleaseFixErrors)),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.pleaseFixErrors)));
     }
   }
 
   Widget _buildProfileImage() {
     if (_profileImageFile != null) {
-      return CircleAvatar(
-        radius: 50,
-        backgroundImage: FileImage(_profileImageFile!),
-      );
+      return CircleAvatar(radius: 50, backgroundImage: FileImage(_profileImageFile!));
     } else if (_profileImageUrl != null && _profileImageUrl!.isNotEmpty) {
-      return CircleAvatar(
-        radius: 50,
-        backgroundImage: NetworkImage(_profileImageUrl!),
+      return ClipOval(
+        child: Image.network(
+          _profileImageUrl!,
+          width: 100,
+          height: 100,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return CircleAvatar(radius: 50, child: Icon(Icons.person, size: 50));
+          },
+        ),
       );
     } else {
-      return CircleAvatar(
-        radius: 50,
-        child: Icon(Icons.person, size: 50),
-      );
+      return CircleAvatar(radius: 50, child: Icon(Icons.person, size: 50));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).profileScreenTitle),
-      ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.profileScreenTitle)),
       body: BlocListener<UserBloc, UserState>(
         listener: (context, state) {
           if (state is UserError) {
             dev.log('User error: ${state.message}', name: 'ProfileScreen');
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
           }
           if (state is UserLoaded) {
             // Update UI with loaded user data
@@ -175,13 +165,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 24),
                 TextFormField(
                   controller: _nameController,
-                  decoration: InputDecoration(
-                    labelText: AppLocalizations.of(context).nameLabel,
-                    border: const OutlineInputBorder(),
-                  ),
+                  decoration: InputDecoration(labelText: AppLocalizations.of(context)!.nameLabel, border: const OutlineInputBorder()),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return AppLocalizations.of(context).nameRequired;
+                      return AppLocalizations.of(context)!.nameRequired;
                     }
                     return null;
                   },
@@ -190,20 +177,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 InkWell(
                   onTap: _selectBirthday,
                   child: InputDecorator(
-                    decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context).birthdayLabel,
-                      border: const OutlineInputBorder(),
-                      suffixIcon: const Icon(Icons.calendar_today),
-                    ),
+                    decoration: InputDecoration(labelText: AppLocalizations.of(context)!.birthdayLabel, border: const OutlineInputBorder(), suffixIcon: const Icon(Icons.calendar_today)),
                     child: Text(
-                      _birthday != null
-                          ? '${_birthday!.year}-${_birthday!.month.toString().padLeft(2, '0')}-${_birthday!.day.toString().padLeft(2, '0')}'
-                          : AppLocalizations.of(context).selectBirthday,
-                      style: TextStyle(
-                        color: _birthday != null
-                            ? Theme.of(context).colorScheme.onSurface
-                            : Theme.of(context).colorScheme.onSurface.withAlpha(100),
-                      ),
+                      _birthday != null ? '${_birthday!.year}-${_birthday!.month.toString().padLeft(2, '0')}-${_birthday!.day.toString().padLeft(2, '0')}' : AppLocalizations.of(context)!.selectBirthday,
+                      style: TextStyle(color: _birthday != null ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onSurface.withAlpha(100)),
                     ),
                   ),
                 ),
@@ -214,15 +191,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     return ElevatedButton(
                       onPressed: isLoading ? null : _saveProfile,
                       child: isLoading
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                              ),
-                            )
-                          : Text(AppLocalizations.of(context).saveButton),
+                          ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)))
+                          : Text(AppLocalizations.of(context)!.saveButton),
                     );
                   },
                 ),

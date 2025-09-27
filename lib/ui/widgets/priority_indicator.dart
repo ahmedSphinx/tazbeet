@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/task.dart';
+import '../themes/design_system.dart';
 
 class PriorityIndicator extends StatelessWidget {
   final TaskPriority priority;
@@ -9,11 +10,11 @@ class PriorityIndicator extends StatelessWidget {
   Color get _color {
     switch (priority) {
       case TaskPriority.high:
-        return Colors.redAccent;
+        return AppColors.priorityHigh;
       case TaskPriority.medium:
-        return Colors.orangeAccent;
+        return AppColors.priorityMedium;
       case TaskPriority.low:
-        return Colors.greenAccent;
+        return AppColors.priorityLow;
     }
   }
 
@@ -33,14 +34,13 @@ class PriorityIndicator extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(_icon, color: _color, size: 16),
-        const SizedBox(width: 4),
+        Icon(_icon, color: _color, size: AppSizes.iconSmall),
+        const SizedBox(width: AppSpacing.xs),
         Text(
           priority.name.toUpperCase(),
-          style: TextStyle(
+          style: context.labelSmall.copyWith(
             color: _color,
             fontWeight: FontWeight.bold,
-            fontSize: 12,
           ),
         ),
       ],

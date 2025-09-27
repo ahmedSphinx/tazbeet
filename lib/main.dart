@@ -8,16 +8,18 @@ import 'package:tazbeet/blocs/auth/auth_bloc.dart';
 import 'package:tazbeet/blocs/auth/auth_event.dart';
 import 'package:tazbeet/blocs/auth/auth_state.dart';
 import 'package:tazbeet/blocs/mood/mood_bloc.dart';
+import 'package:tazbeet/blocs/task_details/task_details_bloc.dart';
 import 'package:tazbeet/blocs/user/user_bloc.dart';
+import 'package:tazbeet/l10n/app_localizations.dart';
 import 'package:tazbeet/services/auth_service.dart';
 import 'package:tazbeet/services/color_customization_service.dart';
 import 'package:tazbeet/services/task_sound_service.dart';
 import 'package:tazbeet/services/ambient_service.dart';
 import 'package:tazbeet/services/update_service.dart';
-import 'l10n/generated/app_localizations.dart';
+import 'package:tazbeet/services/firebase_service_wrapper.dart';
 import 'models/mood.dart';
 import 'models/user.dart';
-import 'blocs/task/task_bloc.dart';
+import 'blocs/task_list/task_list_bloc.dart';
 import 'blocs/category/category_bloc.dart';
 import 'repositories/task_repository.dart';
 import 'repositories/category_repository.dart';
@@ -30,13 +32,17 @@ import 'services/settings_service.dart' as settings;
 import 'services/localization_service.dart';
 
 import 'ui/screens/splash_screen.dart';
+import 'ui/screens/task_details_screen.dart';
 import 'ui/themes/app_themes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase
-  await Firebase.initializeApp();
+  // Initialize Firebase with error handling
+  final firebaseAvailable = await FirebaseServiceWrapper.initializeFirebase();
+  if (!firebaseAvailable) {
+    debugPrint('Firebase not available - app will work in offline mode');
+  }
 
   // Initialize Hive
   await Hive.initFlutter();
@@ -135,6 +141,8 @@ class MyApp extends StatelessWidget {
         return ThemeMode.dark;
       case settings.ThemeMode.system:
         return ThemeMode.system;
+      default:
+        return ThemeMode.system;
     }
   }
 
@@ -144,78 +152,62 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
+    return MultiProvider(
       providers: [
-        BlocProvider<AuthBloc>(
-          create: (context) => AuthBloc(authService)..add(AuthStarted()),
-        ),
-        BlocProvider<TaskBloc>(
-          create: (context) => TaskBloc(
-            taskRepository: taskRepository,
-            notificationService: notificationService,
-          ),
-        ),
-        BlocProvider<CategoryBloc>(
-          create: (context) =>
-              CategoryBloc(categoryRepository: categoryRepository),
-        ),
-        BlocProvider<MoodBloc>(create: (context) => MoodBloc(moodRepository)),
-        BlocProvider<UserBloc>(create: (context) => UserBloc(userRepository)),
+        Provider<TaskRepository>.value(value: taskRepository),
+        Provider<CategoryRepository>.value(value: categoryRepository),
+        Provider<MoodRepository>.value(value: moodRepository),
+        Provider<UserRepository>.value(value: userRepository),
       ],
-      child: MultiProvider(
+      child: MultiBlocProvider(
         providers: [
-          ChangeNotifierProvider.value(value: settingsService),
-          ChangeNotifierProvider.value(value: colorCustomizationService),
-          ChangeNotifierProvider.value(value: AmbientService()),
-          ChangeNotifierProvider.value(value: EmergencyService()),
-          ChangeNotifierProvider.value(value: taskSoundService),
-          ChangeNotifierProvider.value(value: updateService),
+          BlocProvider<AuthBloc>(create: (context) => AuthBloc(authService)..add(AuthStarted())),
+          BlocProvider<TaskListBloc>(
+            create: (context) => TaskListBloc(taskRepository: context.read<TaskRepository>(), categoryRepository: context.read<CategoryRepository>(), notificationService: notificationService),
+          ),
+          BlocProvider<TaskDetailsBloc>(create: (context) => TaskDetailsBloc(taskRepository: context.read<TaskRepository>())),
+          BlocProvider<CategoryBloc>(create: (context) => CategoryBloc(categoryRepository: context.read<CategoryRepository>())),
+          BlocProvider<MoodBloc>(create: (context) => MoodBloc(context.read<MoodRepository>())),
+          BlocProvider<UserBloc>(create: (context) => UserBloc(context.read<UserRepository>())),
         ],
-        child: Consumer2<settings.SettingsService, ColorCustomizationService>(
-          builder:
-              (context, settingsService, colorCustomizationService, child) {
-                // Initialize localization service
-                LocalizationService.initialize(context);
+        child: MultiProvider(
+          providers: [
+            ChangeNotifierProvider.value(value: settingsService),
+            ChangeNotifierProvider.value(value: colorCustomizationService),
+            ChangeNotifierProvider.value(value: AmbientService()),
+            ChangeNotifierProvider.value(value: EmergencyService()),
+            ChangeNotifierProvider.value(value: taskSoundService),
+            ChangeNotifierProvider.value(value: updateService),
+          ],
+          child: Consumer2<settings.SettingsService, ColorCustomizationService>(
+            builder: (context, settingsService, colorCustomizationService, child) {
+              // Initialize localization service
+              LocalizationService.initialize(context);
 
-                return BlocBuilder<AuthBloc, AuthState>(
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'Tazbeet',
+                theme: AppThemes.getLightThemeWithCustomization(colorCustomizationService),
+                darkTheme: AppThemes.getDarkThemeWithCustomization(colorCustomizationService),
+                themeMode: _getThemeMode(settingsService.settings.themeMode),
+                builder: (context, child) {
+                  final mediaQuery = MediaQuery.of(context);
+                  return MediaQuery(
+                    data: mediaQuery.copyWith(textScaler: TextScaler.linear(settingsService.settings.enableLargeText ? 1.3 : 1.0)),
+                    child: child!,
+                  );
+                },
+                locale: _getLocale(settingsService.settings.language),
+                localizationsDelegates: const [AppLocalizations.delegate, GlobalMaterialLocalizations.delegate, GlobalWidgetsLocalizations.delegate, GlobalCupertinoLocalizations.delegate],
+                supportedLocales: AppLocalizations.supportedLocales,
+                home: BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, authState) {
-                    return MaterialApp(
-                      debugShowCheckedModeBanner: false,
-                      title: 'Tazbeet',
-                      theme: AppThemes.getLightThemeWithCustomization(
-                        colorCustomizationService,
-                      ),
-                      darkTheme: AppThemes.getDarkThemeWithCustomization(
-                        colorCustomizationService,
-                      ),
-                      themeMode: _getThemeMode(
-                        settingsService.settings.themeMode,
-                      ),
-                      builder: (context, child) {
-                        return MediaQuery(
-                          data: MediaQuery.of(context).copyWith(
-                            textScaler: TextScaler.linear(
-                              settingsService.settings.enableLargeText
-                                  ? 1.3
-                                  : 1.0,
-                            ),
-                          ),
-                          child: child!,
-                        );
-                      },
-                      locale: _getLocale(settingsService.settings.language),
-                      localizationsDelegates: const [
-                        AppLocalizations.delegate,
-                        GlobalMaterialLocalizations.delegate,
-                        GlobalWidgetsLocalizations.delegate,
-                        GlobalCupertinoLocalizations.delegate,
-                      ],
-                      supportedLocales: AppLocalizations.supportedLocales,
-                      home: const SplashScreen(),
-                    );
+                    return const SplashScreen();
                   },
-                );
-              },
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

@@ -2,19 +2,27 @@ import 'dart:developer' as dev;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:tazbeet/services/firebase_service_wrapper.dart';
 
 class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseAuth? _auth = FirebaseServiceWrapper.firebaseAuth;
+  final GoogleSignIn? _googleSignIn = FirebaseServiceWrapper.googleSignIn;
 
   // Stream of authentication state changes
-  Stream<User?> get authStateChanges => _auth.authStateChanges();
+  Stream<User?>? get authStateChanges {
+    return _auth?.authStateChanges();
+  }
 
   // Get current user
-  User? get currentUser => _auth.currentUser;
+  User? get currentUser => _auth?.currentUser;
 
   // Sign in with Google
   Future<UserCredential?> signInWithGoogle() async {
+    if (_googleSignIn == null || _auth == null) {
+      dev.log('Google Sign-In not available', name: 'AuthService');
+      return null;
+    }
+
     dev.log('Starting Google Sign-In process', name: 'AuthService');
     try {
       // Trigger the authentication flow
@@ -74,6 +82,11 @@ class AuthService {
 
   // Sign in with Facebook
   Future<UserCredential?> signInWithFacebook() async {
+    if (_auth == null) {
+      dev.log('Firebase Auth not available', name: 'AuthService');
+      return null;
+    }
+
     dev.log('Starting Facebook Sign-In process', name: 'AuthService');
     try {
       // Trigger the sign-in flow
@@ -120,6 +133,11 @@ class AuthService {
 
   // Sign out
   Future<void> signOut() async {
+    if (_googleSignIn == null || _auth == null) {
+      dev.log('Sign out not available', name: 'AuthService');
+      return;
+    }
+
     dev.log('Starting sign out process', name: 'AuthService');
     try {
       dev.log('Signing out from Google', name: 'AuthService');
@@ -137,6 +155,11 @@ class AuthService {
 
   // Get user ID token
   Future<String?> getIdToken() async {
+    if (_auth == null) {
+      dev.log('Firebase Auth not available', name: 'AuthService');
+      return null;
+    }
+
     dev.log('Getting ID token for current user', name: 'AuthService');
     try {
       final user = _auth.currentUser;

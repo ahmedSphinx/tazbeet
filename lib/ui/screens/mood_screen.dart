@@ -4,7 +4,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../blocs/mood/mood_bloc.dart';
 import '../../blocs/mood/mood_event.dart';
 import '../../blocs/mood/mood_state.dart';
-import '../../l10n/generated/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/mood.dart';
 import '../../utils/date_formatter.dart';
 import '../utils/page_transitions.dart';
@@ -141,7 +141,7 @@ class _MoodScreenState extends State<MoodScreen> with TickerProviderStateMixin {
             FadeInAnimation(
               delay: const Duration(milliseconds: 400),
               child: Text(
-                AppLocalizations.of(context).howAreYouFeeling,
+                AppLocalizations.of(context)!.howAreYouFeeling,
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
             ),
@@ -149,7 +149,7 @@ class _MoodScreenState extends State<MoodScreen> with TickerProviderStateMixin {
             FadeInAnimation(
               delay: const Duration(milliseconds: 600),
               child: Text(
-                AppLocalizations.of(context).tapToLogMood,
+                AppLocalizations.of(context)!.tapToLogMood,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Theme.of(
@@ -217,15 +217,15 @@ class _MoodScreenState extends State<MoodScreen> with TickerProviderStateMixin {
                             runSpacing: 4,
                             children: [
                               _buildMetricChip(
-                                AppLocalizations.of(context).energy,
+                                AppLocalizations.of(context)!.energy,
                                 moods[index].energyLevel,
                               ),
                               _buildMetricChip(
-                                AppLocalizations.of(context).focus,
+                                AppLocalizations.of(context)!.focus,
                                 moods[index].focusLevel,
                               ),
                               _buildMetricChip(
-                                AppLocalizations.of(context).stress,
+                                AppLocalizations.of(context)!.stress,
                                 moods[index].stressLevel,
                               ),
                             ],
@@ -266,42 +266,42 @@ class _MoodScreenState extends State<MoodScreen> with TickerProviderStateMixin {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            AppLocalizations.of(context).yourMoodInsights,
+            AppLocalizations.of(context)!.yourMoodInsights,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 24),
           _buildStatCard(
-            AppLocalizations.of(context).totalEntries,
+            AppLocalizations.of(context)!.totalEntries,
             stats['totalEntries'].toString(),
           ),
           const SizedBox(height: 16),
           _buildStatCard(
-            AppLocalizations.of(context).averageMood,
+            AppLocalizations.of(context)!.averageMood,
             _getMoodText(MoodLevel.values[stats['averageMood'].round()]),
           ),
           const SizedBox(height: 16),
           _buildStatCard(
-            AppLocalizations.of(context).mostCommonMood,
+            AppLocalizations.of(context)!.mostCommonMood,
             _getMoodText(stats['mostCommonMood']),
           ),
           const SizedBox(height: 16),
           _buildStatCard(
-            AppLocalizations.of(context).currentStreak,
+            AppLocalizations.of(context)!.currentStreak,
             '${stats['streakDays']} days',
           ),
           const SizedBox(height: 16),
           _buildStatCard(
-            AppLocalizations.of(context).averageEnergy,
+            AppLocalizations.of(context)!.averageEnergy,
             '${stats['averageEnergy'].round()}/10',
           ),
           const SizedBox(height: 16),
           _buildStatCard(
-            AppLocalizations.of(context).averageFocus,
+            AppLocalizations.of(context)!.averageFocus,
             '${stats['averageFocus'].round()}/10',
           ),
           const SizedBox(height: 16),
           _buildStatCard(
-            AppLocalizations.of(context).averageStress,
+            AppLocalizations.of(context)!.averageStress,
             '${stats['averageStress'].round()}/10',
           ),
         ],
@@ -357,15 +357,15 @@ class _MoodScreenState extends State<MoodScreen> with TickerProviderStateMixin {
   String _getMoodText(MoodLevel level) {
     switch (level) {
       case MoodLevel.very_bad:
-        return AppLocalizations.of(context).veryBad;
+        return AppLocalizations.of(context)!.veryBad;
       case MoodLevel.bad:
-        return AppLocalizations.of(context).bad;
+        return AppLocalizations.of(context)!.bad;
       case MoodLevel.neutral:
-        return AppLocalizations.of(context).neutral;
+        return AppLocalizations.of(context)!.neutral;
       case MoodLevel.good:
-        return AppLocalizations.of(context).good;
+        return AppLocalizations.of(context)!.good;
       case MoodLevel.very_good:
-        return AppLocalizations.of(context).veryGood;
+        return AppLocalizations.of(context)!.veryGood;
     }
   }
 

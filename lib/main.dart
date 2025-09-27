@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -32,7 +31,6 @@ import 'services/settings_service.dart' as settings;
 import 'services/localization_service.dart';
 
 import 'ui/screens/splash_screen.dart';
-import 'ui/screens/task_details_screen.dart';
 import 'ui/themes/app_themes.dart';
 
 void main() async {
@@ -140,8 +138,6 @@ class MyApp extends StatelessWidget {
       case settings.ThemeMode.dark:
         return ThemeMode.dark;
       case settings.ThemeMode.system:
-        return ThemeMode.system;
-      default:
         return ThemeMode.system;
     }
   }

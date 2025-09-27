@@ -186,98 +186,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     );
   }
 
-  void _showPomodoroCustomizationSheet() {
-    int _workDuration = 25;
-    int _breakDuration = 5;
-    int _longBreakDuration = 15;
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: StatefulBuilder(
-            builder: (context, setState) => Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(AppLocalizations.of(context)!.customizePomodoroSession, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 24),
-                Text(AppLocalizations.of(context)!.workDurationLabel, style: Theme.of(context).textTheme.titleMedium),
-                Slider(
-                  value: _workDuration.toDouble(),
-                  min: 15,
-                  max: 60,
-                  divisions: 9,
-                  label: '${_workDuration}m',
-                  onChanged: (value) {
-                    setState(() {
-                      _workDuration = value.toInt();
-                    });
-                  },
-                ),
-                const SizedBox(height: 16),
-                Text(AppLocalizations.of(context)!.shortBreakLabel, style: Theme.of(context).textTheme.titleMedium),
-                Slider(
-                  value: _breakDuration.toDouble(),
-                  min: 3,
-                  max: 15,
-                  divisions: 4,
-                  label: '${_breakDuration}m',
-                  onChanged: (value) {
-                    setState(() {
-                      _breakDuration = value.toInt();
-                    });
-                  },
-                ),
-                const SizedBox(height: 16),
-                Text(AppLocalizations.of(context)!.longBreakLabel, style: Theme.of(context).textTheme.titleMedium),
-                Slider(
-                  value: _longBreakDuration.toDouble(),
-                  min: 10,
-                  max: 30,
-                  divisions: 4,
-                  label: '${_longBreakDuration}m',
-                  onChanged: (value) {
-                    setState(() {
-                      _longBreakDuration = value.toInt();
-                    });
-                  },
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancelButton)),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          // Here you could save the settings to preferences or state management
-                          // For now, just close the sheet
-                        },
-                        child: Text(AppLocalizations.of(context)!.startSession),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -353,8 +261,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
       return [
         IconButton(
           icon: const Icon(Icons.settings, color: Colors.white),
-          onPressed: _showPomodoroCustomizationSheet,
-          tooltip: AppLocalizations.of(context)!.settingsButton,
+          onPressed: () {
+            //    showCustomizationSheet(context) ;
+          },
+          tooltip: AppLocalizations.of(context)!.settingsScreenTitle,
         ),
       ];
     }

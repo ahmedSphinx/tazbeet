@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../models/category.dart';
@@ -17,8 +19,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     on<DeleteCategory>(_onDeleteCategory);
   }
 
-  Future<void> _onLoadCategories(
-      LoadCategories event, Emitter<CategoryState> emit) async {
+  Future<void> _onLoadCategories(LoadCategories event, Emitter<CategoryState> emit) async {
     emit(CategoryLoading());
     try {
       final categories = await categoryRepository.getAllCategories();
@@ -28,11 +29,9 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     }
   }
 
-  Future<void> _onAddCategory(
-      AddCategory event, Emitter<CategoryState> emit) async {
+  Future<void> _onAddCategory(AddCategory event, Emitter<CategoryState> emit) async {
     if (state is CategoryLoaded) {
-      final List<Category> updatedCategories =
-          List.from((state as CategoryLoaded).categories)..add(event.category);
+      final List<Category> updatedCategories = List.from((state as CategoryLoaded).categories)..add(event.category);
       emit(CategoryLoaded(updatedCategories));
       await categoryRepository.addCategory(event.category);
 
@@ -42,17 +41,15 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          print('Failed to sync category addition to Firestore: $e');
+          log('Failed to sync category addition to Firestore: $e');
         }
       }
     }
   }
 
-  Future<void> _onUpdateCategory(
-      UpdateCategory event, Emitter<CategoryState> emit) async {
+  Future<void> _onUpdateCategory(UpdateCategory event, Emitter<CategoryState> emit) async {
     if (state is CategoryLoaded) {
-      final List<Category> updatedCategories =
-          (state as CategoryLoaded).categories.map((category) {
+      final List<Category> updatedCategories = (state as CategoryLoaded).categories.map((category) {
         return category.id == event.category.id ? event.category : category;
       }).toList();
       emit(CategoryLoaded(updatedCategories));
@@ -64,19 +61,15 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          print('Failed to sync category update to Firestore: $e');
+          log('Failed to sync category update to Firestore: $e');
         }
       }
     }
   }
 
-  Future<void> _onDeleteCategory(
-      DeleteCategory event, Emitter<CategoryState> emit) async {
+  Future<void> _onDeleteCategory(DeleteCategory event, Emitter<CategoryState> emit) async {
     if (state is CategoryLoaded) {
-      final List<Category> updatedCategories = (state as CategoryLoaded)
-          .categories
-          .where((category) => category.id != event.categoryId)
-          .toList();
+      final List<Category> updatedCategories = (state as CategoryLoaded).categories.where((category) => category.id != event.categoryId).toList();
       emit(CategoryLoaded(updatedCategories));
       await categoryRepository.deleteCategory(event.categoryId);
 
@@ -86,7 +79,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          print('Failed to sync category deletion to Firestore: $e');
+          log('Failed to sync category deletion to Firestore: $e');
         }
       }
     }

@@ -141,12 +141,19 @@ class DataManagementService {
     final List<dynamic> jsonList = jsonDecode(content);
 
     for (var jsonTask in jsonList) {
-      final task = Task.fromJson(jsonTask);
-      final existingTask = await _taskRepository.getTaskById(task.id);
-      if (existingTask != null) {
-        await _taskRepository.updateTask(task);
-      } else {
-        await _taskRepository.addTask(task);
+      if (jsonTask is Map) {
+        // Convert Map<dynamic, dynamic> to Map<String, dynamic> safely
+        final Map<String, dynamic> convertedJson = {};
+        jsonTask.forEach((key, value) {
+          convertedJson[key.toString()] = value;
+        });
+        final task = Task.fromJson(convertedJson);
+        final existingTask = await _taskRepository.getTaskById(task.id);
+        if (existingTask != null) {
+          await _taskRepository.updateTask(task);
+        } else {
+          await _taskRepository.addTask(task);
+        }
       }
     }
   }

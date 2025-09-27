@@ -336,5 +336,56 @@
         "type": "String"
       }
     }
-  }
+  },
+  "repeatSettings": "Paramètres de Répétition",
+  "repeatFrequency": "Fréquence de Répétition",
+  "repeatType": "Type de Répétition",
+  "repeatForever": "Pour Toujours",
+  "repeatUntilDate": "Jusqu'à la Date",
+  "repeatCount": "Nombre de Fois",
+  "repeatWeekly": "Hebdomadaire",
+  "repeatBiweekly": "Bi-hebdomadaire",
+  "repeatMonthly": "Mensuel",
+  "repeatOn": "Répéter le :",
+  "repeatPreview": "Aperçu :",
+  "repeatDays": "jours",
+  "repeatTimes": "fois",
+  "repeatEndsOn": "Se termine le : {date}",
+  "@repeatEndsOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "repeatWeeklyOn": "Hebdomadaire le {days}",
+  "@repeatWeeklyOn": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "repeatBiweeklyForever": "Bi-hebdomadaire (pour toujours)",
+  "repeatMonthlyForever": "Mensuel (pour toujours)",
+  "recurringTask": "Tâche Récurrente",
+  "recurringInstance": "Instance Récurrente",
+  "originalTask": "Tâche Originale",
+  "generateRecurringInstances": "Générer des Instances Récurrentes",
+  "recurringTaskStats": "Statistiques des Tâches Récurrentes",
+  "totalRecurringTasks": "Total des Tâches Récurrentes",
+  "totalRecurringInstances": "Total des Instances Récurrentes",
+  "activeRecurringTasks": "Tâches Récurrentes Actives",
+  "recurringTasksManager": "Gestionnaire de Tâches Récurrentes",
+  "tasksNeedingInstances": "Tâches Nécessitant de Nouvelles Instances",
+  "generateAllInstances": "Générer Toutes les Instances",
+  "generateNextInstance": "Générer l'Instance Suivante",
+  "refreshRecurringTasks": "Actualiser les Tâches Récurrentes",
+  "allRecurringUpToDate": "Toutes les tâches récurrentes sont à jour !",
+  "recurringInstancesGenerated": "Instances récurrentes générées avec succès !",
+  "errorGeneratingInstances": "Erreur lors de la génération d'instances récurrentes",
+  "duplicateTask": "Dupliquer la Tâche",
+  "subtaskTitle": "Titre de la Sous-tâche",
+  "subtaskDescription": "Description (optionnel)",
+  "pleaseEnterSubtaskTitle": "Veuillez saisir un titre de sous-tâche"
 }

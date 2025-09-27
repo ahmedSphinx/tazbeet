@@ -331,5 +331,425 @@
         "type": "String"
       }
     }
-  }
+  },
+  "repeatSettings": "إعدادات التكرار",
+  "repeatFrequency": "تكرار",
+  "repeatType": "نوع التكرار",
+  "repeatForever": "إلى الأبد",
+  "repeatUntilDate": "حتى تاريخ",
+  "repeatCount": "عدد المرات",
+  "repeatWeekly": "أسبوعي",
+  "repeatBiweekly": "كل أسبوعين",
+  "repeatMonthly": "شهري",
+  "repeatOn": "التكرار في:",
+  "repeatPreview": "معاينة:",
+  "repeatDays": "أيام",
+  "repeatTimes": "مرات",
+  "repeatEndsOn": "ينتهي في: {date}",
+  "@repeatEndsOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "repeatWeeklyOn": "أسبوعي في {days}",
+  "@repeatWeeklyOn": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "repeatBiweeklyForever": "كل أسبوعين (إلى الأبد)",
+  "repeatMonthlyForever": "شهري (إلى الأبد)",
+  "recurringTask": "مهمة متكررة",
+  "recurringInstance": "نسخة متكررة",
+  "originalTask": "المهمة الأصلية",
+  "generateRecurringInstances": "إنشاء نسخ متكررة",
+  "recurringTaskStats": "إحصائيات المهام المتكررة",
+  "totalRecurringTasks": "إجمالي المهام المتكررة",
+  "totalRecurringInstances": "إجمالي النسخ المتكررة",
+  "activeRecurringTasks": "المهام المتكررة النشطة",
+  "recurringTasksManager": "مدير المهام المتكررة",
+  "tasksNeedingInstances": "المهام التي تحتاج نسخ جديدة",
+  "generateAllInstances": "إنشاء جميع النسخ",
+  "generateNextInstance": "إنشاء النسخة التالية",
+  "refreshRecurringTasks": "تحديث المهام المتكررة",
+  "allRecurringUpToDate": "جميع المهام المتكررة محدثة!",
+  "recurringInstancesGenerated": "تم إنشاء النسخ المتكررة بنجاح!",
+  "errorGeneratingInstances": "خطأ في إنشاء النسخ المتكررة",
+  "subtasks": "المهام الفرعية",
+  "addSubtask": "إضافة مهمة فرعية",
+  "editSubtask": "تعديل المهمة الفرعية",
+  "deleteSubtask": "حذف المهمة الفرعية",
+  "subtaskCompleted": "تم إنجاز المهمة الفرعية",
+  "strictCompletionMode": "وضع الإنجاز الصارم",
+  "flexibleCompletionMode": "وضع الإنجاز المرن",
+  "maxSubtaskDepthReached": "تم الوصول إلى الحد الأقصى لعمق المهام الفرعية",
+  "notificationsDashboard": "لوحة الإشعارات",
+  "upcoming": "قادم",
+  "snooze": "تأجيل",
+  "dismiss": "تجاهل",
+  "reminderIntervals": "فترات التذكير",
+  "thirtyMinutes": "30 دقيقة",
+  "oneHour": "ساعة واحدة",
+  "twoHours": "ساعتان",
+  "oneDay": "يوم واحد",
+  "globalReminderSettings": "إعدادات التذكير العامة",
+  "categoryNotifications": "إشعارات الفئات",
+  "soundNotifications": "إشعارات الصوت",
+  "selectTaskForPomodoro": "اختر مهمة لبومودورو",
+  "searchTasks": "البحث عن المهام...",
+  "suggestedTasks": "المهام المقترحة",
+  "focusOnTask": "التركيز على: {task}",
+  "taskProgress": "تقدم المهمة",
+  "recentSessions": "الجلسات الأخيرة",
+  "generalSession": "جلسة عامة",
+  "sessionLinkedToTask": "الجلسة مرتبطة بالمهمة",
+  "autoGenerateNext": "إنشاء تلقائي للنسخة التالية",
+  "stopRepeating": "إيقاف التكرار",
+  "repeatConfiguration": "إعدادات التكرار",
+  "customRepeat": "تكرار مخصص",
+  "daysOfWeek": "أيام الأسبوع",
+  "daysOfMonth": "أيام الشهر",
+  "sunday": "الأحد",
+  "monday": "الاثنين",
+  "tuesday": "الثلاثاء",
+  "wednesday": "الأربعاء",
+  "thursday": "الخميس",
+  "friday": "الجمعة",
+  "saturday": "السبت",
+  "taskDetailsTitle": "تفاصيل المهمة",
+  "taskDetailsSubtitle": "إدارة المهمة والمهام الفرعية",
+  "subtasksSection": "المهام الفرعية",
+  "addSubtaskButton": "إضافة مهمة فرعية",
+  "completionMode": "وضع الإنجاز",
+  "strictModeDescription": "يجب إنجاز جميع المهام الفرعية لتحديد هذه المهمة كمنجزة",
+  "flexibleModeDescription": "يمكنك تحديد هذه المهمة كمنجزة بشكل مستقل عن المهام الفرعية",
+  "taskProgress": "التقدم",
+  "completionStatus": "حالة الإنجاز",
+  "allSubtasksComplete": "تم إنجاز جميع المهام الفرعية!",
+  "someSubtasksRemaining": "متبقي {remaining} مهام فرعية",
+  "@someSubtasksRemaining": {
+    "placeholders": {
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "taskCompleted": "تم إنجاز المهمة! 🎉",
+  "subtaskCompleted": "تم إنجاز المهمة الفرعية! ✨",
+  "reorderSubtasks": "إعادة ترتيب المهام الفرعية",
+  "dragToReorder": "اسحب لإعادة ترتيب المهام الفرعية",
+  "taskStatistics": "إحصائيات المهمة",
+  "totalSubtasks": "إجمالي المهام الفرعية",
+  "completedSubtasks": "المهام الفرعية المنجزة",
+  "pendingSubtasks": "المهام الفرعية المعلقة",
+  "completionRate": "معدل الإنجاز",
+  "estimatedTime": "الوقت المقدر",
+  "actualTime": "الوقت الفعلي",
+  "timeTracking": "تتبع الوقت",
+  "startTimer": "بدء المؤقت",
+  "stopTimer": "إيقاف المؤقت",
+  "resetTimer": "إعادة تعيين المؤقت",
+  "timerRunning": "المؤقت يعمل",
+  "timerPaused": "المؤقت متوقف",
+  "focusMode": "وضع التركيز",
+  "enterFocusMode": "ادخل وضع التركيز لتقليل التشتيت",
+  "exitFocusMode": "الخروج من وضع التركيز",
+  "motivationalMessage": "أنت تقوم بعمل رائع! حافظ على الزخم!",
+  "celebrationAnimation": "رسوم متحركة احتفالية",
+  "progressAnimation": "رسوم متحركة للتقدم",
+  "taskBreakdown": "تفصيل المهمة",
+  "priorityBreakdown": "تفصيل الأولوية",
+  "dueDateBreakdown": "تفصيل تاريخ الاستحقاق",
+  "categoryBreakdown": "تفصيل الفئة",
+  "highPriorityTasks": "مهام ذات أولوية عالية",
+  "mediumPriorityTasks": "مهام ذات أولوية متوسطة",
+  "lowPriorityTasks": "مهام ذات أولوية منخفضة",
+  "overdueTasks": "المهام المتأخرة",
+  "dueTodayTasks": "المهام المستحقة اليوم",
+  "dueThisWeekTasks": "المهام المستحقة هذا الأسبوع",
+  "noDueDateTasks": "مهام بدون تاريخ استحقاق",
+  "workCategoryTasks": "مهام فئة العمل",
+  "personalCategoryTasks": "مهام فئة شخصية",
+  "healthCategoryTasks": "مهام فئة الصحة",
+  "otherCategoryTasks": "مهام فئات أخرى",
+  "taskInsights": "رؤى المهمة",
+  "productivityScore": "درجة الإنتاجية",
+  "streakDays": "أيام الاستمرارية",
+  "averageCompletionTime": "متوسط وقت الإنجاز",
+  "mostProductiveDay": "أكثر يوم إنتاجية",
+  "mostProductiveHour": "أكثر ساعة إنتاجية",
+  "focusSessionDuration": "مدة جلسة التركيز",
+  "breakDuration": "مدة الاستراحة",
+  "pomodoroSessions": "جلسات البومودورو",
+  "completedPomodoros": "البومودورو المكتملة",
+  "totalFocusTime": "إجمالي وقت التركيز",
+  "efficiencyRating": "تقييم الكفاءة",
+  "taskComplexity": "تعقيد المهمة",
+  "simpleTasks": "مهام بسيطة",
+  "moderateTasks": "مهام متوسطة",
+  "complexTasks": "مهام معقدة",
+  "expertTasks": "مهام خبير",
+  "taskDependencies": "تبعيات المهمة",
+  "blockingTasks": "مهام حاجزة",
+  "blockedTasks": "مهام محجوبة",
+  "independentTasks": "مهام مستقلة",
+  "taskRelationships": "علاقات المهمة",
+  "parentTasks": "المهام الأصلية",
+  "childTasks": "المهام الفرعية",
+  "relatedTasks": "المهام ذات الصلة",
+  "taskHierarchy": "تسلسل المهمة",
+  "mainTask": "المهمة الرئيسية",
+  "level1Subtask": "مهمة فرعية المستوى 1",
+  "level2Subtask": "مهمة فرعية المستوى 2",
+  "level3Subtask": "مهمة فرعية المستوى 3",
+  "maxDepthReached": "تم الوصول إلى الحد الأقصى للعمق",
+  "cannotAddMoreSubtasks": "لا يمكن إضافة المزيد من المهام الفرعية في هذا المستوى",
+  "expandAll": "توسيع الكل",
+  "collapseAll": "طي الكل",
+  "showCompleted": "إظهار المكتملة",
+  "hideCompleted": "إخفاء المكتملة",
+  "sortBy": "ترتيب حسب",
+  "sortByName": "الاسم",
+  "sortByPriority": "الأولوية",
+  "sortByDueDate": "تاريخ الاستحقاق",
+  "sortByCompletion": "الإنجاز",
+  "sortByCreation": "تاريخ الإنشاء",
+  "filterBy": "تصفية حسب",
+  "filterByPriority": "الأولوية",
+  "filterByStatus": "الحالة",
+  "filterByCategory": "الفئة",
+  "filterByDueDate": "تاريخ الاستحقاق",
+  "clearFilters": "مسح المرشحات",
+  "applyFilters": "تطبيق المرشحات",
+  "taskActions": "إجراءات المهمة",
+  "editTask": "تحرير المهمة",
+  "duplicateTask": "تكرار المهمة",
+  "shareTask": "مشاركة المهمة",
+  "exportTask": "تصدير المهمة",
+  "archiveTask": "أرشفة المهمة",
+  "deleteTask": "حذف المهمة",
+  "taskNotes": "ملاحظات المهمة",
+  "addNote": "إضافة ملاحظة",
+  "editNote": "تحرير الملاحظة",
+  "deleteNote": "حذف الملاحظة",
+  "noNotesYet": "لا توجد ملاحظات بعد",
+  "addFirstNote": "أضف ملاحظتك الأولى",
+  "taskAttachments": "مرفقات المهمة",
+  "addAttachment": "إضافة مرفق",
+  "viewAttachment": "عرض المرفق",
+  "downloadAttachment": "تحميل المرفق",
+  "deleteAttachment": "حذف المرفق",
+  "noAttachmentsYet": "لا توجد مرفقات بعد",
+  "addFirstAttachment": "أضف مرفقك الأول",
+  "taskReminders": "تذكيرات المهمة",
+  "addReminder": "إضافة تذكير",
+  "editReminder": "تحرير التذكير",
+  "deleteReminder": "حذف التذكير",
+  "reminderSet": "تم تعيين التذكير",
+  "reminderActive": "التذكير نشط",
+  "reminderSnoozed": "تم تأجيل التذكير",
+  "reminderDismissed": "تم تجاهل التذكير",
+  "taskTags": "علامات المهمة",
+  "addTag": "إضافة علامة",
+  "editTag": "تحرير العلامة",
+  "deleteTag": "حذف العلامة",
+  "noTagsYet": "لا توجد علامات بعد",
+  "addFirstTag": "أضف علامتك الأولى",
+  "taskComments": "تعليقات المهمة",
+  "addComment": "إضافة تعليق",
+  "editComment": "تحرير التعليق",
+  "deleteComment": "حذف التعليق",
+  "noCommentsYet": "لا توجد تعليقات بعد",
+  "addFirstComment": "أضف تعليقك الأول",
+  "taskHistory": "تاريخ المهمة",
+  "viewHistory": "عرض التاريخ",
+  "noHistoryYet": "لا يوجد تاريخ بعد",
+  "historyCleared": "تم مسح التاريخ",
+  "taskVersions": "إصدارات المهمة",
+  "currentVersion": "الإصدار الحالي",
+  "previousVersions": "الإصدارات السابقة",
+  "restoreVersion": "استعادة الإصدار",
+  "versionRestored": "تم استعادة الإصدار",
+  "taskTemplates": "قوالب المهمة",
+  "createTemplate": "إنشاء قالب",
+  "useTemplate": "استخدام قالب",
+  "editTemplate": "تحرير القالب",
+  "deleteTemplate": "حذف القالب",
+  "noTemplatesYet": "لا توجد قوالب بعد",
+  "createFirstTemplate": "أنشئ قالبك الأول",
+  "templateApplied": "تم تطبيق القالب",
+  "taskAutomation": "أتمتة المهمة",
+  "autoAssign": "تعيين تلقائي",
+  "autoSchedule": "جدولة تلقائية",
+  "autoRemind": "تذكير تلقائي",
+  "autoComplete": "إنجاز تلقائي",
+  "automationRules": "قواعد الأتمتة",
+  "createRule": "إنشاء قاعدة",
+  "editRule": "تحرير القاعدة",
+  "deleteRule": "حذف القاعدة",
+  "noRulesYet": "لا توجد قواعد بعد",
+  "createFirstRule": "أنشئ قاعدتك الأولى",
+  "ruleTriggered": "تم تشغيل القاعدة",
+  "taskCollaboration": "التعاون في المهمة",
+  "shareWithTeam": "مشاركة مع الفريق",
+  "assignToMember": "تعيين للعضو",
+  "requestReview": "طلب مراجعة",
+  "approveTask": "موافقة على المهمة",
+  "rejectTask": "رفض المهمة",
+  "taskApproved": "تمت الموافقة على المهمة",
+  "taskRejected": "تم رفض المهمة",
+  "collaborationSettings": "إعدادات التعاون",
+  "teamMembers": "أعضاء الفريق",
+  "addMember": "إضافة عضو",
+  "removeMember": "إزالة عضو",
+  "memberPermissions": "صلاحيات العضو",
+  "adminPermissions": "صلاحيات المدير",
+  "editorPermissions": "صلاحيات المحرر",
+  "viewerPermissions": "صلاحيات المشاهد",
+  "taskAnalytics": "تحليلات المهمة",
+  "productivityMetrics": "مقاييس الإنتاجية",
+  "timeSpent": "الوقت المستغرق",
+  "tasksCompleted": "المهام المكتملة",
+  "averageTimePerTask": "متوسط الوقت لكل مهمة",
+  "completionTrends": "اتجاهات الإنجاز",
+  "productivityInsights": "رؤى الإنتاجية",
+  "weeklyReport": "التقرير الأسبوعي",
+  "monthlyReport": "التقرير الشهري",
+  "yearlyReport": "التقرير السنوي",
+  "customReport": "تقرير مخصص",
+  "exportReport": "تصدير التقرير",
+  "shareReport": "مشاركة التقرير",
+  "reportGenerated": "تم إنشاء التقرير",
+  "taskGamification": "لعبة المهام",
+  "earnPoints": "كسب النقاط",
+  "unlockAchievements": "فتح الإنجازات",
+  "levelUp": "ارتفاع المستوى",
+  "leaderboard": "لوحة المتصدرين",
+  "badges": "الشارات",
+  "streaks": "الاستمرارية",
+  "challenges": "التحديات",
+  "rewards": "المكافآت",
+  "pointsEarned": "تم كسب النقاط",
+  "achievementUnlocked": "تم فتح الإنجاز!",
+  "levelUpMessage": "تهانينا! لقد وصلت إلى المستوى {level}!",
+  "@levelUpMessage": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "newBadgeEarned": "تم كسب شارة جديدة: {badge}",
+  "@newBadgeEarned": {
+    "placeholders": {
+      "badge": {
+        "type": "String"
+      }
+    }
+  },
+  "streakMaintained": "تم الحفاظ على الاستمرارية! {days} أيام متتالية!",
+  "@streakMaintained": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeCompleted": "تم إكمال التحدي!",
+  "rewardUnlocked": "تم فتح المكافأة!",
+  "taskAccessibility": "إمكانية الوصول للمهام",
+  "screenReaderSupport": "دعم قارئ الشاشة",
+  "voiceControl": "التحكم الصوتي",
+  "gestureNavigation": "التنقل بالإيماءات",
+  "highContrastMode": "وضع التباين العالي",
+  "largeTextMode": "وضع النص الكبير",
+  "colorBlindSupport": "دعم المكفوفين الألوان",
+  "reducedMotion": "تقليل الحركة",
+  "focusIndicators": "مؤشرات التركيز",
+  "keyboardNavigation": "التنقل بالكيبورد",
+  "voiceFeedback": "التعليق الصوتي",
+  "taskPersonalization": "تخصيص المهام",
+  "customThemes": "سمات مخصصة",
+  "customColors": "ألوان مخصصة",
+  "customFonts": "خطوط مخصصة",
+  "customIcons": "أيقونات مخصصة",
+  "customSounds": "أصوات مخصصة",
+  "customAnimations": "رسوم متحركة مخصصة",
+  "customNotifications": "إشعارات مخصصة",
+  "customReminders": "تذكيرات مخصصة",
+  "customWidgets": "أدوات مخصصة",
+  "customLayouts": "تخطيطات مخصصة",
+  "taskIntegration": "تكامل المهام",
+  "calendarSync": "مزامنة التقويم",
+  "emailIntegration": "تكامل البريد الإلكتروني",
+  "slackIntegration": "تكامل سلاك",
+  "teamsIntegration": "تكامل تيمز",
+  "googleWorkspace": "جوجل وورك سبيس",
+  "microsoft365": "مايكروسوفت 365",
+  "appleEcosystem": "نظام أبل البيئي",
+  "androidEcosystem": "نظام أندرويد البيئي",
+  "webServices": "خدمات الويب",
+  "apiIntegration": "تكامل API",
+  "taskMigration": "ترحيل المهام",
+  "importTasks": "استيراد المهام",
+  "exportTasks": "تصدير المهام",
+  "backupData": "نسخ احتياطي للبيانات",
+  "restoreData": "استعادة البيانات",
+  "migrateFromOtherApps": "الترحيل من تطبيقات أخرى",
+  "dataTransfer": "نقل البيانات",
+  "syncSettings": "إعدادات المزامنة",
+  "cloudSync": "مزامنة السحابة",
+  "localSync": "مزامنة محلية",
+  "offlineMode": "وضع عدم الاتصال",
+  "taskSecurity": "أمان المهام",
+  "dataEncryption": "تشفير البيانات",
+  "secureStorage": "تخزين آمن",
+  "passwordProtection": "حماية كلمة المرور",
+  "biometricLock": "قفل البيومتري",
+  "twoFactorAuth": "المصادقة الثنائية",
+  "secureBackup": "نسخ احتياطي آمن",
+  "privacySettings": "إعدادات الخصوصية",
+  "dataSharing": "مشاركة البيانات",
+  "analyticsOptOut": "إلغاء الاشتراك في التحليلات",
+  "taskPerformance": "أداء المهام",
+  "appSpeed": "سرعة التطبيق",
+  "memoryUsage": "استخدام الذاكرة",
+  "batteryOptimization": "تحسين البطارية",
+  "backgroundProcessing": "معالجة الخلفية",
+  "offlineCapabilities": "إمكانيات عدم الاتصال",
+  "syncPerformance": "أداء المزامنة",
+  "dataCompression": "ضغط البيانات",
+  "cachingStrategy": "استراتيجية التخزين المؤقت",
+  "lazyLoading": "التحميل الكسول",
+  "taskReliability": "موثوقية المهام",
+  "errorHandling": "معالجة الأخطاء",
+  "dataValidation": "التحقق من صحة البيانات",
+  "backupRecovery": "استعادة النسخ الاحتياطي",
+  "crashReporting": "تقارير الأعطال",
+  "bugFixes": "إصلاحات الأخطاء",
+  "stabilityImprovements": "تحسينات الاستقرار",
+  "featureUpdates": "تحديثات الميزات",
+  "securityPatches": "تصحيحات الأمان",
+  "compatibilityUpdates": "تحديثات التوافق",
+  "taskUsability": "سهولة استخدام المهام",
+  "userInterface": "واجهة المستخدم",
+  "userExperience": "تجربة المستخدم",
+  "accessibilityFeatures": "ميزات إمكانية الوصول",
+  "multilingualSupport": "دعم متعدد اللغات",
+  "rightToLeftSupport": "دعم من اليمين إلى اليسار",
+  "darkModeSupport": "دعم الوضع المظلم",
+  "highContrastSupport": "دعم التباين العالي",
+  "largeTextSupport": "دعم النص الكبير",
+  "voiceControlSupport": "دعم التحكم الصوتي",
+  "gestureSupport": "دعم الإيماءات",
+  "enterSubtaskTitle": "أدخل عنوان المهمة الفرعية",
+  "enterSubtaskDescription": "أدخل وصف المهمة الفرعية (اختياري)",
+  "duplicateTask": "تكرار المهمة",
+  "subtaskTitle": "عنوان المهمة الفرعية",
+  "subtaskDescription": "الوصف (اختياري)",
+  "pleaseEnterSubtaskTitle": "يرجى إدخال عنوان المهمة الفرعية"
 }

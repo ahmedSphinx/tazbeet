@@ -6,14 +6,9 @@ import 'dart:io';
 import '../models/task.dart';
 import 'notification_service.dart';
 import 'localization_service.dart';
+import '../repositories/task_repository.dart';
 
-enum PomodoroState {
-  idle,
-  work,
-  shortBreak,
-  longBreak,
-  paused,
-}
+enum PomodoroState { idle, work, shortBreak, longBreak, paused }
 
 class PomodoroSession {
   final int workDuration; // in minutes
@@ -31,19 +26,29 @@ class PomodoroSession {
 
 class PomodoroTimer extends ChangeNotifier {
   final PomodoroSession session;
+  final TaskRepository? taskRepository;
 
-  PomodoroTimer({
-    PomodoroSession? session,
-  }) : session = session ?? const PomodoroSession();
+  PomodoroTimer({PomodoroSession? session, this.taskRepository})
+    : session = session ?? const PomodoroSession();
 
+  Task? _selectedTask;
   PomodoroState _state = PomodoroState.idle;
-  PomodoroState _previousState = PomodoroState.idle; // Track previous state for paused
+  PomodoroState _previousState =
+      PomodoroState.idle; // Track previous state for paused
   int _currentSession = 0;
   int _completedSessions = 0;
   int _remainingSeconds = 0;
   Timer? _timer;
   DateTime? _startTime;
   DateTime? _pauseTime;
+  DateTime? _workStartTime;
+
+  Task? get selectedTask => _selectedTask;
+
+  void setSelectedTask(Task? task) {
+    _selectedTask = task;
+    notifyListeners();
+  }
 
   static const String _pomodoroDataKey = 'pomodoro_data';
 
@@ -83,7 +88,9 @@ class PomodoroTimer extends ChangeNotifier {
   String get nextStateLabel {
     switch (_state) {
       case PomodoroState.work:
-        return _shouldTakeLongBreak() ? LocalizationService.longBreak : LocalizationService.shortBreak;
+        return _shouldTakeLongBreak()
+            ? LocalizationService.longBreak
+            : LocalizationService.shortBreak;
       case PomodoroState.shortBreak:
       case PomodoroState.longBreak:
         return LocalizationService.work;
@@ -141,6 +148,7 @@ class PomodoroTimer extends ChangeNotifier {
     _currentSession++;
     _remainingSeconds = session.workDuration * 60;
     _startTime = DateTime.now();
+    _workStartTime = DateTime.now();
     _startTimer();
   }
 
@@ -197,10 +205,22 @@ class PomodoroTimer extends ChangeNotifier {
     });
   }
 
-  void _moveToNextState() {
+  void _moveToNextState() async {
     switch (_state) {
       case PomodoroState.work:
         _completedSessions++;
+        // Update task if one is selected
+        if (_selectedTask != null &&
+            taskRepository != null &&
+            _workStartTime != null) {
+          final workDuration = DateTime.now().difference(_workStartTime!);
+          final updatedTask = _selectedTask!.copyWith(
+            pomodoroCount: _selectedTask!.pomodoroCount + 1,
+            timeSpent: _selectedTask!.timeSpent + workDuration,
+            updatedAt: DateTime.now(),
+          );
+          await taskRepository!.updateTask(updatedTask);
+        }
         if (_shouldTakeLongBreak()) {
           _startLongBreak();
         } else {
@@ -218,7 +238,8 @@ class PomodoroTimer extends ChangeNotifier {
   }
 
   bool _shouldTakeLongBreak() {
-    return _completedSessions > 0 && _completedSessions % session.sessionsUntilLongBreak == 0;
+    return _completedSessions > 0 &&
+        _completedSessions % session.sessionsUntilLongBreak == 0;
   }
 
   int _getTotalSecondsForCurrentState() {
@@ -240,10 +261,10 @@ class PomodoroTimer extends ChangeNotifier {
             return session.longBreakDuration * 60;
           case PomodoroState.paused:
           case PomodoroState.idle:
-          return 0;
+            return 0;
         }
       case PomodoroState.idle:
-      return 0;
+        return 0;
     }
   }
 
@@ -253,10 +274,14 @@ class PomodoroTimer extends ChangeNotifier {
   }
 
   Duration getTotalBreakTime() {
-    final shortBreaks = _completedSessions - (_completedSessions ~/ session.sessionsUntilLongBreak);
+    final shortBreaks =
+        _completedSessions -
+        (_completedSessions ~/ session.sessionsUntilLongBreak);
     final longBreaks = _completedSessions ~/ session.sessionsUntilLongBreak;
     return Duration(
-      minutes: shortBreaks * session.shortBreakDuration + longBreaks * session.longBreakDuration,
+      minutes:
+          shortBreaks * session.shortBreakDuration +
+          longBreaks * session.longBreakDuration,
     );
   }
 
@@ -288,14 +313,25 @@ class PomodoroTimer extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     final dataString = prefs.getString(_pomodoroDataKey);
     if (dataString != null) {
-      final data = jsonDecode(dataString) as Map<String, dynamic>;
-      _state = PomodoroState.values[data['state']];
-      _previousState = PomodoroState.values[data['previousState']];
-      _currentSession = data['currentSession'];
-      _completedSessions = data['completedSessions'];
-      _remainingSeconds = data['remainingSeconds'];
-      _startTime = data['startTime'] != null ? DateTime.parse(data['startTime']) : null;
-      _pauseTime = data['pauseTime'] != null ? DateTime.parse(data['pauseTime']) : null;
+      final decodedData = jsonDecode(dataString);
+      if (decodedData is Map) {
+        // Convert Map<dynamic, dynamic> to Map<String, dynamic> safely
+        final Map<String, dynamic> data = {};
+        decodedData.forEach((key, value) {
+          data[key.toString()] = value;
+        });
+        _state = PomodoroState.values[data['state']];
+        _previousState = PomodoroState.values[data['previousState']];
+        _currentSession = data['currentSession'];
+        _completedSessions = data['completedSessions'];
+        _remainingSeconds = data['remainingSeconds'];
+        _startTime = data['startTime'] != null
+            ? DateTime.parse(data['startTime'])
+            : null;
+        _pauseTime = data['pauseTime'] != null
+            ? DateTime.parse(data['pauseTime'])
+            : null;
+      }
 
       // Resume timer if it was running
       if (_state != PomodoroState.idle && _state != PomodoroState.paused) {

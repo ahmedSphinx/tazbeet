@@ -5,7 +5,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../blocs/category/category_bloc.dart';
 import '../../blocs/category/category_event.dart';
 import '../../blocs/category/category_state.dart';
-import '../../l10n/generated/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/category.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -32,24 +32,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
           child: FadeInAnimation(
             child: Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Theme.of(context).colorScheme.primary,
-                    Theme.of(context).colorScheme.primaryContainer,
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.primaryContainer], begin: Alignment.topLeft, end: Alignment.bottomRight),
                 shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.primary.withValues(alpha: 0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+                boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 4))],
               ),
               child: FloatingActionButton(
                 onPressed: () {
@@ -86,31 +71,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.folder_open,
-            size: 80,
-            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
-          ),
+          Icon(Icons.folder_open, size: 80, color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5)),
           const SizedBox(height: 16),
-          Text(
-            AppLocalizations.of(context).noCategoriesYet,
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
+          Text(AppLocalizations.of(context)!.noCategoriesYet, style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: 8),
-          Text(
-            AppLocalizations.of(context).noCategoriesYetDescription,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
-          ),
+          Text(AppLocalizations.of(context)!.noCategoriesYetDescription, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6))),
           const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: _showAddCategoryDialog,
-            icon: const Icon(Icons.add),
-            label: Text(AppLocalizations.of(context).createCategory),
-          ),
+          ElevatedButton.icon(onPressed: _showAddCategoryDialog, icon: const Icon(Icons.add), label: Text(AppLocalizations.of(context)!.createCategory)),
         ],
       ),
     );
@@ -128,15 +95,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
             leading: Container(
               width: 24,
               height: 24,
-              decoration: BoxDecoration(
-                color: category.color,
-                shape: BoxShape.circle,
-              ),
+              decoration: BoxDecoration(color: category.color, shape: BoxShape.circle),
             ),
             title: Text(category.name),
-            subtitle: Text(
-              AppLocalizations.of(context).tasksCount(category.tasksCount),
-            ),
+            subtitle: Text(AppLocalizations.of(context)!.tasksCount(category.tasksCount)),
             trailing: PopupMenuButton<String>(
               onSelected: (value) {
                 switch (value) {
@@ -151,13 +113,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
               itemBuilder: (context) => [
                 PopupMenuItem(
                   value: 'edit',
-                  child: Row(
-                    children: [
-                      Icon(Icons.edit),
-                      SizedBox(width: 8),
-                      Text(AppLocalizations.of(context).editButton),
-                    ],
-                  ),
+                  child: Row(children: [Icon(Icons.edit), SizedBox(width: 8), Text(AppLocalizations.of(context)!.editButton)]),
                 ),
                 PopupMenuItem(
                   value: 'delete',
@@ -165,10 +121,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     children: [
                       Icon(Icons.delete, color: Colors.red),
                       SizedBox(width: 8),
-                      Text(
-                        AppLocalizations.of(context).deleteButton,
-                        style: TextStyle(color: Colors.red),
-                      ),
+                      Text(AppLocalizations.of(context)!.deleteButton, style: TextStyle(color: Colors.red)),
                     ],
                   ),
                 ),
@@ -197,18 +150,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
       isScrollControlled: true,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Wrap(
             children: [
-              ListTile(
-                title: Text(
-                  category == null
-                      ? AppLocalizations.of(context).addCategory
-                      : AppLocalizations.of(context).editCategory,
-                ),
-              ),
+              ListTile(title: Text(category == null ? AppLocalizations.of(context)!.addCategory : AppLocalizations.of(context)!.editCategory)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -216,18 +161,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   children: [
                     TextField(
                       controller: nameController,
-                      decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context).categoryName,
-                        hintText: AppLocalizations.of(
-                          context,
-                        ).enterCategoryName,
-                      ),
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context)!.categoryName, hintText: AppLocalizations.of(context)!.enterCategoryName),
                       autofocus: true,
                     ),
                     const SizedBox(height: 16),
                     Row(
                       children: [
-                        Text(AppLocalizations.of(context).color),
+                        Text(AppLocalizations.of(context)!.color),
                         const SizedBox(width: 16),
                         GestureDetector(
                           onTap: () async {
@@ -235,18 +175,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               context: context,
                               isScrollControlled: true,
                               builder: (context) => Padding(
-                                padding: EdgeInsets.only(
-                                  bottom: MediaQuery.of(
-                                    context,
-                                  ).viewInsets.bottom,
-                                ),
+                                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                                 child: Wrap(
                                   children: [
-                                    ListTile(
-                                      title: Text(
-                                        AppLocalizations.of(context).pickAColor,
-                                      ),
-                                    ),
+                                    ListTile(title: Text(AppLocalizations.of(context)!.pickAColor)),
                                     SingleChildScrollView(
                                       child: ColorPicker(
                                         pickerColor: selectedColor,
@@ -261,25 +193,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(),
-                                          child: Text(
-                                            AppLocalizations.of(
-                                              context,
-                                            ).cancelButton,
-                                          ),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () => Navigator.of(
-                                            context,
-                                          ).pop(selectedColor),
-                                          child: Text(
-                                            AppLocalizations.of(
-                                              context,
-                                            ).selectButton,
-                                          ),
-                                        ),
+                                        TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancelButton)),
+                                        ElevatedButton(onPressed: () => Navigator.of(context).pop(selectedColor), child: Text(AppLocalizations.of(context)!.selectButton)),
                                       ],
                                     ),
                                   ],
@@ -298,10 +213,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             decoration: BoxDecoration(
                               color: selectedColor,
                               shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Theme.of(context).colorScheme.outline,
-                                width: 2,
-                              ),
+                              border: Border.all(color: Theme.of(context).colorScheme.outline, width: 2),
                             ),
                           ),
                         ),
@@ -312,44 +224,23 @@ class _CategoryScreenState extends State<CategoryScreen> {
               ),
               OverflowBar(
                 children: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text(AppLocalizations.of(context).cancelButton),
-                  ),
+                  TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancelButton)),
                   ElevatedButton(
                     onPressed: () {
                       if (nameController.text.trim().isNotEmpty) {
                         if (category == null) {
                           // Add new category
-                          final newCategory = Category(
-                            id: DateTime.now().millisecondsSinceEpoch
-                                .toString(),
-                            name: nameController.text.trim(),
-                            color: selectedColor,
-                            icon: 'folder',
-                            createdAt: DateTime.now(),
-                          );
-                          context.read<CategoryBloc>().add(
-                            AddCategory(newCategory),
-                          );
+                          final newCategory = Category(id: DateTime.now().millisecondsSinceEpoch.toString(), name: nameController.text.trim(), color: selectedColor, icon: 'folder', createdAt: DateTime.now());
+                          context.read<CategoryBloc>().add(AddCategory(newCategory));
                         } else {
                           // Update existing category
-                          final updatedCategory = category.copyWith(
-                            name: nameController.text.trim(),
-                            color: selectedColor,
-                          );
-                          context.read<CategoryBloc>().add(
-                            UpdateCategory(updatedCategory),
-                          );
+                          final updatedCategory = category.copyWith(name: nameController.text.trim(), color: selectedColor);
+                          context.read<CategoryBloc>().add(UpdateCategory(updatedCategory));
                         }
                         Navigator.of(context).pop();
                       }
                     },
-                    child: Text(
-                      category == null
-                          ? AppLocalizations.of(context).addButton
-                          : AppLocalizations.of(context).updateButton,
-                    ),
+                    child: Text(category == null ? AppLocalizations.of(context)!.addButton : AppLocalizations.of(context)!.updateButton),
                   ),
                 ],
               ),
@@ -365,26 +256,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
       context: context,
       builder: (context) => Wrap(
         children: [
-          ListTile(title: Text(AppLocalizations.of(context).deleteCategory)),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              AppLocalizations.of(context).confirmDeleteCategory(category.name),
-            ),
-          ),
+          ListTile(title: Text(AppLocalizations.of(context)!.deleteCategory)),
+          Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: Text(AppLocalizations.of(context)!.confirmDeleteCategory(category.name))),
           OverflowBar(
             children: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(AppLocalizations.of(context).cancelButton),
-              ),
+              TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancelButton)),
               ElevatedButton(
                 onPressed: () {
                   context.read<CategoryBloc>().add(DeleteCategory(category.id));
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: Text(AppLocalizations.of(context).deleteButton),
+                child: Text(AppLocalizations.of(context)!.deleteButton),
               ),
             ],
           ),

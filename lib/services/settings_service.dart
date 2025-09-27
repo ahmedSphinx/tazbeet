@@ -171,10 +171,15 @@ class SettingsService extends ChangeNotifier {
     final settingsJson = prefs.getString('app_settings');
     if (settingsJson != null) {
       try {
-        final json = Map<String, dynamic>.from(
-          jsonDecode(settingsJson) as Map,
-        );
-        _settings = AppSettings.fromJson(json);
+        final decodedJson = jsonDecode(settingsJson);
+        if (decodedJson is Map) {
+          // Convert Map<dynamic, dynamic> to Map<String, dynamic> safely
+          final Map<String, dynamic> convertedJson = {};
+          decodedJson.forEach((key, value) {
+            convertedJson[key.toString()] = value;
+          });
+          _settings = AppSettings.fromJson(convertedJson);
+        }
       } catch (e) {
         log('Error loading settings: $e');
         // Clear corrupted data and use default settings

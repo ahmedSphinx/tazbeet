@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../l10n/generated/app_localizations.dart';
-import '../models/task.dart';
+import 'package:tazbeet/l10n/app_localizations.dart';
+ import '../models/task.dart';
 
 class LocalizationService {
   static AppLocalizations? _localizations;

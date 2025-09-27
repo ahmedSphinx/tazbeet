@@ -82,8 +82,23 @@ class TaskAdapter extends TypeAdapter<Task> {
 
   @override
   Task read(BinaryReader reader) {
-    final json = reader.readMap();
-    return Task.fromJson(Map<String, dynamic>.from(json));
+    try {
+      final json = reader.readMap();
+      // Convert Map<dynamic, dynamic> to Map<String, dynamic> safely
+      final Map<String, dynamic> convertedJson = {};
+      json.forEach((key, value) {
+        convertedJson[key.toString()] = value;
+      });
+      return Task.fromJson(convertedJson);
+    } catch (e) {
+      // If deserialization fails, create a basic task
+      return Task(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        title: 'Error Loading Task',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+    }
   }
 
   @override

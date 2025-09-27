@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart' hide ThemeMode;
 import 'package:provider/provider.dart';
+import 'package:tazbeet/l10n/app_localizations.dart';
 import '../../services/settings_service.dart' as settings;
 import '../../services/color_customization_service.dart';
 import '../../services/task_sound_service.dart';
 import '../../services/update_service.dart';
 import '../../ui/widgets/color_customization_widget.dart';
-import '../../l10n/generated/app_localizations.dart';
+
 import 'profile_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -27,21 +28,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     appBar: AppBar(
-        title: Text(AppLocalizations.of(context).settingsScreenTitle),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.settingsScreenTitle),
         backgroundColor: Theme.of(context).colorScheme.surface,
         foregroundColor: Theme.of(context).colorScheme.onSurface,
         elevation: 0,
         actions: [
-                TextButton(
-                  onPressed: () {
-                    context.read<settings.SettingsService>().resetToDefaults();
-                    context.read<ColorCustomizationService>().resetToDefault();
-                  },
-                  child: Text(AppLocalizations.of(context).resetButton),
-                ),
-              ]
-            ,
+          TextButton(
+            onPressed: () {
+              context.read<settings.SettingsService>().resetToDefaults();
+              context.read<ColorCustomizationService>().resetToDefault();
+            },
+            child: Text(AppLocalizations.of(context)!.resetButton),
+          ),
+        ],
       ),
       body: Consumer2<settings.SettingsService, ColorCustomizationService>(
         builder: (context, settingsService, colorService, child) {
@@ -50,7 +50,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               _buildProfileSection(),
               const SizedBox(height: 24),
-              _buildSectionHeader(AppLocalizations.of(context).appearanceSection),
+              _buildSectionHeader(AppLocalizations.of(context)!.appearanceSection),
               _buildThemeSettings(settingsService),
               _buildAccessibilitySettings(settingsService),
               Consumer<ColorCustomizationService>(
@@ -60,7 +60,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const SizedBox(height: 24),
 
-              _buildSectionHeader(AppLocalizations.of(context).notificationsSection),
+              _buildSectionHeader(AppLocalizations.of(context)!.notificationsSection),
               _buildNotificationSettings(settingsService),
               const SizedBox(height: 24),
 
@@ -68,23 +68,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildTaskSoundSettings(),
               const SizedBox(height: 24),
 
-              _buildSectionHeader(AppLocalizations.of(context).pomodoroSection),
+              _buildSectionHeader(AppLocalizations.of(context)!.pomodoroSection),
               _buildPomodoroSettings(settingsService),
               const SizedBox(height: 24),
 
-              _buildSectionHeader(AppLocalizations.of(context).dataBackupSection),
+              _buildSectionHeader(AppLocalizations.of(context)!.dataBackupSection),
               _buildBackupSettings(settingsService),
               const SizedBox(height: 24),
 
-              _buildSectionHeader(AppLocalizations.of(context).privacyAnalyticsSection),
+              _buildSectionHeader(AppLocalizations.of(context)!.privacyAnalyticsSection),
               _buildPrivacySettings(settingsService),
               const SizedBox(height: 24),
 
-              _buildSectionHeader(AppLocalizations.of(context).regionalSection),
+              _buildSectionHeader(AppLocalizations.of(context)!.regionalSection),
               _buildRegionalSettings(settingsService),
               const SizedBox(height: 24),
 
-              _buildSectionHeader(AppLocalizations.of(context).appUpdates),
+              _buildSectionHeader(AppLocalizations.of(context)!.appUpdates),
               _buildUpdateSettings(),
             ],
           );
@@ -97,13 +97,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Card(
       child: ListTile(
         leading: const Icon(Icons.person),
-        title: Text(AppLocalizations.of(context).profile),
-        subtitle: Text(AppLocalizations.of(context).editProfileInfo),
+        title: Text(AppLocalizations.of(context)!.profile),
+        subtitle: Text(AppLocalizations.of(context)!.editProfileInfo),
         trailing: const Icon(Icons.arrow_forward_ios),
         onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const ProfileScreen()),
-          );
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ProfileScreen()));
         },
       ),
     );
@@ -114,11 +112,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       padding: const EdgeInsets.only(bottom: 8),
       child: Text(
         title,
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          color: Theme.of(context).colorScheme.primary,
-        ),
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.primary),
       ),
     );
   }
@@ -127,11 +121,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     String getThemeModeName(settings.ThemeMode mode) {
       switch (mode) {
         case settings.ThemeMode.system:
-          return AppLocalizations.of(context).systemTheme;
+          return AppLocalizations.of(context)!.systemTheme;
         case settings.ThemeMode.light:
-          return AppLocalizations.of(context).lightTheme;
+          return AppLocalizations.of(context)!.lightTheme;
         case settings.ThemeMode.dark:
-          return AppLocalizations.of(context).darkTheme;
+          return AppLocalizations.of(context)!.darkTheme;
       }
     }
 
@@ -139,10 +133,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Column(
         children: [
           ListTile(
-            title: Text(AppLocalizations.of(context).themeLabel),
-            subtitle: Text(
-              getThemeModeName(settingsService.settings.themeMode),
-            ),
+            title: Text(AppLocalizations.of(context)!.themeLabel),
+            subtitle: Text(getThemeModeName(settingsService.settings.themeMode)),
             trailing: DropdownButton<settings.ThemeMode>(
               value: settingsService.settings.themeMode,
               onChanged: (value) {
@@ -151,10 +143,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
               items: settings.ThemeMode.values.map((mode) {
-                return DropdownMenuItem(
-                  value: mode,
-                  child: Text(getThemeModeName(mode)),
-                );
+                return DropdownMenuItem(value: mode, child: Text(getThemeModeName(mode)));
               }).toList(),
             ),
           ),
@@ -172,9 +161,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             subtitle: const Text('Increase contrast for better visibility'),
             value: settingsService.settings.enableHighContrast,
             onChanged: (value) {
-              settingsService.updateSettings(
-                settingsService.settings.copyWith(enableHighContrast: value),
-              );
+              settingsService.updateSettings(settingsService.settings.copyWith(enableHighContrast: value));
             },
           ),
           SwitchListTile(
@@ -182,9 +169,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             subtitle: const Text('Use larger font sizes'),
             value: settingsService.settings.enableLargeText,
             onChanged: (value) {
-              settingsService.updateSettings(
-                settingsService.settings.copyWith(enableLargeText: value),
-              );
+              settingsService.updateSettings(settingsService.settings.copyWith(enableLargeText: value));
             },
           ),
           SwitchListTile(
@@ -192,9 +177,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             subtitle: const Text('Enable screen reader support'),
             value: settingsService.settings.enableScreenReader,
             onChanged: (value) {
-              settingsService.updateSettings(
-                settingsService.settings.copyWith(enableScreenReader: value),
-              );
+              settingsService.updateSettings(settingsService.settings.copyWith(enableScreenReader: value));
             },
           ),
         ],
@@ -203,9 +186,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildNotificationSettings(settings.SettingsService settingsService) {
-    String getNotificationFrequencyName(
-      settings.NotificationFrequency frequency,
-    ) {
+    String getNotificationFrequencyName(settings.NotificationFrequency frequency) {
       switch (frequency) {
         case settings.NotificationFrequency.immediate:
           return 'Immediate';
@@ -221,20 +202,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Card(
       child: Column(
         children: [
-          SwitchListTile(
-            title: const Text('Enable Notifications'),
-            value: settingsService.settings.enableNotifications,
-            onChanged: (value) =>
-                settingsService.setNotificationsEnabled(value),
-          ),
+          SwitchListTile(title: const Text('Enable Notifications'), value: settingsService.settings.enableNotifications, onChanged: (value) => settingsService.setNotificationsEnabled(value)),
           if (settingsService.settings.enableNotifications) ...[
             ListTile(
               title: const Text('Notification Frequency'),
-              subtitle: Text(
-                getNotificationFrequencyName(
-                  settingsService.settings.notificationFrequency,
-                ),
-              ),
+              subtitle: Text(getNotificationFrequencyName(settingsService.settings.notificationFrequency)),
               trailing: DropdownButton<settings.NotificationFrequency>(
                 value: settingsService.settings.notificationFrequency,
                 onChanged: (value) {
@@ -243,10 +215,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   }
                 },
                 items: settings.NotificationFrequency.values.map((freq) {
-                  return DropdownMenuItem(
-                    value: freq,
-                    child: Text(getNotificationFrequencyName(freq)),
-                  );
+                  return DropdownMenuItem(value: freq, child: Text(getNotificationFrequencyName(freq)));
                 }).toList(),
               ),
             ),
@@ -254,18 +223,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: const Text('Sound'),
               value: settingsService.settings.enableSound,
               onChanged: (value) {
-                settingsService.updateSettings(
-                  settingsService.settings.copyWith(enableSound: value),
-                );
+                settingsService.updateSettings(settingsService.settings.copyWith(enableSound: value));
               },
             ),
             SwitchListTile(
               title: const Text('Vibration'),
               value: settingsService.settings.enableVibration,
               onChanged: (value) {
-                settingsService.updateSettings(
-                  settingsService.settings.copyWith(enableVibration: value),
-                );
+                settingsService.updateSettings(settingsService.settings.copyWith(enableVibration: value));
               },
             ),
           ],
@@ -300,10 +265,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       }
                     },
                     items: taskSoundService.availableSounds.entries.map((entry) {
-                      return DropdownMenuItem(
-                        value: entry.key,
-                        child: Text(entry.value),
-                      );
+                      return DropdownMenuItem(value: entry.key, child: Text(entry.value));
                     }).toList(),
                   ),
                 ),
@@ -328,9 +290,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                     icon: const Icon(Icons.play_arrow),
                     label: const Text('Test Sound'),
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 40),
-                    ),
+                    style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 40)),
                   ),
                 ),
               ],
@@ -360,9 +320,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [
           ListTile(
             title: const Text('Pomodoro Preset'),
-            subtitle: Text(
-              getPomodoroPresetName(settingsService.settings.pomodoroPreset),
-            ),
+            subtitle: Text(getPomodoroPresetName(settingsService.settings.pomodoroPreset)),
             trailing: DropdownButton<settings.PomodoroPreset>(
               value: settingsService.settings.pomodoroPreset,
               onChanged: (value) {
@@ -371,24 +329,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
               items: settings.PomodoroPreset.values.map((preset) {
-                return DropdownMenuItem(
-                  value: preset,
-                  child: Text(getPomodoroPresetName(preset)),
-                );
+                return DropdownMenuItem(value: preset, child: Text(getPomodoroPresetName(preset)));
               }).toList(),
             ),
           ),
-          if (settingsService.settings.pomodoroPreset ==
-              settings.PomodoroPreset.custom)
-            _buildCustomPomodoroSettings(settingsService),
+          if (settingsService.settings.pomodoroPreset == settings.PomodoroPreset.custom) _buildCustomPomodoroSettings(settingsService),
         ],
       ),
     );
   }
 
-  Widget _buildCustomPomodoroSettings(
-    settings.SettingsService settingsService,
-  ) {
+  Widget _buildCustomPomodoroSettings(settings.SettingsService settingsService) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -400,40 +351,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               Expanded(
                 child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Work',
-                    border: OutlineInputBorder(),
-                  ),
+                  decoration: const InputDecoration(labelText: 'Work', border: OutlineInputBorder()),
                   keyboardType: TextInputType.number,
-                  controller: TextEditingController(
-                    text: settingsService.settings.customWorkDuration
-                        .toString(),
-                  ),
+                  controller: TextEditingController(text: settingsService.settings.customWorkDuration.toString()),
                   onChanged: (value) {
                     final duration = int.tryParse(value) ?? 25;
-                    settingsService.setCustomPomodoroDurations(
-                      workDuration: duration,
-                    );
+                    settingsService.setCustomPomodoroDurations(workDuration: duration);
                   },
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Short Break',
-                    border: OutlineInputBorder(),
-                  ),
+                  decoration: const InputDecoration(labelText: 'Short Break', border: OutlineInputBorder()),
                   keyboardType: TextInputType.number,
-                  controller: TextEditingController(
-                    text: settingsService.settings.customShortBreakDuration
-                        .toString(),
-                  ),
+                  controller: TextEditingController(text: settingsService.settings.customShortBreakDuration.toString()),
                   onChanged: (value) {
                     final duration = int.tryParse(value) ?? 5;
-                    settingsService.setCustomPomodoroDurations(
-                      shortBreakDuration: duration,
-                    );
+                    settingsService.setCustomPomodoroDurations(shortBreakDuration: duration);
                   },
                 ),
               ),
@@ -444,40 +379,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               Expanded(
                 child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Long Break',
-                    border: OutlineInputBorder(),
-                  ),
+                  decoration: const InputDecoration(labelText: 'Long Break', border: OutlineInputBorder()),
                   keyboardType: TextInputType.number,
-                  controller: TextEditingController(
-                    text: settingsService.settings.customLongBreakDuration
-                        .toString(),
-                  ),
+                  controller: TextEditingController(text: settingsService.settings.customLongBreakDuration.toString()),
                   onChanged: (value) {
                     final duration = int.tryParse(value) ?? 15;
-                    settingsService.setCustomPomodoroDurations(
-                      longBreakDuration: duration,
-                    );
+                    settingsService.setCustomPomodoroDurations(longBreakDuration: duration);
                   },
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Sessions to Long Break',
-                    border: OutlineInputBorder(),
-                  ),
+                  decoration: const InputDecoration(labelText: 'Sessions to Long Break', border: OutlineInputBorder()),
                   keyboardType: TextInputType.number,
-                  controller: TextEditingController(
-                    text: settingsService.settings.sessionsUntilLongBreak
-                        .toString(),
-                  ),
+                  controller: TextEditingController(text: settingsService.settings.sessionsUntilLongBreak.toString()),
                   onChanged: (value) {
                     final sessions = int.tryParse(value) ?? 4;
-                    settingsService.setCustomPomodoroDurations(
-                      sessionsUntilLongBreak: sessions,
-                    );
+                    settingsService.setCustomPomodoroDurations(sessionsUntilLongBreak: sessions);
                   },
                 ),
               ),
@@ -497,33 +416,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
             subtitle: const Text('Automatically backup your data'),
             value: settingsService.settings.enableAutoBackup,
             onChanged: (value) {
-              settingsService.updateSettings(
-                settingsService.settings.copyWith(enableAutoBackup: value),
-              );
+              settingsService.updateSettings(settingsService.settings.copyWith(enableAutoBackup: value));
             },
           ),
           if (settingsService.settings.enableAutoBackup)
             ListTile(
               title: const Text('Backup Frequency'),
-              subtitle: Text(
-                '${settingsService.settings.backupFrequencyDays} days',
-              ),
+              subtitle: Text('${settingsService.settings.backupFrequencyDays} days'),
               trailing: DropdownButton<int>(
                 value: settingsService.settings.backupFrequencyDays,
                 onChanged: (value) {
                   if (value != null) {
-                    settingsService.updateSettings(
-                      settingsService.settings.copyWith(
-                        backupFrequencyDays: value,
-                      ),
-                    );
+                    settingsService.updateSettings(settingsService.settings.copyWith(backupFrequencyDays: value));
                   }
                 },
                 items: [1, 3, 7, 14, 30].map((days) {
-                  return DropdownMenuItem(
-                    value: days,
-                    child: Text('$days days'),
-                  );
+                  return DropdownMenuItem(value: days, child: Text('$days days'));
                 }).toList(),
               ),
             ),
@@ -541,9 +449,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             subtitle: const Text('Help improve the app with usage data'),
             value: settingsService.settings.enableAnalytics,
             onChanged: (value) {
-              settingsService.updateSettings(
-                settingsService.settings.copyWith(enableAnalytics: value),
-              );
+              settingsService.updateSettings(settingsService.settings.copyWith(enableAnalytics: value));
             },
           ),
           SwitchListTile(
@@ -551,9 +457,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             subtitle: const Text('Send crash reports to help fix issues'),
             value: settingsService.settings.enableCrashReporting,
             onChanged: (value) {
-              settingsService.updateSettings(
-                settingsService.settings.copyWith(enableCrashReporting: value),
-              );
+              settingsService.updateSettings(settingsService.settings.copyWith(enableCrashReporting: value));
             },
           ),
         ],
@@ -572,16 +476,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               value: settingsService.settings.language,
               onChanged: (value) {
                 if (value != null) {
-                  settingsService.updateSettings(
-                    settingsService.settings.copyWith(language: value),
-                  );
+                  settingsService.updateSettings(settingsService.settings.copyWith(language: value));
                 }
               },
-              items: ['en','ar', 'es', 'fr', 'de'].map((lang) {
-                return DropdownMenuItem(
-                  value: lang,
-                  child: Text(_getLanguageName(lang)),
-                );
+              items: ['en', 'ar', 'es', 'fr', 'de'].map((lang) {
+                return DropdownMenuItem(value: lang, child: Text(_getLanguageName(lang)));
               }).toList(),
             ),
           ),
@@ -592,9 +491,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               value: settingsService.settings.dateFormat,
               onChanged: (value) {
                 if (value != null) {
-                  settingsService.updateSettings(
-                    settingsService.settings.copyWith(dateFormat: value),
-                  );
+                  settingsService.updateSettings(settingsService.settings.copyWith(dateFormat: value));
                 }
               },
               items: ['MM/dd/yyyy', 'dd/MM/yyyy', 'yyyy-MM-dd'].map((format) {
@@ -609,9 +506,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               value: settingsService.settings.timeFormat,
               onChanged: (value) {
                 if (value != null) {
-                  settingsService.updateSettings(
-                    settingsService.settings.copyWith(timeFormat: value),
-                  );
+                  settingsService.updateSettings(settingsService.settings.copyWith(timeFormat: value));
                 }
               },
               items: ['12h', '24h'].map((format) {
@@ -635,9 +530,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  String _getNotificationFrequencyName(
-    settings.NotificationFrequency frequency,
-  ) {
+  String _getNotificationFrequencyName(settings.NotificationFrequency frequency) {
     switch (frequency) {
       case settings.NotificationFrequency.immediate:
         return 'Immediate';
@@ -686,52 +579,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
         return Card(
           child: Column(
             children: [
-              ListTile(
-                title: Text(AppLocalizations.of(context).currentVersion),
-                subtitle: Text(AppLocalizations.of(context).version(updateService.currentVersion)),
-              ),
+              ListTile(title: Text(AppLocalizations.of(context)!.currentVersion), subtitle: Text(AppLocalizations.of(context)!.version(updateService.currentVersion))),
               const Divider(),
               ListTile(
-                title: Text(AppLocalizations.of(context).checkForUpdates),
+                title: Text(AppLocalizations.of(context)!.checkForUpdates),
                 subtitle: Text(_getUpdateStatusText(updateService)),
                 trailing: updateService.isChecking
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : IconButton(
-                        icon: const Icon(Icons.refresh),
-                        onPressed: () => _checkForUpdates(updateService),
-                      ),
+                    ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                    : IconButton(icon: const Icon(Icons.refresh), onPressed: () => _checkForUpdates(updateService)),
                 onTap: () => _checkForUpdates(updateService),
               ),
               if (updateService.isUpdateAvailable) ...[
                 const Divider(),
                 ListTile(
-                  title: Text(AppLocalizations.of(context).updateAvailable),
-                  subtitle: Text(AppLocalizations.of(context).version(updateService.updateInfo?.version ?? '')),
+                  title: Text(AppLocalizations.of(context)!.updateAvailable),
+                  subtitle: Text(AppLocalizations.of(context)!.version(updateService.updateInfo?.version ?? '')),
                   trailing: updateService.isDownloading
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : ElevatedButton(
-                          onPressed: () => _startUpdate(updateService),
-                          child: Text(AppLocalizations.of(context).installUpdate),
-                        ),
+                      ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                      : ElevatedButton(onPressed: () => _startUpdate(updateService), child: Text(AppLocalizations.of(context)!.installUpdate)),
                 ),
               ],
               if (updateService.hasError) ...[
                 const Divider(),
                 ListTile(
-                  title: Text(AppLocalizations.of(context).updateError),
+                  title: Text(AppLocalizations.of(context)!.updateError),
                   subtitle: const Text('Failed to check for updates'),
-                  trailing: TextButton(
-                    onPressed: () => _checkForUpdates(updateService),
-                    child: Text(AppLocalizations.of(context).retry),
-                  ),
+                  trailing: TextButton(onPressed: () => _checkForUpdates(updateService), child: Text(AppLocalizations.of(context)!.retry)),
                 ),
               ],
             ],
@@ -743,13 +616,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   String _getUpdateStatusText(UpdateService updateService) {
     if (updateService.isChecking) {
-      return AppLocalizations.of(context).downloadingUpdate;
+      return AppLocalizations.of(context)!.downloadingUpdate;
     } else if (updateService.isUpdateAvailable) {
-      return AppLocalizations.of(context).updateAvailable;
+      return AppLocalizations.of(context)!.updateAvailable;
     } else if (updateService.hasError) {
-      return AppLocalizations.of(context).updateError;
+      return AppLocalizations.of(context)!.updateError;
     } else {
-      return AppLocalizations.of(context).noUpdatesAvailable;
+      return AppLocalizations.of(context)!.noUpdatesAvailable;
     }
   }
 

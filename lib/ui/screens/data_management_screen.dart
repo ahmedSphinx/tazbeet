@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../blocs/task/task_bloc.dart';
-import '../../blocs/task/task_event.dart';
+import '../../blocs/task_list/task_list_bloc.dart';
+import '../../blocs/task_list/task_list_event.dart';
 import '../../services/data_management_service.dart';
 
 class DataManagementScreen extends StatefulWidget {
@@ -19,10 +19,7 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Data Management'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
+      appBar: AppBar(title: const Text('Data Management'), backgroundColor: Theme.of(context).colorScheme.inversePrimary),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
@@ -42,12 +39,7 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
   Widget _buildSectionHeader(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+      child: Text(title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
     );
   }
 
@@ -63,36 +55,20 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
             Row(
               children: [
                 Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: _isExporting ? null : _exportToCSV,
-                    icon: const Icon(Icons.table_chart),
-                    label: const Text('Export CSV'),
-                  ),
+                  child: ElevatedButton.icon(onPressed: _isExporting ? null : _exportToCSV, icon: const Icon(Icons.table_chart), label: const Text('Export CSV')),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: _isExporting ? null : _exportToJSON,
-                    icon: const Icon(Icons.code),
-                    label: const Text('Export JSON'),
-                  ),
+                  child: ElevatedButton.icon(onPressed: _isExporting ? null : _exportToJSON, icon: const Icon(Icons.code), label: const Text('Export JSON')),
                 ),
               ],
             ),
             const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: _isExporting ? null : _exportToICS,
-                icon: const Icon(Icons.calendar_today),
-                label: const Text('Export ICS (Calendar)'),
-              ),
+              child: ElevatedButton.icon(onPressed: _isExporting ? null : _exportToICS, icon: const Icon(Icons.calendar_today), label: const Text('Export ICS (Calendar)')),
             ),
-            if (_isExporting)
-              const Padding(
-                padding: EdgeInsets.only(top: 16.0),
-                child: LinearProgressIndicator(),
-              ),
+            if (_isExporting) const Padding(padding: EdgeInsets.only(top: 16.0), child: LinearProgressIndicator()),
           ],
         ),
       ),
@@ -110,17 +86,9 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
             const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: _isImporting ? null : _importFromFile,
-                icon: const Icon(Icons.file_upload),
-                label: const Text('Import from File'),
-              ),
+              child: ElevatedButton.icon(onPressed: _isImporting ? null : _importFromFile, icon: const Icon(Icons.file_upload), label: const Text('Import from File')),
             ),
-            if (_isImporting)
-              const Padding(
-                padding: EdgeInsets.only(top: 16.0),
-                child: LinearProgressIndicator(),
-              ),
+            if (_isImporting) const Padding(padding: EdgeInsets.only(top: 16.0), child: LinearProgressIndicator()),
           ],
         ),
       ),
@@ -139,19 +107,11 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
             Row(
               children: [
                 Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: _createBackup,
-                    icon: const Icon(Icons.backup),
-                    label: const Text('Create Backup'),
-                  ),
+                  child: ElevatedButton.icon(onPressed: _createBackup, icon: const Icon(Icons.backup), label: const Text('Create Backup')),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: _restoreBackup,
-                    icon: const Icon(Icons.restore),
-                    label: const Text('Restore Backup'),
-                  ),
+                  child: ElevatedButton.icon(onPressed: _restoreBackup, icon: const Icon(Icons.restore), label: const Text('Restore Backup')),
                 ),
               ],
             ),
@@ -215,7 +175,7 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
         }
 
         // Refresh the task list
-        context.read<TaskBloc>().add(LoadTasks());
+        context.read<TaskListBloc>().add(LoadTasks());
         _showSuccessSnackBar('Import completed successfully');
       }
     } catch (e) {
@@ -240,7 +200,7 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
       final filePath = await _dataService.pickImportFile();
       if (filePath != null && filePath.endsWith('.json')) {
         await _dataService.importTasksFromJSON(filePath);
-        context.read<TaskBloc>().add(LoadTasks());
+        context.read<TaskListBloc>().add(LoadTasks());
         _showSuccessSnackBar('Backup restored successfully');
       } else {
         _showErrorSnackBar('Please select a valid backup file');
@@ -251,20 +211,10 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
   }
 
   void _showSuccessSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-      ),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.green));
   }
 
   void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 }

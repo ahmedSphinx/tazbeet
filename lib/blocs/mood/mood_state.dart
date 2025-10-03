@@ -47,3 +47,12 @@ class MoodError extends MoodState {
   @override
   List<Object?> get props => [message];
 }
+
+class MoodCheckInTriggeredState extends MoodState {
+  final DateTime triggerTime;
+
+  const MoodCheckInTriggeredState(this.triggerTime);
+
+  @override
+  List<Object?> get props => [triggerTime];
+}

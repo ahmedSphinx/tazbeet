@@ -17,4 +17,26 @@ class AuthSignInRequested extends AuthEvent {}
 
 class AuthFacebookSignInRequested extends AuthEvent {}
 
+class AuthEmailSignInRequested extends AuthEvent {
+  final String email;
+  final String password;
+
+  const AuthEmailSignInRequested(this.email, this.password);
+
+  @override
+  List<Object?> get props => [email, password];
+}
+
+class AuthEmailSignUpRequested extends AuthEvent {
+  final String email;
+  final String password;
+
+  const AuthEmailSignUpRequested(this.email, this.password);
+
+  @override
+  List<Object?> get props => [email, password];
+}
+
 class AuthSignOutRequested extends AuthEvent {}
+
+class AuthProfileCompleted extends AuthEvent {}

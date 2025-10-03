@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:tazbeet/services/app_logging.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -57,7 +57,7 @@ class TaskDetailsBloc extends Bloc<TaskDetailsEvent, TaskDetailsState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          log('Failed to sync strict mode toggle to Firestore: $e');
+          AppLogging.logInfo('Failed to sync strict mode toggle to Firestore: $e');
         }
       }
     }
@@ -89,7 +89,7 @@ class TaskDetailsBloc extends Bloc<TaskDetailsEvent, TaskDetailsState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          log('Failed to sync subtask addition to Firestore: $e');
+          AppLogging.logInfo('Failed to sync subtask addition to Firestore: $e');
         }
       }
     }
@@ -125,7 +125,7 @@ class TaskDetailsBloc extends Bloc<TaskDetailsEvent, TaskDetailsState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          log('Failed to sync subtask update to Firestore: $e');
+          AppLogging.logInfo('Failed to sync subtask update to Firestore: $e');
         }
       }
     }
@@ -157,7 +157,7 @@ class TaskDetailsBloc extends Bloc<TaskDetailsEvent, TaskDetailsState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          log('Failed to sync subtask deletion to Firestore: $e');
+          AppLogging.logInfo('Failed to sync subtask deletion to Firestore: $e');
         }
       }
     }
@@ -179,7 +179,7 @@ class TaskDetailsBloc extends Bloc<TaskDetailsEvent, TaskDetailsState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          log('Failed to sync subtasks reordering to Firestore: $e');
+          AppLogging.logInfo('Failed to sync subtasks reordering to Firestore: $e');
         }
       }
     }
@@ -197,7 +197,7 @@ class TaskDetailsBloc extends Bloc<TaskDetailsEvent, TaskDetailsState> {
       try {
         await _dataSyncService.syncToFirestore(user.uid);
       } catch (e) {
-        log('Failed to sync task details update to Firestore: $e');
+        AppLogging.logInfo('Failed to sync task details update to Firestore: $e');
       }
     }
   }
@@ -218,7 +218,7 @@ class TaskDetailsBloc extends Bloc<TaskDetailsEvent, TaskDetailsState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          log('Failed to sync task completion to Firestore: $e');
+          AppLogging.logInfo('Failed to sync task completion to Firestore: $e');
         }
       }
     }
@@ -240,7 +240,7 @@ class TaskDetailsBloc extends Bloc<TaskDetailsEvent, TaskDetailsState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          log('Failed to sync task duplication to Firestore: $e');
+          AppLogging.logInfo('Failed to sync task duplication to Firestore: $e');
         }
       }
     }
@@ -261,7 +261,7 @@ class TaskDetailsBloc extends Bloc<TaskDetailsEvent, TaskDetailsState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          log('Failed to sync task uncompletion to Firestore: $e');
+          AppLogging.logInfo('Failed to sync task uncompletion to Firestore: $e');
         }
       }
     }
@@ -300,10 +300,14 @@ class TaskDetailsBloc extends Bloc<TaskDetailsEvent, TaskDetailsState> {
     void count(Task t) {
       total++;
       if (t.isCompleted) completed++;
-      for (var s in t.subtasks) count(s);
+      for (var s in t.subtasks) {
+        count(s);
+      }
     }
 
-    for (var s in task.subtasks) count(s);
+    for (var s in task.subtasks) {
+      count(s);
+    }
     return total == 0 ? 0.0 : completed / total;
   }
 

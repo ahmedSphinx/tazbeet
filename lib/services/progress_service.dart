@@ -7,8 +7,7 @@ class ProgressService {
     final dayEnd = dayStart.add(const Duration(days: 1));
 
     final dayTasks = tasks.where((task) {
-      return task.createdAt.isAfter(dayStart) &&
-          task.createdAt.isBefore(dayEnd);
+      return task.createdAt.isAfter(dayStart) && task.createdAt.isBefore(dayEnd);
     }).toList();
 
     if (dayTasks.isEmpty) return 0.0;
@@ -22,8 +21,7 @@ class ProgressService {
     final weekEnd = weekStart.add(const Duration(days: 7));
 
     final weekTasks = tasks.where((task) {
-      return task.createdAt.isAfter(weekStart) &&
-          task.createdAt.isBefore(weekEnd);
+      return task.createdAt.isAfter(weekStart) && task.createdAt.isBefore(weekEnd);
     }).toList();
 
     if (weekTasks.isEmpty) return 0.0;
@@ -34,15 +32,10 @@ class ProgressService {
 
   // Calculate monthly completion percentage
   double getMonthlyCompletionPercentage(List<Task> tasks, DateTime monthStart) {
-    final monthEnd = DateTime(
-      monthStart.year,
-      monthStart.month + 1,
-      monthStart.day,
-    );
+    final monthEnd = DateTime(monthStart.year, monthStart.month + 1, monthStart.day);
 
     final monthTasks = tasks.where((task) {
-      return task.createdAt.isAfter(monthStart) &&
-          task.createdAt.isBefore(monthEnd);
+      return task.createdAt.isAfter(monthStart) && task.createdAt.isBefore(monthEnd);
     }).toList();
 
     if (monthTasks.isEmpty) return 0.0;
@@ -69,17 +62,14 @@ class ProgressService {
   int getCompletionStreak(List<Task> tasks) {
     final now = DateTime.now();
     int streak = 0;
-    final completedTasksByDate = _groupTasksByDate(
-      tasks.where((task) => task.isCompleted).toList(),
-    );
+    final completedTasksByDate = _groupTasksByDate(tasks.where((task) => task.isCompleted).toList());
 
     for (int i = 0; i < 365; i++) {
       // Check up to a year back
       final date = now.subtract(Duration(days: i));
       final dayStart = DateTime(date.year, date.month, date.day);
 
-      if (completedTasksByDate.containsKey(dayStart) &&
-          completedTasksByDate[dayStart]!.isNotEmpty) {
+      if (completedTasksByDate.containsKey(dayStart) && completedTasksByDate[dayStart]!.isNotEmpty) {
         streak++;
       } else {
         break;
@@ -94,7 +84,7 @@ class ProgressService {
     if (tasks.isEmpty) return 0.0;
 
     // Filter out tasks with null values
-    final validTasks = tasks.where((task) => task.createdAt != null).toList();
+    final validTasks = tasks;
 
     if (validTasks.isEmpty) return 0.0;
 
@@ -102,12 +92,8 @@ class ProgressService {
     final baseScore = completedTasks / validTasks.length;
 
     // Weight by priority (high priority tasks are worth more)
-    final highPriorityTasks = validTasks
-        .where((task) => task.priority == TaskPriority.high)
-        .toList();
-    final highPriorityCompleted = highPriorityTasks
-        .where((task) => task.isCompleted)
-        .length;
+    final highPriorityTasks = validTasks.where((task) => task.priority == TaskPriority.high).toList();
+    final highPriorityCompleted = highPriorityTasks.where((task) => task.isCompleted).length;
 
     double priorityWeight = 0.0;
     if (highPriorityTasks.isNotEmpty) {
@@ -121,9 +107,7 @@ class ProgressService {
     }).length;
 
     double timelinessWeight = 0.0;
-    final tasksWithDueDate = validTasks
-        .where((task) => task.dueDate != null)
-        .length;
+    final tasksWithDueDate = validTasks.where((task) => task.dueDate != null).length;
     if (tasksWithDueDate > 0) {
       timelinessWeight = (onTimeTasks / tasksWithDueDate) * 0.1;
     }
@@ -132,20 +116,13 @@ class ProgressService {
   }
 
   // Get category-wise progress
-  Map<String, double> getCategoryProgress(
-    List<Task> tasks,
-    List<String> categoryIds,
-  ) {
+  Map<String, double> getCategoryProgress(List<Task> tasks, List<String> categoryIds) {
     final categoryProgress = <String, double>{};
 
     for (final categoryId in categoryIds) {
-      final categoryTasks = tasks
-          .where((task) => task.categoryId == categoryId)
-          .toList();
+      final categoryTasks = tasks.where((task) => task.categoryId == categoryId).toList();
       if (categoryTasks.isNotEmpty) {
-        final completedTasks = categoryTasks
-            .where((task) => task.isCompleted)
-            .length;
+        final completedTasks = categoryTasks.where((task) => task.isCompleted).length;
         categoryProgress[categoryId] = completedTasks / categoryTasks.length;
       } else {
         categoryProgress[categoryId] = 0.0;
@@ -160,11 +137,7 @@ class ProgressService {
     final groupedTasks = <DateTime, List<Task>>{};
 
     for (final task in tasks) {
-      final date = DateTime(
-        task.createdAt.year,
-        task.createdAt.month,
-        task.createdAt.day,
-      );
+      final date = DateTime(task.createdAt.year, task.createdAt.month, task.createdAt.day);
       if (!groupedTasks.containsKey(date)) {
         groupedTasks[date] = [];
       }
@@ -178,9 +151,7 @@ class ProgressService {
   int getOverdueTasksCount(List<Task> tasks) {
     final now = DateTime.now();
     return tasks.where((task) {
-      return task.dueDate != null &&
-          !task.isCompleted &&
-          task.dueDate!.isBefore(now);
+      return task.dueDate != null && !task.isCompleted && task.dueDate!.isBefore(now);
     }).length;
   }
 
@@ -191,10 +162,7 @@ class ProgressService {
     final tomorrow = today.add(const Duration(days: 1));
 
     return tasks.where((task) {
-      return task.dueDate != null &&
-          !task.isCompleted &&
-          task.dueDate!.isAfter(today) &&
-          task.dueDate!.isBefore(tomorrow);
+      return task.dueDate != null && !task.isCompleted && task.dueDate!.isAfter(today) && task.dueDate!.isBefore(tomorrow);
     }).length;
   }
 
@@ -205,10 +173,7 @@ class ProgressService {
     final weekEnd = weekStart.add(const Duration(days: 7));
 
     return tasks.where((task) {
-      return task.dueDate != null &&
-          !task.isCompleted &&
-          task.dueDate!.isAfter(weekStart) &&
-          task.dueDate!.isBefore(weekEnd);
+      return task.dueDate != null && !task.isCompleted && task.dueDate!.isAfter(weekStart) && task.dueDate!.isBefore(weekEnd);
     }).length;
   }
 }

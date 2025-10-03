@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer' show log;
+import 'package:tazbeet/services/app_logging.dart';
 import 'dart:io';
 import 'package:workmanager/workmanager.dart' as wm;
 import 'package:hive_flutter/hive_flutter.dart';
@@ -32,12 +32,7 @@ class BackgroundService {
       taskReminderTask,
       taskReminderTask,
       frequency: const Duration(minutes: 15),
-      constraints: wm.Constraints(
-        requiresBatteryNotLow: true,
-        requiresCharging: false,
-        requiresDeviceIdle: false,
-        requiresStorageNotLow: true,
-      ),
+      constraints: wm.Constraints(requiresBatteryNotLow: true, requiresCharging: false, requiresDeviceIdle: false, requiresStorageNotLow: true),
     );
 
     // Register pomodoro timer task
@@ -45,12 +40,7 @@ class BackgroundService {
       pomodoroTimerTask,
       pomodoroTimerTask,
       frequency: const Duration(minutes: 1),
-      constraints: wm.Constraints(
-        requiresBatteryNotLow: true,
-        requiresCharging: false,
-        requiresDeviceIdle: false,
-        requiresStorageNotLow: true,
-      ),
+      constraints: wm.Constraints(requiresBatteryNotLow: true, requiresCharging: false, requiresDeviceIdle: false, requiresStorageNotLow: true),
     );
   }
 
@@ -61,9 +51,7 @@ class BackgroundService {
         taskReminderTask,
         inputData: {'taskId': task.id},
         initialDelay: task.reminderDate!.difference(DateTime.now()),
-        constraints: wm.Constraints(
-          requiresBatteryNotLow: true,
-        ),
+        constraints: wm.Constraints(requiresBatteryNotLow: true),
       );
     }
   }
@@ -73,14 +61,12 @@ class BackgroundService {
       await wm.Workmanager().cancelByUniqueName('task_$taskId');
     }
   }
-
-
 }
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   wm.Workmanager().executeTask((task, inputData) async {
-    log('Native called background task: $task',name: 'BackgroundService');
+    AppLogging.logInfo('Native called background task: $task', name: 'BackgroundService');
 
     // Initialize Hive for background isolate
     await Hive.initFlutter();
@@ -128,14 +114,14 @@ extension BackgroundServicePrivate on BackgroundService {
         await _notificationService.showTaskDueNotification(task);
       }
     } catch (e) {
-      log('Error checking due tasks: $e', name: 'BackgroundService');
+      AppLogging.logError('Error checking due tasks: $e', name: 'BackgroundService');
     }
   }
 
   Future<void> _managePomodoroTimers() async {
     // This would manage persistent Pomodoro timers
     // For now, just a placeholder for background timer management
-    log('Managing Pomodoro timers in background');
+    AppLogging.logInfo('Managing Pomodoro timers in background');
   }
 
   Future<void> _sendTaskReminder(String taskId) async {
@@ -145,10 +131,11 @@ extension BackgroundServicePrivate on BackgroundService {
       final task = box.get(taskId);
 
       if (task != null && !task.isCompleted) {
-        await _notificationService.scheduleTaskReminder(task);
+        // Directly show notification instead of scheduling again to avoid loop
+        await _notificationService.showTaskDueNotification(task);
       }
     } catch (e) {
-      log('Error sending task reminder: $e');
+      AppLogging.logInfo('Error sending task reminder: $e');
     }
   }
 }

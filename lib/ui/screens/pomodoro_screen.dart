@@ -27,7 +27,6 @@ class PomodoroScreen extends StatefulWidget {
 
 class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStateMixin {
   late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
   bool _initialTaskSet = false;
 
   // Enhanced UI state
@@ -40,14 +39,12 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
   int _workDuration = 25;
   int _breakDuration = 5;
   int _longBreakDuration = 15;
-  int _sessionsBeforeLongBreak = 4;
-  int _totalSessions = 4;
+  final int _sessionsBeforeLongBreak = 4;
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
 
     // Initialize enhanced features
     _confettiController = ConfettiController(duration: const Duration(seconds: 2));
@@ -70,11 +67,41 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
     super.dispose();
   }
 
-  void _showCustomizationSheet(BuildContext context) {
-    showModalBottomSheet(context: context, isScrollControlled: true, backgroundColor: Colors.transparent, builder: (context) => _buildCustomizationSheet());
+  String _getLocalizedLabel(PomodoroState state, bool isPaused, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    String label;
+    switch (state) {
+      case PomodoroState.work:
+        label = l10n.work;
+        break;
+      case PomodoroState.shortBreak:
+        label = l10n.shortBreak;
+        break;
+      case PomodoroState.longBreak:
+        label = l10n.longBreak;
+        break;
+      case PomodoroState.idle:
+        label = l10n.idle;
+        break;
+      default:
+        label = l10n.idle;
+    }
+    if (isPaused) {
+      label += ' (${l10n.paused})';
+    }
+    return label;
   }
 
-  Widget _buildCustomizationSheet() {
+  void _showCustomizationSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => StatefulBuilder(builder: (context, modalSetState) => _buildCustomizationSheet(modalSetState, () => setState(() => _showCustomization = false))),
+    );
+  }
+
+  Widget _buildCustomizationSheet(StateSetter modalSetState, VoidCallback onStart) {
     return Container(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       decoration: BoxDecoration(
@@ -87,9 +114,9 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(AppLocalizations.of(context)!.customizePomodoroSession, /* 'Customize Pomodoro Session' */ style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.customizePomodoroSession, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 24),
-            Text(AppLocalizations.of(context)!.workDurationLabel, /* 'Work Duration: $_workDuration minutes' */ style: Theme.of(context).textTheme.titleMedium),
+            Text(AppLocalizations.of(context)!.workDurationLabel, style: Theme.of(context).textTheme.titleMedium),
             Slider(
               value: _workDuration.toDouble(),
               min: 15,
@@ -97,7 +124,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
               divisions: 9,
               label: '${_workDuration}m',
               onChanged: (value) {
-                setState(() {
+                modalSetState(() {
                   _workDuration = value.toInt();
                 });
               },
@@ -111,7 +138,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
               divisions: 4,
               label: '${_breakDuration}m',
               onChanged: (value) {
-                setState(() {
+                modalSetState(() {
                   _breakDuration = value.toInt();
                 });
               },
@@ -125,7 +152,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
               divisions: 4,
               label: '${_longBreakDuration}m',
               onChanged: (value) {
-                setState(() {
+                modalSetState(() {
                   _longBreakDuration = value.toInt();
                 });
               },
@@ -141,7 +168,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context);
-                      setState(() => _showCustomization = false);
+                      onStart();
                     },
                     child: Text(AppLocalizations.of(context)!.startSession),
                   ),
@@ -237,7 +264,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
                               style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 8),
-                            Text(timer.currentStateLabel, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white.withOpacity(0.8))),
+                            Text(_getLocalizedLabel(timer.effectiveState, timer.isPaused, context), style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white.withOpacity(0.8))),
                           ],
                         ),
                         angle: 90,
@@ -277,6 +304,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
                     timer.pause();
                     _animationController.reverse();
                   } else {
+                    timer.updateSession(PomodoroSession(workDuration: _workDuration, shortBreakDuration: _breakDuration, longBreakDuration: _longBreakDuration, sessionsUntilLongBreak: _sessionsBeforeLongBreak));
                     timer.start();
                     _animationController.forward();
                   }
@@ -328,7 +356,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
 
                   return Container(
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: _getBackgroundColors(timer.state)),
+                      gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: _getBackgroundColors(timer.effectiveState)),
                     ),
                     child: SafeArea(child: _showCustomization ? _buildTaskSelectionView(timer) : _buildTimerView(timer)),
                   );
@@ -411,17 +439,17 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
     );
   }
 
-  List<Color> _getBackgroundColors(PomodoroState state) {
-    switch (state) {
+  List<Color> _getBackgroundColors(PomodoroState effectiveState) {
+    switch (effectiveState) {
       case PomodoroState.work:
         return [const Color(0xFF667EEA), const Color(0xFF764BA2)];
       case PomodoroState.shortBreak:
         return [const Color(0xFF11998E), const Color(0xFF38EF7D)];
       case PomodoroState.longBreak:
-        return [const Color(0xFF667EEA), const Color(0xFF764BA2)];
-      case PomodoroState.paused:
-        return [const Color(0xFF2C3E50), const Color(0xFF34495E)];
+        return [const Color(0xFFf093fb), const Color(0xFFf5576c)];
       case PomodoroState.idle:
+        return [const Color(0xFF667EEA), const Color(0xFF764BA2)];
+      default:
         return [const Color(0xFF667EEA), const Color(0xFF764BA2)];
     }
   }

@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:tazbeet/services/app_logging.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,7 +28,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
     return Scaffold(
       body: BlocBuilder<TaskListBloc, TaskListState>(
         builder: (context, taskState) {
-          log(' ProgressScreen state: $taskState', name: 'ProgressScreen');
+          AppLogging.logInfo(' ProgressScreen state: $taskState', name: 'ProgressScreen');
           if (taskState is TaskListLoaded) {
             return BlocBuilder<CategoryBloc, CategoryState>(
               builder: (context, categoryState) {
@@ -38,7 +38,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
           } else if (taskState is TaskListLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (taskState is TaskListError) {
-            log('Error loading tasks: ${taskState.message}', name: 'ProgressScreen');
+            AppLogging.logInfo('Error loading tasks: ${taskState.message}', name: 'ProgressScreen');
             return const Center(child: Text('Unable to load progress data'));
           } else {
             return const Center(child: Text('Unable '));

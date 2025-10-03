@@ -306,6 +306,11 @@
   "neutral": "محايد",
   "good": "جيد",
   "veryGood": "جيد جداً",
+  "moodCheckInTitle": "فحص المزاج",
+  "howAreYouFeeling": "كيف تشعر؟",
+  "moodLevel": "مستوى المزاج",
+  "noteOptional": "ملاحظة (اختيارية)",
+  "noteHint": "أضف ملاحظة عن مزاجك...",
   "work": "عمل",
   "shortBreak": "استراحة قصيرة",
   "longBreak": "استراحة طويلة",
@@ -762,5 +767,41 @@
   "sessionProgress": "تقدم الجلسة",
   "settingsButton": "الإعدادات",
   "tomorrow": "غداً",
-  "yesterday": "أمس"
+  "yesterday": "أمس",
+  "overdueTasks": "مهمات متأخرة - تحتاج إلى انتباه فوري",
+  "todayTasks": "مهمات يجب إنجازها اليوم",
+  "tomorrowTasks": "مهمات غداً",
+  "thisWeekTasks": "مهمات هذا الأسبوع",
+  "laterTasks": "مهمات لاحقة",
+  "noDateTasks": "مهمات بدون تاريخ محدد",
+  "receiveNotificationsForTasksAndReminders": "تلقي إشعارات للمهام والتذكيرات",
+  "playSoundForNotifications": "تشغيل صوت للإشعارات",
+  "vibrateForNotifications": "اهتزاز للإشعارات",
+  "noUpcomingTasksWithReminders": "لا توجد مهام قادمة مع تذكيرات",
+  "noOverdueTasks": "لا توجد مهام متأخرة",
+  "testNotification": "اختبار الإشعار",
+  "clearAll": "مسح الكل",
+  "quickActions": "إجراءات سريعة",
+  "reminderCancelledFor": "تم إلغاء التذكير لـ: {taskTitle}",
+  "@reminderCancelledFor": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "testNotificationSent": "تم إرسال إشعار الاختبار!",
+  "reminder": "تذكير: {date}",
+  "@reminder": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "noReminderSet": "لم يتم تعيين تذكير",
+  "allNotificationsCleared": "تم مسح جميع الإشعارات!",
+  "testReminderIn10Seconds": "اختبار تذكير في 10 ثواني",
+  "testReminderScheduled": "تم جدولة تذكير الاختبار لمدة 10 ثواني من الآن",
+  "completedTasks": "مهمات مكتملة"
 }

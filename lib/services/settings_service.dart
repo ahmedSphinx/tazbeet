@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer' show log;
+import 'package:tazbeet/services/app_logging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'notification_service.dart';
 
 enum ThemeMode { system, light, dark }
 
@@ -36,6 +38,8 @@ class AppSettings {
   final bool enableHighContrast;
   final bool enableLargeText;
   final bool enableScreenReader;
+  final bool enableMoodNotifications;
+  final List<String> moodCheckInTimes; // Stored as HH:MM strings
 
   const AppSettings({
     this.themeMode = ThemeMode.system,
@@ -58,6 +62,8 @@ class AppSettings {
     this.enableHighContrast = false,
     this.enableLargeText = false,
     this.enableScreenReader = false,
+    this.enableMoodNotifications = false,
+    this.moodCheckInTimes = const ['09:00', '15:00', '21:00'], // Default times
   });
 
   AppSettings copyWith({
@@ -81,6 +87,8 @@ class AppSettings {
     bool? enableHighContrast,
     bool? enableLargeText,
     bool? enableScreenReader,
+    bool? enableMoodNotifications,
+    List<String>? moodCheckInTimes,
   }) {
     return AppSettings(
       themeMode: themeMode ?? this.themeMode,
@@ -103,6 +111,8 @@ class AppSettings {
       enableHighContrast: enableHighContrast ?? this.enableHighContrast,
       enableLargeText: enableLargeText ?? this.enableLargeText,
       enableScreenReader: enableScreenReader ?? this.enableScreenReader,
+      enableMoodNotifications: enableMoodNotifications ?? this.enableMoodNotifications,
+      moodCheckInTimes: moodCheckInTimes ?? this.moodCheckInTimes,
     );
   }
 
@@ -128,6 +138,8 @@ class AppSettings {
       'enableHighContrast': enableHighContrast,
       'enableLargeText': enableLargeText,
       'enableScreenReader': enableScreenReader,
+      'enableMoodNotifications': enableMoodNotifications,
+      'moodCheckInTimes': moodCheckInTimes,
     };
   }
 
@@ -153,6 +165,8 @@ class AppSettings {
       enableHighContrast: json['enableHighContrast'] ?? false,
       enableLargeText: json['enableLargeText'] ?? false,
       enableScreenReader: json['enableScreenReader'] ?? false,
+      enableMoodNotifications: json['enableMoodNotifications'] ?? true,
+      moodCheckInTimes: List<String>.from(json['moodCheckInTimes'] ?? ['09:00', '15:00', '21:00']),
     );
   }
 }
@@ -181,7 +195,7 @@ class SettingsService extends ChangeNotifier {
           _settings = AppSettings.fromJson(convertedJson);
         }
       } catch (e) {
-        log('Error loading settings: $e');
+        AppLogging.logInfo('Error loading settings: $e');
         // Clear corrupted data and use default settings
         await prefs.remove('app_settings');
         _settings = const AppSettings();
@@ -224,18 +238,24 @@ class SettingsService extends ChangeNotifier {
     await updateSettings(_settings.copyWith(pomodoroPreset: preset));
   }
 
-  Future<void> setCustomPomodoroDurations({
-    int? workDuration,
-    int? shortBreakDuration,
-    int? longBreakDuration,
-    int? sessionsUntilLongBreak,
-  }) async {
-    await updateSettings(_settings.copyWith(
-      customWorkDuration: workDuration,
-      customShortBreakDuration: shortBreakDuration,
-      customLongBreakDuration: longBreakDuration,
-      sessionsUntilLongBreak: sessionsUntilLongBreak,
-    ));
+  Future<void> setCustomPomodoroDurations({int? workDuration, int? shortBreakDuration, int? longBreakDuration, int? sessionsUntilLongBreak}) async {
+    await updateSettings(_settings.copyWith(customWorkDuration: workDuration, customShortBreakDuration: shortBreakDuration, customLongBreakDuration: longBreakDuration, sessionsUntilLongBreak: sessionsUntilLongBreak));
+  }
+
+  Future<void> setMoodNotificationsEnabled(bool enabled) async {
+    await updateSettings(_settings.copyWith(enableMoodNotifications: enabled));
+    if (enabled) {
+      await NotificationService().scheduleMoodCheckInNotifications(_settings.moodCheckInTimes);
+    } else {
+      await NotificationService().cancelMoodCheckInNotifications();
+    }
+  }
+
+  Future<void> setMoodCheckInTimes(List<String> times) async {
+    await updateSettings(_settings.copyWith(moodCheckInTimes: times));
+    if (_settings.enableMoodNotifications) {
+      await NotificationService().scheduleMoodCheckInNotifications(times);
+    }
   }
 
   // Get current Pomodoro durations based on preset

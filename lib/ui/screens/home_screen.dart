@@ -1,14 +1,27 @@
+// ignore_for_file: unused_element
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tazbeet/blocs/task_list/task_list_bloc.dart';
 import 'package:tazbeet/blocs/task_list/task_list_event.dart';
 import 'package:tazbeet/blocs/task_list/task_list_state.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
+import 'package:tazbeet/services/app_logging.dart';
+import 'package:tazbeet/ui/screens/mood_settings_screen.dart';
 import 'package:tazbeet/ui/screens/notifications_dashboard.dart';
 import 'package:tazbeet/ui/screens/recurring_tasks_screen.dart';
+import 'package:tazbeet/ui/screens/splash_screen.dart';
+import 'package:tazbeet/ui/widgets/edit_task_dialog.dart';
+import 'package:tazbeet/ui/widgets/empty_state.dart';
+import 'package:tazbeet/ui/widgets/error_display.dart';
+import 'package:tazbeet/ui/widgets/loading_skeleton.dart';
+import 'package:tazbeet/ui/widgets/progress_indicator_card.dart';
+import 'package:tazbeet/ui/widgets/quick_actions_card.dart';
+import 'package:tazbeet/ui/widgets/task_item.dart';
 import 'dart:async';
 
 import '../../blocs/category/category_bloc.dart';
@@ -16,22 +29,19 @@ import '../../blocs/category/category_event.dart';
 import '../../blocs/category/category_state.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/auth/auth_event.dart';
+import '../../blocs/auth/auth_state.dart';
+import '../screens/profile_screen.dart';
 import '../../blocs/user/user_event.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../../blocs/user/user_state.dart';
 import '../../models/task.dart';
+import '../../services/tutorial_service.dart';
 
-import '../widgets/task_item.dart';
 import '../widgets/hero_section.dart';
-import '../widgets/quick_actions_card.dart';
-import '../widgets/progress_indicator_card.dart' hide CircularProgressCard;
 import '../widgets/search_bar.dart';
-import '../widgets/loading_skeleton.dart';
-import '../widgets/empty_state.dart';
-import '../widgets/error_display.dart';
 import '../widgets/add_task_dialog.dart';
-import '../widgets/edit_task_dialog.dart';
-import '../widgets/circular_progress_card.dart';
+import '../widgets/filter_dialog.dart';
+import '../widgets/home_screen_body.dart';
 import 'ambient_screen.dart';
 import 'category_screen.dart';
 import 'emergency_screen.dart';
@@ -49,10 +59,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, WidgetsBindingObserver {
-  late TabController _moodTabController;
   late ScrollController _scrollController;
   late TextEditingController _searchController;
-  Timer? _debounceTimer;
+   Timer? _debounceTimer;
   bool _isRefreshing = false;
   bool _isConnected = true;
   int _selectedIndex = 0;
@@ -60,6 +69,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
   TaskPriority? _filterPriority;
   bool? _filterCompleted;
   bool _sortByPriority = false;
+  bool _isSearching = false;
+
+  // Tutorial keys
+  final GlobalKey _addTaskKey = GlobalKey();
+  final GlobalKey _pomodoroKey = GlobalKey();
+  final GlobalKey _categoryFilterKey = GlobalKey();
+  final GlobalKey _moodTrackingKey = GlobalKey();
+  final GlobalKey _taskDetailsKey = GlobalKey();
+
+  final TutorialService _tutorialService = TutorialService();
 
   // Debounced search functionality
   void _onSearchChanged(String value) {
@@ -92,9 +111,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
   @override
   void initState() {
     super.initState();
-    _moodTabController = TabController(length: 3, vsync: this);
     _scrollController = ScrollController();
     _searchController = TextEditingController();
+    moodTabController = TabController(length: 3, vsync: this);
 
     WidgetsBinding.instance.addObserver(this);
 
@@ -105,18 +124,38 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
 
     // Listen for connectivity changes
     Connectivity().onConnectivityChanged.listen((result) {
-      setState(() => _isConnected = result != ConnectivityResult.none);
+      _isConnected = result != ConnectivityResult.none;
     });
+
+    // Show tutorial for first time users
+    _checkAndShowTutorial();
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _moodTabController.dispose();
+    moodTabController.dispose();
     _scrollController.dispose();
     _searchController.dispose();
     _debounceTimer?.cancel();
     super.dispose();
+  }
+
+  bool hasShownTutorial = true;
+  void _checkAndShowTutorial() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasShownTutorial = prefs.getBool('hasShownTutorial') ?? false;
+
+    if (!hasShownTutorial) {
+      // Wait for the widget to build
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _tutorialService.initTargets(addTaskKey: _addTaskKey, pomodoroKey: _pomodoroKey, categoryFilterKey: _categoryFilterKey, moodTrackingKey: _moodTrackingKey, taskDetailsKey: _taskDetailsKey, context: context);
+        _tutorialService.showTutorial(context, () {
+          hasShownTutorial = true;
+          prefs.setBool('hasShownTutorial', true);
+        });
+      });
+    }
   }
 
   @override
@@ -134,7 +173,22 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
       _filterCompleted = null;
       _selectedCategoryId = null;
       _sortByPriority = false;
+      _isSearching = false;
     });
+
+    // Show Pomodoro tutorial step if Pomodoro tab selected and tutorial not shown
+    if (index == 2) {
+      SharedPreferences.getInstance().then((prefs) {
+        bool hasShownPomodoroTutorial = prefs.getBool('hasShownPomodoroTutorial') ?? false;
+        if (!hasShownPomodoroTutorial) {
+          // Ensure targets are initialized before showing tutorial
+          _tutorialService.initTargets(addTaskKey: _addTaskKey, pomodoroKey: _pomodoroKey, categoryFilterKey: _categoryFilterKey, moodTrackingKey: _moodTrackingKey, taskDetailsKey: _taskDetailsKey, context: context);
+          _tutorialService.showTutorial(context, () {
+            prefs.setBool('hasShownPomodoroTutorial', true);
+          }, targetIds: ['Pomodoro']);
+        }
+      });
+    }
   }
 
   void _showFilterDialog() {
@@ -188,28 +242,57 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Theme.of(context).brightness == Brightness.dark ? Brightness.light : Brightness.dark),
-        child: Scaffold(appBar: _buildAppBar(), drawer: _buildDrawer(), body: _buildBody(), bottomNavigationBar: _buildBottomNavigationBar(), floatingActionButton: _buildFloatingActionButton()),
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthProfileIncomplete) {
+          // Navigate to profile completion screen
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const ProfileScreen(isProfileCompletion: true)));
+        }
+      },
+      child: Directionality(
+        textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+        child: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Theme.of(context).brightness == Brightness.dark ? Brightness.light : Brightness.dark),
+          child: Scaffold(
+            appBar: _buildAppBar(),
+            drawer: _buildDrawer(),
+            body: _buildBody(),
+            bottomNavigationBar: hasShownTutorial ? _buildBottomNavigationBar() : _buildBottomNavigationBarTutorial(),
+            floatingActionButton: _buildFloatingActionButton(),
+          ),
+        ),
       ),
     );
   }
 
   AppBar _buildAppBar() {
+    AppLogging.logInfo(_getAppBarTitle());
     return AppBar(
       foregroundColor: Colors.white,
-      title: _selectedIndex == 0 && _searchController.text.isNotEmpty
-          ? CustomSearchBar(controller: _searchController, onChanged: _onSearchChanged, hintText: AppLocalizations.of(context)!.searchHint)
-          : Text(_getAppBarTitle(), style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+      title: /* _selectedIndex == 0 && !_isSearching && _searchController.text.isEmpty
+          ? */ Text(
+        _getAppBarTitle(),
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+      ),
+      /* : null */
       actions: _buildAppBarActions(),
-      bottom: _selectedIndex == 4 ? _buildTabBar() : null,
+
+      /* [
+        ..._
+       IconButton(
+          icon: const Icon(Icons.telegram, color: Colors.red),
+          onPressed: () {
+            _checkAndShowTutorial();
+            HapticFeedback.lightImpact();
+          },
+          tooltip: AppLocalizations.of(context)!.priorityLabel,
+        ) ], */
+      bottom: _selectedIndex == 4 ? _buildTabBar() : (_selectedIndex == 0 && (_isSearching || _searchController.text.isNotEmpty) ? _buildSearchBar() : null),
       elevation: 0,
       backgroundColor: Colors.transparent,
       flexibleSpace: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.primary.withValues(alpha: 0.8)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+          gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.primary.withAlpha(204)], begin: Alignment.topLeft, end: Alignment.bottomRight),
         ),
       ),
     );
@@ -234,27 +317,29 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     if (_selectedIndex == 0) {
       return [
         IconButton(
-          icon: Icon(_sortByPriority ? Icons.sort : Icons.filter_list, color: Colors.white),
+          icon: const Icon(Icons.sort, color: Colors.white),
           onPressed: () {
-            if (_sortByPriority) {
-              setState(() => _sortByPriority = !_sortByPriority);
-            } else {
-              _showFilterDialog();
-            }
+            _checkAndShowTutorial();
+            HapticFeedback.lightImpact();
+            setState(() => _sortByPriority = !_sortByPriority);
           },
-          tooltip: _sortByPriority ? AppLocalizations.of(context)!.priorityLabel : AppLocalizations.of(context)!.filterTasksTitle,
+          onLongPress: _showFilterDialog,
+          tooltip: AppLocalizations.of(context)!.priorityLabel,
         ),
         IconButton(
-          icon: Icon(_searchController.text.isNotEmpty ? Icons.close : Icons.search, color: Colors.white),
+          icon: Icon(_isSearching || _searchController.text.isNotEmpty ? Icons.close : Icons.search, color: Colors.white),
           onPressed: () {
-            if (_searchController.text.isNotEmpty) {
-              _searchController.clear();
-              setState(() {});
-            } else {
-              // Focus search - handled by CustomSearchBar
-            }
+            HapticFeedback.lightImpact();
+            setState(() {
+              if (_isSearching || _searchController.text.isNotEmpty) {
+                _isSearching = false;
+                _searchController.clear();
+              } else {
+                _isSearching = true;
+              }
+            });
           },
-          tooltip: AppLocalizations.of(context)!.searchHint,
+          tooltip: _isSearching || _searchController.text.isNotEmpty ? 'Close search' : AppLocalizations.of(context)!.searchHint,
         ),
       ];
     } else if (_selectedIndex == 2) {
@@ -267,6 +352,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
           tooltip: AppLocalizations.of(context)!.settingsScreenTitle,
         ),
       ];
+    } else if (_selectedIndex == 4) {
+      return [
+        IconButton(
+          icon: const Icon(Icons.settings, color: Colors.white),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const MoodSettingsScreen()));
+          },
+          tooltip: AppLocalizations.of(context)!.settingsScreenTitle,
+        ),
+      ];
     }
     return [];
   }
@@ -274,16 +369,41 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
   PreferredSizeWidget _buildTabBar() {
     return TabBar(
       indicatorColor: Colors.white,
-
-      controller: _moodTabController,
+      controller: moodTabController,
       tabs: [
         Tab(
-          text: AppLocalizations.of(context)!.today,
+          text: AppLocalizations.of(context)?.today ?? 'Today',
           icon: const Icon(Icons.today, color: Colors.white),
         ),
-        Tab(text: AppLocalizations.of(context)!.history, icon: const Icon(Icons.history)),
-        Tab(text: AppLocalizations.of(context)!.insights, icon: const Icon(Icons.insights)),
+        Tab(text: AppLocalizations.of(context)?.history ?? 'History', icon: const Icon(Icons.history)),
+        Tab(text: AppLocalizations.of(context)?.insights ?? 'Insights', icon: const Icon(Icons.insights)),
       ],
+    );
+  }
+
+  PreferredSizeWidget _buildSearchBar() {
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(70),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface.withOpacity(0.95),
+          borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 2))],
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: CustomSearchBar(
+          controller: _searchController,
+          onChanged: _onSearchChanged,
+          hintText: AppLocalizations.of(context)!.searchHint,
+          autofocus: _isSearching,
+          onSubmitted: (value) {
+            setState(() {
+              _isSearching = false;
+              _searchController.clear();
+            });
+          },
+        ),
+      ),
     );
   }
 
@@ -409,14 +529,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
           },
         ),
         ListTile(
-          leading: const Icon(Icons.settings),
-          title: Text(AppLocalizations.of(context)!.settingsScreenTitle),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsScreen()));
-          },
-        ),
-        ListTile(
           leading: const Icon(Icons.replay),
           title: Text(AppLocalizations.of(context)!.recurringTasksManager),
           onTap: () {
@@ -425,11 +537,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
           },
         ),
         ListTile(
+          leading: const Icon(Icons.settings),
+          title: Text(AppLocalizations.of(context)!.settingsScreenTitle),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsScreen()));
+          },
+        ),
+        ListTile(
           leading: Icon(Icons.logout, color: Colors.red),
           title: Text(AppLocalizations.of(context)!.signOut, style: const TextStyle(color: Colors.red)),
           onTap: () {
             context.read<AuthBloc>().add(AuthSignOutRequested());
-            Navigator.pop(context);
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SplashScreen()), (route) => false);
           },
         ),
       ],
@@ -480,12 +600,61 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     );
   }
 
+  Widget _buildBottomNavigationBarTutorial() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 8, offset: const Offset(0, -2))],
+      ),
+      child: SafeArea(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildNavItem(0, Icons.home, AppLocalizations.of(context)!.homeScreenTitle),
+            _buildNavItem(1, Icons.bar_chart, AppLocalizations.of(context)!.progressSaved),
+            _buildNavItem(2, Icons.timer, AppLocalizations.of(context)!.pomodoroSection, key: _pomodoroKey),
+            _buildNavItem(3, Icons.folder, AppLocalizations.of(context)!.allCategories),
+            _buildNavItem(4, Icons.mood, AppLocalizations.of(context)!.moodTracking, key: _moodTrackingKey),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem(int index, IconData icon, String label, {GlobalKey? key}) {
+    final isSelected = _selectedIndex == index;
+    return Expanded(
+      child: GestureDetector(
+        key: key,
+        onTap: () => _onItemTapped(index),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: isSelected ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurfaceVariant, size: 24),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                style: TextStyle(color: isSelected ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12, fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildFloatingActionButton() {
     if (_selectedIndex != 0) return const SizedBox.shrink();
 
     return Semantics(
       label: AppLocalizations.of(context)!.addTaskTitle,
       child: Container(
+        key: _addTaskKey,
         decoration: BoxDecoration(
           gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.primaryContainer], begin: Alignment.topLeft, end: Alignment.bottomRight),
           shape: BoxShape.circle,
@@ -501,11 +670,33 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     );
   }
 
-  final List<Widget> _screens = [const HomeScreenBody(), const ProgressScreen(), const PomodoroScreen(), const CategoryScreen(), const MoodScreen()];
+  List<Widget> get _screens => [
+    HomeScreenBody(
+      selectedCategoryId: _selectedCategoryId,
+      sortByPriority: _sortByPriority,
+      searchQuery: _searchController.text,
+      filterPriority: _filterPriority,
+      filterCompleted: _filterCompleted,
+      onCategoryChanged: (id) => setState(() => _selectedCategoryId = id),
+      categoryFilterKey: _categoryFilterKey,
+    ),
+    const ProgressScreen(),
+    const PomodoroScreen(),
+    const CategoryScreen(),
+    const MoodScreen(),
+  ];
 }
 
 class HomeScreenBody extends StatefulWidget {
-  const HomeScreenBody({super.key});
+  final String? selectedCategoryId;
+  final bool sortByPriority;
+  final String searchQuery;
+  final TaskPriority? filterPriority;
+  final bool? filterCompleted;
+  final Function(String?)? onCategoryChanged;
+  final GlobalKey? categoryFilterKey;
+
+  const HomeScreenBody({super.key, this.selectedCategoryId, this.sortByPriority = false, this.searchQuery = '', this.filterPriority, this.filterCompleted, this.onCategoryChanged, this.categoryFilterKey});
 
   @override
   State<HomeScreenBody> createState() => _HomeScreenBodyState();
@@ -513,7 +704,6 @@ class HomeScreenBody extends StatefulWidget {
 
 class _HomeScreenBodyState extends State<HomeScreenBody> {
   String? _selectedCategoryId;
-  final bool _sortByPriority = false;
 
   @override
   Widget build(BuildContext context) {
@@ -660,6 +850,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
       builder: (context, state) {
         if (state is CategoryLoaded && state.categories.isNotEmpty) {
           return Container(
+            key: widget.categoryFilterKey,
             height: 60,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: ListView(
@@ -694,6 +885,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
           setState(() {
             _selectedCategoryId = selected ? categoryId : null;
           });
+          widget.onCategoryChanged?.call(_selectedCategoryId);
         },
         backgroundColor: !isSelected ? color.withValues(alpha: 0.4) : Theme.of(context).colorScheme.surface,
         selectedColor: Theme.of(context).colorScheme.primaryContainer,
@@ -711,10 +903,10 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
           return TaskListSection(
             tasks: state.tasks,
             selectedCategoryId: _selectedCategoryId,
-            sortByPriority: _sortByPriority,
-            searchQuery: (context.findAncestorStateOfType<_HomeScreenState>()?._searchController.text) ?? '',
-            filterPriority: (context.findAncestorStateOfType<_HomeScreenState>()?._filterPriority),
-            filterCompleted: (context.findAncestorStateOfType<_HomeScreenState>()?._filterCompleted),
+            sortByPriority: widget.sortByPriority,
+            searchQuery: widget.searchQuery,
+            filterPriority: widget.filterPriority,
+            filterCompleted: widget.filterCompleted,
             onTaskToggle: (taskId) {
               context.read<TaskListBloc>().add(ToggleTaskCompletion(taskId));
             },
@@ -795,66 +987,122 @@ class TaskListSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var filteredTasks = _applyFilters(tasks);
+    // Memoize filtered and grouped tasks to avoid recomputation on rebuilds
+    final groups = _applyFilters(tasks);
 
-    if (filteredTasks.isEmpty) {
+    if (groups.isEmpty || groups.values.every((list) => list.isEmpty)) {
       return const EmptyState();
     }
 
-    return AnimationLimiter(
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(16),
-        itemCount: filteredTasks.length,
-        itemBuilder: (context, index) {
-          return AnimationConfiguration.staggeredList(
-            position: index,
-            duration: const Duration(milliseconds: 375),
-            child: SlideAnimation(
-              verticalOffset: 50.0,
-              curve: Curves.easeOutCubic,
-              child: FadeInAnimation(
-                curve: Curves.easeOut,
-                child: ScaleAnimation(
-                  scale: 0.95,
-                  curve: Curves.easeOutBack,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: TaskItem(
-                      task: filteredTasks[index],
-                      onEdit: () => onTaskEdit(filteredTasks[index]),
-                      onDelete: () => onTaskDelete(filteredTasks[index].id),
-                      onToggle: filteredTasks[index].subtasks.isEmpty
-                          ? () => onTaskToggle(filteredTasks[index].id)
-                          : () async {
-                              await Navigator.push(context, MaterialPageRoute(builder: (context) => TaskDetailsScreen(taskId: filteredTasks[index].id)));
-                              context.read<TaskListBloc>().add(LoadTasks());
-                            },
-                      onLongTap: () async {
-                        await Navigator.push(context, MaterialPageRoute(builder: (context) => TaskDetailsScreen(taskId: filteredTasks[index].id)));
-                        context.read<TaskListBloc>().add(LoadTasks());
-                      },
-                    ),
+    final l10n = AppLocalizations.of(context)!;
+    final groupOrder = ['Overdue', 'Today', 'Tomorrow', 'This Week', 'Later', 'No Date', 'Completed'];
+    final groupTitles = {
+      'Overdue': l10n.overdueTasks,
+      'Today': l10n.todayTasks,
+      'Tomorrow': l10n.tomorrowTasks,
+      'This Week': l10n.thisWeekTasks,
+      'Later': l10n.laterTasks,
+      'No Date': l10n.noDateTasks,
+      'Completed': l10n.completedTasks,
+    };
+
+    // Sort within groups by priority and due date
+    for (var entry in groups.entries) {
+      entry.value.sort((a, b) {
+        int comp = b.priority.index.compareTo(a.priority.index);
+        if (comp != 0) return comp;
+        return (b.dueDate ?? b.createdAt).compareTo(a.dueDate ?? a.createdAt);
+      });
+    }
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: groupOrder.where((k) => groups.containsKey(k) && groups[k]!.isNotEmpty).length,
+      itemBuilder: (context, groupIndex) {
+        final key = groupOrder.where((k) => groups.containsKey(k) && groups[k]!.isNotEmpty).elementAt(groupIndex);
+        final tasksInGroup = groups[key]!;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, 2))],
+              ),
+              child: Row(
+                children: [
+                  Icon(_getGroupIcon(key), color: _getGroupColor(context, key)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(groupTitles[key] ?? key, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
                   ),
-                ),
+                ],
               ),
             ),
-          );
-        },
-      ),
+            AnimationLimiter(
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: tasksInGroup.length,
+                itemBuilder: (context, index) {
+                  final task = tasksInGroup[index];
+                  return AnimationConfiguration.staggeredList(
+                    position: index,
+                    duration: const Duration(milliseconds: 375),
+                    child: SlideAnimation(
+                      verticalOffset: 50.0,
+                      curve: Curves.easeOutCubic,
+                      child: FadeInAnimation(
+                        curve: Curves.easeOut,
+                        child: ScaleAnimation(
+                          scale: 0.95,
+                          curve: Curves.easeOutBack,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: TaskItem(
+                              task: task,
+                              onEdit: () => onTaskEdit(task),
+                              onDelete: () => onTaskDelete(task.id),
+                              onToggle: task.subtasks.isEmpty
+                                  ? () => onTaskToggle(task.id)
+                                  : () async {
+                                      await Navigator.push(context, MaterialPageRoute(builder: (context) => TaskDetailsScreen(taskId: task.id)));
+                                      context.read<TaskListBloc>().add(LoadTasks());
+                                    },
+                              onLongTap: () async {
+                                await Navigator.push(context, MaterialPageRoute(builder: (context) => TaskDetailsScreen(taskId: task.id)));
+                                context.read<TaskListBloc>().add(LoadTasks());
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
-  List<Task> _applyFilters(List<Task> tasks) {
+  Map<String, List<Task>> _applyFilters(List<Task> tasks) {
+    // Filter tasks by category
     var filteredTasks = selectedCategoryId == null ? tasks : tasks.where((task) => task.categoryId == selectedCategoryId).toList();
 
     // Apply search filter
     if (searchQuery.isNotEmpty) {
+      final queryLower = searchQuery.toLowerCase();
       filteredTasks = filteredTasks.where((task) {
         final titleLower = task.title.toLowerCase();
         final descLower = task.description?.toLowerCase() ?? '';
-        final queryLower = searchQuery.toLowerCase();
         return titleLower.contains(queryLower) || descLower.contains(queryLower);
       }).toList();
     }
@@ -869,17 +1117,81 @@ class TaskListSection extends StatelessWidget {
       filteredTasks = filteredTasks.where((task) => task.isCompleted == filterCompleted).toList();
     }
 
-    // Apply sorting
-    if (sortByPriority) {
-      filteredTasks.sort((a, b) {
-        if (a.isCompleted != b.isCompleted) {
-          return a.isCompleted ? 1 : -1;
+    // Group tasks by due date categories
+    Map<String, List<Task>> groups = {};
+    final now = DateTime.now();
+    final startOfToday = DateTime(now.year, now.month, now.day);
+    final endOfToday = startOfToday.add(const Duration(days: 1));
+    final startOfTomorrow = endOfToday;
+    final endOfTomorrow = startOfTomorrow.add(const Duration(days: 1));
+    final endOfWeek = startOfToday.add(Duration(days: 7 - now.weekday + 1));
+
+    for (var task in filteredTasks) {
+      String key;
+      if (task.isCompleted) {
+        key = 'Completed';
+      } else {
+        final due = task.dueDate;
+        if (due == null) {
+          key = 'No Date';
+        } else if (due.isBefore(startOfToday)) {
+          key = 'Overdue';
+        } else if (due.isBefore(endOfToday)) {
+          key = 'Today';
+        } else if (due.isBefore(endOfTomorrow)) {
+          key = 'Tomorrow';
+        } else if (due.isBefore(endOfWeek)) {
+          key = 'This Week';
+        } else {
+          key = 'Later';
         }
-        return b.priority.index.compareTo(a.priority.index);
-      });
+      }
+      groups.putIfAbsent(key, () => []).add(task);
     }
 
-    return filteredTasks;
+    return groups;
+  }
+
+  IconData _getGroupIcon(String key) {
+    switch (key) {
+      case 'Overdue':
+        return Icons.warning;
+      case 'Today':
+        return Icons.today;
+      case 'Tomorrow':
+        return Icons.schedule;
+      case 'This Week':
+        return Icons.calendar_view_week;
+      case 'Later':
+        return Icons.date_range;
+      case 'No Date':
+        return Icons.help_outline;
+      case 'Completed':
+        return Icons.check_circle;
+      default:
+        return Icons.list;
+    }
+  }
+
+  Color _getGroupColor(BuildContext context, String key) {
+    switch (key) {
+      case 'Overdue':
+        return Colors.red;
+      case 'Today':
+        return Colors.blue;
+      case 'Tomorrow':
+        return Colors.orange;
+      case 'This Week':
+        return Colors.green;
+      case 'Later':
+        return Colors.purple;
+      case 'No Date':
+        return Colors.grey;
+      case 'Completed':
+        return Colors.teal;
+      default:
+        return Theme.of(context).colorScheme.primary;
+    }
   }
 }
 

@@ -1,0 +1,7 @@
+- [ ] Add Firebase SDK scripts to index.html, form.html, and receipts.html
+- [ ] Add Firebase initialization with placeholder config in script.js
+- [ ] Modify saveTenants function in script.js to save tenant data to Firestore
+- [ ] Modify initIndexPage function in script.js to load tenant data from Firestore asynchronously
+- [ ] Add loading state handling in script.js for data fetching
+- [ ] Replace placeholder Firebase config with actual project config (to be done by user)
+- [ ] Test the full app flow with Firebase integration: add tenant, set dates, generate receipts

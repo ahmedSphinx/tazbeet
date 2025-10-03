@@ -1,9 +1,7 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
 import '../../models/task.dart';
 import '../../blocs/task_details/task_details_bloc.dart';

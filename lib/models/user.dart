@@ -17,24 +17,12 @@ class User extends Equatable {
   final DateTime createdAt;
   @HiveField(5)
   final DateTime updatedAt;
+  @HiveField(6)
+  final String? email;
 
-  const User({
-    required this.id,
-    required this.name,
-    this.profileImageUrl,
-    this.birthday,
-    required this.createdAt,
-    required this.updatedAt,
-  });
+  const User({required this.id, required this.name, this.profileImageUrl, this.birthday, required this.createdAt, required this.updatedAt, this.email});
 
-  User copyWith({
-    String? id,
-    String? name,
-    String? profileImageUrl,
-    DateTime? birthday,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) {
+  User copyWith({String? id, String? name, String? profileImageUrl, DateTime? birthday, DateTime? createdAt, DateTime? updatedAt, String? email}) {
     return User(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -42,18 +30,12 @@ class User extends Equatable {
       birthday: birthday ?? this.birthday,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      email: email ?? this.email,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'profileImageUrl': profileImageUrl,
-      'birthday': birthday?.toIso8601String(),
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-    };
+    return {'id': id, 'name': name, 'profileImageUrl': profileImageUrl, 'birthday': birthday?.toIso8601String(), 'createdAt': createdAt.toIso8601String(), 'updatedAt': updatedAt.toIso8601String(), 'email': email};
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -64,16 +46,10 @@ class User extends Equatable {
       birthday: json['birthday'] != null ? DateTime.parse(json['birthday']) : null,
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
+      email: json['email'],
     );
   }
 
   @override
-  List<Object?> get props => [
-        id,
-        name,
-        profileImageUrl,
-        birthday,
-        createdAt,
-        updatedAt,
-      ];
+  List<Object?> get props => [id, name, profileImageUrl, birthday, createdAt, updatedAt, email];
 }

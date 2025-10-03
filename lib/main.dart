@@ -1,3 +1,6 @@
+import 'package:tazbeet/services/app_logging.dart';
+import 'package:tazbeet/services/navigation_service.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -31,7 +34,7 @@ import 'services/settings_service.dart' as settings;
 import 'services/localization_service.dart';
 
 import 'ui/screens/splash_screen.dart';
-import 'ui/screens/task_details_screen.dart';
+import 'ui/screens/mood_input_screen.dart';
 import 'ui/themes/app_themes.dart';
 
 void main() async {
@@ -40,7 +43,7 @@ void main() async {
   // Initialize Firebase with error handling
   final firebaseAvailable = await FirebaseServiceWrapper.initializeFirebase();
   if (!firebaseAvailable) {
-    debugPrint('Firebase not available - app will work in offline mode');
+    AppLogging.logWarning('Firebase not available - app will work in offline mode');
   }
 
   // Initialize Hive
@@ -62,6 +65,11 @@ void main() async {
   // Initialize settings service
   final settingsService = settings.SettingsService();
   await settingsService.initialize();
+
+  // Schedule mood check-in notifications if enabled
+  if (settingsService.settings.enableMoodNotifications) {
+    await notificationService.scheduleMoodCheckInNotifications(settingsService.settings.moodCheckInTimes);
+  }
 
   // Initialize auth service
   final authService = AuthService();
@@ -91,7 +99,7 @@ void main() async {
   // Create default categories if they don't exist  await categoryRepository.createDefaultCategories();
 
   runApp(
-    MyApp(
+    Tazbeet(
       taskRepository: taskRepository,
       categoryRepository: categoryRepository,
       notificationService: notificationService,
@@ -106,7 +114,7 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class Tazbeet extends StatelessWidget {
   final TaskRepository taskRepository;
   final CategoryRepository categoryRepository;
   final NotificationService notificationService;
@@ -118,7 +126,7 @@ class MyApp extends StatelessWidget {
   final TaskSoundService taskSoundService;
   final UpdateService updateService;
 
-  const MyApp({
+  const Tazbeet({
     super.key,
     required this.taskRepository,
     required this.categoryRepository,
@@ -140,13 +148,11 @@ class MyApp extends StatelessWidget {
         return ThemeMode.dark;
       case settings.ThemeMode.system:
         return ThemeMode.system;
-      default:
-        return ThemeMode.system;
     }
   }
 
   Locale _getLocale(String languageCode) {
-    return Locale(languageCode);
+    return AppLocalizations.supportedLocales.contains(Locale(languageCode)) ? Locale(languageCode) : const Locale('en');
   }
 
   @override
@@ -185,7 +191,9 @@ class MyApp extends StatelessWidget {
 
               return MaterialApp(
                 debugShowCheckedModeBanner: false,
+                navigatorKey: NavigationService.navigatorKey,
                 title: 'Tazbeet',
+                routes: {'/mood_input': (context) => BlocProvider.value(value: context.read<MoodBloc>(), child: const MoodInputScreen())},
                 theme: AppThemes.getLightThemeWithCustomization(colorCustomizationService),
                 darkTheme: AppThemes.getDarkThemeWithCustomization(colorCustomizationService),
                 themeMode: _getThemeMode(settingsService.settings.themeMode),
@@ -212,3 +220,161 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+ /*
+
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  tz.initializeTimeZones(); // 📝 ضروري لتحديد المنطقة الزمنية المحلية
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(title: 'Reminder App', home: ReminderPage());
+  }
+}
+
+class ReminderPage extends StatefulWidget {
+  @override
+  _ReminderPageState createState() => _ReminderPageState();
+}
+
+class _ReminderPageState extends State<ReminderPage> {
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  String _selectedRepeat = 'none'; // 📝 للاحتفاظ بخيار التكرار
+
+  @override
+  void initState() {
+    super.initState();
+    initializeNotifications();
+  }
+
+  void initializeNotifications() async {
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    // 📝 إعداد Android
+    const AndroidInitializationSettings androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    // 📝 إعدادات تهيئة عامة
+    const InitializationSettings initSettings = InitializationSettings(android: androidSettings);
+
+    // 📝 تهيئة الإشعارات
+    await flutterLocalNotificationsPlugin.initialize(
+      initSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        // 📝 رد الفعل عند الضغط على الإشعار أو زر التفاعل
+        if (response.payload != null) {
+          print('تم الضغط على الإشعار مع الحمولة: ${response.payload}');
+        }
+      },
+    );
+  }
+
+  /// 🧠 دالة لجدولة تذكير بناءً على الوقت وخيار التكرار
+  Future<void> scheduleReminder(DateTime scheduledTime) async {
+    // 📝 تحويل الوقت إلى المنطقة الزمنية
+    final tz.TZDateTime scheduledDate = tz.TZDateTime.from(scheduledTime, tz.local);
+
+    // 📝 إعداد تفاصيل الإشعار (مع زر تفاعلي)
+    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      'reminder_channel', // معرف القناة
+      'Reminders', // اسم القناة
+      channelDescription: 'Channel for Reminder notifications',
+      importance: Importance.max,
+      priority: Priority.high,
+      playSound: true,
+      actions: <AndroidNotificationAction>[
+        AndroidNotificationAction(
+          'done', // 📝 معرف الزر
+          'تم', // 📝 اسم الزر
+        ),
+      ],
+    );
+
+    // 📝 ضبط خصائص التذكير حسب التكرار
+    DateTimeComponents? repeatComponent;
+    if (_selectedRepeat == 'daily') {
+      repeatComponent = DateTimeComponents.time; // تكرار يومي
+    } else if (_selectedRepeat == 'weekly') {
+      repeatComponent = DateTimeComponents.dayOfWeekAndTime; // تكرار أسبوعي
+    }
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      0, // 📝 معرف الإشعار
+      '🔔 تذكير',
+      '📌 لا تنسَ مهمتك المجدولة!',
+      scheduledDate,
+      NotificationDetails(android: androidDetails),
+
+      payload: 'reminder_payload',
+      androidScheduleMode: AndroidScheduleMode.alarmClock, // 📝 معلومات إضافية
+    );
+  }
+
+  /// 🧠 دالة لإلغاء جميع الإشعارات
+  Future<void> cancelAllReminders() async {
+    await flutterLocalNotificationsPlugin.cancelAll();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('✅ تم إلغاء جميع التذكيرات')));
+  }
+
+  /// 🧠 دالة لاختيار وقت التذكير ثم جدولته
+  void _pickTimeAndScheduleReminder() async {
+    final TimeOfDay? picked = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+
+    if (picked != null) {
+      final now = DateTime.now();
+
+      final scheduledDate = DateTime(now.year, now.month, now.day, picked.hour, picked.minute);
+
+      await scheduleReminder(scheduledDate);
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('🕑 تم جدولة التذكير')));
+    }
+  }
+
+  /// 🧠 واجهة المستخدم
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('📅 جدول التذكير')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            // 📝 زر لاختيار الوقت
+            ElevatedButton(onPressed: _pickTimeAndScheduleReminder, child: Text('اختر وقت التذكير')),
+            SizedBox(height: 20),
+            // 📝 اختيار التكرار
+            DropdownButton<String>(
+              value: _selectedRepeat,
+              items: const [
+                DropdownMenuItem(value: 'none', child: Text('بدون تكرار')),
+                DropdownMenuItem(value: 'daily', child: Text('تكرار يومي')),
+                DropdownMenuItem(value: 'weekly', child: Text('تكرار أسبوعي')),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _selectedRepeat = value!;
+                });
+              },
+            ),
+            SizedBox(height: 20),
+            // 📝 زر لإلغاء التذكيرات
+            ElevatedButton(
+              onPressed: cancelAllReminders,
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: Text('إلغاء كل التذكيرات'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+*/

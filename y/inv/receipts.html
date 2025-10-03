@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>إيصالات الإيجار</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet" />
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 0.5cm;
+        }
+
+        @media print {
+
+            html,
+            body {
+                width: auto;
+                height: auto;
+                margin: 0;
+                padding: 0;
+                background: white !important;
+                /*    direction: rtl;
+                text-align: right; */
+            }
+
+            #receiptsContainer {
+                display: block;
+                width: auto !important;
+                min-height: auto !important;
+                page-break-inside: avoid;
+            }
+
+            .receipt-page {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr 1fr;
+                gap: 0;
+                width: 28.7cm;
+                height: 19.9cm;
+                box-sizing: border-box;
+                page-break-after: always;
+                margin: 0 auto;
+                background: white;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+                border-radius: 18px;
+                position: relative;
+                /* Ensure 4 receipts per A4 page */
+                overflow: hidden;
+            }
+
+            .receipt {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                box-sizing: border-box;
+                page-break-inside: avoid;
+                background: white !important;
+                border: 1px solid #eee;
+                border-radius: 12px;
+                box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+                display: block !important;
+                position: relative !important;
+                background-image: url('inv.jpg') !important;
+                background-size: 99% 99% !important;
+                background-repeat: no-repeat !important;
+                background-position: top left !important;
+                overflow: hidden;
+                font-size: 10pt !important;
+                padding: 1.2cm 1cm 1cm 1.2cm;
+                /* Ensure receipt fits in grid cell */
+                box-sizing: border-box;
+            }
+
+            .receipt .amount,
+            .receipt .amount-text,
+            .receipt .date-start,
+            .receipt .date-end,
+            .receipt .duration,
+            .receipt .apartment,
+            .receipt .number,
+            .receipt .address,
+            .receipt .release-date,
+            .receipt .receipt-date {
+                color: #000000;
+
+                font-family: 'Amiri', serif;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+                line-height: 1.5;
+                text-shadow: 1px 1px 2px #ccc;
+                font-weight: 700;
+
+            }
+
+            .receipt .name {
+                font-size: 18px;
+                padding: 2px 8px;
+                top: 110px;
+                right: 230px;
+                /* Test border to verify .name is applied */
+                position: relative;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+                line-height: 1.5
+            }
+
+            .receipt .amount {
+                right: 0px;
+                color: #000000;
+                font-size: 20px;
+                position: absolute;
+                top: 54px;
+            }
+
+            .receipt .amount-text {
+                font-size: 18px;
+                position: absolute;
+                top: 125px;
+                right: -65px;
+            }
+
+
+            .receipt .date-start,
+            .receipt .date-end,
+            .receipt .duration,
+            .receipt .apartment,
+            .receipt .number,
+
+            .receipt .address,
+            .receipt .release-date,
+            .receipt .receipt-date {
+                font-size: 16px;
+                position: absolute;
+                left: 50px;
+            }
+
+            .receipt .date-start {
+                top: 227px;
+                right: 60px;
+                font-size: 13px;
+             }
+
+
+
+            .receipt .date-end {
+                top: 227px;
+                right: 180px;
+                font-size: 13px;
+ 
+            }
+
+            .receipt .duration {
+                top: 225px;
+                right: -55px;
+ 
+            }
+
+            .receipt .apartment {
+                top: 190px;
+                right: -57px;
+             }
+
+            .receipt .number {
+                font-size: 16px;
+                position: absolute;
+                right: 20px;
+                top: 190px;
+             }
+
+            .receipt .address {
+                top: 190px;
+                right: 130px;
+ 
+            }
+
+
+
+            .receipt .release-date {
+                top: 320px;
+                right: -40px;
+             }
+
+
+
+
+        }
+
+        @media screen {
+
+
+            .receipt-page {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr 1fr;
+                gap: 0;
+                width: 29.7cm;
+                height: 21cm;
+                background: white;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+                border-radius: 18px;
+                margin: 40px auto;
+                position: relative;
+            }
+
+            .receipt {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                box-sizing: border-box;
+                background: white;
+                border: 1px solid #eee;
+                border-radius: 12px;
+                box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+                position: relative;
+                background-image: url('inv.jpg');
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center center;
+                overflow: hidden;
+                font-size: 2vw;
+                padding: 1.2cm 1cm 1cm 1.2cm;
+            }
+
+            .receipt .amount,
+            .receipt .amount-text,
+            .receipt .date-start,
+            .receipt .date-end,
+            .receipt .duration,
+            .receipt .apartment,
+            .receipt .number,
+            .receipt .address,
+            .receipt .release-date,
+            .receipt .receipt-date {
+                color: #000000;
+
+                font-family: 'Amiri', serif;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+                line-height: 1.5;
+                text-shadow: 1px 1px 2px #ccc;
+                font-weight: 700;
+
+            }
+
+            .receipt .name {
+                font-size: 18px;
+                padding: 2px 8px;
+                top: 120px;
+                right: 230px;
+                /* Test border to verify .name is applied */
+                position: relative;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+                line-height: 1.5
+            }
+
+            .receipt .amount {
+                right: 210px;
+                color: #000000;
+                font-size: 20px;
+                position: absolute;
+                top: 54px;
+            }
+
+            .receipt .amount-text {
+                font-size: 18px;
+                position: absolute;
+                top: 135px;
+                right: 130px;
+            }
+
+            .receipt .number {
+                font-size: 16px;
+                position: absolute;
+                right: 210px;
+                top: 206px;
+            }
+
+            .receipt .date-start,
+            .receipt .date-end,
+            .receipt .duration,
+            .receipt .apartment,
+            .receipt .number,
+
+            .receipt .address,
+            .receipt .release-date,
+            .receipt .receipt-date {
+                font-size: 16px;
+                position: absolute;
+                left: 50px;
+            }
+
+            .receipt .date-start {
+                top: 240px;
+                right: 244px;
+                font-size: 13px;
+            }
+
+
+
+            .receipt .date-end {
+                top: 240px;
+                right: 370px;
+                font-size: 13px;
+            }
+
+            .receipt .duration {
+                top: 240px;
+                right: 130px;
+            }
+
+            .receipt .apartment {
+                top: 205px;
+                right: 129px;
+            }
+
+            .receipt .address {
+                top: 200px;
+                right: 330px;
+
+            }
+
+
+
+            .receipt .release-date {
+                top: 343px;
+                right: 135px;
+            }
+
+
+
+        }
+    </style>
+</head>
+
+<body>
+    <div id="receiptsContainer"></div>
+    <script src="script.js"></script>
+</body>
+
+</html>

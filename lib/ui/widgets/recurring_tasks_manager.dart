@@ -7,7 +7,7 @@ import '../../models/task.dart';
 import '../../services/repeat_service.dart';
 
 class RecurringTasksManager extends StatefulWidget {
-  const RecurringTasksManager({Key? key}) : super(key: key);
+  const RecurringTasksManager({super.key});
 
   @override
   State<RecurringTasksManager> createState() => _RecurringTasksManagerState();
@@ -79,7 +79,6 @@ class _RecurringTasksManagerState extends State<RecurringTasksManager> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     if (_isLoading) {

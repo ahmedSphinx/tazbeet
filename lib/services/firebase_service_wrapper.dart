@@ -1,8 +1,12 @@
+import 'package:tazbeet/services/app_logging.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_api_availability/google_api_availability.dart';
+import 'package:tazbeet/firebase_options.dart';
 
 class FirebaseServiceWrapper {
   static bool _isInitialized = false;
@@ -13,14 +17,33 @@ class FirebaseServiceWrapper {
     if (_isInitialized) return true;
     if (_hasError) return false;
 
+    // Check Google Play Services availability on Android
+    if (!kIsWeb) {
+      try {
+        final availability = await GoogleApiAvailability.instance.checkGooglePlayServicesAvailability();
+        if (availability != GooglePlayServicesAvailability.success) {
+          AppLogging.logWarning('Google Play Services not available: $availability');
+          _hasError = true;
+          return false;
+        }
+      } catch (e) {
+        AppLogging.logWarning('Failed to check Google Play Services: $e');
+        _hasError = true;
+        return false;
+      }
+    }
+
     try {
-      await Firebase.initializeApp();
+      // Initialize Firebase only if not already initialized
+      if (Firebase.apps.isEmpty) {
+        await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+      }
       _isInitialized = true;
-      debugPrint('Firebase initialized successfully');
+      AppLogging.logInfo('Firebase initialized successfully');
       return true;
     } catch (e) {
       _hasError = true;
-      debugPrint('Firebase initialization failed: $e');
+      AppLogging.logInfo('Firebase initialization failed: $e');
       return false;
     }
   }
@@ -34,7 +57,7 @@ class FirebaseServiceWrapper {
     try {
       return FirebaseAuth.instance;
     } catch (e) {
-      debugPrint('Firebase Auth not available: $e');
+      AppLogging.logInfo('Firebase Auth not available: $e');
       return null;
     }
   }
@@ -45,7 +68,7 @@ class FirebaseServiceWrapper {
     try {
       return FirebaseFirestore.instance;
     } catch (e) {
-      debugPrint('Firestore not available: $e');
+      AppLogging.logInfo('Firestore not available: $e');
       return null;
     }
   }
@@ -56,7 +79,7 @@ class FirebaseServiceWrapper {
     try {
       return GoogleSignIn();
     } catch (e) {
-      debugPrint('Google Sign In not available: $e');
+      AppLogging.logInfo('Google Sign In not available: $e');
       return null;
     }
   }
@@ -64,14 +87,14 @@ class FirebaseServiceWrapper {
   /// Safe Firebase Auth operation wrapper
   static Future<T?> safeAuthOperation<T>(Future<T> Function() operation) async {
     if (!isFirebaseAvailable) {
-      debugPrint('Firebase Auth not available, skipping operation');
+      AppLogging.logInfo('Firebase Auth not available, skipping operation');
       return null;
     }
 
     try {
       return await operation();
     } catch (e) {
-      debugPrint('Firebase Auth operation failed: $e');
+      AppLogging.logInfo('Firebase Auth operation failed: $e');
       return null;
     }
   }
@@ -79,14 +102,14 @@ class FirebaseServiceWrapper {
   /// Safe Firestore operation wrapper
   static Future<T?> safeFirestoreOperation<T>(Future<T> Function() operation) async {
     if (!isFirebaseAvailable) {
-      debugPrint('Firestore not available, skipping operation');
+      AppLogging.logInfo('Firestore not available, skipping operation');
       return null;
     }
 
     try {
       return await operation();
     } catch (e) {
-      debugPrint('Firestore operation failed: $e');
+      AppLogging.logInfo('Firestore operation failed: $e');
       return null;
     }
   }
@@ -100,7 +123,7 @@ class FirebaseServiceWrapper {
       // This will throw if Google Play Services are not available
       return true; // Assume supported unless we detect otherwise
     } catch (e) {
-      debugPrint('Platform may not support Firebase: $e');
+      AppLogging.logInfo('Platform may not support Firebase: $e');
       return false;
     }
   }

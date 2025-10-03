@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -14,13 +15,16 @@
       direction: ltr;
       transition: background-color 0.3s ease, color 0.3s ease;
     }
+
     body.dark {
       background: #121212;
       color: #e0e0e0;
     }
+
     [dir="rtl"] {
       direction: rtl;
     }
+
     header {
       background-color: #4a90e2;
       color: white;
@@ -28,51 +32,62 @@
       text-align: center;
       transition: background-color 0.3s ease;
     }
+
     body.dark header {
       background-color: #1e88e5;
     }
+
     header h1 {
       margin: 0;
       font-size: 2rem;
       user-select: none;
     }
+
     main {
       max-width: 900px;
       margin: 2rem auto;
       padding: 0 1rem;
     }
+
     section {
       margin-bottom: 2rem;
       background: white;
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       padding: 1.5rem;
       transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
     }
+
     body.dark section {
       background: #1e1e1e;
       color: #e0e0e0;
-      box-shadow: 0 2px 8px rgba(255,255,255,0.1);
+      box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
     }
+
     section:hover {
       transform: translateY(-5px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
+
     body.dark section:hover {
-      box-shadow: 0 6px 12px rgba(255,255,255,0.2);
+      box-shadow: 0 6px 12px rgba(255, 255, 255, 0.2);
     }
+
     h2 {
       color: #4a90e2;
       margin-top: 0;
       transition: color 0.3s ease;
     }
+
     body.dark h2 {
       color: #90caf9;
     }
+
     p {
       line-height: 1.6;
       font-size: 1.1rem;
     }
+
     .toggle-container {
       position: fixed;
       top: 1rem;
@@ -81,6 +96,7 @@
       gap: 0.5rem;
       z-index: 1000;
     }
+
     button.toggle-btn {
       background: #4a90e2;
       color: white;
@@ -92,18 +108,42 @@
       transition: background-color 0.3s ease, transform 0.2s ease;
       user-select: none;
     }
+
     button.toggle-btn:hover {
       background: #357ABD;
       transform: scale(1.05);
     }
+
     body.dark button.toggle-btn {
       background: #1e88e5;
     }
+
     body.dark button.toggle-btn:hover {
       background: #1565c0;
     }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.95rem;
+      color: #666;
+    }
+
+    body.dark footer {
+      color: #aaa;
+    }
+
+    footer a {
+      color: inherit;
+      text-decoration: underline;
+    }
+
+    footer a:hover {
+      text-decoration: none;
+    }
   </style>
 </head>
+
 <body>
   <div class="toggle-container">
     <button class="toggle-btn" id="langToggle" aria-label="Toggle Language">العربية</button>
@@ -116,28 +156,40 @@
     <section>
       <h2 id="intro-title">About Tazbeet</h2>
       <p id="intro-desc">
-        Tazbeet is a productivity and wellness app designed to help users manage their tasks, moods, and time effectively. It combines task management, mood tracking, and Pomodoro techniques to enhance focus and well-being.
+        Tazbeet is a productivity and wellness app designed to help users manage their tasks, moods, and time
+        effectively. It combines task management, mood tracking, and Pomodoro techniques to enhance focus and
+        well-being.
       </p>
     </section>
     <section>
       <h2 id="section1-title">Application Performance</h2>
       <p id="section1-desc">
-        Tazbeet is engineered for optimal performance, utilizing efficient algorithms and Flutter's native capabilities to ensure fast load times, smooth animations, and minimal battery consumption across a wide range of devices.
+        Tazbeet is engineered for optimal performance, utilizing efficient algorithms and Flutter's native capabilities
+        to ensure fast load times, smooth animations, and minimal battery consumption across a wide range of devices.
       </p>
     </section>
     <section>
       <h2 id="section2-title">User Interface & Experience</h2>
       <p id="section2-desc">
-        The app features an intuitive and accessible design, with thoughtfully crafted animations and transitions that enhance usability. It supports dynamic theming and responsive layouts to provide a seamless experience on all screen sizes.
+        The app features an intuitive and accessible design, with thoughtfully crafted animations and transitions that
+        enhance usability. It supports dynamic theming and responsive layouts to provide a seamless experience on all
+        screen sizes.
       </p>
     </section>
     <section>
       <h2 id="section3-title">Multilingual Support</h2>
       <p id="section3-desc">
-        Tazbeet offers full support for Arabic and English languages, including right-to-left layout adjustments for Arabic. Users can effortlessly switch languages, ensuring a personalized and culturally appropriate experience.
+        Tazbeet offers full support for Arabic and English languages, including right-to-left layout adjustments for
+        Arabic. Users can effortlessly switch languages, ensuring a personalized and culturally appropriate experience.
       </p>
     </section>
   </main>
+
+  <!-- Footer with Privacy Policy -->
+  <footer>
+    <a id="privacy-link" href="https://tazbeet-570e2.web.app/privacy_policy.html" target="_blank">Privacy Policy</a>
+  </footer>
+
   <script>
     const langToggle = document.getElementById('langToggle');
     const themeToggle = document.getElementById('themeToggle');
@@ -150,15 +202,16 @@
     function switchToArabic() {
       htmlEl.setAttribute('lang', 'ar');
       htmlEl.setAttribute('dir', 'rtl');
-      document.getElementById('title').textContent = 'تزبيت - عرض الأداء والتصميم';
-      document.getElementById('intro-title').textContent = 'عن تزبيت';
-      document.getElementById('intro-desc').textContent = 'تزبيت هو تطبيق للإنتاجية والرفاهية مصمم لمساعدة المستخدمين على إدارة مهامهم ومزاجهم ووقتهم بفعالية. يجمع بين إدارة المهام، تتبع المزاج، وتقنيات بومودورو لتعزيز التركيز والرفاهية.';
+      document.getElementById('title').textContent = 'تظبيت - عرض الأداء والتصميم';
+      document.getElementById('intro-title').textContent = 'عن تظبيت';
+      document.getElementById('intro-desc').textContent = 'تظبيت هو تطبيق للإنتاجية والرفاهية مصمم لمساعدة المستخدمين على إدارة مهامهم ومزاجهم ووقتهم بفعالية. يجمع بين إدارة المهام، تتبع المزاج، وتقنيات بومودورو لتعزيز التركيز والرفاهية.';
       document.getElementById('section1-title').textContent = 'أداء التطبيق';
-      document.getElementById('section1-desc').textContent = 'تم تصميم تزبيت لتحقيق أداء مثالي، باستخدام خوارزميات فعالة وقدرات Flutter الأصلية لضمان أوقات تحميل سريعة، ورسوم متحركة سلسة، واستهلاك بطارية منخفض عبر مجموعة واسعة من الأجهزة.';
+      document.getElementById('section1-desc').textContent = 'تم تصميم تظبيت لتحقيق أداء مثالي، باستخدام خوارزميات فعالة وقدرات Flutter الأصلية لضمان أوقات تحميل سريعة، ورسوم متحركة سلسة، واستهلاك بطارية منخفض عبر مجموعة واسعة من الأجهزة.';
       document.getElementById('section2-title').textContent = 'واجهة المستخدم والتجربة';
       document.getElementById('section2-desc').textContent = 'يتميز التطبيق بتصميم بديهي وسهل الوصول، مع رسوم متحركة وانتقالات مدروسة تعزز سهولة الاستخدام. يدعم التخصيص الديناميكي للثيمات وتصميمات متجاوبة لتوفير تجربة سلسة على جميع أحجام الشاشات.';
       document.getElementById('section3-title').textContent = 'دعم متعدد اللغات';
-      document.getElementById('section3-desc').textContent = 'يقدم تزبيت دعمًا كاملاً للغتين العربية والإنجليزية، بما في ذلك تعديلات تخطيط من اليمين إلى اليسار للغة العربية. يمكن للمستخدمين التبديل بين اللغات بسهولة، مما يضمن تجربة مخصصة ومناسبة ثقافيًا.';
+      document.getElementById('section3-desc').textContent = 'يقدم تظبيت دعمًا كاملاً للغتين العربية والإنجليزية، بما في ذلك تعديلات تخطيط من اليمين إلى اليسار للغة العربية. يمكن للمستخدمين التبديل بين اللغات بسهولة، مما يضمن تجربة مخصصة ومناسبة ثقافيًا.';
+      document.getElementById('privacy-link').textContent = 'سياسة الخصوصية';
       langToggle.textContent = 'English';
     }
 
@@ -174,6 +227,7 @@
       document.getElementById('section2-desc').textContent = 'The app features an intuitive and accessible design, with thoughtfully crafted animations and transitions that enhance usability. It supports dynamic theming and responsive layouts to provide a seamless experience on all screen sizes.';
       document.getElementById('section3-title').textContent = 'Multilingual Support';
       document.getElementById('section3-desc').textContent = 'Tazbeet offers full support for Arabic and English languages, including right-to-left layout adjustments for Arabic. Users can effortlessly switch languages, ensuring a personalized and culturally appropriate experience.';
+      document.getElementById('privacy-link').textContent = 'Privacy Policy';
       langToggle.textContent = 'العربية';
     }
 
@@ -192,8 +246,10 @@
     langToggle.addEventListener('click', () => {
       if (isArabic()) {
         switchToEnglish();
+        localStorage.setItem('lang', 'en');
       } else {
         switchToArabic();
+        localStorage.setItem('lang', 'ar');
       }
     });
 
@@ -223,4 +279,5 @@
     initialize();
   </script>
 </body>
+
 </html>

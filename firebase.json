@@ -1,10 +1,39 @@
 {
-  "hosting": {
-    "public": "y",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ]
-  }
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "tazbeet-570e2",
+                    "appId": "1:59269490691:android:5471588776016168b70636",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "ios": {
+                "default": {
+                    "projectId": "tazbeet-570e2",
+                    "appId": "1:59269490691:ios:b9844a3dc408e705b70636",
+                    "uploadDebugSymbols": false,
+                    "fileOutput": "ios/Runner/GoogleService-Info.plist"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "tazbeet-570e2",
+                    "configurations": {
+                        "android": "1:59269490691:android:5471588776016168b70636",
+                        "ios": "1:59269490691:ios:b9844a3dc408e705b70636",
+                        "web": "1:59269490691:web:d2e1922bdeb47467b70636"
+                    }
+                }
+            }
+        }
+    },
+    "hosting": {
+        "public": "y",
+        "ignore": [
+            "firebase.json",
+            "**/.*",
+            "**/node_modules/**"
+        ]
+    }
 }

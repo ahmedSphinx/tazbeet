@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:tazbeet/l10n/app_localizations.dart';
 import '../../models/repeat_rule.dart';
 
 class RepeatConfigWidget extends StatefulWidget {
   final RepeatRule? initialRepeatRule;
   final Function(RepeatRule?) onRepeatRuleChanged;
 
-  const RepeatConfigWidget({Key? key, this.initialRepeatRule, required this.onRepeatRuleChanged}) : super(key: key);
+  const RepeatConfigWidget({super.key, this.initialRepeatRule, required this.onRepeatRuleChanged});
 
   @override
   State<RepeatConfigWidget> createState() => _RepeatConfigWidgetState();
@@ -44,7 +43,6 @@ class _RepeatConfigWidgetState extends State<RepeatConfigWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return Column(

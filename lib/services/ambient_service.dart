@@ -1,18 +1,10 @@
 import 'dart:async';
+import 'package:tazbeet/services/app_logging.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum AmbientSound {
-  rain,
-  ocean,
-  forest,
-  whiteNoise,
-  cafe,
-  fire,
-  wind,
-  thunderstorm,
-}
+enum AmbientSound { rain, ocean, forest, whiteNoise, cafe, fire, wind, thunderstorm }
 
 class AmbientService extends ChangeNotifier {
   static final AmbientService _instance = AmbientService._internal();
@@ -37,10 +29,7 @@ class AmbientService extends ChangeNotifier {
     _volume = prefs.getDouble('ambient_volume') ?? 0.5;
     final savedSound = prefs.getString('ambient_sound');
     if (savedSound != null) {
-      _currentSound = AmbientSound.values.firstWhere(
-        (sound) => sound.name == savedSound,
-        orElse: () => AmbientSound.rain,
-      );
+      _currentSound = AmbientSound.values.firstWhere((sound) => sound.name == savedSound, orElse: () => AmbientSound.rain);
     }
 
     _audioPlayer.onPlayerStateChanged.listen((state) {
@@ -70,7 +59,7 @@ class AmbientService extends ChangeNotifier {
       await _audioPlayer.setReleaseMode(ReleaseMode.loop);
       await _audioPlayer.resume();
     } catch (e) {
-      debugPrint('Error playing ambient sound: $e');
+      AppLogging.logInfo('Error playing ambient sound: $e');
     }
   }
 

@@ -398,5 +398,40 @@
   "sessionProgress": "Progrès de la Session",
   "settingsButton": "Paramètres",
   "tomorrow": "Demain",
-  "yesterday": "Hier"
+  "yesterday": "Hier",
+  "overdueTasks": "Tâches en retard - nécessitent une attention immédiate",
+  "todayTasks": "Tâches à accomplir aujourd'hui",
+  "tomorrowTasks": "Tâches de demain",
+  "thisWeekTasks": "Tâches de cette semaine",
+  "laterTasks": "Tâches ultérieures",
+  "noDateTasks": "Tâches sans date spécifique",
+  "receiveNotificationsForTasksAndReminders": "Recevoir des notifications pour les tâches et les rappels",
+  "playSoundForNotifications": "Jouer un son pour les notifications",
+  "vibrateForNotifications": "Vibrer pour les notifications",
+  "noUpcomingTasksWithReminders": "Aucune tâche à venir avec des rappels",
+  "noOverdueTasks": "Aucune tâche en retard",
+  "testNotification": "Notification de Test",
+  "clearAll": "Tout Effacer",
+  "quickActions": "Actions Rapides",
+  "reminderCancelledFor": "Rappel annulé pour : {taskTitle}",
+  "@reminderCancelledFor": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "testNotificationSent": "Notification de test envoyée !",
+  "reminder": "Rappel : {date}",
+  "@reminder": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "noReminderSet": "Aucun rappel défini",
+  "upcoming": "À venir",
+  "allNotificationsCleared": "Toutes les notifications effacées !",
+  "completedTasks": "Tâches terminées"
 }

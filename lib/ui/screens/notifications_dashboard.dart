@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
 
 import '../../services/notification_service.dart';
 import '../../models/task.dart';
+import '../../repositories/task_repository.dart';
 
 class NotificationsDashboard extends StatefulWidget {
   const NotificationsDashboard({super.key});
@@ -14,9 +14,11 @@ class NotificationsDashboard extends StatefulWidget {
 
 class _NotificationsDashboardState extends State<NotificationsDashboard> {
   final NotificationService _notificationService = NotificationService();
+  final TaskRepository _taskRepository = TaskRepository();
   bool _notificationsEnabled = true;
   bool _soundEnabled = true;
   bool _vibrationEnabled = true;
+  bool _systemNotificationsEnabled = false;
   List<Task> _upcomingTasks = [];
   List<Task> _overdueTasks = [];
 
@@ -29,21 +31,30 @@ class _NotificationsDashboardState extends State<NotificationsDashboard> {
 
   Future<void> _loadNotificationSettings() async {
     // Load notification settings from shared preferences
+    final systemEnabled = await _notificationService.areNotificationsEnabled();
     setState(() {
       // These would be loaded from SharedPreferences in a real implementation
       _notificationsEnabled = true;
       _soundEnabled = true;
       _vibrationEnabled = true;
+      _systemNotificationsEnabled = systemEnabled;
     });
   }
 
   Future<void> _loadUpcomingTasks() async {
-    // Load upcoming and overdue tasks
+    final allTasks = await _taskRepository.getAllTasks();
+    final now = DateTime.now();
+    final upcoming = allTasks.where((task) => task.reminderDate != null && task.reminderDate!.isAfter(now) && !task.isCompleted).toList();
+    final overdue = allTasks.where((task) => task.dueDate != null && task.dueDate!.isBefore(now) && !task.isCompleted).toList();
+    upcoming.sort((a, b) => a.reminderDate!.compareTo(b.reminderDate!));
+    overdue.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
     setState(() {
-      // This would be loaded from the task repository in a real implementation
-      _upcomingTasks = [];
-      _overdueTasks = [];
+      _upcomingTasks = upcoming;
+      _overdueTasks = overdue;
     });
+
+    // Reschedule all reminders on load to ensure notifications are up to date
+    await _notificationService.rescheduleAllReminders(upcoming);
   }
 
   @override
@@ -85,13 +96,18 @@ class _NotificationsDashboardState extends State<NotificationsDashboard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Notification Settings', style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 16),
+            Text(AppLocalizations.of(context)!.notificationsSection, style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 8),
+            Text(
+              _systemNotificationsEnabled ? 'الإشعارات مفعلة في النظام' : 'الإشعارات معطلة في النظام - اذهب إلى الإعدادات لتفعيلها',
+              style: TextStyle(color: _systemNotificationsEnabled ? Colors.green : Colors.red, fontSize: 14),
+            ),
+            const SizedBox(height: 8),
 
             // Enable/Disable Notifications
             SwitchListTile(
-              title: const Text('Enable Notifications'),
-              subtitle: const Text('Receive notifications for tasks and reminders'),
+              title: Text(AppLocalizations.of(context)!.enableNotifications),
+              subtitle: Text(AppLocalizations.of(context)!.receiveNotificationsForTasksAndReminders),
               value: _notificationsEnabled,
               onChanged: (value) {
                 setState(() {
@@ -106,8 +122,8 @@ class _NotificationsDashboardState extends State<NotificationsDashboard> {
 
               // Sound Settings
               SwitchListTile(
-                title: const Text('Sound'),
-                subtitle: const Text('Play sound for notifications'),
+                title: Text(AppLocalizations.of(context)!.sound),
+                subtitle: Text(AppLocalizations.of(context)!.playSoundForNotifications),
                 value: _soundEnabled,
                 onChanged: (value) {
                   setState(() {
@@ -118,8 +134,8 @@ class _NotificationsDashboardState extends State<NotificationsDashboard> {
 
               // Vibration Settings
               SwitchListTile(
-                title: const Text('Vibration'),
-                subtitle: const Text('Vibrate for notifications'),
+                title: Text(AppLocalizations.of(context)!.vibration),
+                subtitle: Text(AppLocalizations.of(context)!.vibrateForNotifications),
                 value: _vibrationEnabled,
                 onChanged: (value) {
                   setState(() {
@@ -144,14 +160,14 @@ class _NotificationsDashboardState extends State<NotificationsDashboard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Upcoming Tasks', style: Theme.of(context).textTheme.titleLarge),
+                Text(AppLocalizations.of(context)!.upcoming, style: Theme.of(context).textTheme.titleLarge),
                 Text('${_upcomingTasks.length}', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.primary)),
               ],
             ),
             const SizedBox(height: 16),
 
             if (_upcomingTasks.isEmpty)
-              const Text('No upcoming tasks with reminders')
+              Text(AppLocalizations.of(context)!.noUpcomingTasksWithReminders)
             else
               ListView.builder(
                 shrinkWrap: true,
@@ -162,7 +178,9 @@ class _NotificationsDashboardState extends State<NotificationsDashboard> {
                   return ListTile(
                     leading: const Icon(Icons.schedule),
                     title: Text(task.title),
-                    subtitle: Text(task.reminderDate != null ? 'Reminder: ${task.reminderDate!.day}/${task.reminderDate!.month}/${task.reminderDate!.year}' : 'No reminder set'),
+                    subtitle: Text(
+                      task.reminderDate != null ? AppLocalizations.of(context)!.reminder('${task.reminderDate!.day}/${task.reminderDate!.month}/${task.reminderDate!.year}') : AppLocalizations.of(context)!.noReminderSet,
+                    ),
                     trailing: IconButton(icon: const Icon(Icons.notifications_off), onPressed: () => _cancelTaskReminder(task)),
                   );
                 },
@@ -183,14 +201,14 @@ class _NotificationsDashboardState extends State<NotificationsDashboard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Overdue Tasks', style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.red)),
+                Text(AppLocalizations.of(context)!.overdueTasks, style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.red)),
                 Text('${_overdueTasks.length}', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.red)),
               ],
             ),
             const SizedBox(height: 16),
 
             if (_overdueTasks.isEmpty)
-              const Text('No overdue tasks')
+              Text(AppLocalizations.of(context)!.noOverdueTasks)
             else
               ListView.builder(
                 shrinkWrap: true,
@@ -201,7 +219,7 @@ class _NotificationsDashboardState extends State<NotificationsDashboard> {
                   return ListTile(
                     leading: const Icon(Icons.warning, color: Colors.red),
                     title: Text(task.title, style: const TextStyle(color: Colors.red)),
-                    subtitle: Text('Due: ${task.dueDate!.day}/${task.dueDate!.month}/${task.dueDate!.year}'),
+                    subtitle: Text('${AppLocalizations.of(context)!.dueDate}: ${task.dueDate!.day}/${task.dueDate!.month}/${task.dueDate!.year}'),
                     trailing: IconButton(
                       icon: const Icon(Icons.notifications_active, color: Colors.red),
                       onPressed: () => _showOverdueNotification(task),
@@ -222,8 +240,10 @@ class _NotificationsDashboardState extends State<NotificationsDashboard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Quick Actions', style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 16),
+            Text(AppLocalizations.of(context)!.quickControls, style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 8),
+            Text('ملاحظة: التذكيرات المجدولة لا تظهر إذا كان التطبيق مفتوح. أغلق التطبيق لاختبارها.', style: TextStyle(color: Colors.orange, fontSize: 12)),
+            const SizedBox(height: 8),
 
             Row(
               children: [
@@ -231,7 +251,7 @@ class _NotificationsDashboardState extends State<NotificationsDashboard> {
                   child: ElevatedButton.icon(
                     onPressed: _testNotification,
                     icon: const Icon(Icons.notification_add),
-                    label: const Text('Test Notification'),
+                    label: Text(AppLocalizations.of(context)!.testNotification),
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
                   ),
                 ),
@@ -240,8 +260,30 @@ class _NotificationsDashboardState extends State<NotificationsDashboard> {
                   child: ElevatedButton.icon(
                     onPressed: _clearAllNotifications,
                     icon: const Icon(Icons.clear_all),
-                    label: const Text('Clear All'),
+                    label: Text(AppLocalizations.of(context)!.clearAllButton),
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.grey, foregroundColor: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: _testReminderIn10Seconds,
+                    icon: const Icon(Icons.timer),
+                    label: Text(AppLocalizations.of(context)!.testReminderIn10Seconds),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: _openNotificationSettings,
+                    icon: const Icon(Icons.settings),
+                    label: const Text('Settings'),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.orange, foregroundColor: Colors.white),
                   ),
                 ),
               ],
@@ -256,7 +298,7 @@ class _NotificationsDashboardState extends State<NotificationsDashboard> {
     await _notificationService.cancelTaskReminder(task.id);
     await _loadUpcomingTasks(); // Refresh the list
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Reminder cancelled for: ${task.title}')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.reminderCancelledFor(task.title))));
     }
   }
 
@@ -271,7 +313,7 @@ class _NotificationsDashboardState extends State<NotificationsDashboard> {
     await _notificationService.showTaskDueNotification(testTask);
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Test notification sent!')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.testNotificationSent)));
     }
   }
 
@@ -284,7 +326,20 @@ class _NotificationsDashboardState extends State<NotificationsDashboard> {
     await _loadUpcomingTasks(); // Refresh the list
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('All notifications cleared!')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.allNotificationsCleared)));
     }
+  }
+
+  Future<void> _testReminderIn10Seconds() async {
+    await _notificationService.scheduleTestReminder();
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.testReminderScheduled)));
+    }
+  }
+
+  Future<void> _openNotificationSettings() async {
+    // Open app notification settings
+    await _notificationService.openNotificationSettings();
   }
 }

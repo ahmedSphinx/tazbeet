@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tazbeet - Support</title>
+  <style>
+    body {
+      font-family: 'Tajawal', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f7fa;
+      color: #333;
+      direction: ltr;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark {
+      background: #121212;
+      color: #e0e0e0;
+    }
+
+    [dir="rtl"] {
+      direction: rtl;
+    }
+
+    header {
+      background-color: #4a90e2;
+      color: white;
+      padding: 1rem 2rem;
+      text-align: center;
+      transition: background-color 0.3s ease;
+    }
+
+    body.dark header {
+      background-color: #1e88e5;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      user-select: none;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    section {
+      margin-bottom: 2rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark section {
+      background: #1e1e1e;
+      color: #e0e0e0;
+      box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+    }
+
+    section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    body.dark section:hover {
+      box-shadow: 0 6px 12px rgba(255, 255, 255, 0.2);
+    }
+
+    h2 {
+      color: #4a90e2;
+      margin-top: 0;
+      transition: color 0.3s ease;
+    }
+
+    body.dark h2 {
+      color: #90caf9;
+    }
+
+    p {
+      line-height: 1.6;
+      font-size: 1.1rem;
+    }
+
+    .contact-info {
+      background: #f0f8ff;
+      padding: 1rem;
+      border-radius: 4px;
+      margin: 1rem 0;
+    }
+
+    body.dark .contact-info {
+      background: #2a2a2a;
+    }
+
+    .faq-item {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 1rem;
+    }
+
+    body.dark .faq-item {
+      border-bottom: 1px solid #444;
+    }
+
+    .faq-question {
+      font-weight: bold;
+      color: #4a90e2;
+    }
+
+    body.dark .faq-question {
+      color: #90caf9;
+    }
+
+    .toggle-container {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 1000;
+    }
+
+    button.toggle-btn {
+      background: #4a90e2;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      user-select: none;
+    }
+
+    button.toggle-btn:hover {
+      background: #357ABD;
+      transform: scale(1.05);
+    }
+
+    body.dark button.toggle-btn {
+      background: #1e88e5;
+    }
+
+    body.dark button.toggle-btn:hover {
+      background: #1565c0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.95rem;
+      color: #666;
+    }
+
+    body.dark footer {
+      color: #aaa;
+    }
+
+    footer a {
+      color: inherit;
+      text-decoration: underline;
+    }
+
+    footer a:hover {
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="toggle-container">
+    <button class="toggle-btn" id="langToggle" aria-label="Toggle Language">العربية</button>
+    <button class="toggle-btn" id="themeToggle" aria-label="Toggle Dark Mode">🌙</button>
+  </div>
+  <header>
+    <h1 id="title">Tazbeet - Support</h1>
+  </header>
+  <main>
+    <section>
+      <h2 id="contact-title">Contact Us</h2>
+      <p id="contact-desc">Need help with Tazbeet? We're here to assist you. Please reach out to us through the following channels:</p>
+      <div class="contact-info">
+        <p><strong>Email:</strong> support@tazbeet.com</p>
+        <p><strong>Website:</strong> <a href="https://tazbeet-570e2.web.app" target="_blank">tazbeet-570e2.web.app</a></p>
+        <p><strong>Response Time:</strong> We aim to respond to all inquiries within 24-48 hours.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="faq-title">Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <div class="faq-question" id="faq1-q">How do I create a new task?</div>
+        <p id="faq1-a">Tap the + button on the home screen, fill in the task details, and save. You can add subtasks, set priorities, and assign categories.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" id="faq2-q">How does the Pomodoro timer work?</div>
+        <p id="faq2-a">Start a Pomodoro session from the timer screen. Work for the set duration, then take a break. Sessions automatically cycle through work and break periods.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" id="faq3-q">Can I sync my data across devices?</div>
+        <p id="faq3-a">Yes! Sign in with your account to sync tasks, categories, and settings across all your devices via Firebase.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" id="faq4-q">How do I track my mood?</div>
+        <p id="faq4-a">Go to the Mood section, tap the + button, and log your current energy, focus, and stress levels. View insights over time.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" id="faq5-q">Is my data secure?</div>
+        <p id="faq5-a">Absolutely. We use Firebase for secure data storage and encryption. Your personal information is never shared without your consent.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="troubleshooting-title">Troubleshooting</h2>
+      <p id="troubleshooting-desc">Having issues? Try these common solutions:</p>
+      <ul>
+        <li id="trouble1">Restart the app or your device</li>
+        <li id="trouble2">Check your internet connection for sync issues</li>
+        <li id="trouble3">Ensure you have the latest app version from the store</li>
+        <li id="trouble4">Clear app cache in settings if experiencing performance issues</li>
+      </ul>
+      <p>If problems persist, please contact us with details about your device, app version, and the issue you're experiencing.</p>
+    </section>
+  </main>
+
+  <!-- Footer with Privacy Policy -->
+  <footer>
+    <a id="privacy-link" href="https://tazbeet-570e2.web.app/privacy_policy.html" target="_blank">Privacy Policy</a> |
+    <a href="https://tazbeet-570e2.web.app/index.html">Home</a>
+  </footer>
+
+  <script>
+    const langToggle = document.getElementById('langToggle');
+    const themeToggle = document.getElementById('themeToggle');
+    const htmlEl = document.documentElement;
+    const bodyEl = document.body;
+
+    const isArabic = () => htmlEl.getAttribute('lang') === 'ar';
+    const isDark = () => bodyEl.classList.contains('dark');
+
+    function switchToArabic() {
+      htmlEl.setAttribute('lang', 'ar');
+      htmlEl.setAttribute('dir', 'rtl');
+      document.getElementById('title').textContent = 'تظبيت - الدعم';
+      document.getElementById('contact-title').textContent = 'اتصل بنا';
+      document.getElementById('contact-desc').textContent = 'تحتاج مساعدة مع تظبيت؟ نحن هنا لمساعدتك. يرجى التواصل معنا من خلال القنوات التالية:';
+      document.getElementById('faq-title').textContent = 'الأسئلة الشائعة';
+      document.getElementById('faq1-q').textContent = 'كيف أنشئ مهمة جديدة؟';
+      document.getElementById('faq1-a').textContent = 'اضغط على زر + في الشاشة الرئيسية، املأ تفاصيل المهمة، واحفظ. يمكنك إضافة مهام فرعية، تعيين أولويات، وتعيين فئات.';
+      document.getElementById('faq2-q').textContent = 'كيف يعمل مؤقت بومودورو؟';
+      document.getElementById('faq2-a').textContent = 'ابدأ جلسة بومودورو من شاشة المؤقت. اعمل للمدة المحددة، ثم خذ استراحة. تتناوب الجلسات تلقائياً بين العمل والاستراحة.';
+      document.getElementById('faq3-q').textContent = 'هل يمكنني مزامنة بياناتي عبر الأجهزة؟';
+      document.getElementById('faq3-a').textContent = 'نعم! قم بتسجيل الدخول بحسابك لمزامنة المهام والفئات والإعدادات عبر جميع أجهزتك عبر Firebase.';
+      document.getElementById('faq4-q').textContent = 'كيف أتتبع مزاجي؟';
+      document.getElementById('faq4-a').textContent = 'اذهب إلى قسم المزاج، اضغط على زر +، وسجل مستويات الطاقة والتركيز والتوتر الحالية. عرض الرؤى مع مرور الوقت.';
+      document.getElementById('faq5-q').textContent = 'هل بياناتي آمنة؟';
+      document.getElementById('faq5-a').textContent = 'بالتأكيد. نحن نستخدم Firebase لتخزين البيانات الآمن والتشفير. معلوماتك الشخصية لا تُشارك أبداً بدون موافقتك.';
+      document.getElementById('troubleshooting-title').textContent = 'استكشاف الأخطاء';
+      document.getElementById('troubleshooting-desc').textContent = 'تواجه مشاكل؟ جرب هذه الحلول الشائعة:';
+      document.getElementById('trouble1').textContent = 'أعد تشغيل التطبيق أو جهازك';
+      document.getElementById('trouble2').textContent = 'تحقق من اتصال الإنترنت لمشاكل المزامنة';
+      document.getElementById('trouble3').textContent = 'تأكد من وجود أحدث إصدار من التطبيق من المتجر';
+      document.getElementById('trouble4').textContent = 'مسح ذاكرة التخزين المؤقت في الإعدادات إذا كنت تواجه مشاكل في الأداء';
+      document.getElementById('privacy-link').textContent = 'سياسة الخصوصية';
+      langToggle.textContent = 'English';
+    }
+
+    function switchToEnglish() {
+      htmlEl.setAttribute('lang', 'en');
+      htmlEl.setAttribute('dir', 'ltr');
+      document.getElementById('title').textContent = 'Tazbeet - Support';
+      document.getElementById('contact-title').textContent = 'Contact Us';
+      document.getElementById('contact-desc').textContent = 'Need help with Tazbeet? We\'re here to assist you. Please reach out to us through the following channels:';
+      document.getElementById('faq-title').textContent = 'Frequently Asked Questions';
+      document.getElementById('faq1-q').textContent = 'How do I create a new task?';
+      document.getElementById('faq1-a').textContent = 'Tap the + button on the home screen, fill in the task details, and save. You can add subtasks, set priorities, and assign categories.';
+      document.getElementById('faq2-q').textContent = 'How does the Pomodoro timer work?';
+      document.getElementById('faq2-a').textContent = 'Start a Pomodoro session from the timer screen. Work for the set duration, then take a break. Sessions automatically cycle through work and break periods.';
+      document.getElementById('faq3-q').textContent = 'Can I sync my data across devices?';
+      document.getElementById('faq3-a').textContent = 'Yes! Sign in with your account to sync tasks, categories, and settings across all your devices via Firebase.';
+      document.getElementById('faq4-q').textContent = 'How do I track my mood?';
+      document.getElementById('faq4-a').textContent = 'Go to the Mood section, tap the + button, and log your current energy, focus, and stress levels. View insights over time.';
+      document.getElementById('faq5-q').textContent = 'Is my data secure?';
+      document.getElementById('faq5-a').textContent = 'Absolutely. We use Firebase for secure data storage and encryption. Your personal information is never shared without your consent.';
+      document.getElementById('troubleshooting-title').textContent = 'Troubleshooting';
+      document.getElementById('troubleshooting-desc').textContent = 'Having issues? Try these common solutions:';
+      document.getElementById('trouble1').textContent = 'Restart the app or your device';
+      document.getElementById('trouble2').textContent = 'Check your internet connection for sync issues';
+      document.getElementById('trouble3').textContent = 'Ensure you have the latest app version from the store';
+      document.getElementById('trouble4').textContent = 'Clear app cache in settings if experiencing performance issues';
+      document.getElementById('privacy-link').textContent = 'Privacy Policy';
+      langToggle.textContent = 'العربية';
+    }
+
+    function toggleDarkMode() {
+      if (isDark()) {
+        bodyEl.classList.remove('dark');
+        themeToggle.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+      } else {
+        bodyEl.classList.add('dark');
+        themeToggle.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    langToggle.addEventListener('click', () => {
+      if (isArabic()) {
+        switchToEnglish();
+        localStorage.setItem('lang', 'en');
+      } else {
+        switchToArabic();
+        localStorage.setItem('lang', 'ar');
+      }
+    });
+
+    themeToggle.addEventListener('click', () => {
+      toggleDarkMode();
+    });
+
+    // Initialize language and theme from localStorage or defaults
+    function initialize() {
+      const savedLang = localStorage.getItem('lang');
+      if (savedLang === 'ar') {
+        switchToArabic();
+      } else {
+        switchToEnglish();
+      }
+
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        bodyEl.classList.add('dark');
+        themeToggle.textContent = '☀️';
+      } else {
+        bodyEl.classList.remove('dark');
+        themeToggle.textContent = '🌙';
+      }
+    }
+
+    initialize();
+  </script>
+</body>
+
+</html>

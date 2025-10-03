@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:tazbeet/services/app_logging.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -45,6 +45,10 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
 
       // Update category task counts when loading tasks
       await categoryRepository.updateCategoryTaskCounts(tasks);
+
+      // Reschedule all reminders on app start to ensure notifications persist
+      await notificationService.rescheduleAllReminders(tasks);
+      await notificationService.getPendingNotifications();
     } catch (e) {
       emit(TaskListError('Failed to load tasks'));
     }
@@ -66,7 +70,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
           // Log error but don't fail the operation
-          log('Failed to sync task addition to Firestore: $e');
+          AppLogging.logInfo('Failed to sync task addition to Firestore: $e');
         }
       }
     }
@@ -90,7 +94,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
           // Log error but don't fail the operation
-          log('Failed to sync task update to Firestore: $e');
+          AppLogging.logInfo('Failed to sync task update to Firestore: $e');
         }
       }
     }
@@ -112,7 +116,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
           // Log error but don't fail the operation
-          log('Failed to sync task deletion to Firestore: $e');
+          AppLogging.logInfo('Failed to sync task deletion to Firestore: $e');
         }
       }
     }
@@ -142,7 +146,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
           // Log error but don't fail the operation
-          log('Failed to sync task completion toggle to Firestore: $e');
+          AppLogging.logInfo('Failed to sync task completion toggle to Firestore: $e');
         }
       }
     }
@@ -176,7 +180,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          log('Failed to sync repeat rule addition to Firestore: $e');
+          AppLogging.logInfo('Failed to sync repeat rule addition to Firestore: $e');
         }
       }
     }
@@ -201,7 +205,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          log('Failed to sync repeat rule update to Firestore: $e');
+          AppLogging.logInfo('Failed to sync repeat rule update to Firestore: $e');
         }
       }
     }
@@ -226,7 +230,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          log('Failed to sync repeat rule removal to Firestore: $e');
+          AppLogging.logInfo('Failed to sync repeat rule removal to Firestore: $e');
         }
       }
     }
@@ -249,7 +253,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
             try {
               await _dataSyncService.syncToFirestore(user.uid);
             } catch (e) {
-              log('Failed to sync recurring instance to Firestore: $e');
+              AppLogging.logInfo('Failed to sync recurring instance to Firestore: $e');
             }
           }
         }

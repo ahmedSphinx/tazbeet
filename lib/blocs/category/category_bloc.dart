@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:tazbeet/services/app_logging.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,7 +41,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          log('Failed to sync category addition to Firestore: $e');
+          AppLogging.logInfo('Failed to sync category addition to Firestore: $e');
         }
       }
     }
@@ -61,7 +61,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          log('Failed to sync category update to Firestore: $e');
+          AppLogging.logInfo('Failed to sync category update to Firestore: $e');
         }
       }
     }
@@ -79,7 +79,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         try {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
-          log('Failed to sync category deletion to Firestore: $e');
+          AppLogging.logInfo('Failed to sync category deletion to Firestore: $e');
         }
       }
     }

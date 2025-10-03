@@ -168,7 +168,7 @@ class AppThemes {
   }
 
   static ThemeData getCustomTheme(Color primaryColor, bool isDark) {
-    final basePrimary = isDark ? _primaryDark : _primaryLight;
+
     final baseSecondary = isDark ? _secondaryDark : _secondaryLight;
     final baseTertiary = isDark ? _tertiaryDark : _tertiaryLight;
     final baseAccent = isDark ? _accentDark : _accentLight;

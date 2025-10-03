@@ -16,25 +16,23 @@ class PomodoroSession {
   final int longBreakDuration; // in minutes
   final int sessionsUntilLongBreak;
 
-  const PomodoroSession({
-    this.workDuration = 30,
-    this.shortBreakDuration = 5,
-    this.longBreakDuration = 15,
-    this.sessionsUntilLongBreak = 4,
-  });
+  const PomodoroSession({this.workDuration = 30, this.shortBreakDuration = 5, this.longBreakDuration = 15, this.sessionsUntilLongBreak = 4});
 }
 
 class PomodoroTimer extends ChangeNotifier {
-  final PomodoroSession session;
+  PomodoroSession session;
   final TaskRepository? taskRepository;
 
-  PomodoroTimer({PomodoroSession? session, this.taskRepository})
-    : session = session ?? const PomodoroSession();
+  PomodoroTimer({PomodoroSession? session, this.taskRepository}) : session = session ?? const PomodoroSession();
+
+  void updateSession(PomodoroSession newSession) {
+    session = newSession;
+    notifyListeners();
+  }
 
   Task? _selectedTask;
   PomodoroState _state = PomodoroState.idle;
-  PomodoroState _previousState =
-      PomodoroState.idle; // Track previous state for paused
+  PomodoroState _previousState = PomodoroState.idle; // Track previous state for paused
   int _currentSession = 0;
   int _completedSessions = 0;
   int _remainingSeconds = 0;
@@ -54,6 +52,7 @@ class PomodoroTimer extends ChangeNotifier {
 
   // Getters
   PomodoroState get state => _state;
+  PomodoroState get effectiveState => _state == PomodoroState.paused ? _previousState : _state;
   int get currentSession => _currentSession;
   int get completedSessions => _completedSessions;
   int get remainingSeconds => _remainingSeconds;
@@ -88,9 +87,7 @@ class PomodoroTimer extends ChangeNotifier {
   String get nextStateLabel {
     switch (_state) {
       case PomodoroState.work:
-        return _shouldTakeLongBreak()
-            ? LocalizationService.longBreak
-            : LocalizationService.shortBreak;
+        return _shouldTakeLongBreak() ? LocalizationService.longBreak : LocalizationService.shortBreak;
       case PomodoroState.shortBreak:
       case PomodoroState.longBreak:
         return LocalizationService.work;
@@ -138,7 +135,7 @@ class PomodoroTimer extends ChangeNotifier {
 
   void skip() {
     _timer?.cancel();
-    _moveToNextState();
+    _moveToNextState(completed: false);
     _saveState();
     notifyListeners();
   }
@@ -172,6 +169,8 @@ class PomodoroTimer extends ChangeNotifier {
       _startTime = _startTime!.add(pausedDuration);
       _pauseTime = null;
     }
+    _state = _previousState;
+    notifyListeners();
     _startTimer();
   }
 
@@ -191,35 +190,24 @@ class PomodoroTimer extends ChangeNotifier {
         _saveState();
         // Send notification when session completes
         if (Platform.isAndroid || Platform.isIOS) {
-          NotificationService().showTaskCompletedNotification(
-            Task(
-              id: 'pomodoro',
-              title: LocalizationService.pomodoroSessionCompleted,
-              createdAt: DateTime.now(),
-              updatedAt: DateTime.now(),
-            ),
-          );
+          NotificationService().showTaskCompletedNotification(Task(id: 'pomodoro', title: LocalizationService.pomodoroSessionCompleted, createdAt: DateTime.now(), updatedAt: DateTime.now()));
         }
         notifyListeners();
       }
     });
   }
 
-  void _moveToNextState() async {
+  void _moveToNextState({bool completed = true}) async {
     switch (_state) {
       case PomodoroState.work:
-        _completedSessions++;
-        // Update task if one is selected
-        if (_selectedTask != null &&
-            taskRepository != null &&
-            _workStartTime != null) {
-          final workDuration = DateTime.now().difference(_workStartTime!);
-          final updatedTask = _selectedTask!.copyWith(
-            pomodoroCount: _selectedTask!.pomodoroCount + 1,
-            timeSpent: _selectedTask!.timeSpent + workDuration,
-            updatedAt: DateTime.now(),
-          );
-          await taskRepository!.updateTask(updatedTask);
+        if (completed) {
+          _completedSessions++;
+          // Update task if one is selected
+          if (_selectedTask != null && taskRepository != null && _workStartTime != null) {
+            final workDuration = DateTime.now().difference(_workStartTime!);
+            final updatedTask = _selectedTask!.copyWith(pomodoroCount: _selectedTask!.pomodoroCount + 1, timeSpent: _selectedTask!.timeSpent + workDuration, updatedAt: DateTime.now());
+            await taskRepository!.updateTask(updatedTask);
+          }
         }
         if (_shouldTakeLongBreak()) {
           _startLongBreak();
@@ -238,8 +226,7 @@ class PomodoroTimer extends ChangeNotifier {
   }
 
   bool _shouldTakeLongBreak() {
-    return _completedSessions > 0 &&
-        _completedSessions % session.sessionsUntilLongBreak == 0;
+    return _completedSessions > 0 && _completedSessions % session.sessionsUntilLongBreak == 0;
   }
 
   int _getTotalSecondsForCurrentState() {
@@ -274,15 +261,9 @@ class PomodoroTimer extends ChangeNotifier {
   }
 
   Duration getTotalBreakTime() {
-    final shortBreaks =
-        _completedSessions -
-        (_completedSessions ~/ session.sessionsUntilLongBreak);
+    final shortBreaks = _completedSessions - (_completedSessions ~/ session.sessionsUntilLongBreak);
     final longBreaks = _completedSessions ~/ session.sessionsUntilLongBreak;
-    return Duration(
-      minutes:
-          shortBreaks * session.shortBreakDuration +
-          longBreaks * session.longBreakDuration,
-    );
+    return Duration(minutes: shortBreaks * session.shortBreakDuration + longBreaks * session.longBreakDuration);
   }
 
   double getAverageSessionTime() {
@@ -325,12 +306,8 @@ class PomodoroTimer extends ChangeNotifier {
         _currentSession = data['currentSession'];
         _completedSessions = data['completedSessions'];
         _remainingSeconds = data['remainingSeconds'];
-        _startTime = data['startTime'] != null
-            ? DateTime.parse(data['startTime'])
-            : null;
-        _pauseTime = data['pauseTime'] != null
-            ? DateTime.parse(data['pauseTime'])
-            : null;
+        _startTime = data['startTime'] != null ? DateTime.parse(data['startTime']) : null;
+        _pauseTime = data['pauseTime'] != null ? DateTime.parse(data['pauseTime']) : null;
       }
 
       // Resume timer if it was running

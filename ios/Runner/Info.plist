@@ -59,6 +59,18 @@
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>This app needs notification permissions to remind you of tasks and Pomodoro sessions.</string>
 
+	<!-- Photo Library Permissions for image picker -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to your photo library to allow you to select profile images.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>This app needs permission to save images to your photo library.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs camera access to take profile photos.</string>
+
+	<!-- Local Network Permissions for Flutter Debugging -->
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>This app needs local network access for debugging and development purposes.</string>
+
 	<!-- Facebook App Configuration -->
 	<key>CFBundleURLTypes</key>
 	<array>
@@ -66,6 +78,12 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>1532810721494581</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.59269490691-fl4b8m56aqsoo746m1hpqo60j22al495</string>
 			</array>
 		</dict>
 	</array>

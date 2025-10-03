@@ -1,7 +1,7 @@
-import 'dart:developer' as dev;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:tazbeet/services/app_logging.dart';
 
 class TaskSoundService extends ChangeNotifier {
   static final TaskSoundService _instance = TaskSoundService._internal();
@@ -17,10 +17,7 @@ class TaskSoundService extends ChangeNotifier {
   static const Map<String, String> _availableSounds = {
     'task_complete_1.mp3': 'Task Complete 1',
     'task_complete_2.mp3': 'Task Complete 2',
-    'rain.mp3': 'Rain',
-    'ocean.mp3': 'Ocean',
-    'forest.mp3': 'Forest',
-    'white_noise.mp3': 'White Noise',
+    /*     'rain.mp3': 'Rain','ocean.mp3': 'Ocean','forest.mp3': 'Forest','white_noise.mp3': 'White Noise', */
   };
 
   // Getters
@@ -41,7 +38,7 @@ class TaskSoundService extends ChangeNotifier {
 
   Future<void> playTaskCompletionSound() async {
     if (!_soundEnabled) {
-      dev.log('Task completion sound is disabled', name: 'TaskSoundService');
+      AppLogging.logInfo('Task completion sound is disabled', name: 'TaskSoundService');
       return;
     }
 
@@ -50,15 +47,15 @@ class TaskSoundService extends ChangeNotifier {
       await _audioPlayer.setSource(AssetSource('sounds/$_selectedSound'));
       await _audioPlayer.resume();
 
-      dev.log('Task completion sound played successfully: $_selectedSound', name: 'TaskSoundService');
+      AppLogging.logInfo('Task completion sound played successfully: $_selectedSound', name: 'TaskSoundService');
     } catch (e) {
-      dev.log('Error playing task completion sound: $_selectedSound', name: 'TaskSoundService', error: e);
+      AppLogging.logError('Error playing task completion sound: $_selectedSound', name: 'TaskSoundService', error: e);
       // Fallback: try to use the first available sound
       try {
         await _audioPlayer.setSource(AssetSource('sounds/task_complete_1.mp3'));
         await _audioPlayer.resume();
       } catch (fallbackError) {
-        dev.log('Fallback sound also failed', name: 'TaskSoundService', error: fallbackError);
+        AppLogging.logError('Fallback sound also failed', name: 'TaskSoundService', error: fallbackError);
       }
     }
   }
@@ -69,7 +66,7 @@ class TaskSoundService extends ChangeNotifier {
     await prefs.setBool('task_completion_sound_enabled', enabled);
     notifyListeners();
 
-    dev.log('Task completion sound enabled: $enabled', name: 'TaskSoundService');
+    AppLogging.logInfo('Task completion sound enabled: $enabled', name: 'TaskSoundService');
   }
 
   Future<void> setVolume(double volume) async {
@@ -80,7 +77,7 @@ class TaskSoundService extends ChangeNotifier {
     await prefs.setDouble('task_completion_sound_volume', _volume);
     notifyListeners();
 
-    dev.log('Task completion sound volume set to: $_volume', name: 'TaskSoundService');
+    AppLogging.logInfo('Task completion sound volume set to: $_volume', name: 'TaskSoundService');
   }
 
   Future<void> setSelectedSound(String soundFileName) async {
@@ -89,7 +86,7 @@ class TaskSoundService extends ChangeNotifier {
     await prefs.setString('task_completion_selected_sound', soundFileName);
     notifyListeners();
 
-    dev.log('Task completion sound changed to: $_selectedSound', name: 'TaskSoundService');
+    AppLogging.logInfo('Task completion sound changed to: $_selectedSound', name: 'TaskSoundService');
   }
 
   @override

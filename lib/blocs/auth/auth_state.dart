@@ -31,3 +31,12 @@ class AuthError extends AuthState {
   @override
   List<Object?> get props => [message];
 }
+
+class AuthProfileIncomplete extends AuthState {
+  final User user;
+
+  const AuthProfileIncomplete(this.user);
+
+  @override
+  List<Object?> get props => [user];
+}

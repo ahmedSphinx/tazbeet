@@ -1,0 +1,217 @@
+body {
+    font-family: 'Amiri', serif;
+    direction: rtl;
+    margin: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+#tenantsList {
+    margin: 20px 0;
+}
+
+.tenant {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tenant div {
+    margin: 0 10px;
+}
+
+button {
+    margin: 5px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+label {
+    margin: 10px 0 5px;
+}
+
+input {
+    padding: 8px;
+}
+
+.receipt-page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+    page-break-after: always;
+    margin-bottom: 20px;
+}
+
+.receipt {
+    background-image: url('inv.jpg');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 7.425cm;
+    /* Adjust as needed */
+    position: relative;
+    border: 1px solid #000;
+    box-sizing: border-box;
+    font-size: 18px;
+    color: #4a148c; /* Changed text color to a deep purple */
+    font-family: 'Amiri', serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+    line-height: 1.6;
+    text-shadow: 1px 1px 2px #ccc;
+    overflow: hidden;
+}
+
+.receipt .name {
+    font-size: 18px;
+    color: blueviolet;
+    font-family: 'Amiri', serif;
+    background: #fffbe7;
+    padding: 2px 8px;
+    border: 2px solid green; /* Test border to verify .name is applied */
+}
+
+.receipt .amount,
+.receipt .amount-text,
+.receipt .date-start,
+.receipt .date-end,
+.receipt .duration,
+.receipt .apartment,
+.receipt .address,
+.receipt .release-date,
+.receipt .receipt-date {
+    font-family: 'Amiri', serif;
+    font-weight: 700;
+    text-shadow: 0 1px 2px #eee;
+    letter-spacing: 0.5px;    text-decoration-color: blueviolet;
+
+    /* Remove color and font-size here to allow field-specific overrides */
+}
+
+.receipt .amount {
+    position: absolute;
+    top: 150px;
+    left: 50px;
+    font-size: 20px;
+    font-family: 'Amiri', serif;
+}
+
+.receipt .amount-text {
+    position: absolute;
+    top: 180px;
+    left: 50px;
+    font-size: 18px;
+    font-family: 'Amiri', serif;
+}
+
+.receipt .date-start {
+    position: absolute;
+    top: 210px;
+    left: 50px;
+    font-size: 16px;
+    font-family: 'Amiri', serif;
+}
+
+.receipt .date-end {
+    position: absolute;
+    top: 240px;
+    left: 50px;
+    font-size: 16px;
+    font-family: 'Amiri', serif;
+}
+
+.receipt .duration {
+    position: absolute;
+    top: 270px;
+    left: 50px;
+    font-size: 16px;
+    font-family: 'Amiri', serif;
+}
+
+.receipt .apartment {
+    position: absolute;
+    top: 300px;
+    left: 50px;
+    font-size: 16px;
+    font-family: 'Amiri', serif;
+}
+
+.receipt .address {
+    position: absolute;
+    top: 330px;
+    left: 50px;
+    font-size: 16px;
+    font-family: 'Amiri', serif;
+}
+
+.receipt .release-date {
+    position: absolute;
+    top: 360px;
+    left: 50px;
+    font-size: 16px;
+    font-family: 'Amiri', serif;
+}
+
+.receipt .receipt-date {
+    position: absolute;
+    top: 390px;
+    left: 50px;
+    font-size: 16px;
+    font-family: 'Amiri', serif;
+}
+
+@media print {
+    body {
+        margin: 0;
+    }
+
+    .receipt-page {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        width: 29.7cm !important;
+        height: 21cm !important;
+        box-sizing: border-box;
+        page-break-after: always;
+        margin: 0 auto !important;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 0 !important;
+    }
+
+    .receipt {
+        width: 14.2cm !important;
+        height: 10cm !important;
+        margin: 0.5cm !important;
+        background-size: contain !important;
+        background-repeat: no-repeat !important;
+        background-position: center center !important;
+        box-sizing: border-box;
+        font-size: 10pt !important;
+        border: 1px solid #000;
+        overflow: hidden;
+        position: relative;
+        display: block !important;
+    }
+
+    @page {
+        size: A4 landscape;
+        margin: 10mm;
+    }
+}
+
+/* In your HTML/JS, make sure you use:
+<div class="name">${receipt.name}</div>
+NOT <div class=".receipt .name">...</div> */

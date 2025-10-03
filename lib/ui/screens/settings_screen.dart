@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'package:flutter/material.dart' hide ThemeMode;
 import 'package:provider/provider.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
@@ -6,8 +8,12 @@ import '../../services/color_customization_service.dart';
 import '../../services/task_sound_service.dart';
 import '../../services/update_service.dart';
 import '../../ui/widgets/color_customization_widget.dart';
+import '../../ui/widgets/animated_expansion_card.dart';
+import '../../ui/themes/app_themes.dart';
+import '../../ui/themes/design_system.dart';
 
 import 'profile_screen.dart';
+import 'mood_settings_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -17,6 +23,8 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  String _searchQuery = '';
+
   @override
   void initState() {
     super.initState();
@@ -27,65 +35,70 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.settingsScreenTitle),
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        foregroundColor: Theme.of(context).colorScheme.onSurface,
+        title: Text(
+          AppLocalizations.of(context)!.settingsScreenTitle,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onPrimary),
+        ),
+        backgroundColor: Colors.transparent,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
         elevation: 0,
+        flexibleSpace: Container(decoration: BoxDecoration(gradient: AppThemes.getPrimaryGradient(isDark))),
         actions: [
           TextButton(
-            onPressed: () {
-              context.read<settings.SettingsService>().resetToDefaults();
-              context.read<ColorCustomizationService>().resetToDefault();
+            onPressed: () async {
+              final confirmed = await showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Reset Settings'),
+                  content: const Text('Are you sure you want to reset all settings to their default values? This action cannot be undone.'),
+                  actions: [
+                    TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
+                    ElevatedButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Reset')),
+                  ],
+                ),
+              );
+              if (confirmed == true) {
+                context.read<settings.SettingsService>().resetToDefaults();
+                context.read<ColorCustomizationService>().resetToDefault();
+              }
             },
-            child: Text(AppLocalizations.of(context)!.resetButton),
+            child: Text(AppLocalizations.of(context)!.resetButton, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
           ),
         ],
       ),
       body: Consumer2<settings.SettingsService, ColorCustomizationService>(
         builder: (context, settingsService, colorService, child) {
-          return ListView(
-            padding: const EdgeInsets.all(16),
+          return Column(
             children: [
-              _buildProfileSection(),
-              const SizedBox(height: 24),
-              _buildSectionHeader(AppLocalizations.of(context)!.appearanceSection),
-              _buildThemeSettings(settingsService),
-              _buildAccessibilitySettings(settingsService),
-              Consumer<ColorCustomizationService>(
-                builder: (context, colorService, child) {
-                  return ColorCustomizationWidget(colorService: colorService);
-                },
+              Padding(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: Semantics(
+                  label: 'Search settings',
+                  hint: 'Type to filter settings sections',
+                  child: TextField(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.search),
+                      hintText: 'Search settings...',
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _searchQuery = value.toLowerCase();
+                      });
+                    },
+                  ),
+                ),
               ),
-              const SizedBox(height: 24),
-
-              _buildSectionHeader(AppLocalizations.of(context)!.notificationsSection),
-              _buildNotificationSettings(settingsService),
-              const SizedBox(height: 24),
-
-              _buildSectionHeader('Task Completion Sounds'),
-              _buildTaskSoundSettings(),
-              const SizedBox(height: 24),
-
-              _buildSectionHeader(AppLocalizations.of(context)!.pomodoroSection),
-              _buildPomodoroSettings(settingsService),
-              const SizedBox(height: 24),
-
-              _buildSectionHeader(AppLocalizations.of(context)!.dataBackupSection),
-              _buildBackupSettings(settingsService),
-              const SizedBox(height: 24),
-
-              _buildSectionHeader(AppLocalizations.of(context)!.privacyAnalyticsSection),
-              _buildPrivacySettings(settingsService),
-              const SizedBox(height: 24),
-
-              _buildSectionHeader(AppLocalizations.of(context)!.regionalSection),
-              _buildRegionalSettings(settingsService),
-              const SizedBox(height: 24),
-
-              _buildSectionHeader(AppLocalizations.of(context)!.appUpdates),
-              _buildUpdateSettings(),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.lg),
+                  children: _filteredSections(settingsService, colorService),
+                ),
+              ),
             ],
           );
         },
@@ -95,6 +108,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildProfileSection() {
     return Card(
+      margin: EdgeInsets.zero,
       child: ListTile(
         leading: const Icon(Icons.person),
         title: Text(AppLocalizations.of(context)!.profile),
@@ -107,13 +121,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildSectionHeader(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        title,
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.primary),
+  Widget _buildMoodSection() {
+    return Card(
+      margin: EdgeInsets.zero,
+      child: ListTile(
+        leading: const Icon(Icons.mood),
+        title: Text(AppLocalizations.of(context)!.moodSettingsTitle),
+        subtitle: Text(AppLocalizations.of(context)!.moodSettingsSubtitle),
+        trailing: const Icon(Icons.arrow_forward_ios),
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MoodSettingsScreen()));
+        },
       ),
+    );
+  }
+
+  Widget _buildAppearanceSection(settings.SettingsService settingsService, ColorCustomizationService colorService) {
+    return AnimatedExpansionCard(
+      leading: const Icon(Icons.palette),
+      title: Text(AppLocalizations.of(context)!.appearanceSection),
+      children: [
+        _buildThemeSettings(settingsService),
+        _buildAccessibilitySettings(settingsService),
+        ColorCustomizationWidget(colorService: colorService),
+      ],
     );
   }
 
@@ -129,7 +160,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
     }
 
-    return Card(
+    return Container(
+      decoration: AppCardStyles.standard(context),
+      margin: EdgeInsets.zero,
       child: Column(
         children: [
           ListTile(
@@ -153,7 +186,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildAccessibilitySettings(settings.SettingsService settingsService) {
-    return Card(
+    return Container(
+      decoration: AppCardStyles.standard(context),
+      margin: EdgeInsets.zero,
       child: Column(
         children: [
           SwitchListTile(
@@ -185,6 +220,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  Widget _buildNotificationsSection(settings.SettingsService settingsService) {
+    return AnimatedExpansionCard(leading: const Icon(Icons.notifications), title: Text(AppLocalizations.of(context)!.notificationsSection), children: [_buildNotificationSettings(settingsService)]);
+  }
+
   Widget _buildNotificationSettings(settings.SettingsService settingsService) {
     String getNotificationFrequencyName(settings.NotificationFrequency frequency) {
       switch (frequency) {
@@ -199,7 +238,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
     }
 
-    return Card(
+    return Container(
+      decoration: AppCardStyles.standard(context),
+      margin: EdgeInsets.zero,
       child: Column(
         children: [
           SwitchListTile(title: const Text('Enable Notifications'), value: settingsService.settings.enableNotifications, onChanged: (value) => settingsService.setNotificationsEnabled(value)),
@@ -239,66 +280,78 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildTaskSoundSettings() {
-    return Consumer<TaskSoundService>(
-      builder: (context, taskSoundService, child) {
-        return Card(
-          child: Column(
-            children: [
-              SwitchListTile(
-                title: const Text('Enable Task Completion Sound'),
-                subtitle: const Text('Play sound when tasks are completed'),
-                value: taskSoundService.soundEnabled,
-                onChanged: (value) {
-                  taskSoundService.setSoundEnabled(value);
-                },
+  Widget _buildTaskSoundsSection() {
+    return AnimatedExpansionCard(
+      leading: const Icon(Icons.music_note),
+      title: const Text('Task Completion Sounds'),
+      children: [
+        Consumer<TaskSoundService>(
+          builder: (context, taskSoundService, child) {
+            return Container(
+              decoration: AppCardStyles.standard(context),
+              margin: EdgeInsets.zero,
+              child: Column(
+                children: [
+                  SwitchListTile(
+                    title: const Text('Enable Task Completion Sound'),
+                    subtitle: const Text('Play sound when tasks are completed'),
+                    value: taskSoundService.soundEnabled,
+                    onChanged: (value) {
+                      taskSoundService.setSoundEnabled(value);
+                    },
+                  ),
+                  if (taskSoundService.soundEnabled) ...[
+                    ListTile(
+                      title: const Text('Sound Selection'),
+                      subtitle: Text(taskSoundService.availableSounds[taskSoundService.selectedSound] ?? 'Unknown'),
+                      trailing: DropdownButton<String>(
+                        value: taskSoundService.selectedSound,
+                        onChanged: (value) {
+                          if (value != null) {
+                            taskSoundService.setSelectedSound(value);
+                          }
+                        },
+                        items: taskSoundService.availableSounds.entries.map((entry) {
+                          return DropdownMenuItem(value: entry.key, child: Text(entry.value));
+                        }).toList(),
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('Volume'),
+                      subtitle: Slider(
+                        value: taskSoundService.volume,
+                        onChanged: (value) {
+                          taskSoundService.setVolume(value);
+                        },
+                        min: 0.0,
+                        max: 1.0,
+                        divisions: 10,
+                        label: '${(taskSoundService.volume * 100).round()}%',
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          taskSoundService.playTaskCompletionSound();
+                        },
+                        icon: const Icon(Icons.play_arrow),
+                        label: const Text('Test Sound'),
+                        style: AppButtonStyles.primary(context),
+                      ),
+                    ),
+                  ],
+                ],
               ),
-              if (taskSoundService.soundEnabled) ...[
-                ListTile(
-                  title: const Text('Sound Selection'),
-                  subtitle: Text(taskSoundService.availableSounds[taskSoundService.selectedSound] ?? 'Unknown'),
-                  trailing: DropdownButton<String>(
-                    value: taskSoundService.selectedSound,
-                    onChanged: (value) {
-                      if (value != null) {
-                        taskSoundService.setSelectedSound(value);
-                      }
-                    },
-                    items: taskSoundService.availableSounds.entries.map((entry) {
-                      return DropdownMenuItem(value: entry.key, child: Text(entry.value));
-                    }).toList(),
-                  ),
-                ),
-                ListTile(
-                  title: const Text('Volume'),
-                  subtitle: Slider(
-                    value: taskSoundService.volume,
-                    onChanged: (value) {
-                      taskSoundService.setVolume(value);
-                    },
-                    min: 0.0,
-                    max: 1.0,
-                    divisions: 10,
-                    label: '${(taskSoundService.volume * 100).round()}%',
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      taskSoundService.playTaskCompletionSound();
-                    },
-                    icon: const Icon(Icons.play_arrow),
-                    label: const Text('Test Sound'),
-                    style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 40)),
-                  ),
-                ),
-              ],
-            ],
-          ),
-        );
-      },
+            );
+          },
+        ),
+      ],
     );
+  }
+
+  Widget _buildPomodoroSection(settings.SettingsService settingsService) {
+    return AnimatedExpansionCard(leading: const Icon(Icons.timer), title: Text(AppLocalizations.of(context)!.pomodoroSection), children: [_buildPomodoroSettings(settingsService)]);
   }
 
   Widget _buildPomodoroSettings(settings.SettingsService settingsService) {
@@ -316,6 +369,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
 
     return Card(
+      margin: EdgeInsets.zero,
       child: Column(
         children: [
           ListTile(
@@ -341,74 +395,69 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildCustomPomodoroSettings(settings.SettingsService settingsService) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Custom Durations (minutes)'),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  decoration: const InputDecoration(labelText: 'Work', border: OutlineInputBorder()),
-                  keyboardType: TextInputType.number,
-                  controller: TextEditingController(text: settingsService.settings.customWorkDuration.toString()),
-                  onChanged: (value) {
-                    final duration = int.tryParse(value) ?? 25;
-                    settingsService.setCustomPomodoroDurations(workDuration: duration);
-                  },
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: TextField(
-                  decoration: const InputDecoration(labelText: 'Short Break', border: OutlineInputBorder()),
-                  keyboardType: TextInputType.number,
-                  controller: TextEditingController(text: settingsService.settings.customShortBreakDuration.toString()),
-                  onChanged: (value) {
-                    final duration = int.tryParse(value) ?? 5;
-                    settingsService.setCustomPomodoroDurations(shortBreakDuration: duration);
-                  },
-                ),
-              ),
-            ],
+          const SizedBox(height: AppSpacing.md),
+          _buildDurationSlider(
+            label: 'Work Duration',
+            value: settingsService.settings.customWorkDuration.toDouble(),
+            min: 5,
+            max: 60,
+            onChanged: (value) => settingsService.setCustomPomodoroDurations(workDuration: value.toInt()),
           ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  decoration: const InputDecoration(labelText: 'Long Break', border: OutlineInputBorder()),
-                  keyboardType: TextInputType.number,
-                  controller: TextEditingController(text: settingsService.settings.customLongBreakDuration.toString()),
-                  onChanged: (value) {
-                    final duration = int.tryParse(value) ?? 15;
-                    settingsService.setCustomPomodoroDurations(longBreakDuration: duration);
-                  },
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: TextField(
-                  decoration: const InputDecoration(labelText: 'Sessions to Long Break', border: OutlineInputBorder()),
-                  keyboardType: TextInputType.number,
-                  controller: TextEditingController(text: settingsService.settings.sessionsUntilLongBreak.toString()),
-                  onChanged: (value) {
-                    final sessions = int.tryParse(value) ?? 4;
-                    settingsService.setCustomPomodoroDurations(sessionsUntilLongBreak: sessions);
-                  },
-                ),
-              ),
-            ],
+          const SizedBox(height: AppSpacing.md),
+          _buildDurationSlider(
+            label: 'Short Break Duration',
+            value: settingsService.settings.customShortBreakDuration.toDouble(),
+            min: 1,
+            max: 15,
+            onChanged: (value) => settingsService.setCustomPomodoroDurations(shortBreakDuration: value.toInt()),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          _buildDurationSlider(
+            label: 'Long Break Duration',
+            value: settingsService.settings.customLongBreakDuration.toDouble(),
+            min: 5,
+            max: 30,
+            onChanged: (value) => settingsService.setCustomPomodoroDurations(longBreakDuration: value.toInt()),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          _buildDurationSlider(
+            label: 'Sessions to Long Break',
+            value: settingsService.settings.sessionsUntilLongBreak.toDouble(),
+            min: 2,
+            max: 8,
+            onChanged: (value) => settingsService.setCustomPomodoroDurations(sessionsUntilLongBreak: value.toInt()),
           ),
         ],
       ),
     );
   }
 
+  Widget _buildDurationSlider({required String label, required double value, required double min, required double max, required ValueChanged<double> onChanged}) {
+    return Tooltip(
+      message: 'Adjust the $label duration in minutes',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('$label: ${value.toInt()} min'),
+          Slider(value: value, min: min, max: max, divisions: (max - min).toInt(), label: '${value.toInt()}', onChanged: onChanged),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBackupSection(settings.SettingsService settingsService) {
+    return AnimatedExpansionCard(leading: const Icon(Icons.backup), title: Text(AppLocalizations.of(context)!.dataBackupSection), children: [_buildBackupSettings(settingsService)]);
+  }
+
   Widget _buildBackupSettings(settings.SettingsService settingsService) {
-    return Card(
+    return Container(
+      decoration: AppCardStyles.standard(context),
+      margin: EdgeInsets.zero,
       child: Column(
         children: [
           SwitchListTile(
@@ -440,8 +489,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  Widget _buildPrivacySection(settings.SettingsService settingsService) {
+    return AnimatedExpansionCard(leading: const Icon(Icons.privacy_tip), title: Text(AppLocalizations.of(context)!.privacyAnalyticsSection), children: [_buildPrivacySettings(settingsService)]);
+  }
+
   Widget _buildPrivacySettings(settings.SettingsService settingsService) {
-    return Card(
+    return Container(
+      decoration: AppCardStyles.standard(context),
+      margin: EdgeInsets.zero,
       child: Column(
         children: [
           SwitchListTile(
@@ -465,8 +520,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  Widget _buildRegionalSection(settings.SettingsService settingsService) {
+    return AnimatedExpansionCard(leading: const Icon(Icons.language), title: Text(AppLocalizations.of(context)!.regionalSection), children: [_buildRegionalSettings(settingsService)]);
+  }
+
   Widget _buildRegionalSettings(settings.SettingsService settingsService) {
-    return Card(
+    return Container(
+      decoration: AppCardStyles.standard(context),
+      margin: EdgeInsets.zero,
       child: Column(
         children: [
           ListTile(
@@ -519,43 +580,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  String _getThemeModeName(settings.ThemeMode mode) {
-    switch (mode) {
-      case settings.ThemeMode.system:
-        return 'System';
-      case settings.ThemeMode.light:
-        return 'Light';
-      case settings.ThemeMode.dark:
-        return 'Dark';
-    }
-  }
-
-  String _getNotificationFrequencyName(settings.NotificationFrequency frequency) {
-    switch (frequency) {
-      case settings.NotificationFrequency.immediate:
-        return 'Immediate';
-      case settings.NotificationFrequency.hourly:
-        return 'Hourly';
-      case settings.NotificationFrequency.daily:
-        return 'Daily';
-      case settings.NotificationFrequency.weekly:
-        return 'Weekly';
-    }
-  }
-
-  String _getPomodoroPresetName(settings.PomodoroPreset preset) {
-    switch (preset) {
-      case settings.PomodoroPreset.classic:
-        return 'Classic (25/5/15)';
-      case settings.PomodoroPreset.short:
-        return 'Short (15/3/10)';
-      case settings.PomodoroPreset.long:
-        return 'Long (50/10/30)';
-      case settings.PomodoroPreset.custom:
-        return 'Custom';
-    }
-  }
-
   String _getLanguageName(String code) {
     switch (code) {
       case 'ar':
@@ -573,44 +597,52 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  Widget _buildUpdateSettings() {
-    return Consumer<UpdateService>(
-      builder: (context, updateService, child) {
-        return Card(
-          child: Column(
-            children: [
-              ListTile(title: Text(AppLocalizations.of(context)!.currentVersion), subtitle: Text(AppLocalizations.of(context)!.version(updateService.currentVersion))),
-              const Divider(),
-              ListTile(
-                title: Text(AppLocalizations.of(context)!.checkForUpdates),
-                subtitle: Text(_getUpdateStatusText(updateService)),
-                trailing: updateService.isChecking
-                    ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                    : IconButton(icon: const Icon(Icons.refresh), onPressed: () => _checkForUpdates(updateService)),
-                onTap: () => _checkForUpdates(updateService),
+  Widget _buildUpdatesSection() {
+    return AnimatedExpansionCard(
+      leading: const Icon(Icons.system_update),
+      title: Text(AppLocalizations.of(context)!.appUpdates),
+      children: [
+        Consumer<UpdateService>(
+          builder: (context, updateService, child) {
+            return Container(
+              decoration: AppCardStyles.standard(context),
+              margin: EdgeInsets.zero,
+              child: Column(
+                children: [
+                  ListTile(title: Text(AppLocalizations.of(context)!.currentVersion), subtitle: Text(AppLocalizations.of(context)!.version(updateService.currentVersion))),
+                  const Divider(),
+                  ListTile(
+                    title: Text(AppLocalizations.of(context)!.checkForUpdates),
+                    subtitle: Text(_getUpdateStatusText(updateService)),
+                    trailing: updateService.isChecking
+                        ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                        : IconButton(icon: const Icon(Icons.refresh), onPressed: () => _checkForUpdates(updateService)),
+                    onTap: () => _checkForUpdates(updateService),
+                  ),
+                  if (updateService.isUpdateAvailable) ...[
+                    const Divider(),
+                    ListTile(
+                      title: Text(AppLocalizations.of(context)!.updateAvailable),
+                      subtitle: Text(AppLocalizations.of(context)!.version(updateService.updateInfo?.version ?? '')),
+                      trailing: updateService.isDownloading
+                          ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                          : ElevatedButton(onPressed: () => _startUpdate(updateService), child: Text(AppLocalizations.of(context)!.installUpdate), style: AppButtonStyles.primary(context)),
+                    ),
+                  ],
+                  if (updateService.hasError) ...[
+                    const Divider(),
+                    ListTile(
+                      title: Text(AppLocalizations.of(context)!.updateError),
+                      subtitle: const Text('Failed to check for updates'),
+                      trailing: TextButton(onPressed: () => _checkForUpdates(updateService), child: Text(AppLocalizations.of(context)!.retry), style: AppButtonStyles.secondary(context)),
+                    ),
+                  ],
+                ],
               ),
-              if (updateService.isUpdateAvailable) ...[
-                const Divider(),
-                ListTile(
-                  title: Text(AppLocalizations.of(context)!.updateAvailable),
-                  subtitle: Text(AppLocalizations.of(context)!.version(updateService.updateInfo?.version ?? '')),
-                  trailing: updateService.isDownloading
-                      ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                      : ElevatedButton(onPressed: () => _startUpdate(updateService), child: Text(AppLocalizations.of(context)!.installUpdate)),
-                ),
-              ],
-              if (updateService.hasError) ...[
-                const Divider(),
-                ListTile(
-                  title: Text(AppLocalizations.of(context)!.updateError),
-                  subtitle: const Text('Failed to check for updates'),
-                  trailing: TextButton(onPressed: () => _checkForUpdates(updateService), child: Text(AppLocalizations.of(context)!.retry)),
-                ),
-              ],
-            ],
-          ),
-        );
-      },
+            );
+          },
+        ),
+      ],
     );
   }
 
@@ -636,5 +668,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } else {
       await updateService.startFlexibleUpdate();
     }
+  }
+
+  List<Widget> _filteredSections(settings.SettingsService settingsService, ColorCustomizationService colorService) {
+    final allSections = [
+      {'title': 'profile', 'widget': _buildProfileSection()},
+      {'title': 'mood', 'widget': _buildMoodSection()},
+      {'title': 'appearance', 'widget': _buildAppearanceSection(settingsService, colorService)},
+      {'title': 'notifications', 'widget': _buildNotificationsSection(settingsService)},
+      {'title': 'task sounds', 'widget': _buildTaskSoundsSection()},
+      {'title': 'pomodoro', 'widget': _buildPomodoroSection(settingsService)},
+      {'title': 'backup', 'widget': _buildBackupSection(settingsService)},
+      {'title': 'privacy', 'widget': _buildPrivacySection(settingsService)},
+      {'title': 'regional', 'widget': _buildRegionalSection(settingsService)},
+      {'title': 'updates', 'widget': _buildUpdatesSection()},
+    ];
+
+    final filtered = _searchQuery.isEmpty ? allSections : allSections.where((section) => (section['title'] as String).contains(_searchQuery)).toList();
+
+    final widgets = <Widget>[];
+    for (final section in filtered) {
+      widgets.add(section['widget'] as Widget);
+      widgets.add(const SizedBox(height: AppSpacing.lg));
+    }
+    if (widgets.isNotEmpty) {
+      widgets.removeLast(); // Remove last spacing
+    }
+    return widgets;
   }
 }

@@ -86,19 +86,381 @@ class AppLocalizationsAr extends AppLocalizations {
   String get regionalSection => 'الإقليمي';
 
   @override
-  String get deleteButton => 'حذف';
+  String get moodSettingsTitle => 'Mood Settings';
+
+  @override
+  String get moodSettingsSubtitle => 'Configure mood check-in notifications';
+
+  @override
+  String get enableMoodNotifications => 'Enable Mood Notifications';
+
+  @override
+  String get moodCheckInTimes => 'Check-in Times';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get completedTasks => 'مهمات مكتملة';
+
+  @override
+  String get work => 'عمل';
+
+  @override
+  String get shortBreak => 'استراحة قصيرة';
+
+  @override
+  String get longBreak => 'استراحة طويلة';
+
+  @override
+  String get paused => 'متوقف مؤقتاً';
+
+  @override
+  String get idle => 'خامل';
+
+  @override
+  String get pomodoroSessionCompleted => 'انتهت جلسة بومودورو';
+
+  @override
+  String get highPriorityLabel => 'عالية';
+
+  @override
+  String get mediumPriorityLabel => 'متوسطة';
+
+  @override
+  String get lowPriorityLabel => 'منخفضة';
+
+  @override
+  String get addTaskTitle => 'إضافة مهمة جديدة';
+
+  @override
+  String get priorityLabel => 'الأولوية:';
+
+  @override
+  String get dueDateLabel => 'تاريخ الاستحقاق (اختياري)';
+
+  @override
+  String get selectDueDate => 'حدد تاريخ الاستحقاق';
+
+  @override
+  String get categoryLabel => 'الفئة (اختياري)';
+
+  @override
+  String get noCategory => 'بدون فئة';
+
+  @override
+  String get repeatSettings => 'إعدادات التكرار';
+
+  @override
+  String get nameRequired => 'الاسم مطلوب';
+
+  @override
+  String get editTaskTitle => 'تعديل المهمة';
+
+  @override
+  String get updateButton => 'تحديث';
+
+  @override
+  String get ambientSounds => 'الأصوات المحيطة';
+
+  @override
+  String get focusAndRelaxation => 'التركيز والاسترخاء';
+
+  @override
+  String get chooseBackgroundSound => 'اختر صوت خلفية لمساعدتك على التركيز أو الاسترخاء';
+
+  @override
+  String get volume => 'مستوى الصوت';
+
+  @override
+  String get fadeIn => 'زيادة الصوت تدريجياً';
+
+  @override
+  String get fadeOut => 'خفض الصوت تدريجياً';
+
+  @override
+  String get noCategoriesYet => 'لا توجد فئات بعد';
+
+  @override
+  String get createCategoriesToOrganize => 'قم بإنشاء فئات لتنظيم مهامك';
+
+  @override
+  String get createCategory => 'إنشاء فئة';
+
+  @override
+  String get edit => 'تعديل';
+
+  @override
+  String get addCategory => 'إضافة فئة';
+
+  @override
+  String get editCategory => 'تعديل فئة';
+
+  @override
+  String get categoryName => 'اسم الفئة';
+
+  @override
+  String get enterCategoryName => 'أدخل اسم الفئة';
+
+  @override
+  String get color => 'اللون:';
+
+  @override
+  String get pickAColor => 'اختر لونًا';
+
+  @override
+  String get select => 'اختر';
+
+  @override
+  String get deleteCategory => 'حذف فئة';
+
+  @override
+  String confirmDeleteCategory(String categoryName) {
+    return 'هل أنت متأكد من حذف \"$categoryName\"؟ سيؤدي هذا إلى إزالة الفئة من جميع المهام المرتبطة.';
+  }
+
+  @override
+  String tasksCount(int count) {
+    return '$count مهمة';
+  }
+
+  @override
+  String get selectButton => 'اختيار';
+
+  @override
+  String get pause => 'إيقاف مؤقت';
+
+  @override
+  String get start => 'بدء';
+
+  @override
+  String get stop => 'إيقاف';
+
+  @override
+  String get skip => 'تخطي';
+
+  @override
+  String get next => 'التالي';
+
+  @override
+  String get statistics => 'الإحصائيات';
+
+  @override
+  String get overview => 'نظرة عامة';
+
+  @override
+  String get week => 'أسبوع';
+
+  @override
+  String get month => 'شهر';
+
+  @override
+  String get streak => 'سلسلة';
+
+  @override
+  String get productivityScore => 'درجة الإنتاجية';
+
+  @override
+  String get weeklyProgress => 'التقدم الأسبوعي';
+
+  @override
+  String get categoryProgress => 'تقدم الفئة';
+
+  @override
+  String get totaltasks => 'إجمالي المهام';
+
+  @override
+  String get dueDate => 'تاريخ الاستحقاق';
+
+  @override
+  String get overdue => 'متأخر';
+
+  @override
+  String get dueThisWeek => 'مستحق هذا الأسبوع';
+
+  @override
+  String get logMood => 'سجل مزاجك';
+
+  @override
+  String get notesOptional => 'ملاحظات (اختيارية)';
+
+  @override
+  String get energyLevel => 'مستوى الطاقة';
+
+  @override
+  String get focusLevel => 'مستوى التركيز';
+
+  @override
+  String get stressLevel => 'مستوى التوتر';
+
+  @override
+  String get saveMood => 'حفظ المزاج';
+
+  @override
+  String get veryBad => 'سيء جداً';
+
+  @override
+  String get bad => 'سيء';
+
+  @override
+  String get neutral => 'محايد';
+
+  @override
+  String get good => 'جيد';
+
+  @override
+  String get veryGood => 'جيد جداً';
+
+  @override
+  String get moodCheckInTitle => 'فحص المزاج';
+
+  @override
+  String get moodHowAreYouFeeling => 'كيف تشعر؟';
+
+  @override
+  String get moodSelectLevel =>   'اختر مستوى المزاج';
+
+  @override
+  String get moodEnergyLevel =>   'مستوى الطاقة';
+
+  @override
+  String get moodFocusLevel =>  'مستوى التركيز';
+
+  @override
+  String get moodStressLevel =>   'مستوى التوتر';
+
+  @override
+  String get low =>   'منخفض';
+
+  @override
+  String get high =>  'مرتفع';
+
+  @override
+  String get moodNoteOptional =>  'ملاحظة (اختياري)';
+
+  @override
+  String get moodNoteHint =>  'اكتب أي شيء عن يومك...';
+
+  @override
+  String get moodSaveButton => 'حفظ المزاج';
+
+  @override
+  String get moodVeryBad =>   'سيء جداً';
+
+  @override
+  String get moodBad =>   'سيء';
+
+  @override
+  String get moodNeutral =>     'محايد';
+
+  @override
+  String get moodGood =>    'جيد';
+
+  @override
+  String get moodVeryGood =>  'جيد جداً';
+
+  @override
+  String get moodSavedSuccess =>  'تم حفظ المزاج بنجاح';
+
+  @override
+  String get moodSaveFailed =>  'فشل في حفظ المزاج';
+
+  @override
+  String get save => 'حفظ';
+
+  @override
+  String get noCategoriesYetDescription => 'قم بإنشاء فئات لتنظيم مهامك';
 
   @override
   String get editButton => 'تعديل';
 
   @override
+  String get deleteButton => 'حذف';
+
+  @override
   String get addButton => 'إضافة';
 
   @override
-  String get searchHint => 'البحث عن المهام...';
+  String get emergencyControls => 'عناصر تحكم الطوارئ';
 
   @override
-  String get noTasksFound => 'لم يتم العثور على مهام';
+  String get emergencyMode => 'وضع الطوارئ';
+
+  @override
+  String get activateEmergencyMode => 'تفعيل وضع الطوارئ لتعليق جميع التذكيرات والمؤقتات';
+
+  @override
+  String get emergencyModeActive => 'وضع الطوارئ نشط';
+
+  @override
+  String get allRemindersSuspended => 'تم تعليق جميع التذكيرات والمؤقتات';
+
+  @override
+  String get emergencyModeInactive => 'وضع الطوارئ غير نشط';
+
+  @override
+  String get suspendRemindersTimers => 'تعليق جميع التذكيرات والمؤقتات فورًا';
+
+  @override
+  String get quickControls => 'عناصر تحكم سريعة';
+
+  @override
+  String get fifteenMinPause => 'إيقاف مؤقت 15 دقيقة';
+
+  @override
+  String get oneHourPause => 'إيقاف مؤقت ساعة واحدة';
+
+  @override
+  String get resumeAll => 'استئناف الكل';
+
+  @override
+  String get remindersSuspended => 'تم تعليق التذكيرات';
+
+  @override
+  String timeRemaining(String time) {
+    return 'الوقت المتبقي: $time';
+  }
+
+  @override
+  String get resumeNow => 'استئناف الآن';
+
+  @override
+  String get moodHistory => 'تاريخ المزاج';
+
+  @override
+  String get noMoodEntriesYet => 'لا توجد إدخالات مزاجية بعد';
+
+  @override
+  String get startLoggingMoods => 'ابدأ في تسجيل مزاجك لرؤية تاريخك';
+
+  @override
+  String percent(int value) {
+    return '$value%';
+  }
+
+  @override
+  String get rain => 'مطر';
+
+  @override
+  String get oceanWaves => 'أمواج المحيط';
+
+  @override
+  String get forest => 'غابة';
+
+  @override
+  String get whiteNoise => 'ضوضاء بيضاء';
+
+  @override
+  String get coffeeShop => 'مقهى';
+
+  @override
+  String get fireplace => 'موقد';
+
+  @override
+  String get wind => 'رياح';
+
+  @override
+  String get thunderstorm => 'عاصفة رعدية';
 
   @override
   String get taskCompleted => 'تم إنجاز المهمة! 🎉';
@@ -209,40 +571,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get tapToAddFirstTask => 'اضغط على زر + لإضافة مهمتك الأولى';
 
   @override
-  String get addTaskTitle => 'إضافة مهمة جديدة';
-
-  @override
-  String get editTaskTitle => 'تعديل المهمة';
-
-  @override
-  String get updateButton => 'تحديث';
-
-  @override
   String get deleteTaskTitle => 'حذف المهمة';
-
-  @override
-  String get noCategory => 'بدون فئة';
 
   @override
   String get filterTasksTitle => 'تصفية المهام';
 
   @override
-  String get priorityLabel => 'الأولوية:';
-
-  @override
   String get allLabel => 'الكل';
-
-  @override
-  String get highPriorityLabel => 'عالية';
-
-  @override
-  String get mediumPriorityLabel => 'متوسطة';
-
-  @override
-  String get lowPriorityLabel => 'منخفضة';
-
-  @override
-  String get statusLabel => 'الحالة:';
 
   @override
   String get incompleteLabel => 'غير مكتملة';
@@ -261,9 +596,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get nameLabel => 'الاسم';
-
-  @override
-  String get nameRequired => 'الاسم مطلوب';
 
   @override
   String get birthdayLabel => 'تاريخ الميلاد';
@@ -297,15 +629,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get termsAndPrivacy => 'بتسجيل الدخول، أنت توافق على شروط الخدمة وسياسة الخصوصية الخاصة بنا';
-
-  @override
-  String get dueDateLabel => 'تاريخ الاستحقاق (اختياري)';
-
-  @override
-  String get selectDueDate => 'حدد تاريخ الاستحقاق';
-
-  @override
-  String get categoryLabel => 'الفئة (اختياري)';
 
   @override
   String get moodTracking => 'تتبع الحالة المزاجية';
@@ -406,15 +729,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get customDurations => 'الأوقات المخصصة (بالدقائق)';
 
   @override
-  String get work => 'عمل';
-
-  @override
-  String get shortBreak => 'استراحة قصيرة';
-
-  @override
-  String get longBreak => 'استراحة طويلة';
-
-  @override
   String get sessionsToLongBreak => 'الجلسات حتى الاستراحة الطويلة';
 
   @override
@@ -468,7 +782,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get insights => 'الإحصائيات';
 
   @override
-  String get howAreYouFeeling => 'كيف تشعر اليوم؟';
+  String get howAreYouFeeling => 'كيف تشعر؟';
 
   @override
   String get tapToLogMood => 'اضغط على زر + لتسجيل حالتك المزاجية';
@@ -498,21 +812,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get averageStress => 'متوسط التوتر';
 
   @override
-  String get veryBad => 'سيء جداً';
-
-  @override
-  String get bad => 'سيء';
-
-  @override
-  String get neutral => 'محايد';
-
-  @override
-  String get good => 'جيد';
-
-  @override
-  String get veryGood => 'جيد جداً';
-
-  @override
   String get energy => 'الطاقة';
 
   @override
@@ -527,237 +826,176 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get emergencyControls => 'عناصر تحكم الطوارئ';
+  String get noTasksFound => 'لم يتم العثور على مهام';
 
   @override
-  String get emergencyMode => 'وضع الطوارئ';
+  String get searchHint => 'البحث عن المهام...';
 
   @override
-  String get activateEmergencyMode => 'تفعيل وضع الطوارئ لتعليق جميع التذكيرات والمؤقتات';
+  String get deleteTaskConfirmationTitle => 'Delete Task';
 
   @override
-  String get emergencyModeActive => 'وضع الطوارئ نشط';
+  String get deleteSubtask => 'حذف المهمة الفرعية';
 
   @override
-  String get allRemindersSuspended => 'تم تعليق جميع التذكيرات والمؤقتات';
+  String get confirmDeleteSubtask => 'Are you sure you want to delete this subtask?';
 
   @override
-  String get emergencyModeInactive => 'وضع الطوارئ غير نشط';
+  String get highPriority => 'High';
 
   @override
-  String get suspendRemindersTimers => 'تعليق جميع التذكيرات والمؤقتات فورًا';
+  String get mediumPriority => 'Medium';
 
   @override
-  String get quickControls => 'عناصر تحكم سريعة';
+  String get lowPriority => 'Low';
 
   @override
-  String get fifteenMinPause => 'إيقاف مؤقت 15 دقيقة';
+  String get addSubtask => 'إضافة مهمة فرعية';
 
   @override
-  String get oneHourPause => 'إيقاف مؤقت ساعة واحدة';
+  String get recurringTasksManager => 'مدير المهام المتكررة';
 
   @override
-  String get resumeAll => 'استئناف الكل';
+  String get generateRecurringInstances => 'إنشاء نسخ متكررة';
 
   @override
-  String get remindersSuspended => 'تم تعليق التذكيرات';
+  String get recurringInstancesGenerated => 'تم إنشاء النسخ المتكررة بنجاح!';
 
   @override
-  String timeRemaining(String time) {
-    return 'الوقت المتبقي: $time';
+  String get errorGeneratingInstances => 'خطأ في إنشاء النسخ المتكررة';
+
+  @override
+  String get duplicateTask => 'تكرار المهمة';
+
+  @override
+  String get allRecurringUpToDate => 'جميع المهام المتكررة محدثة!';
+
+  @override
+  String get generateNextInstance => 'إنشاء النسخة التالية';
+
+  @override
+  String get generateAllInstances => 'إنشاء جميع النسخ';
+
+  @override
+  String get activeRecurringTasks => 'المهام المتكررة النشطة';
+
+  @override
+  String get totalRecurringInstances => 'إجمالي النسخ المتكررة';
+
+  @override
+  String get tasksNeedingInstances => 'المهام التي تحتاج نسخ جديدة';
+
+  @override
+  String get refreshRecurringTasks => 'تحديث المهام المتكررة';
+
+  @override
+  String get subtaskTitle => 'عنوان المهمة الفرعية';
+
+  @override
+  String get subtaskDescription => 'الوصف (اختياري)';
+
+  @override
+  String get pleaseEnterSubtaskTitle => 'يرجى إدخال عنوان المهمة الفرعية';
+
+  @override
+  String get customizePomodoroSession => 'تخصيص جلسة بومودورو';
+
+  @override
+  String get workDurationLabel => 'مدة العمل';
+
+  @override
+  String get shortBreakLabel => 'استراحة قصيرة';
+
+  @override
+  String get longBreakLabel => 'استراحة طويلة';
+
+  @override
+  String get startSession => 'بدء الجلسة';
+
+  @override
+  String get pomodoroFocus => 'تركيز بومودورو';
+
+  @override
+  String get pomodoroDescription => 'اختر مهمة للتركيز عليها وتخصيص جلستك';
+
+  @override
+  String get sessionProgress => 'تقدم الجلسة';
+
+  @override
+  String get settingsButton => 'الإعدادات';
+
+  @override
+  String get tomorrow => 'غداً';
+
+  @override
+  String get yesterday => 'أمس';
+
+  @override
+  String get overdueTasks => 'مهمات متأخرة - تحتاج إلى انتباه فوري';
+
+  @override
+  String get todayTasks => 'مهمات يجب إنجازها اليوم';
+
+  @override
+  String get tomorrowTasks => 'مهمات غداً';
+
+  @override
+  String get thisWeekTasks => 'مهمات هذا الأسبوع';
+
+  @override
+  String get laterTasks => 'مهمات لاحقة';
+
+  @override
+  String get noDateTasks => 'مهمات بدون تاريخ محدد';
+
+  @override
+  String get receiveNotificationsForTasksAndReminders => 'تلقي إشعارات للمهام والتذكيرات';
+
+  @override
+  String get playSoundForNotifications => 'تشغيل صوت للإشعارات';
+
+  @override
+  String get vibrateForNotifications => 'اهتزاز للإشعارات';
+
+  @override
+  String get noUpcomingTasksWithReminders => 'لا توجد مهام قادمة مع تذكيرات';
+
+  @override
+  String get noOverdueTasks => 'لا توجد مهام متأخرة';
+
+  @override
+  String get testNotification => 'اختبار الإشعار';
+
+  @override
+  String get quickActions => 'إجراءات سريعة';
+
+  @override
+  String reminderCancelledFor(String taskTitle) {
+    return 'تم إلغاء التذكير لـ: $taskTitle';
   }
 
   @override
-  String get resumeNow => 'استئناف الآن';
+  String get testNotificationSent => 'تم إرسال إشعار الاختبار!';
 
   @override
-  String get moodHistory => 'تاريخ المزاج';
-
-  @override
-  String get noMoodEntriesYet => 'لا توجد إدخالات مزاجية بعد';
-
-  @override
-  String get startLoggingMoods => 'ابدأ في تسجيل مزاجك لرؤية تاريخك';
-
-  @override
-  String get ambientSounds => 'الأصوات المحيطة';
-
-  @override
-  String get focusAndRelaxation => 'التركيز والاسترخاء';
-
-  @override
-  String get chooseBackgroundSound => 'اختر صوت خلفية لمساعدتك على التركيز أو الاسترخاء';
-
-  @override
-  String get volume => 'مستوى الصوت';
-
-  @override
-  String percent(int value) {
-    return '$value%';
+  String reminder(String date) {
+    return 'تذكير: $date';
   }
 
   @override
-  String get fadeIn => 'زيادة الصوت تدريجياً';
+  String get noReminderSet => 'لم يتم تعيين تذكير';
 
   @override
-  String get fadeOut => 'خفض الصوت تدريجياً';
+  String get allNotificationsCleared => 'تم مسح جميع الإشعارات!';
 
   @override
-  String get noCategoriesYet => 'لا توجد فئات بعد';
+  String get testReminderIn10Seconds => 'اختبار تذكير في 10 ثواني';
 
   @override
-  String get createCategoriesToOrganize => 'قم بإنشاء فئات لتنظيم مهامك';
+  String get testReminderScheduled => 'تم جدولة تذكير الاختبار لمدة 10 ثواني من الآن';
 
   @override
-  String get createCategory => 'إنشاء فئة';
-
-  @override
-  String get tapToManage => 'اضغط لإدارة';
-
-  @override
-  String get edit => 'تعديل';
-
-  @override
-  String get addCategory => 'إضافة فئة';
-
-  @override
-  String get editCategory => 'تعديل فئة';
-
-  @override
-  String get categoryName => 'اسم الفئة';
-
-  @override
-  String get enterCategoryName => 'أدخل اسم الفئة';
-
-  @override
-  String get color => 'اللون:';
-
-  @override
-  String get pickAColor => 'اختر لونًا';
-
-  @override
-  String get select => 'اختر';
-
-  @override
-  String get deleteCategory => 'حذف فئة';
-
-  @override
-  String confirmDeleteCategory(String categoryName) {
-    return 'هل أنت متأكد من حذف \"$categoryName\"؟ سيؤدي هذا إلى إزالة الفئة من جميع المهام المرتبطة.';
-  }
-
-  @override
-  String get rain => 'مطر';
-
-  @override
-  String get oceanWaves => 'أمواج المحيط';
-
-  @override
-  String get forest => 'غابة';
-
-  @override
-  String get whiteNoise => 'ضوضاء بيضاء';
-
-  @override
-  String get coffeeShop => 'مقهى';
-
-  @override
-  String get fireplace => 'موقد';
-
-  @override
-  String get wind => 'رياح';
-
-  @override
-  String get thunderstorm => 'عاصفة رعدية';
-
-  @override
-  String get noCategoriesYetDescription => 'قم بإنشاء فئات لتنظيم مهامك';
-
-  @override
-  String tasksCount(int count) {
-    return '$count مهمة';
-  }
-
-  @override
-  String get selectButton => 'اختيار';
-
-  @override
-  String get pause => 'إيقاف مؤقت';
-
-  @override
-  String get start => 'بدء';
-
-  @override
-  String get stop => 'إيقاف';
-
-  @override
-  String get skip => 'تخطي';
-
-  @override
-  String get next => 'التالي';
-
-  @override
-  String get statistics => 'الإحصائيات';
-
-  @override
-  String get overview => 'نظرة عامة';
-
-  @override
-  String get week => 'أسبوع';
-
-  @override
-  String get month => 'شهر';
-
-  @override
-  String get streak => 'سلسلة';
-
-  @override
-  String get productivityScore => 'درجة الإنتاجية';
-
-  @override
-  String get weeklyProgress => 'التقدم الأسبوعي';
-
-  @override
-  String get categoryProgress => 'تقدم الفئة';
-
-  @override
-  String get totaltasks => 'إجمالي المهام';
-
-  @override
-  String get dueDate => 'تاريخ الاستحقاق';
-
-  @override
-  String get overdue => 'متأخر';
-
-  @override
-  String get dueThisWeek => 'مستحق هذا الأسبوع';
-
-  @override
-  String get logMood => 'سجل مزاجك';
-
-  @override
-  String get notesOptional => 'ملاحظات (اختيارية)';
-
-  @override
-  String get energyLevel => 'مستوى الطاقة';
-
-  @override
-  String get focusLevel => 'مستوى التركيز';
-
-  @override
-  String get stressLevel => 'مستوى التوتر';
-
-  @override
-  String get saveMood => 'حفظ المزاج';
-
-  @override
-  String get paused => 'متوقف مؤقتاً';
-
-  @override
-  String get idle => 'خامل';
-
-  @override
-  String get pomodoroSessionCompleted => 'انتهت جلسة بومودورو';
+  String get upcoming => 'قادم';
 
   @override
   String get appUpdates => 'تحديثات التطبيق';
@@ -885,104 +1123,5 @@ class AppLocalizationsAr extends AppLocalizations {
   String get taskProgress => 'التقدم';
 
   @override
-  String get deleteTaskConfirmationTitle => 'Delete Task';
-
-  @override
-  String get deleteSubtask => 'حذف المهمة الفرعية';
-
-  @override
-  String get confirmDeleteSubtask => 'Are you sure you want to delete this subtask?';
-
-  @override
-  String get highPriority => 'High';
-
-  @override
-  String get mediumPriority => 'Medium';
-
-  @override
-  String get lowPriority => 'Low';
-
-  @override
-  String get repeatSettings => 'إعدادات التكرار';
-
-  @override
-  String get addSubtask => 'إضافة مهمة فرعية';
-
-  @override
-  String get recurringTasksManager => 'مدير المهام المتكررة';
-
-  @override
-  String get generateRecurringInstances => 'إنشاء نسخ متكررة';
-
-  @override
-  String get recurringInstancesGenerated => 'تم إنشاء النسخ المتكررة بنجاح!';
-
-  @override
-  String get errorGeneratingInstances => 'خطأ في إنشاء النسخ المتكررة';
-
-  @override
-  String get duplicateTask => 'تكرار المهمة';
-
-  @override
-  String get allRecurringUpToDate => 'جميع المهام المتكررة محدثة!';
-
-  @override
-  String get generateNextInstance => 'إنشاء النسخة التالية';
-
-  @override
-  String get generateAllInstances => 'إنشاء جميع النسخ';
-
-  @override
-  String get activeRecurringTasks => 'المهام المتكررة النشطة';
-
-  @override
-  String get totalRecurringInstances => 'إجمالي النسخ المتكررة';
-
-  @override
-  String get tasksNeedingInstances => 'المهام التي تحتاج نسخ جديدة';
-
-  @override
-  String get refreshRecurringTasks => 'تحديث المهام المتكررة';
-
-  @override
-  String get subtaskTitle => 'عنوان المهمة الفرعية';
-
-  @override
-  String get subtaskDescription => 'الوصف (اختياري)';
-
-  @override
-  String get pleaseEnterSubtaskTitle => 'يرجى إدخال عنوان المهمة الفرعية';
-
-  @override
-  String get customizePomodoroSession => 'تخصيص جلسة بومودورو';
-
-  @override
-  String get workDurationLabel => 'مدة العمل';
-
-  @override
-  String get shortBreakLabel => 'استراحة قصيرة';
-
-  @override
-  String get longBreakLabel => 'استراحة طويلة';
-
-  @override
-  String get startSession => 'بدء الجلسة';
-
-  @override
-  String get pomodoroFocus => 'تركيز بومودورو';
-
-  @override
-  String get pomodoroDescription => 'اختر مهمة للتركيز عليها وتخصيص جلستك';
-
-  @override
-  String get sessionProgress => 'تقدم الجلسة';
-
-  @override
-  String get settingsButton => 'الإعدادات';
-
-  @override
-  String get tomorrow => 'غداً';
-
-  @override
-  String get yesterday => 'أمس';
+  String get statusLabel => 'الحالة:';
 }

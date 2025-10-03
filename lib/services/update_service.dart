@@ -1,16 +1,11 @@
+import 'package:tazbeet/services/app_logging.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum UpdateStatus {
-  checking,
-  available,
-  downloading,
-  installing,
-  upToDate,
-  error,
-}
+enum UpdateStatus { checking, available, downloading, installing, upToDate, error }
 
 class UpdateInfo {
   final String version;
@@ -18,12 +13,7 @@ class UpdateInfo {
   final bool isImmediateUpdate;
   final UpdateStatus status;
 
-  const UpdateInfo({
-    required this.version,
-    this.releaseNotes,
-    this.isImmediateUpdate = false,
-    required this.status,
-  });
+  const UpdateInfo({required this.version, this.releaseNotes, this.isImmediateUpdate = false, required this.status});
 }
 
 class UpdateService extends ChangeNotifier {
@@ -47,7 +37,7 @@ class UpdateService extends ChangeNotifier {
       _currentVersion = packageInfo.version;
       notifyListeners();
     } catch (e) {
-      debugPrint('Error getting package info: $e');
+      AppLogging.logInfo('Error getting package info: $e');
     }
   }
 
@@ -60,11 +50,7 @@ class UpdateService extends ChangeNotifier {
       if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
         final newVersion = updateInfo.availableVersionCode?.toString() ?? 'Unknown';
 
-        _updateInfo = UpdateInfo(
-          version: newVersion,
-          isImmediateUpdate: updateInfo.immediateUpdateAllowed,
-          status: UpdateStatus.available,
-        );
+        _updateInfo = UpdateInfo(version: newVersion, isImmediateUpdate: updateInfo.immediateUpdateAllowed, status: UpdateStatus.available);
 
         _setStatus(UpdateStatus.available);
         notifyListeners();
@@ -75,7 +61,7 @@ class UpdateService extends ChangeNotifier {
         return null;
       }
     } catch (e) {
-      debugPrint('Error checking for updates: $e');
+      AppLogging.logError('Error checking for updates: $e');
       _setStatus(UpdateStatus.error);
       notifyListeners();
       return null;
@@ -91,7 +77,7 @@ class UpdateService extends ChangeNotifier {
       }
       return false;
     } catch (e) {
-      debugPrint('Error starting flexible update: $e');
+      AppLogging.logInfo('Error starting flexible update: $e');
       _setStatus(UpdateStatus.error);
       return false;
     }
@@ -105,7 +91,7 @@ class UpdateService extends ChangeNotifier {
       }
       return false;
     } catch (e) {
-      debugPrint('Error starting immediate update: $e');
+      AppLogging.logInfo('Error starting immediate update: $e');
       _setStatus(UpdateStatus.error);
       return false;
     }
@@ -117,7 +103,7 @@ class UpdateService extends ChangeNotifier {
       _setStatus(UpdateStatus.upToDate);
       notifyListeners();
     } catch (e) {
-      debugPrint('Error completing flexible update: $e');
+      AppLogging.logInfo('Error completing flexible update: $e');
       _setStatus(UpdateStatus.error);
     }
   }
@@ -154,7 +140,7 @@ class UpdateService extends ChangeNotifier {
       const oneDayInMs = 24 * 60 * 60 * 1000; // 24 hours
 
       if (lastCheck != null && (now - lastCheck) < oneDayInMs) {
-        debugPrint('Update check skipped - checked within last 24 hours');
+        AppLogging.logInfo('Update check skipped - checked within last 24 hours');
         return; // Skip if checked within last 24 hours
       }
 
@@ -162,10 +148,10 @@ class UpdateService extends ChangeNotifier {
       await prefs.setInt(lastCheckKey, now);
 
       // Perform the update check
-      debugPrint('Performing automatic update check...');
+      AppLogging.logInfo('Performing automatic update check...');
       await checkForUpdates();
     } catch (e) {
-      debugPrint('Error in automatic update check: $e');
+      AppLogging.logInfo('Error in automatic update check: $e');
     }
   }
 }

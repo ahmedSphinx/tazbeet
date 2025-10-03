@@ -249,11 +249,569 @@ abstract class AppLocalizations {
   /// **'Regional'**
   String get regionalSection;
 
-  /// No description provided for @deleteButton.
+  /// No description provided for @moodSettingsTitle.
   ///
   /// In en, this message translates to:
-  /// **'Delete'**
-  String get deleteButton;
+  /// **'Mood Settings'**
+  String get moodSettingsTitle;
+
+  /// No description provided for @moodSettingsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Configure mood check-in notifications'**
+  String get moodSettingsSubtitle;
+
+  /// No description provided for @enableMoodNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Mood Notifications'**
+  String get enableMoodNotifications;
+
+  /// No description provided for @moodCheckInTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in Times'**
+  String get moodCheckInTimes;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @completedTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed tasks'**
+  String get completedTasks;
+
+  /// No description provided for @work.
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get work;
+
+  /// No description provided for @shortBreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Short Break'**
+  String get shortBreak;
+
+  /// No description provided for @longBreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Long Break'**
+  String get longBreak;
+
+  /// No description provided for @paused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get paused;
+
+  /// No description provided for @idle.
+  ///
+  /// In en, this message translates to:
+  /// **'Idle'**
+  String get idle;
+
+  /// No description provided for @pomodoroSessionCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro Session Completed'**
+  String get pomodoroSessionCompleted;
+
+  /// No description provided for @highPriorityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get highPriorityLabel;
+
+  /// No description provided for @mediumPriorityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get mediumPriorityLabel;
+
+  /// No description provided for @lowPriorityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get lowPriorityLabel;
+
+  /// No description provided for @addTaskTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Task'**
+  String get addTaskTitle;
+
+  /// No description provided for @priorityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority:'**
+  String get priorityLabel;
+
+  /// No description provided for @dueDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Due Date (Optional)'**
+  String get dueDateLabel;
+
+  /// No description provided for @selectDueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select due date'**
+  String get selectDueDate;
+
+  /// No description provided for @categoryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Category (Optional)'**
+  String get categoryLabel;
+
+  /// No description provided for @noCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'No Category'**
+  String get noCategory;
+
+  /// No description provided for @repeatSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat Settings'**
+  String get repeatSettings;
+
+  /// No description provided for @nameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Name is required'**
+  String get nameRequired;
+
+  /// No description provided for @editTaskTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Task'**
+  String get editTaskTitle;
+
+  /// No description provided for @updateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get updateButton;
+
+  /// No description provided for @ambientSounds.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambient Sounds'**
+  String get ambientSounds;
+
+  /// No description provided for @focusAndRelaxation.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus & Relaxation'**
+  String get focusAndRelaxation;
+
+  /// No description provided for @chooseBackgroundSound.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a background sound to help you concentrate or relax'**
+  String get chooseBackgroundSound;
+
+  /// No description provided for @volume.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume'**
+  String get volume;
+
+  /// No description provided for @fadeIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Fade In'**
+  String get fadeIn;
+
+  /// No description provided for @fadeOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Fade Out'**
+  String get fadeOut;
+
+  /// No description provided for @noCategoriesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No categories yet'**
+  String get noCategoriesYet;
+
+  /// No description provided for @createCategoriesToOrganize.
+  ///
+  /// In en, this message translates to:
+  /// **'Create categories to organize your tasks'**
+  String get createCategoriesToOrganize;
+
+  /// No description provided for @createCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Category'**
+  String get createCategory;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @addCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Category'**
+  String get addCategory;
+
+  /// No description provided for @editCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Category'**
+  String get editCategory;
+
+  /// No description provided for @categoryName.
+  ///
+  /// In en, this message translates to:
+  /// **'Category Name'**
+  String get categoryName;
+
+  /// No description provided for @enterCategoryName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter category name'**
+  String get enterCategoryName;
+
+  /// No description provided for @color.
+  ///
+  /// In en, this message translates to:
+  /// **'Color:'**
+  String get color;
+
+  /// No description provided for @pickAColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a color'**
+  String get pickAColor;
+
+  /// No description provided for @select.
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get select;
+
+  /// No description provided for @deleteCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Category'**
+  String get deleteCategory;
+
+  /// No description provided for @confirmDeleteCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{categoryName}\"? This will remove the category from all associated tasks.'**
+  String confirmDeleteCategory(String categoryName);
+
+  /// No description provided for @tasksCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} tasks'**
+  String tasksCount(int count);
+
+  /// No description provided for @selectButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get selectButton;
+
+  /// No description provided for @pause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pause;
+
+  /// No description provided for @start.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get start;
+
+  /// No description provided for @stop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get stop;
+
+  /// No description provided for @skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skip;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get statistics;
+
+  /// No description provided for @overview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get overview;
+
+  /// No description provided for @week.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get week;
+
+  /// No description provided for @month.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get month;
+
+  /// No description provided for @streak.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak'**
+  String get streak;
+
+  /// No description provided for @productivityScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Productivity Score'**
+  String get productivityScore;
+
+  /// No description provided for @weeklyProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Progress'**
+  String get weeklyProgress;
+
+  /// No description provided for @categoryProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Category Progress'**
+  String get categoryProgress;
+
+  /// No description provided for @totaltasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Tasks'**
+  String get totaltasks;
+
+  /// No description provided for @dueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Due Date'**
+  String get dueDate;
+
+  /// No description provided for @overdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get overdue;
+
+  /// No description provided for @dueThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Due This Week'**
+  String get dueThisWeek;
+
+  /// No description provided for @logMood.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Your Mood'**
+  String get logMood;
+
+  /// No description provided for @notesOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes (optional)'**
+  String get notesOptional;
+
+  /// No description provided for @energyLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Energy Level'**
+  String get energyLevel;
+
+  /// No description provided for @focusLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus Level'**
+  String get focusLevel;
+
+  /// No description provided for @stressLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Stress Level'**
+  String get stressLevel;
+
+  /// No description provided for @saveMood.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Mood'**
+  String get saveMood;
+
+  /// No description provided for @veryBad.
+  ///
+  /// In en, this message translates to:
+  /// **'Very Bad'**
+  String get veryBad;
+
+  /// No description provided for @bad.
+  ///
+  /// In en, this message translates to:
+  /// **'Bad'**
+  String get bad;
+
+  /// No description provided for @neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Neutral'**
+  String get neutral;
+
+  /// No description provided for @good.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get good;
+
+  /// No description provided for @veryGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Very Good'**
+  String get veryGood;
+
+  /// No description provided for @moodCheckInTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood Check-In'**
+  String get moodCheckInTitle;
+
+  /// No description provided for @moodHowAreYouFeeling.
+  ///
+  /// In en, this message translates to:
+  /// **'How are you feeling?'**
+  String get moodHowAreYouFeeling;
+
+  /// No description provided for @moodSelectLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your mood level'**
+  String get moodSelectLevel;
+
+  /// No description provided for @moodEnergyLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Energy Level'**
+  String get moodEnergyLevel;
+
+  /// No description provided for @moodFocusLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus Level'**
+  String get moodFocusLevel;
+
+  /// No description provided for @moodStressLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Stress Level'**
+  String get moodStressLevel;
+
+  /// No description provided for @low.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get low;
+
+  /// No description provided for @high.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get high;
+
+  /// No description provided for @moodNoteOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a note (optional)'**
+  String get moodNoteOptional;
+
+  /// No description provided for @moodNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'How are you feeling?'**
+  String get moodNoteHint;
+
+  /// No description provided for @moodSaveButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Mood'**
+  String get moodSaveButton;
+
+  /// No description provided for @moodVeryBad.
+  ///
+  /// In en, this message translates to:
+  /// **'Very Bad'**
+  String get moodVeryBad;
+
+  /// No description provided for @moodBad.
+  ///
+  /// In en, this message translates to:
+  /// **'Bad'**
+  String get moodBad;
+
+  /// No description provided for @moodNeutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Neutral'**
+  String get moodNeutral;
+
+  /// No description provided for @moodGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get moodGood;
+
+  /// No description provided for @moodVeryGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Very Good'**
+  String get moodVeryGood;
+
+  /// No description provided for @moodSavedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood saved successfully!'**
+  String get moodSavedSuccess;
+
+  /// No description provided for @moodSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save mood'**
+  String get moodSaveFailed;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @noCategoriesYetDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Create categories to organize your tasks'**
+  String get noCategoriesYetDescription;
 
   /// No description provided for @editButton.
   ///
@@ -261,23 +819,173 @@ abstract class AppLocalizations {
   /// **'Edit'**
   String get editButton;
 
+  /// No description provided for @deleteButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteButton;
+
   /// No description provided for @addButton.
   ///
   /// In en, this message translates to:
   /// **'Add'**
   String get addButton;
 
-  /// No description provided for @searchHint.
+  /// No description provided for @emergencyControls.
   ///
   /// In en, this message translates to:
-  /// **'Search tasks...'**
-  String get searchHint;
+  /// **'Emergency Controls'**
+  String get emergencyControls;
 
-  /// No description provided for @noTasksFound.
+  /// No description provided for @emergencyMode.
   ///
   /// In en, this message translates to:
-  /// **'No tasks found'**
-  String get noTasksFound;
+  /// **'Emergency Mode'**
+  String get emergencyMode;
+
+  /// No description provided for @activateEmergencyMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate emergency mode to suspend all reminders and timers'**
+  String get activateEmergencyMode;
+
+  /// No description provided for @emergencyModeActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency Mode Active'**
+  String get emergencyModeActive;
+
+  /// No description provided for @allRemindersSuspended.
+  ///
+  /// In en, this message translates to:
+  /// **'All reminders and timers are suspended'**
+  String get allRemindersSuspended;
+
+  /// No description provided for @emergencyModeInactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency Mode'**
+  String get emergencyModeInactive;
+
+  /// No description provided for @suspendRemindersTimers.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspend all reminders and timers immediately'**
+  String get suspendRemindersTimers;
+
+  /// No description provided for @quickControls.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Controls'**
+  String get quickControls;
+
+  /// No description provided for @fifteenMinPause.
+  ///
+  /// In en, this message translates to:
+  /// **'15 Min Pause'**
+  String get fifteenMinPause;
+
+  /// No description provided for @oneHourPause.
+  ///
+  /// In en, this message translates to:
+  /// **'1 Hour Pause'**
+  String get oneHourPause;
+
+  /// No description provided for @resumeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume All'**
+  String get resumeAll;
+
+  /// No description provided for @remindersSuspended.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders Suspended'**
+  String get remindersSuspended;
+
+  /// No description provided for @timeRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Time remaining: {time}'**
+  String timeRemaining(String time);
+
+  /// No description provided for @resumeNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume Now'**
+  String get resumeNow;
+
+  /// No description provided for @moodHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood History'**
+  String get moodHistory;
+
+  /// No description provided for @noMoodEntriesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No mood entries yet'**
+  String get noMoodEntriesYet;
+
+  /// No description provided for @startLoggingMoods.
+  ///
+  /// In en, this message translates to:
+  /// **'Start logging your moods to see your history'**
+  String get startLoggingMoods;
+
+  /// No description provided for @percent.
+  ///
+  /// In en, this message translates to:
+  /// **'{value}%'**
+  String percent(int value);
+
+  /// No description provided for @rain.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain'**
+  String get rain;
+
+  /// No description provided for @oceanWaves.
+  ///
+  /// In en, this message translates to:
+  /// **'Ocean Waves'**
+  String get oceanWaves;
+
+  /// No description provided for @forest.
+  ///
+  /// In en, this message translates to:
+  /// **'Forest'**
+  String get forest;
+
+  /// No description provided for @whiteNoise.
+  ///
+  /// In en, this message translates to:
+  /// **'White Noise'**
+  String get whiteNoise;
+
+  /// No description provided for @coffeeShop.
+  ///
+  /// In en, this message translates to:
+  /// **'Coffee Shop'**
+  String get coffeeShop;
+
+  /// No description provided for @fireplace.
+  ///
+  /// In en, this message translates to:
+  /// **'Fireplace'**
+  String get fireplace;
+
+  /// No description provided for @wind.
+  ///
+  /// In en, this message translates to:
+  /// **'Wind'**
+  String get wind;
+
+  /// No description provided for @thunderstorm.
+  ///
+  /// In en, this message translates to:
+  /// **'Thunderstorm'**
+  String get thunderstorm;
 
   /// No description provided for @taskCompleted.
   ///
@@ -495,35 +1203,11 @@ abstract class AppLocalizations {
   /// **'Tap the + button to add your first task'**
   String get tapToAddFirstTask;
 
-  /// No description provided for @addTaskTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Add New Task'**
-  String get addTaskTitle;
-
-  /// No description provided for @editTaskTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Edit Task'**
-  String get editTaskTitle;
-
-  /// No description provided for @updateButton.
-  ///
-  /// In en, this message translates to:
-  /// **'Update'**
-  String get updateButton;
-
   /// No description provided for @deleteTaskTitle.
   ///
   /// In en, this message translates to:
   /// **'Delete Task'**
   String get deleteTaskTitle;
-
-  /// No description provided for @noCategory.
-  ///
-  /// In en, this message translates to:
-  /// **'No Category'**
-  String get noCategory;
 
   /// No description provided for @filterTasksTitle.
   ///
@@ -531,41 +1215,11 @@ abstract class AppLocalizations {
   /// **'Filter Tasks'**
   String get filterTasksTitle;
 
-  /// No description provided for @priorityLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Priority:'**
-  String get priorityLabel;
-
   /// No description provided for @allLabel.
   ///
   /// In en, this message translates to:
   /// **'All'**
   String get allLabel;
-
-  /// No description provided for @highPriorityLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'High'**
-  String get highPriorityLabel;
-
-  /// No description provided for @mediumPriorityLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Medium'**
-  String get mediumPriorityLabel;
-
-  /// No description provided for @lowPriorityLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Low'**
-  String get lowPriorityLabel;
-
-  /// No description provided for @statusLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Status:'**
-  String get statusLabel;
 
   /// No description provided for @incompleteLabel.
   ///
@@ -602,12 +1256,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Name'**
   String get nameLabel;
-
-  /// No description provided for @nameRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Name is required'**
-  String get nameRequired;
 
   /// No description provided for @birthdayLabel.
   ///
@@ -674,24 +1322,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'By signing in, you agree to our Terms of Service and Privacy Policy'**
   String get termsAndPrivacy;
-
-  /// No description provided for @dueDateLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Due Date (Optional)'**
-  String get dueDateLabel;
-
-  /// No description provided for @selectDueDate.
-  ///
-  /// In en, this message translates to:
-  /// **'Select due date'**
-  String get selectDueDate;
-
-  /// No description provided for @categoryLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Category (Optional)'**
-  String get categoryLabel;
 
   /// No description provided for @moodTracking.
   ///
@@ -885,24 +1515,6 @@ abstract class AppLocalizations {
   /// **'Custom Durations (minutes)'**
   String get customDurations;
 
-  /// No description provided for @work.
-  ///
-  /// In en, this message translates to:
-  /// **'Work'**
-  String get work;
-
-  /// No description provided for @shortBreak.
-  ///
-  /// In en, this message translates to:
-  /// **'Short Break'**
-  String get shortBreak;
-
-  /// No description provided for @longBreak.
-  ///
-  /// In en, this message translates to:
-  /// **'Long Break'**
-  String get longBreak;
-
   /// No description provided for @sessionsToLongBreak.
   ///
   /// In en, this message translates to:
@@ -1065,36 +1677,6 @@ abstract class AppLocalizations {
   /// **'Average Stress'**
   String get averageStress;
 
-  /// No description provided for @veryBad.
-  ///
-  /// In en, this message translates to:
-  /// **'Very Bad'**
-  String get veryBad;
-
-  /// No description provided for @bad.
-  ///
-  /// In en, this message translates to:
-  /// **'Bad'**
-  String get bad;
-
-  /// No description provided for @neutral.
-  ///
-  /// In en, this message translates to:
-  /// **'Neutral'**
-  String get neutral;
-
-  /// No description provided for @good.
-  ///
-  /// In en, this message translates to:
-  /// **'Good'**
-  String get good;
-
-  /// No description provided for @veryGood.
-  ///
-  /// In en, this message translates to:
-  /// **'Very Good'**
-  String get veryGood;
-
   /// No description provided for @energy.
   ///
   /// In en, this message translates to:
@@ -1119,455 +1701,341 @@ abstract class AppLocalizations {
   /// **'{label}: {value}/10'**
   String metricValue(String label, int value);
 
-  /// No description provided for @emergencyControls.
+  /// No description provided for @noTasksFound.
   ///
   /// In en, this message translates to:
-  /// **'Emergency Controls'**
-  String get emergencyControls;
+  /// **'No tasks found'**
+  String get noTasksFound;
 
-  /// No description provided for @emergencyMode.
+  /// No description provided for @searchHint.
   ///
   /// In en, this message translates to:
-  /// **'Emergency Mode'**
-  String get emergencyMode;
+  /// **'Search tasks...'**
+  String get searchHint;
 
-  /// No description provided for @activateEmergencyMode.
+  /// No description provided for @deleteTaskConfirmationTitle.
   ///
   /// In en, this message translates to:
-  /// **'Activate emergency mode to suspend all reminders and timers'**
-  String get activateEmergencyMode;
+  /// **'Delete Task'**
+  String get deleteTaskConfirmationTitle;
 
-  /// No description provided for @emergencyModeActive.
+  /// No description provided for @deleteSubtask.
   ///
   /// In en, this message translates to:
-  /// **'Emergency Mode Active'**
-  String get emergencyModeActive;
+  /// **'Delete Subtask'**
+  String get deleteSubtask;
 
-  /// No description provided for @allRemindersSuspended.
+  /// No description provided for @confirmDeleteSubtask.
   ///
   /// In en, this message translates to:
-  /// **'All reminders and timers are suspended'**
-  String get allRemindersSuspended;
+  /// **'Are you sure you want to delete this subtask?'**
+  String get confirmDeleteSubtask;
 
-  /// No description provided for @emergencyModeInactive.
+  /// No description provided for @highPriority.
   ///
   /// In en, this message translates to:
-  /// **'Emergency Mode'**
-  String get emergencyModeInactive;
+  /// **'High'**
+  String get highPriority;
 
-  /// No description provided for @suspendRemindersTimers.
+  /// No description provided for @mediumPriority.
   ///
   /// In en, this message translates to:
-  /// **'Suspend all reminders and timers immediately'**
-  String get suspendRemindersTimers;
+  /// **'Medium'**
+  String get mediumPriority;
 
-  /// No description provided for @quickControls.
+  /// No description provided for @lowPriority.
   ///
   /// In en, this message translates to:
-  /// **'Quick Controls'**
-  String get quickControls;
+  /// **'Low'**
+  String get lowPriority;
 
-  /// No description provided for @fifteenMinPause.
+  /// No description provided for @addSubtask.
   ///
   /// In en, this message translates to:
-  /// **'15 Min Pause'**
-  String get fifteenMinPause;
+  /// **'Add Subtask'**
+  String get addSubtask;
 
-  /// No description provided for @oneHourPause.
+  /// No description provided for @recurringTasksManager.
   ///
   /// In en, this message translates to:
-  /// **'1 Hour Pause'**
-  String get oneHourPause;
+  /// **'Recurring Tasks Manager'**
+  String get recurringTasksManager;
 
-  /// No description provided for @resumeAll.
+  /// No description provided for @generateRecurringInstances.
   ///
   /// In en, this message translates to:
-  /// **'Resume All'**
-  String get resumeAll;
+  /// **'Generate Recurring Instances'**
+  String get generateRecurringInstances;
 
-  /// No description provided for @remindersSuspended.
+  /// No description provided for @recurringInstancesGenerated.
   ///
   /// In en, this message translates to:
-  /// **'Reminders Suspended'**
-  String get remindersSuspended;
+  /// **'Recurring instances generated'**
+  String get recurringInstancesGenerated;
 
-  /// No description provided for @timeRemaining.
+  /// No description provided for @errorGeneratingInstances.
   ///
   /// In en, this message translates to:
-  /// **'Time remaining: {time}'**
-  String timeRemaining(String time);
+  /// **'Error generating instances'**
+  String get errorGeneratingInstances;
 
-  /// No description provided for @resumeNow.
+  /// No description provided for @duplicateTask.
   ///
   /// In en, this message translates to:
-  /// **'Resume Now'**
-  String get resumeNow;
+  /// **'Duplicate Task'**
+  String get duplicateTask;
 
-  /// No description provided for @moodHistory.
+  /// No description provided for @allRecurringUpToDate.
   ///
   /// In en, this message translates to:
-  /// **'Mood History'**
-  String get moodHistory;
+  /// **'All recurring up to date'**
+  String get allRecurringUpToDate;
 
-  /// No description provided for @noMoodEntriesYet.
+  /// No description provided for @generateNextInstance.
   ///
   /// In en, this message translates to:
-  /// **'No mood entries yet'**
-  String get noMoodEntriesYet;
+  /// **'Generate Next Instance'**
+  String get generateNextInstance;
 
-  /// No description provided for @startLoggingMoods.
+  /// No description provided for @generateAllInstances.
   ///
   /// In en, this message translates to:
-  /// **'Start logging your moods to see your history'**
-  String get startLoggingMoods;
+  /// **'Generate All Instances'**
+  String get generateAllInstances;
 
-  /// No description provided for @ambientSounds.
+  /// No description provided for @activeRecurringTasks.
   ///
   /// In en, this message translates to:
-  /// **'Ambient Sounds'**
-  String get ambientSounds;
+  /// **'Active Recurring Tasks'**
+  String get activeRecurringTasks;
 
-  /// No description provided for @focusAndRelaxation.
+  /// No description provided for @totalRecurringInstances.
   ///
   /// In en, this message translates to:
-  /// **'Focus & Relaxation'**
-  String get focusAndRelaxation;
+  /// **'Total Recurring Instances'**
+  String get totalRecurringInstances;
 
-  /// No description provided for @chooseBackgroundSound.
+  /// No description provided for @tasksNeedingInstances.
   ///
   /// In en, this message translates to:
-  /// **'Choose a background sound to help you concentrate or relax'**
-  String get chooseBackgroundSound;
+  /// **'Tasks Needing Instances'**
+  String get tasksNeedingInstances;
 
-  /// No description provided for @volume.
+  /// No description provided for @refreshRecurringTasks.
   ///
   /// In en, this message translates to:
-  /// **'Volume'**
-  String get volume;
+  /// **'Refresh Recurring Tasks'**
+  String get refreshRecurringTasks;
 
-  /// No description provided for @percent.
+  /// No description provided for @subtaskTitle.
   ///
   /// In en, this message translates to:
-  /// **'{value}%'**
-  String percent(int value);
+  /// **'Subtask Title'**
+  String get subtaskTitle;
 
-  /// No description provided for @fadeIn.
+  /// No description provided for @subtaskDescription.
   ///
   /// In en, this message translates to:
-  /// **'Fade In'**
-  String get fadeIn;
+  /// **'Description (optional)'**
+  String get subtaskDescription;
 
-  /// No description provided for @fadeOut.
+  /// No description provided for @pleaseEnterSubtaskTitle.
   ///
   /// In en, this message translates to:
-  /// **'Fade Out'**
-  String get fadeOut;
+  /// **'Please enter a subtask title'**
+  String get pleaseEnterSubtaskTitle;
 
-  /// No description provided for @noCategoriesYet.
+  /// No description provided for @customizePomodoroSession.
   ///
   /// In en, this message translates to:
-  /// **'No categories yet'**
-  String get noCategoriesYet;
+  /// **'Customize Pomodoro Session'**
+  String get customizePomodoroSession;
 
-  /// No description provided for @createCategoriesToOrganize.
+  /// No description provided for @workDurationLabel.
   ///
   /// In en, this message translates to:
-  /// **'Create categories to organize your tasks'**
-  String get createCategoriesToOrganize;
+  /// **'Work Duration'**
+  String get workDurationLabel;
 
-  /// No description provided for @createCategory.
+  /// No description provided for @shortBreakLabel.
   ///
   /// In en, this message translates to:
-  /// **'Create Category'**
-  String get createCategory;
+  /// **'Short Break'**
+  String get shortBreakLabel;
 
-  /// No description provided for @tapToManage.
+  /// No description provided for @longBreakLabel.
   ///
   /// In en, this message translates to:
-  /// **'Tap to manage'**
-  String get tapToManage;
+  /// **'Long Break'**
+  String get longBreakLabel;
 
-  /// No description provided for @edit.
+  /// No description provided for @startSession.
   ///
   /// In en, this message translates to:
-  /// **'Edit'**
-  String get edit;
+  /// **'Start Session'**
+  String get startSession;
 
-  /// No description provided for @addCategory.
+  /// No description provided for @pomodoroFocus.
   ///
   /// In en, this message translates to:
-  /// **'Add Category'**
-  String get addCategory;
+  /// **'Pomodoro Focus'**
+  String get pomodoroFocus;
 
-  /// No description provided for @editCategory.
+  /// No description provided for @pomodoroDescription.
   ///
   /// In en, this message translates to:
-  /// **'Edit Category'**
-  String get editCategory;
+  /// **'Choose a task to focus on and customize your session'**
+  String get pomodoroDescription;
 
-  /// No description provided for @categoryName.
+  /// No description provided for @sessionProgress.
   ///
   /// In en, this message translates to:
-  /// **'Category Name'**
-  String get categoryName;
+  /// **'Session Progress'**
+  String get sessionProgress;
 
-  /// No description provided for @enterCategoryName.
+  /// No description provided for @settingsButton.
   ///
   /// In en, this message translates to:
-  /// **'Enter category name'**
-  String get enterCategoryName;
+  /// **'Settings'**
+  String get settingsButton;
 
-  /// No description provided for @color.
+  /// No description provided for @tomorrow.
   ///
   /// In en, this message translates to:
-  /// **'Color:'**
-  String get color;
+  /// **'Tomorrow'**
+  String get tomorrow;
 
-  /// No description provided for @pickAColor.
+  /// No description provided for @yesterday.
   ///
   /// In en, this message translates to:
-  /// **'Pick a color'**
-  String get pickAColor;
+  /// **'Yesterday'**
+  String get yesterday;
 
-  /// No description provided for @select.
+  /// No description provided for @overdueTasks.
   ///
   /// In en, this message translates to:
-  /// **'Select'**
-  String get select;
+  /// **'Overdue tasks - need immediate attention'**
+  String get overdueTasks;
 
-  /// No description provided for @deleteCategory.
+  /// No description provided for @todayTasks.
   ///
   /// In en, this message translates to:
-  /// **'Delete Category'**
-  String get deleteCategory;
+  /// **'Tasks to complete today'**
+  String get todayTasks;
 
-  /// No description provided for @confirmDeleteCategory.
+  /// No description provided for @tomorrowTasks.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to delete \"{categoryName}\"? This will remove the category from all associated tasks.'**
-  String confirmDeleteCategory(String categoryName);
+  /// **'Tomorrow\'s tasks'**
+  String get tomorrowTasks;
 
-  /// No description provided for @rain.
+  /// No description provided for @thisWeekTasks.
   ///
   /// In en, this message translates to:
-  /// **'Rain'**
-  String get rain;
+  /// **'Tasks for this week'**
+  String get thisWeekTasks;
 
-  /// No description provided for @oceanWaves.
+  /// No description provided for @laterTasks.
   ///
   /// In en, this message translates to:
-  /// **'Ocean Waves'**
-  String get oceanWaves;
+  /// **'Later tasks'**
+  String get laterTasks;
 
-  /// No description provided for @forest.
+  /// No description provided for @noDateTasks.
   ///
   /// In en, this message translates to:
-  /// **'Forest'**
-  String get forest;
+  /// **'Tasks without a specific date'**
+  String get noDateTasks;
 
-  /// No description provided for @whiteNoise.
+  /// No description provided for @receiveNotificationsForTasksAndReminders.
   ///
   /// In en, this message translates to:
-  /// **'White Noise'**
-  String get whiteNoise;
+  /// **'Receive notifications for tasks and reminders'**
+  String get receiveNotificationsForTasksAndReminders;
 
-  /// No description provided for @coffeeShop.
+  /// No description provided for @playSoundForNotifications.
   ///
   /// In en, this message translates to:
-  /// **'Coffee Shop'**
-  String get coffeeShop;
+  /// **'Play sound for notifications'**
+  String get playSoundForNotifications;
 
-  /// No description provided for @fireplace.
+  /// No description provided for @vibrateForNotifications.
   ///
   /// In en, this message translates to:
-  /// **'Fireplace'**
-  String get fireplace;
+  /// **'Vibrate for notifications'**
+  String get vibrateForNotifications;
 
-  /// No description provided for @wind.
+  /// No description provided for @noUpcomingTasksWithReminders.
   ///
   /// In en, this message translates to:
-  /// **'Wind'**
-  String get wind;
+  /// **'No upcoming tasks with reminders'**
+  String get noUpcomingTasksWithReminders;
 
-  /// No description provided for @thunderstorm.
+  /// No description provided for @noOverdueTasks.
   ///
   /// In en, this message translates to:
-  /// **'Thunderstorm'**
-  String get thunderstorm;
+  /// **'No overdue tasks'**
+  String get noOverdueTasks;
 
-  /// No description provided for @noCategoriesYetDescription.
+  /// No description provided for @testNotification.
   ///
   /// In en, this message translates to:
-  /// **'Create categories to organize your tasks'**
-  String get noCategoriesYetDescription;
+  /// **'Test Notification'**
+  String get testNotification;
 
-  /// No description provided for @tasksCount.
+  /// No description provided for @quickActions.
   ///
   /// In en, this message translates to:
-  /// **'{count} tasks'**
-  String tasksCount(int count);
+  /// **'Quick Actions'**
+  String get quickActions;
 
-  /// No description provided for @selectButton.
+  /// No description provided for @reminderCancelledFor.
   ///
   /// In en, this message translates to:
-  /// **'Select'**
-  String get selectButton;
+  /// **'Reminder cancelled for: {taskTitle}'**
+  String reminderCancelledFor(String taskTitle);
 
-  /// No description provided for @pause.
+  /// No description provided for @testNotificationSent.
   ///
   /// In en, this message translates to:
-  /// **'Pause'**
-  String get pause;
+  /// **'Test notification sent!'**
+  String get testNotificationSent;
 
-  /// No description provided for @start.
+  /// No description provided for @reminder.
   ///
   /// In en, this message translates to:
-  /// **'Start'**
-  String get start;
+  /// **'Reminder: {date}'**
+  String reminder(String date);
 
-  /// No description provided for @stop.
+  /// No description provided for @noReminderSet.
   ///
   /// In en, this message translates to:
-  /// **'Stop'**
-  String get stop;
+  /// **'No reminder set'**
+  String get noReminderSet;
 
-  /// No description provided for @skip.
+  /// No description provided for @allNotificationsCleared.
   ///
   /// In en, this message translates to:
-  /// **'Skip'**
-  String get skip;
+  /// **'All notifications cleared!'**
+  String get allNotificationsCleared;
 
-  /// No description provided for @next.
+  /// No description provided for @testReminderIn10Seconds.
   ///
   /// In en, this message translates to:
-  /// **'Next'**
-  String get next;
+  /// **'Test Reminder in 10s'**
+  String get testReminderIn10Seconds;
 
-  /// No description provided for @statistics.
+  /// No description provided for @testReminderScheduled.
   ///
   /// In en, this message translates to:
-  /// **'Statistics'**
-  String get statistics;
+  /// **'Test reminder scheduled for 10 seconds from now'**
+  String get testReminderScheduled;
 
-  /// No description provided for @overview.
+  /// No description provided for @upcoming.
   ///
   /// In en, this message translates to:
-  /// **'Overview'**
-  String get overview;
-
-  /// No description provided for @week.
-  ///
-  /// In en, this message translates to:
-  /// **'Week'**
-  String get week;
-
-  /// No description provided for @month.
-  ///
-  /// In en, this message translates to:
-  /// **'Month'**
-  String get month;
-
-  /// No description provided for @streak.
-  ///
-  /// In en, this message translates to:
-  /// **'Streak'**
-  String get streak;
-
-  /// No description provided for @productivityScore.
-  ///
-  /// In en, this message translates to:
-  /// **'Productivity Score'**
-  String get productivityScore;
-
-  /// No description provided for @weeklyProgress.
-  ///
-  /// In en, this message translates to:
-  /// **'Weekly Progress'**
-  String get weeklyProgress;
-
-  /// No description provided for @categoryProgress.
-  ///
-  /// In en, this message translates to:
-  /// **'Category Progress'**
-  String get categoryProgress;
-
-  /// No description provided for @totaltasks.
-  ///
-  /// In en, this message translates to:
-  /// **'Total Tasks'**
-  String get totaltasks;
-
-  /// No description provided for @dueDate.
-  ///
-  /// In en, this message translates to:
-  /// **'Due Date'**
-  String get dueDate;
-
-  /// No description provided for @overdue.
-  ///
-  /// In en, this message translates to:
-  /// **'Overdue'**
-  String get overdue;
-
-  /// No description provided for @dueThisWeek.
-  ///
-  /// In en, this message translates to:
-  /// **'Due This Week'**
-  String get dueThisWeek;
-
-  /// No description provided for @logMood.
-  ///
-  /// In en, this message translates to:
-  /// **'Log Your Mood'**
-  String get logMood;
-
-  /// No description provided for @notesOptional.
-  ///
-  /// In en, this message translates to:
-  /// **'Notes (optional)'**
-  String get notesOptional;
-
-  /// No description provided for @energyLevel.
-  ///
-  /// In en, this message translates to:
-  /// **'Energy Level'**
-  String get energyLevel;
-
-  /// No description provided for @focusLevel.
-  ///
-  /// In en, this message translates to:
-  /// **'Focus Level'**
-  String get focusLevel;
-
-  /// No description provided for @stressLevel.
-  ///
-  /// In en, this message translates to:
-  /// **'Stress Level'**
-  String get stressLevel;
-
-  /// No description provided for @saveMood.
-  ///
-  /// In en, this message translates to:
-  /// **'Save Mood'**
-  String get saveMood;
-
-  /// No description provided for @paused.
-  ///
-  /// In en, this message translates to:
-  /// **'Paused'**
-  String get paused;
-
-  /// No description provided for @idle.
-  ///
-  /// In en, this message translates to:
-  /// **'Idle'**
-  String get idle;
-
-  /// No description provided for @pomodoroSessionCompleted.
-  ///
-  /// In en, this message translates to:
-  /// **'Pomodoro Session Completed'**
-  String get pomodoroSessionCompleted;
+  /// **'Upcoming'**
+  String get upcoming;
 
   /// No description provided for @appUpdates.
   ///
@@ -1815,209 +2283,11 @@ abstract class AppLocalizations {
   /// **'Task Progress'**
   String get taskProgress;
 
-  /// No description provided for @deleteTaskConfirmationTitle.
+  /// No description provided for @statusLabel.
   ///
   /// In en, this message translates to:
-  /// **'Delete Task'**
-  String get deleteTaskConfirmationTitle;
-
-  /// No description provided for @deleteSubtask.
-  ///
-  /// In en, this message translates to:
-  /// **'Delete Subtask'**
-  String get deleteSubtask;
-
-  /// No description provided for @confirmDeleteSubtask.
-  ///
-  /// In en, this message translates to:
-  /// **'Are you sure you want to delete this subtask?'**
-  String get confirmDeleteSubtask;
-
-  /// No description provided for @highPriority.
-  ///
-  /// In en, this message translates to:
-  /// **'High'**
-  String get highPriority;
-
-  /// No description provided for @mediumPriority.
-  ///
-  /// In en, this message translates to:
-  /// **'Medium'**
-  String get mediumPriority;
-
-  /// No description provided for @lowPriority.
-  ///
-  /// In en, this message translates to:
-  /// **'Low'**
-  String get lowPriority;
-
-  /// No description provided for @repeatSettings.
-  ///
-  /// In en, this message translates to:
-  /// **'Repeat Settings'**
-  String get repeatSettings;
-
-  /// No description provided for @addSubtask.
-  ///
-  /// In en, this message translates to:
-  /// **'Add Subtask'**
-  String get addSubtask;
-
-  /// No description provided for @recurringTasksManager.
-  ///
-  /// In en, this message translates to:
-  /// **'Recurring Tasks Manager'**
-  String get recurringTasksManager;
-
-  /// No description provided for @generateRecurringInstances.
-  ///
-  /// In en, this message translates to:
-  /// **'Generate Recurring Instances'**
-  String get generateRecurringInstances;
-
-  /// No description provided for @recurringInstancesGenerated.
-  ///
-  /// In en, this message translates to:
-  /// **'Recurring instances generated'**
-  String get recurringInstancesGenerated;
-
-  /// No description provided for @errorGeneratingInstances.
-  ///
-  /// In en, this message translates to:
-  /// **'Error generating instances'**
-  String get errorGeneratingInstances;
-
-  /// No description provided for @duplicateTask.
-  ///
-  /// In en, this message translates to:
-  /// **'Duplicate Task'**
-  String get duplicateTask;
-
-  /// No description provided for @allRecurringUpToDate.
-  ///
-  /// In en, this message translates to:
-  /// **'All recurring up to date'**
-  String get allRecurringUpToDate;
-
-  /// No description provided for @generateNextInstance.
-  ///
-  /// In en, this message translates to:
-  /// **'Generate Next Instance'**
-  String get generateNextInstance;
-
-  /// No description provided for @generateAllInstances.
-  ///
-  /// In en, this message translates to:
-  /// **'Generate All Instances'**
-  String get generateAllInstances;
-
-  /// No description provided for @activeRecurringTasks.
-  ///
-  /// In en, this message translates to:
-  /// **'Active Recurring Tasks'**
-  String get activeRecurringTasks;
-
-  /// No description provided for @totalRecurringInstances.
-  ///
-  /// In en, this message translates to:
-  /// **'Total Recurring Instances'**
-  String get totalRecurringInstances;
-
-  /// No description provided for @tasksNeedingInstances.
-  ///
-  /// In en, this message translates to:
-  /// **'Tasks Needing Instances'**
-  String get tasksNeedingInstances;
-
-  /// No description provided for @refreshRecurringTasks.
-  ///
-  /// In en, this message translates to:
-  /// **'Refresh Recurring Tasks'**
-  String get refreshRecurringTasks;
-
-  /// No description provided for @subtaskTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Subtask Title'**
-  String get subtaskTitle;
-
-  /// No description provided for @subtaskDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Description (optional)'**
-  String get subtaskDescription;
-
-  /// No description provided for @pleaseEnterSubtaskTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Please enter a subtask title'**
-  String get pleaseEnterSubtaskTitle;
-
-  /// No description provided for @customizePomodoroSession.
-  ///
-  /// In en, this message translates to:
-  /// **'Customize Pomodoro Session'**
-  String get customizePomodoroSession;
-
-  /// No description provided for @workDurationLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Work Duration'**
-  String get workDurationLabel;
-
-  /// No description provided for @shortBreakLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Short Break'**
-  String get shortBreakLabel;
-
-  /// No description provided for @longBreakLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Long Break'**
-  String get longBreakLabel;
-
-  /// No description provided for @startSession.
-  ///
-  /// In en, this message translates to:
-  /// **'Start Session'**
-  String get startSession;
-
-  /// No description provided for @pomodoroFocus.
-  ///
-  /// In en, this message translates to:
-  /// **'Pomodoro Focus'**
-  String get pomodoroFocus;
-
-  /// No description provided for @pomodoroDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose a task to focus on and customize your session'**
-  String get pomodoroDescription;
-
-  /// No description provided for @sessionProgress.
-  ///
-  /// In en, this message translates to:
-  /// **'Session Progress'**
-  String get sessionProgress;
-
-  /// No description provided for @settingsButton.
-  ///
-  /// In en, this message translates to:
-  /// **'Settings'**
-  String get settingsButton;
-
-  /// No description provided for @tomorrow.
-  ///
-  /// In en, this message translates to:
-  /// **'Tomorrow'**
-  String get tomorrow;
-
-  /// No description provided for @yesterday.
-  ///
-  /// In en, this message translates to:
-  /// **'Yesterday'**
-  String get yesterday;
+  /// **'Status:'**
+  String get statusLabel;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

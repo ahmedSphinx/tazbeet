@@ -1,4 +1,4 @@
-import 'dart:developer';
+// ignore_for_file: unused_element
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +10,7 @@ import 'package:tazbeet/l10n/app_localizations.dart';
 
 import 'package:tazbeet/ui/themes/app_themes.dart';
 import 'package:tazbeet/ui/screens/home_screen.dart';
+import 'package:tazbeet/ui/screens/registration_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,21 +23,29 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
 
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  bool _obscurePassword = true;
+  bool _rememberMe = false;
+  bool _isLoading = false;
+  String? _emailError;
+  String? _passwordError;
+
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
-
-
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(CurvedAnimation(parent: _animationController, curve: Curves.elasticOut));
-
-
     _animationController.forward();
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -54,30 +63,28 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             colors: isDark ? [const Color(0xFF0F172A), const Color(0xFF1E293B), const Color(0xFF334155)] : [const Color(0xFFF8FAFC), const Color(0xFFE2E8F0), const Color(0xFFCBD5E1)],
           ),
         ),
-        child: BlocBuilder<AuthBloc, AuthState>(
-          builder: (context, state) {
-            log(state.toString());
+        child: BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthLoading) {
+              setState(() => _isLoading = true);
+            } else {
+              setState(() => _isLoading = false);
+            }
 
             // Handle successful authentication
             if (state is AuthAuthenticated) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const HomeScreen()), (Route<dynamic> route) => false);
-              });
-              return _buildLoadingScreen(context);
-            }
-
-            if (state is AuthLoading) {
-              return _buildLoadingScreen(context);
+              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const HomeScreen()), (Route<dynamic> route) => false);
             }
 
             if (state is AuthError) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                _showErrorSnackBar(context, state.message);
-              });
+              _showErrorSnackBar(context, state.message);
             }
-
-            return _buildLoginContent(context, isDark);
           },
+          child: BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, state) {
+              return _buildLoginContent(context, isDark);
+            },
+          ),
         ),
       ),
     );
@@ -195,14 +202,48 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 ),
                 const SizedBox(height: 60),
 
-                // Animated Sign In Buttons
+                // Animated Email/Password Form
                 AnimationConfiguration.staggeredList(
                   position: 2,
                   duration: const Duration(milliseconds: 800),
                   child: SlideAnimation(
                     verticalOffset: 30.0,
                     child: FadeInAnimation(
-                      child: Column(children: [_buildGoogleSignInButton(context), const SizedBox(height: 16), _buildDivider(context), const SizedBox(height: 16), _buildFacebookSignInButton(context)]),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            _buildEmailField(),
+                            const SizedBox(height: 20),
+                            _buildPasswordField(),
+                            //const SizedBox(height: 16),
+                            //_buildRememberMeAndForgotPassword(),
+                            const SizedBox(height: 32),
+                            _buildLoginButton(),
+                            const SizedBox(height: 24),
+                            _buildRegisterLink(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Animated Social Sign In
+                AnimationConfiguration.staggeredList(
+                  position: 3,
+                  duration: const Duration(milliseconds: 800),
+                  child: SlideAnimation(
+                    verticalOffset: 30.0,
+                    child: FadeInAnimation(
+                      child: Column(
+                        children: [
+                          _buildDivider(context),
+                          const SizedBox(height: 16),
+                          Row(mainAxisAlignment: MainAxisAlignment.center, children: [_buildGoogleSignInButton(context), const SizedBox(width: 16), _buildFacebookSignInButton(context)]),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -234,97 +275,42 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
   Widget _buildGoogleSignInButton(BuildContext context) {
     return Container(
-      width: double.infinity,
-      height: 56,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 5))],
-      ),
-      child: ElevatedButton(
-        onPressed: () {
-          context.read<AuthBloc>().add(AuthSignInRequested());
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          foregroundColor: Theme.of(context).colorScheme.primary,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 24,
-              height: 24,
-              decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-              child: Image.asset(
-                'assets/images/google.png',
-                width: 20,
-                height: 20,
-                fit: BoxFit.contain,
-                /*  errorBuilder: (context, error, stackTrace) {
-                  return Icon(
-                    Icons.login,
-                    size: 20,
-                    color: Theme.of(context).colorScheme.primary,
-                  );
-                }, */
-              ),
-            ),
-            const SizedBox(width: 12),
-            Text(
-              'Continue with Google',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.primary),
-            ),
-          ],
+      width: 50,
+      height: 50,
+      decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+
+      child: Padding(
+        padding: const EdgeInsets.all(3.0),
+        child: IconButton(
+          onPressed: () {
+            context.read<AuthBloc>().add(AuthSignInRequested());
+          },
+          icon: Container(
+            width: 50,
+            height: 50,
+            decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+            child: Image.asset('assets/images/google.png', fit: BoxFit.cover),
+          ),
         ),
       ),
     );
   }
 
   Widget _buildFacebookSignInButton(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 56,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: const Color(0xFF1877F2).withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 5))],
-      ),
-      child: ElevatedButton(
-        onPressed: () {
-          context.read<AuthBloc>().add(AuthFacebookSignInRequested());
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF1877F2),
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 24,
-              height: 24,
-              decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-              child: Image.asset(
-                'assets/images/facebook.png',
-                width: 20,
-                height: 20,
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) {
-                  return const Icon(Icons.facebook, size: 20, color: Color(0xFF1877F2));
-                },
-              ),
-            ),
-            const SizedBox(width: 12),
-            Text(
-              'Continue with Facebook',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: Colors.white),
-            ),
-          ],
+    return IconButton(
+      onPressed: () {
+        context.read<AuthBloc>().add(AuthFacebookSignInRequested());
+      },
+      icon: Container(
+        width: 50,
+        height: 50,
+        decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+        child: Image.asset(
+          'assets/images/facebook.png',
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return const Icon(Icons.facebook, size: 24, color: Color(0xFF1877F2));
+          },
         ),
       ),
     );
@@ -353,6 +339,239 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildEmailField() {
+    return Focus(
+      onFocusChange: (hasFocus) {
+        if (!hasFocus) {
+          _validateEmail();
+        }
+      },
+      child: TextFormField(
+        controller: _emailController,
+        keyboardType: TextInputType.emailAddress,
+        textInputAction: TextInputAction.next,
+        autocorrect: false,
+        enableSuggestions: false,
+        decoration: InputDecoration(
+          labelText: 'Email Address',
+          hintText: 'your@email.com',
+          errorText: _emailError,
+          prefixIcon: Icon(Icons.email_outlined, color: _emailError != null ? Theme.of(context).colorScheme.error : null),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: _emailError != null ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.outline),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: _emailError != null ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.outline.withValues(alpha: 0.5)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: Theme.of(context).colorScheme.error, width: 2),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: Theme.of(context).colorScheme.error, width: 2),
+          ),
+          filled: true,
+          fillColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0.8),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        ),
+        style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
+        onChanged: (value) {
+          if (_emailError != null) {
+            setState(() => _emailError = null);
+          }
+        },
+        validator: (value) {
+          return _validateEmail();
+        },
+      ),
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return Focus(
+      onFocusChange: (hasFocus) {
+        if (!hasFocus) {
+          _validatePassword();
+        }
+      },
+      child: TextFormField(
+        controller: _passwordController,
+        obscureText: _obscurePassword,
+        textInputAction: TextInputAction.done,
+        onFieldSubmitted: (_) => _handleLogin(),
+        decoration: InputDecoration(
+          labelText: 'Password',
+          hintText: 'Enter your password',
+          errorText: _passwordError,
+          prefixIcon: Icon(Icons.lock_outline, color: _passwordError != null ? Theme.of(context).colorScheme.error : null),
+          suffixIcon: IconButton(
+            icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility, color: _passwordError != null ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
+            onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: _passwordError != null ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.outline),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: _passwordError != null ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.outline.withValues(alpha: 0.5)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: Theme.of(context).colorScheme.error, width: 2),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: Theme.of(context).colorScheme.error, width: 2),
+          ),
+          filled: true,
+          fillColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0.8),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        ),
+        style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
+        onChanged: (value) {
+          if (_passwordError != null) {
+            setState(() => _passwordError = null);
+          }
+        },
+        validator: (value) {
+          return _validatePassword();
+        },
+      ),
+    );
+  }
+
+  Widget _buildLoginButton() {
+    return Container(
+      width: double.infinity,
+      height: 56,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: _isLoading ? [] : [BoxShadow(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 5))],
+      ),
+      child: ElevatedButton(
+        onPressed: _isLoading ? null : _handleLogin,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: _isLoading ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3) : Theme.of(context).colorScheme.primary,
+          foregroundColor: _isLoading ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5) : Theme.of(context).colorScheme.onPrimary,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        ),
+        child: _isLoading
+            ? SizedBox(height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.onPrimary)))
+            : Text('Sign In', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600)),
+      ),
+    );
+  }
+
+  Widget _buildRememberMeAndForgotPassword() {
+    return Row(
+      children: [
+        // Remember Me Checkbox
+        Row(
+          children: [
+            Checkbox(
+              value: _rememberMe,
+              onChanged: _isLoading ? null : (value) => setState(() => _rememberMe = value ?? false),
+              activeColor: Theme.of(context).colorScheme.primary,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            ),
+            Text('Remember me', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8))),
+          ],
+        ),
+        const Spacer(),
+        // Forgot Password Link
+        TextButton(
+          onPressed: _isLoading ? null : _handleForgotPassword,
+          style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size.zero, tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+          child: Text(
+            'Forgot Password?',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRegisterLink() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("Don't have an account? ", style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
+        TextButton(
+          onPressed: _isLoading
+              ? null
+              : () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RegistrationScreen()));
+                },
+          style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size.zero, tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+          child: Text(
+            'Register',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
+          ),
+        ),
+      ],
+    );
+  }
+
+  String? _validateEmail() {
+    final value = _emailController.text.trim();
+    if (value.isEmpty) {
+      setState(() => _emailError = 'Please enter your email address');
+      return _emailError;
+    }
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+      setState(() => _emailError = 'Please enter a valid email address');
+      return _emailError;
+    }
+    setState(() => _emailError = null);
+    return null;
+  }
+
+  String? _validatePassword() {
+    final value = _passwordController.text;
+    if (value.isEmpty) {
+      setState(() => _passwordError = 'Please enter your password');
+      return _passwordError;
+    }
+    if (value.length < 6) {
+      setState(() => _passwordError = 'Password must be at least 6 characters');
+      return _passwordError;
+    }
+    setState(() => _passwordError = null);
+    return null;
+  }
+
+  void _handleLogin() {
+    if (_formKey.currentState?.validate() ?? false) {
+      context.read<AuthBloc>().add(AuthEmailSignInRequested(_emailController.text.trim(), _passwordController.text));
+    }
+  }
+
+  void _handleForgotPassword() {
+    // For now, show a simple dialog. In a real app, this would send a reset email
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Reset Password'),
+        content: const Text('Password reset functionality will be implemented soon. Please contact support for assistance.'),
+        actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('OK'))],
+      ),
     );
   }
 

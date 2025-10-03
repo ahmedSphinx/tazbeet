@@ -1,7 +1,7 @@
-import 'dart:developer' as dev;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:tazbeet/services/app_logging.dart';
 import '../models/task.dart';
 import '../models/category.dart';
 import '../models/mood.dart';
@@ -12,6 +12,7 @@ import '../repositories/category_repository.dart';
 import '../repositories/mood_repository.dart';
 import '../repositories/user_repository.dart';
 import 'firebase_service_wrapper.dart';
+import 'settings_service.dart';
 
 class DataSyncService {
   final FirebaseFirestore? _firestore = FirebaseServiceWrapper.firestore;
@@ -19,15 +20,16 @@ class DataSyncService {
   final CategoryRepository _categoryRepository = CategoryRepository();
   final MoodRepository _moodRepository = MoodRepository();
   final UserRepository _userRepository = UserRepository();
+  final SettingsService _settingsService = SettingsService();
 
   // Sync data from Firestore to local storage after sign-in
   Future<void> syncFromFirestore(String userId) async {
     if (_firestore == null) {
-      dev.log('Firestore not available, skipping sync', name: 'DataSyncService');
+      AppLogging.logInfo('Firestore not available, skipping sync', name: 'DataSyncService');
       return;
     }
 
-    dev.log('Starting data sync from Firestore for user: $userId', name: 'DataSyncService');
+    AppLogging.logInfo('Starting data sync from Firestore for user: $userId', name: 'DataSyncService');
 
     try {
       // Initialize repositories
@@ -48,12 +50,15 @@ class DataSyncService {
       // Sync user profile
       await _syncUserFromFirestore(userId);
 
+      // Sync user settings
+      await _syncSettingsFromFirestore(userId);
+
       // Sync subtasks
       await _syncSubtasksFromFirestore(userId);
 
-      dev.log('Data sync from Firestore completed successfully', name: 'DataSyncService');
+      AppLogging.logInfo('Data sync from Firestore completed successfully', name: 'DataSyncService');
     } catch (e) {
-      dev.log('Error during data sync from Firestore', name: 'DataSyncService', error: e);
+      AppLogging.logError('Error during data sync from Firestore', name: 'DataSyncService', error: e);
       throw Exception('Failed to sync data from Firestore: $e');
     }
   }
@@ -61,11 +66,11 @@ class DataSyncService {
   // Sync data from local storage to Firestore
   Future<void> syncToFirestore(String userId) async {
     if (_firestore == null) {
-      dev.log('Firestore not available, skipping sync', name: 'DataSyncService');
+      AppLogging.logInfo('Firestore not available, skipping sync', name: 'DataSyncService');
       return;
     }
 
-    dev.log('Starting data sync to Firestore for user: $userId', name: 'DataSyncService');
+    AppLogging.logInfo('Starting data sync to Firestore for user: $userId', name: 'DataSyncService');
 
     try {
       // Initialize repositories
@@ -86,18 +91,21 @@ class DataSyncService {
       // Sync user profile
       await _syncUserToFirestore(userId);
 
+      // Sync user settings
+      await _syncSettingsToFirestore(userId);
+
       // Sync subtasks
       await _syncSubtasksToFirestore(userId);
 
-      dev.log('Data sync to Firestore completed successfully', name: 'DataSyncService');
+      AppLogging.logInfo('Data sync to Firestore completed successfully', name: 'DataSyncService');
     } catch (e) {
-      dev.log('Error during data sync to Firestore', name: 'DataSyncService', error: e);
+      AppLogging.logError('Error during data sync to Firestore', name: 'DataSyncService', error: e);
       throw Exception('Failed to sync data to Firestore: $e');
     }
   }
 
   Future<void> _syncTasksFromFirestore(String userId) async {
-    dev.log('Syncing tasks from Firestore', name: 'DataSyncService');
+    AppLogging.logInfo('Syncing tasks from Firestore', name: 'DataSyncService');
 
     final tasksRef = _firestore!.collection('users').doc(userId).collection('tasks');
     final snapshot = await tasksRef.get();
@@ -136,11 +144,11 @@ class DataSyncService {
       await _taskRepository.addTask(task);
     }
 
-    dev.log('Synced ${tasks.length} tasks from Firestore', name: 'DataSyncService');
+    AppLogging.logInfo('Synced ${tasks.length} tasks from Firestore', name: 'DataSyncService');
   }
 
   Future<void> _syncCategoriesFromFirestore(String userId) async {
-    dev.log('Syncing categories from Firestore', name: 'DataSyncService');
+    AppLogging.logInfo('Syncing categories from Firestore', name: 'DataSyncService');
 
     final categoriesRef = _firestore!.collection('users').doc(userId).collection('categories');
     final snapshot = await categoriesRef.get();
@@ -167,11 +175,11 @@ class DataSyncService {
       await _categoryRepository.addCategory(category);
     }
 
-    dev.log('Synced ${categories.length} categories from Firestore', name: 'DataSyncService');
+    AppLogging.logInfo('Synced ${categories.length} categories from Firestore', name: 'DataSyncService');
   }
 
   Future<void> _syncMoodsFromFirestore(String userId) async {
-    dev.log('Syncing moods from Firestore', name: 'DataSyncService');
+    AppLogging.logInfo('Syncing moods from Firestore', name: 'DataSyncService');
 
     final moodsRef = _firestore!.collection('users').doc(userId).collection('moods');
     final snapshot = await moodsRef.get();
@@ -194,11 +202,11 @@ class DataSyncService {
       await _moodRepository.addMood(mood);
     }
 
-    dev.log('Synced ${moods.length} moods from Firestore', name: 'DataSyncService');
+    AppLogging.logInfo('Synced ${moods.length} moods from Firestore', name: 'DataSyncService');
   }
 
   Future<void> _syncTasksToFirestore(String userId) async {
-    dev.log('Syncing tasks to Firestore', name: 'DataSyncService');
+    AppLogging.logInfo('Syncing tasks to Firestore', name: 'DataSyncService');
 
     final localTasks = await _taskRepository.getAllTasks();
     final localTaskIds = localTasks.map((task) => task.id).toSet();
@@ -214,7 +222,7 @@ class DataSyncService {
     final tasksToDelete = firestoreTaskIds.difference(localTaskIds);
     for (final taskId in tasksToDelete) {
       batch.delete(tasksRef.doc(taskId));
-      dev.log('Deleting task $taskId from Firestore', name: 'DataSyncService');
+      AppLogging.logInfo('Deleting task $taskId from Firestore', name: 'DataSyncService');
     }
 
     // Add/update tasks that exist locally
@@ -246,11 +254,11 @@ class DataSyncService {
     }
 
     await batch.commit();
-    dev.log('Synced ${localTasks.length} tasks to Firestore, deleted ${tasksToDelete.length} tasks', name: 'DataSyncService');
+    AppLogging.logInfo('Synced ${localTasks.length} tasks to Firestore, deleted ${tasksToDelete.length} tasks', name: 'DataSyncService');
   }
 
   Future<void> _syncCategoriesToFirestore(String userId) async {
-    dev.log('Syncing categories to Firestore', name: 'DataSyncService');
+    AppLogging.logInfo('Syncing categories to Firestore', name: 'DataSyncService');
 
     final localCategories = await _categoryRepository.getAllCategories();
     final localCategoryIds = localCategories.map((category) => category.id).toSet();
@@ -266,7 +274,7 @@ class DataSyncService {
     final categoriesToDelete = firestoreCategoryIds.difference(localCategoryIds);
     for (final categoryId in categoriesToDelete) {
       batch.delete(categoriesRef.doc(categoryId));
-      dev.log('Deleting category $categoryId from Firestore', name: 'DataSyncService');
+      AppLogging.logInfo('Deleting category $categoryId from Firestore', name: 'DataSyncService');
     }
 
     // Add/update categories that exist locally
@@ -276,11 +284,11 @@ class DataSyncService {
     }
 
     await batch.commit();
-    dev.log('Synced ${localCategories.length} categories to Firestore, deleted ${categoriesToDelete.length} categories', name: 'DataSyncService');
+    AppLogging.logInfo('Synced ${localCategories.length} categories to Firestore, deleted ${categoriesToDelete.length} categories', name: 'DataSyncService');
   }
 
   Future<void> _syncMoodsToFirestore(String userId) async {
-    dev.log('Syncing moods to Firestore', name: 'DataSyncService');
+    AppLogging.logInfo('Syncing moods to Firestore', name: 'DataSyncService');
 
     final moods = await _moodRepository.getAllMoods();
 
@@ -293,20 +301,20 @@ class DataSyncService {
     }
 
     await batch.commit();
-    dev.log('Synced ${moods.length} moods to Firestore', name: 'DataSyncService');
+    AppLogging.logInfo('Synced ${moods.length} moods to Firestore', name: 'DataSyncService');
   }
 
   Future<void> _syncUserFromFirestore(String userId) async {
-    dev.log('Syncing user profile from Firestore', name: 'DataSyncService');
+    AppLogging.logInfo('Syncing user profile from Firestore', name: 'DataSyncService');
 
     // Since UserRepository.getUser already fetches from Firestore if not local
     await _userRepository.getUser(userId);
 
-    dev.log('Synced user profile from Firestore', name: 'DataSyncService');
+    AppLogging.logInfo('Synced user profile from Firestore', name: 'DataSyncService');
   }
 
   Future<void> _syncUserToFirestore(String userId) async {
-    dev.log('Syncing user profile to Firestore', name: 'DataSyncService');
+    AppLogging.logInfo('Syncing user profile to Firestore', name: 'DataSyncService');
 
     final user = await _userRepository.getUser(userId);
     if (user != null) {
@@ -314,7 +322,34 @@ class DataSyncService {
       await _userRepository.saveUser(user);
     }
 
-    dev.log('Synced user profile to Firestore', name: 'DataSyncService');
+    AppLogging.logInfo('Synced user profile to Firestore', name: 'DataSyncService');
+  }
+
+  Future<void> _syncSettingsFromFirestore(String userId) async {
+    AppLogging.logInfo('Syncing user settings from Firestore', name: 'DataSyncService');
+
+    final settingsRef = _firestore!.collection('users').doc(userId).collection('settings').doc('user_settings');
+    final doc = await settingsRef.get();
+
+    if (doc.exists) {
+      final data = doc.data();
+      if (data != null) {
+        final settings = AppSettings.fromJson(data);
+        await _settingsService.updateSettings(settings);
+      }
+    }
+
+    AppLogging.logInfo('Synced user settings from Firestore', name: 'DataSyncService');
+  }
+
+  Future<void> _syncSettingsToFirestore(String userId) async {
+    AppLogging.logInfo('Syncing user settings to Firestore', name: 'DataSyncService');
+
+    final settingsRef = _firestore!.collection('users').doc(userId).collection('settings').doc('user_settings');
+    final settingsJson = _settingsService.settings.toJson();
+    await settingsRef.set(settingsJson);
+
+    AppLogging.logInfo('Synced user settings to Firestore', name: 'DataSyncService');
   }
 
   // Public method to save user data during sign-in
@@ -325,7 +360,7 @@ class DataSyncService {
 
   // Subtask synchronization methods
   Future<void> _syncSubtasksFromFirestore(String userId) async {
-    dev.log('Syncing subtasks from Firestore', name: 'DataSyncService');
+    AppLogging.logInfo('Syncing subtasks from Firestore', name: 'DataSyncService');
 
     final tasks = await _taskRepository.getAllTasks();
 
@@ -336,7 +371,7 @@ class DataSyncService {
       }
     }
 
-    dev.log('Subtasks sync from Firestore completed', name: 'DataSyncService');
+    AppLogging.logInfo('Subtasks sync from Firestore completed', name: 'DataSyncService');
   }
 
   Future<void> _syncTaskSubtasksFromFirestore(String userId, Task parentTask) async {
@@ -365,11 +400,11 @@ class DataSyncService {
     final updatedTask = parentTask.copyWith(subtasks: subtasks);
     await _taskRepository.updateTask(updatedTask);
 
-    dev.log('Synced ${subtasks.length} subtasks for task ${parentTask.id}', name: 'DataSyncService');
+    AppLogging.logInfo('Synced ${subtasks.length} subtasks for task ${parentTask.id}', name: 'DataSyncService');
   }
 
   Future<void> _syncSubtasksToFirestore(String userId) async {
-    dev.log('Syncing subtasks to Firestore', name: 'DataSyncService');
+    AppLogging.logInfo('Syncing subtasks to Firestore', name: 'DataSyncService');
 
     final tasks = await _taskRepository.getAllTasks();
 
@@ -379,7 +414,7 @@ class DataSyncService {
       }
     }
 
-    dev.log('Subtasks sync to Firestore completed', name: 'DataSyncService');
+    AppLogging.logInfo('Subtasks sync to Firestore completed', name: 'DataSyncService');
   }
 
   Future<void> _syncTaskSubtasksToFirestore(String userId, Task parentTask) async {
@@ -410,22 +445,22 @@ class DataSyncService {
     }
 
     await batch.commit();
-    dev.log('Synced ${parentTask.subtasks.length} subtasks for task ${parentTask.id}', name: 'DataSyncService');
+    AppLogging.logInfo('Synced ${parentTask.subtasks.length} subtasks for task ${parentTask.id}', name: 'DataSyncService');
   }
 
   // Method to sync a specific task's subtasks
   Future<void> syncTaskSubtasks(String userId, Task task) async {
     if (_firestore == null) {
-      dev.log('Firestore not available, skipping subtask sync', name: 'DataSyncService');
+      AppLogging.logInfo('Firestore not available, skipping subtask sync', name: 'DataSyncService');
       return;
     }
 
     try {
       await _syncTaskSubtasksFromFirestore(userId, task);
       await _syncTaskSubtasksToFirestore(userId, task);
-      dev.log('Task subtasks synced successfully', name: 'DataSyncService');
+      AppLogging.logInfo('Task subtasks synced successfully', name: 'DataSyncService');
     } catch (e) {
-      dev.log('Error syncing task subtasks', name: 'DataSyncService', error: e);
+      AppLogging.logError('Error syncing task subtasks', name: 'DataSyncService', error: e);
       throw Exception('Failed to sync task subtasks: $e');
     }
   }

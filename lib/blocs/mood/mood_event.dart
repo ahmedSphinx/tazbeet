@@ -47,3 +47,22 @@ class LoadMoodTrends extends MoodEvent {
   @override
   List<Object?> get props => [days];
 }
+
+class MoodCheckInTriggered extends MoodEvent {
+  final DateTime triggerTime;
+
+  const MoodCheckInTriggered(this.triggerTime);
+
+  @override
+  List<Object?> get props => [triggerTime];
+}
+
+class QuickAddMood extends MoodEvent {
+  final MoodLevel level;
+  final String? note;
+
+  const QuickAddMood(this.level, this.note);
+
+  @override
+  List<Object?> get props => [level, note];
+}

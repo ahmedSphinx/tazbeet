@@ -1,13 +1,15 @@
-import 'dart:developer' show log;
+import 'package:tazbeet/services/app_logging.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/user.dart';
+import '../services/firebase_service_wrapper.dart';
 
 class UserRepository {
   static const String _boxName = 'user';
   late Box<User> _box;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  FirebaseFirestore? get _firestore => FirebaseServiceWrapper.firestore;
 
   Future<void> init() async {
     _box = await Hive.openBox<User>(_boxName);
@@ -20,25 +22,27 @@ class UserRepository {
       return localUser;
     }
 
-    // Fetch from Firestore
-    try {
-      final doc = await _firestore.collection('users').doc(userId).get();
-      if (doc.exists) {
-        final data = doc.data();
-        if (data != null) {
-          // Convert Map<dynamic, dynamic> to Map<String, dynamic> safely
-          final Map<String, dynamic> convertedData = {};
-          data.forEach((key, value) {
-            convertedData[key.toString()] = value;
-          });
-          final user = User.fromJson(convertedData);
-          await _box.put(userId, user);
-          return user;
+    // Fetch from Firestore if available
+    if (_firestore != null) {
+      try {
+        final doc = await _firestore!.collection('users').doc(userId).get();
+        if (doc.exists) {
+          final data = doc.data();
+          if (data != null) {
+            // Convert Map<dynamic, dynamic> to Map<String, dynamic> safely
+            final Map<String, dynamic> convertedData = {};
+            data.forEach((key, value) {
+              convertedData[key.toString()] = value;
+            });
+            final user = User.fromJson(convertedData);
+            await _box.put(userId, user);
+            return user;
+          }
         }
+      } catch (e) {
+        // If Firestore fails, return null or handle error
+        AppLogging.logInfo('Error fetching user from Firestore: $e');
       }
-    } catch (e) {
-      // If Firestore fails, return null or handle error
-      log('Error fetching user from Firestore: $e');
     }
 
     return null;
@@ -48,12 +52,14 @@ class UserRepository {
     // Save locally
     await _box.put(user.id, user);
 
-    // Save to Firestore
-    try {
-      await _firestore.collection('users').doc(user.id).set(user.toJson());
-    } catch (e) {
-      log('Error saving user to Firestore: $e');
-      // Could throw or handle differently
+    // Save to Firestore if available
+    if (_firestore != null) {
+      try {
+        await _firestore!.collection('users').doc(user.id).set(user.toJson());
+      } catch (e) {
+        AppLogging.logInfo('Error saving user to Firestore: $e');
+        // Could throw or handle differently
+      }
     }
   }
 
@@ -66,11 +72,13 @@ class UserRepository {
     // Delete locally
     await _box.delete(userId);
 
-    // Delete from Firestore
-    try {
-      await _firestore.collection('users').doc(userId).delete();
-    } catch (e) {
-      log('Error deleting user from Firestore: $e');
+    // Delete from Firestore if available
+    if (_firestore != null) {
+      try {
+        await _firestore!.collection('users').doc(userId).delete();
+      } catch (e) {
+        AppLogging.logInfo('Error deleting user from Firestore: $e');
+      }
     }
   }
 }

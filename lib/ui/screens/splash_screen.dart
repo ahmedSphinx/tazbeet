@@ -5,6 +5,7 @@ import 'package:tazbeet/blocs/auth/auth_bloc.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
 import 'package:tazbeet/ui/screens/home_screen.dart';
 import 'package:tazbeet/ui/screens/login_screen.dart';
+import 'package:tazbeet/ui/screens/profile_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -69,12 +70,21 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is AuthAuthenticated || state is AuthUnauthenticated) {
+        if (state is AuthAuthenticated || state is AuthUnauthenticated || state is AuthProfileIncomplete) {
           Future.delayed(const Duration(milliseconds: 3500), () {
             if (mounted) {
+              Widget nextScreen;
+              if (state is AuthAuthenticated) {
+                nextScreen = const HomeScreen();
+              } else if (state is AuthProfileIncomplete) {
+                nextScreen = const ProfileScreen(isProfileCompletion: true);
+              } else {
+                nextScreen = const LoginScreen();
+              }
+
               Navigator.of(context).pushReplacement(
                 PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) => state is AuthAuthenticated ? const HomeScreen() : const LoginScreen(),
+                  pageBuilder: (context, animation, secondaryAnimation) => nextScreen,
                   transitionsBuilder: (context, animation, secondaryAnimation, child) {
                     const begin = Offset(1.0, 0.0);
                     const end = Offset.zero;

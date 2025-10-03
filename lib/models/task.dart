@@ -30,7 +30,7 @@ class Task extends Equatable {
   final Duration timeSpent;
   final List<Map<String, dynamic>> pomodoroSessions;
 
-  Task({
+  const Task({
     required this.id,
     required this.title,
     this.description,
@@ -242,7 +242,9 @@ class Task extends Equatable {
     void count(Task t) {
       total++;
       if (t.isCompleted) completed++;
-      for (var s in t.subtasks) count(s);
+      for (var s in t.subtasks) {
+        count(s);
+      }
     }
 
     count(this);

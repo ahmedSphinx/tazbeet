@@ -27,28 +27,31 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       final user = await userRepository.getUser(firebaseUser.uid);
       if (user == null) {
         // Create user from Firebase user info
-        final newUser = model.User(
-          id: firebaseUser.uid,
-          name: firebaseUser.displayName ?? '',
-          profileImageUrl: firebaseUser.photoURL ?? '',
-          birthday: null,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        );
+        final newUser = model.User(id: firebaseUser.uid, name: firebaseUser.displayName ?? '', profileImageUrl: firebaseUser.photoURL ?? '', birthday: null, createdAt: DateTime.now(), updatedAt: DateTime.now());
         await userRepository.saveUser(newUser);
         emit(UserLoaded(newUser));
       } else {
-        // Update user name and profileImageUrl from Firebase user info if changed
+        // Only update name and profileImageUrl from Firebase for social auth users (Google/Facebook)
+        // Email/password users should keep their manually entered data
         bool updated = false;
         model.User updatedUser = user;
-        if (user.name != (firebaseUser.displayName ?? '')) {
-          updatedUser = updatedUser.copyWith(name: firebaseUser.displayName ?? '');
+
+        // Only update if Firebase has actual data (not empty) and it's different from current user data
+        final firebaseDisplayName = firebaseUser.displayName ?? '';
+        final firebasePhotoUrl = firebaseUser.photoURL ?? '';
+
+        // For social auth users, update name if Firebase has a non-empty display name
+        if (firebaseDisplayName.isNotEmpty && user.name != firebaseDisplayName) {
+          updatedUser = updatedUser.copyWith(name: firebaseDisplayName);
           updated = true;
         }
-        if (user.profileImageUrl != (firebaseUser.photoURL ?? '')) {
-          updatedUser = updatedUser.copyWith(profileImageUrl: firebaseUser.photoURL ?? '');
+
+        // For social auth users, update profile image if Firebase has a non-empty photo URL
+        if (firebasePhotoUrl.isNotEmpty && user.profileImageUrl != firebasePhotoUrl) {
+          updatedUser = updatedUser.copyWith(profileImageUrl: firebasePhotoUrl);
           updated = true;
         }
+
         if (updated) {
           await userRepository.updateUser(updatedUser);
           emit(UserLoaded(updatedUser));

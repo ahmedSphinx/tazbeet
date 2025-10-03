@@ -538,5 +538,41 @@
   "sessionProgress": "Progreso de la Sesión",
   "settingsButton": "Configuración",
   "tomorrow": "Mañana",
-  "yesterday": "Ayer"
+  "yesterday": "Ayer",
+  "overdueTasks": "Tareas vencidas - requieren atención inmediata",
+  "todayTasks": "Tareas para completar hoy",
+  "tomorrowTasks": "Tareas de mañana",
+  "thisWeekTasks": "Tareas de esta semana",
+  "laterTasks": "Tareas posteriores",
+  "noDateTasks": "Tareas sin fecha específica",
+  "receiveNotificationsForTasksAndReminders": "Recibir notificaciones para tareas y recordatorios",
+  "playSoundForNotifications": "Reproducir sonido para notificaciones",
+  "vibrateForNotifications": "Vibrar para notificaciones",
+  "noUpcomingTasksWithReminders": "No hay tareas próximas con recordatorios",
+  "noOverdueTasks": "No hay tareas vencidas",
+  "testNotification": "Notificación de Prueba",
+  "clearAll": "Limpiar Todo",
+  "quickActions": "Acciones Rápidas",
+  "reminderCancelledFor": "Recordatorio cancelado para: {taskTitle}",
+  "@reminderCancelledFor": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "testNotificationSent": "¡Notificación de prueba enviada!",
+  "reminder": "Recordatorio: {date}",
+  "@reminder": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "noReminderSet": "No se ha establecido recordatorio",
+  "allNotificationsCleared": "¡Todas las notificaciones limpiadas!",
+  "testReminderIn10Seconds": "Prueba de Recordatorio en 10s",
+  "testReminderScheduled": "Recordatorio de prueba programado para 10 segundos desde ahora",
+  "completedTasks": "Tareas completadas"
 }

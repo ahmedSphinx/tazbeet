@@ -181,7 +181,7 @@ class TaskItem extends StatelessWidget {
                 const SizedBox(height: 8),
                 LinearProgressIndicator(value: progress, backgroundColor: Colors.red.withValues(alpha: 0.2), valueColor: AlwaysStoppedAnimation<Color>(progress == 1.0 ? Colors.green : Colors.blue)),
                 const SizedBox(height: 4),
-                Text('${(progress * 100).round()}% complete', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                Text('${(progress * 100).round()}% ${AppLocalizations.of(context)!.completedLabel}', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
               ],
             ],
           ),

@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:tazbeet/services/app_logging.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,6 +21,8 @@ import '../widgets/add_task_dialog.dart';
 import '../widgets/edit_task_dialog.dart';
 
 import '../widgets/error_display.dart';
+import '../../services/notification_service.dart';
+import 'pomodoro_screen.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
   final String taskId;
@@ -88,7 +90,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
     final task = state.task;
     final progress = state.progress;
     isCompleted = task.isCompleted;
-    log('Building content for task: ${task.id} with progress: $progress', name: 'TaskDetailsScreen');
+    // AppLogging.logInfo('Building content for task: ${task.id} with progress: $progress', name: 'TaskDetailsScreen');
     return CustomScrollView(
       controller: _scrollController,
       slivers: [
@@ -101,7 +103,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
               children: [
                 _buildMotivationalQuote(context, task, l10n),
                 const SizedBox(height: 16),
-                _buildProgressCard(context, progress, task, l10n),
+                if (task.subtasks.isNotEmpty) _buildProgressCard(context, progress, task, l10n),
                 const SizedBox(height: 16),
                 _buildTaskDetails(context, task, l10n),
                 const SizedBox(height: 16),
@@ -291,6 +293,13 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
               _buildDetailRow(Icons.flag, l10n.priority, _getPriorityText(task.priority, l10n)),
               if (task.reminderIntervals.isNotEmpty) ...[_buildDetailRow(Icons.notifications, l10n.reminders, task.reminderIntervals.map((min) => '${min}m').join(', '))],
               if (task.repeatRule != null) ...[_buildDetailRow(Icons.repeat, l10n.repeat, task.repeatRule!.toString())],
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                onPressed: () => _setReminder(context, task, l10n),
+                icon: const Icon(Icons.notifications_active),
+                label: Text(task.reminderDate != null ? l10n.editButton : 'Set Reminder'),
+                style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 40)),
+              ),
             ],
           ),
         ),
@@ -385,6 +394,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
   }
 
   Widget _buildPomodoroSection(BuildContext context, Task task, AppLocalizations l10n) {
+    //  AppLogging.logInfo('Building Pomodoro section for task: ${task.id}, isCompleted $isCompleted', name: 'TaskDetailsScreen');
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 500),
       opacity: isCompleted ? 0.5 : 1.0,
@@ -539,20 +549,20 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
   }
 
   void _addSubtask(BuildContext context, Task task, AppLocalizations l10n) {
-    log('Opening add subtask dialog for task: ${task.id}', name: 'TaskDetailsScreen');
+    AppLogging.logInfo('Opening add subtask dialog for task: ${task.id}', name: 'TaskDetailsScreen');
     showDialog(
       context: context,
       builder: (dialogContext) => Dialog(
         child: AddTaskDialog(
           onTaskAdded: (subtask) {
             try {
-              log('Adding subtask: ${subtask.title} to task: ${task.id}', name: 'TaskDetailsScreen');
+              AppLogging.logInfo('Adding subtask: ${subtask.title} to task: ${task.id}', name: 'TaskDetailsScreen');
               context.read<TaskDetailsBloc>().add(AddSubtask(task.id, subtask));
-              log('Subtask added successfully: ${subtask.id}', name: 'TaskDetailsScreen');
+              AppLogging.logInfo('Subtask added successfully: ${subtask.id}', name: 'TaskDetailsScreen');
               Navigator.of(dialogContext).pop();
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Subtask added successfully')));
             } catch (e, stackTrace) {
-              log('Error adding subtask: $e', name: 'TaskDetailsScreen', error: e, stackTrace: stackTrace);
+              AppLogging.logError('Error adding subtask: $e', name: 'TaskDetailsScreen', error: e, stackTrace: stackTrace);
               Navigator.of(dialogContext).pop();
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to add subtask: $e'), backgroundColor: Colors.red));
             }
@@ -610,7 +620,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
 
   void _startPomodoro(BuildContext context, Task task) {
     // Navigate to Pomodoro screen with task pre-selected
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Starting Pomodoro for ${task.title}')));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => PomodoroScreen(initialTask: task)));
   }
 
   void _completeTask(BuildContext context, Task task) {
@@ -685,5 +695,25 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
       countTotal(s);
     }
     return count;
+  }
+
+  void _setReminder(BuildContext context, Task task, AppLocalizations l10n) async {
+    final DateTime? pickedDate = await showDatePicker(context: context, initialDate: task.reminderDate ?? DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 365)));
+
+    if (pickedDate != null) {
+      final TimeOfDay? pickedTime = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(task.reminderDate ?? DateTime.now().add(Duration(minutes: 1))));
+
+      if (pickedTime != null) {
+        final DateTime reminderDate = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, pickedTime.hour, pickedTime.minute);
+
+        final updatedTask = task.copyWith(reminderDate: reminderDate);
+        context.read<TaskDetailsBloc>().add(UpdateTaskDetails(updatedTask));
+
+        // Schedule the notification
+        await NotificationService().scheduleTaskReminder(updatedTask);
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Reminder set for ${DateFormat.yMMMd().add_jm().format(reminderDate)}')));
+      }
+    }
   }
 }

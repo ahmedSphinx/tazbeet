@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -87,10 +86,15 @@ class _SubtaskWidgetState extends State<SubtaskWidget> with TickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final canHaveChildren = widget.depth < widget.maxDepth;
     final hasChildren = widget.subtask.subtasks.isNotEmpty;
     final completedChildren = widget.subtask.subtasks.where((s) => s.isCompleted).length;
     final progress = hasChildren ? completedChildren / widget.subtask.subtasks.length : 0.0;
+
+    // Color coding for depths
+    final depthColors = [Colors.blue, Colors.green, Colors.orange, Colors.purple, Colors.teal];
+    final borderColor = depthColors[widget.depth % depthColors.length];
 
     return AnimatedBuilder(
       animation: _animationController,
@@ -108,7 +112,7 @@ class _SubtaskWidgetState extends State<SubtaskWidget> with TickerProviderStateM
             elevation: _isCompleted ? 1 : 3,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
-              side: BorderSide(color: _isCompleted ? Colors.green.withValues(alpha: 0.3) : Colors.transparent, width: 1),
+              side: BorderSide(color: _isCompleted ? Colors.green.withValues(alpha: 0.3) : borderColor.withValues(alpha: 0.3), width: 1),
             ),
             child: Column(
               children: [
@@ -129,6 +133,12 @@ class _SubtaskWidgetState extends State<SubtaskWidget> with TickerProviderStateM
                               onChanged: widget.isParentCompleted
                                   ? null
                                   : (value) async {
+                                      // Strict mode: prevent completing if has uncompleted children
+                                      if (value == true && widget.strictMode && hasChildren && completedChildren < widget.subtask.subtasks.length) {
+                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.completeSubtasksFirst)));
+                                        return;
+                                      }
+
                                       if (value == true && !_isCompleted) {
                                         setState(() => _isCompleted = true);
                                         await _taskSoundService.playTaskCompletionSound();
@@ -141,6 +151,11 @@ class _SubtaskWidgetState extends State<SubtaskWidget> with TickerProviderStateM
 
                                       final toggledSubtask = widget.subtask.copyWith(isCompleted: value ?? false, updatedAt: DateTime.now());
                                       widget.onToggle(toggledSubtask);
+
+                                      // Auto-complete parent if all children completed
+                                      if (value == true && hasChildren && completedChildren + 1 == widget.subtask.subtasks.length) {
+                                        // This would need to be handled at parent level, perhaps via callback
+                                      }
                                     },
                               activeColor: Colors.green,
                               checkColor: Colors.white,
@@ -160,61 +175,63 @@ class _SubtaskWidgetState extends State<SubtaskWidget> with TickerProviderStateM
                                 IconButton(
                                   icon: Icon(_isExpanded ? Icons.expand_less : Icons.expand_more, size: 20, color: Colors.blue),
                                   onPressed: () => setState(() => _isExpanded = !_isExpanded),
-                                  tooltip: _isExpanded ? 'Collapse' : 'Expand',
+                                  tooltip: _isExpanded ? AppLocalizations.of(context)!.collapse : AppLocalizations.of(context)!.expand,
                                 ),
                               ],
-                              IconButton(
-                                icon: Icon(_isEditing ? Icons.check : Icons.edit, size: 20),
-                                onPressed: widget.isParentCompleted
-                                    ? null
-                                    : () {
-                                        if (_isEditing) {
-                                          _saveEdit();
-                                        } else {
-                                          setState(() => _isEditing = true);
-                                        }
-                                      },
-                                tooltip: _isEditing ? AppLocalizations.of(context)!.saveButton : AppLocalizations.of(context)!.editButton,
-                              ),
-                              PopupMenuButton<String>(
-                                enabled: !widget.isParentCompleted,
-                                icon: const Icon(Icons.more_vert, size: 20),
-                                onSelected: widget.isParentCompleted
-                                    ? null
-                                    : (value) {
-                                        switch (value) {
-                                          case 'edit':
+                              if (_isEditing)
+                                IconButton(
+                                  icon: Icon(_isEditing ? Icons.check : Icons.edit, size: 20, color: Colors.blue),
+                                  onPressed: widget.isParentCompleted
+                                      ? null
+                                      : () {
+                                          if (_isEditing) {
+                                            _saveEdit();
+                                          } else {
                                             setState(() => _isEditing = true);
-                                            break;
-                                          case 'delete':
-                                            _showDeleteConfirmation();
-                                            break;
-                                          case 'duplicate':
-                                            _duplicateSubtask();
-                                            break;
-                                        }
-                                      },
-                                itemBuilder: (context) => [
-                                  PopupMenuItem(
-                                    value: 'edit',
-                                    child: Row(children: [const Icon(Icons.edit, size: 16), const SizedBox(width: 8), Text(AppLocalizations.of(context)!.editButton)]),
-                                  ),
-                                  PopupMenuItem(
-                                    value: 'duplicate',
-                                    child: Row(children: [const Icon(Icons.copy, size: 16), const SizedBox(width: 8), Text(AppLocalizations.of(context)!.duplicateTask)]),
-                                  ),
-                                  PopupMenuItem(
-                                    value: 'delete',
-                                    child: Row(
-                                      children: [
-                                        const Icon(Icons.delete, color: Colors.red, size: 16),
-                                        const SizedBox(width: 8),
-                                        Text(AppLocalizations.of(context)!.deleteButton, style: const TextStyle(color: Colors.red)),
-                                      ],
+                                          }
+                                        },
+                                  tooltip: _isEditing ? AppLocalizations.of(context)!.saveButton : AppLocalizations.of(context)!.editButton,
+                                ),
+                              if (!_isEditing)
+                                PopupMenuButton<String>(
+                                  enabled: !widget.isParentCompleted,
+                                  icon: const Icon(Icons.more_vert, size: 20),
+                                  onSelected: widget.isParentCompleted
+                                      ? null
+                                      : (value) {
+                                          switch (value) {
+                                            case 'edit':
+                                              setState(() => _isEditing = true);
+                                              break;
+                                            case 'delete':
+                                              _showDeleteConfirmation();
+                                              break;
+                                            case 'duplicate':
+                                              _duplicateSubtask();
+                                              break;
+                                          }
+                                        },
+                                  itemBuilder: (context) => [
+                                    PopupMenuItem(
+                                      value: 'edit',
+                                      child: Row(children: [const Icon(Icons.edit, size: 16), const SizedBox(width: 8), Text(AppLocalizations.of(context)!.editButton)]),
                                     ),
-                                  ),
-                                ],
-                              ),
+                                    PopupMenuItem(
+                                      value: 'duplicate',
+                                      child: Row(children: [const Icon(Icons.copy, size: 16), const SizedBox(width: 8), Text(AppLocalizations.of(context)!.duplicateTask)]),
+                                    ),
+                                    PopupMenuItem(
+                                      value: 'delete',
+                                      child: Row(
+                                        children: [
+                                          const Icon(Icons.delete, color: Colors.red, size: 16),
+                                          const SizedBox(width: 8),
+                                          Text(AppLocalizations.of(context)!.deleteButton, style: const TextStyle(color: Colors.red)),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                             ],
                           ),
                         ],
@@ -231,29 +248,33 @@ class _SubtaskWidgetState extends State<SubtaskWidget> with TickerProviderStateM
                   ),
                 ),
 
-                // Expanded children
-                if (hasChildren && _isExpanded) ...[
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      children: widget.subtask.subtasks
-                          .map(
-                            (subtask) => SubtaskWidget(
-                              subtask: subtask,
-                              depth: widget.depth + 1,
-                              maxDepth: widget.maxDepth,
-                              onToggle: widget.onToggle,
-                              onEdit: widget.onEdit,
-                              onDelete: widget.onDelete,
-                              onAddNested: (newSubtask) => context.read<TaskDetailsBloc>().add(AddSubtask(subtask.id, newSubtask)),
-                              strictMode: widget.strictMode,
-                              isParentCompleted: subtask.isCompleted,
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
-                ],
+                // Expanded children with animation
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  child: hasChildren && _isExpanded
+                      ? Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                            children: widget.subtask.subtasks
+                                .map(
+                                  (subtask) => SubtaskWidget(
+                                    subtask: subtask,
+                                    depth: widget.depth + 1,
+                                    maxDepth: widget.maxDepth,
+                                    onToggle: widget.onToggle,
+                                    onEdit: widget.onEdit,
+                                    onDelete: widget.onDelete,
+                                    onAddNested: (newSubtask) => context.read<TaskDetailsBloc>().add(AddSubtask(subtask.id, newSubtask)),
+                                    strictMode: widget.strictMode,
+                                    isParentCompleted: subtask.isCompleted,
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ),
 
                 // Add subtask button
                 if (canHaveChildren && _isExpanded) ...[
@@ -341,19 +362,20 @@ class _SubtaskWidgetState extends State<SubtaskWidget> with TickerProviderStateM
   }
 
   void _showDeleteConfirmation() {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.deleteSubtask),
-        content: Text('Are you sure you want to delete this subtask?'),
+        title: Text(l10n.deleteSubtask),
+        content: Text(l10n.confirmDeleteSubtask),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancelButton)),
+          TextButton(onPressed: () => Navigator.pop(context), child: Text(l10n.cancelButton)),
           TextButton(
             onPressed: () {
               widget.onDelete(widget.subtask.id);
               Navigator.pop(context);
             },
-            child: Text(AppLocalizations.of(context)!.deleteButton, style: const TextStyle(color: Colors.red)),
+            child: Text(l10n.deleteButton, style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -361,9 +383,10 @@ class _SubtaskWidgetState extends State<SubtaskWidget> with TickerProviderStateM
   }
 
   void _duplicateSubtask() {
+    final l10n = AppLocalizations.of(context)!;
     final duplicatedSubtask = Task(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
-      title: '${widget.subtask.title} (Copy)',
+      title: '${widget.subtask.title} ${l10n.copySuffix}',
       description: widget.subtask.description,
       isCompleted: false,
       parentId: widget.subtask.id,

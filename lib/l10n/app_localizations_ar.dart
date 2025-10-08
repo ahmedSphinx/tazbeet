@@ -86,19 +86,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get regionalSection => 'الإقليمي';
 
   @override
-  String get moodSettingsTitle => 'Mood Settings';
+  String get moodSettingsTitle => 'إعدادات المزاج';
 
   @override
-  String get moodSettingsSubtitle => 'Configure mood check-in notifications';
+  String get moodSettingsSubtitle => 'تكوين إشعارات فحص المزاج';
 
   @override
-  String get enableMoodNotifications => 'Enable Mood Notifications';
+  String get enableMoodNotifications => 'تفعيل إشعارات المزاج';
 
   @override
-  String get moodCheckInTimes => 'Check-in Times';
+  String get moodCheckInTimes => 'أوقات الفحص';
 
   @override
-  String get add => 'Add';
+  String get add => 'إضافة';
+
+  @override
+  String get suggestTimes => 'اقتراح أوقات';
 
   @override
   String get completedTasks => 'مهمات مكتملة';
@@ -315,55 +318,55 @@ class AppLocalizationsAr extends AppLocalizations {
   String get moodCheckInTitle => 'فحص المزاج';
 
   @override
-  String get moodHowAreYouFeeling => 'كيف تشعر؟';
+  String get moodHowAreYouFeeling => 'كيف تشعر اليوم؟';
 
   @override
-  String get moodSelectLevel =>   'اختر مستوى المزاج';
+  String get moodSelectLevel => 'اختر مستوى مزاجك';
 
   @override
-  String get moodEnergyLevel =>   'مستوى الطاقة';
+  String get moodEnergyLevel => 'مستوى الطاقة';
 
   @override
-  String get moodFocusLevel =>  'مستوى التركيز';
+  String get moodFocusLevel => 'مستوى التركيز';
 
   @override
-  String get moodStressLevel =>   'مستوى التوتر';
+  String get moodStressLevel => 'مستوى التوتر';
 
   @override
-  String get low =>   'منخفض';
+  String get low => 'منخفض';
 
   @override
-  String get high =>  'مرتفع';
+  String get high => 'عالي';
 
   @override
-  String get moodNoteOptional =>  'ملاحظة (اختياري)';
+  String get moodNoteOptional => 'ملاحظة (اختيارية)';
 
   @override
-  String get moodNoteHint =>  'اكتب أي شيء عن يومك...';
+  String get moodNoteHint => 'كيف تشعر؟';
 
   @override
   String get moodSaveButton => 'حفظ المزاج';
 
   @override
-  String get moodVeryBad =>   'سيء جداً';
+  String get moodVeryBad => 'سيء جداً';
 
   @override
-  String get moodBad =>   'سيء';
+  String get moodBad => 'سيء';
 
   @override
-  String get moodNeutral =>     'محايد';
+  String get moodNeutral => 'محايد';
 
   @override
-  String get moodGood =>    'جيد';
+  String get moodGood => 'جيد';
 
   @override
-  String get moodVeryGood =>  'جيد جداً';
+  String get moodVeryGood => 'جيد جداً';
 
   @override
-  String get moodSavedSuccess =>  'تم حفظ المزاج بنجاح';
+  String get moodSavedSuccess => 'تم حفظ المزاج بنجاح!';
 
   @override
-  String get moodSaveFailed =>  'فشل في حفظ المزاج';
+  String get moodSaveFailed => 'فشل في حفظ المزاج';
 
   @override
   String get save => 'حفظ';
@@ -832,22 +835,31 @@ class AppLocalizationsAr extends AppLocalizations {
   String get searchHint => 'البحث عن المهام...';
 
   @override
-  String get deleteTaskConfirmationTitle => 'Delete Task';
+  String get deleteTaskConfirmationTitle => 'حذف المهمة';
 
   @override
   String get deleteSubtask => 'حذف المهمة الفرعية';
 
   @override
-  String get confirmDeleteSubtask => 'Are you sure you want to delete this subtask?';
+  String get confirmDeleteSubtask => 'هل أنت متأكد من حذف هذه المهمة الفرعية؟';
 
   @override
-  String get highPriority => 'High';
+  String get collapse => 'طي';
 
   @override
-  String get mediumPriority => 'Medium';
+  String get expand => 'توسيع';
 
   @override
-  String get lowPriority => 'Low';
+  String get copySuffix => '(نسخة)';
+
+  @override
+  String get highPriority => 'عالية';
+
+  @override
+  String get mediumPriority => 'متوسطة';
+
+  @override
+  String get lowPriority => 'منخفضة';
 
   @override
   String get addSubtask => 'إضافة مهمة فرعية';
@@ -989,6 +1001,27 @@ class AppLocalizationsAr extends AppLocalizations {
   String get allNotificationsCleared => 'تم مسح جميع الإشعارات!';
 
   @override
+  String get checkPendingNotifications => 'فحص المعلقة';
+
+  @override
+  String get cancelAllNotifications => 'إلغاء الكل';
+
+  @override
+  String get allNotificationsCancelled => 'تم إلغاء جميع الإشعارات!';
+
+  @override
+  String get moodCheckInNotificationTitle => 'فحص المزاج';
+
+  @override
+  String get moodCheckInNotificationBody => 'كيف تشعر الآن؟ اضغط لتسجيل مزاجك.';
+
+  @override
+  String get testMoodNotificationTitle => 'اختبار إشعار المزاج';
+
+  @override
+  String get testMoodNotificationBody => 'هذا إشعار اختبار لفحص المزاج.';
+
+  @override
   String get testReminderIn10Seconds => 'اختبار تذكير في 10 ثواني';
 
   @override
@@ -1039,7 +1072,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get updatePersonalInfo => 'Update your personal information';
+  String get updatePersonalInfo => 'تحديث المعلومات الشخصية';
 
   @override
   String get sunday => 'الأحد';
@@ -1066,62 +1099,74 @@ class AppLocalizationsAr extends AppLocalizations {
   String get focusMode => 'وضع التركيز';
 
   @override
-  String get motivationalQuoteHigh => 'You\'ve got this! 🚀';
+  String get motivationalQuoteHigh => 'لديك هذا! 🚀';
 
   @override
-  String get motivationalQuoteMedium => 'Keep going! 💪';
+  String get motivationalQuoteMedium => 'استمر! 💪';
 
   @override
-  String get motivationalQuoteLow => 'Take it easy! 😊';
+  String get motivationalQuoteLow => 'خذ الأمر ببساطة! 😊';
 
   @override
-  String get taskDetails => 'Task Details';
+  String get taskDetails => 'تفاصيل المهمة';
 
   @override
-  String get noDueDate => 'No due date';
+  String get noDueDate => 'لا يوجد تاريخ استحقاق';
 
   @override
-  String get priority => 'Priority';
+  String get priority => 'الأولوية';
 
   @override
-  String get reminders => 'Reminders';
+  String get reminders => 'التذكيرات';
 
   @override
-  String get repeat => 'Repeat';
+  String get repeat => 'تكرار';
 
   @override
-  String get noSubtasks => 'No subtasks yet';
+  String get noSubtasks => 'لا توجد مهام فرعية بعد';
 
   @override
   String get subtasks => 'المهام الفرعية';
 
   @override
-  String get sessions => 'Sessions';
+  String get sessions => 'الجلسات';
 
   @override
   String get timeSpent => 'الوقت المستغرق';
 
   @override
-  String get avgSession => 'Avg Session';
+  String get avgSession => 'متوسط الجلسة';
 
   @override
   String get pomodoroSessions => 'جلسات البومودورو';
 
   @override
-  String get startPomodoroSession => 'Start Pomodoro Session';
+  String get startPomodoroSession => 'بدء جلسة بومودورو';
 
   @override
-  String get timeline => 'Timeline';
+  String get timeline => 'الجدول الزمني';
 
   @override
-  String get created => 'Created';
+  String get created => 'تم الإنشاء';
 
   @override
-  String get lastModified => 'Last Modified';
+  String get lastModified => 'آخر تعديل';
 
   @override
   String get taskProgress => 'التقدم';
 
   @override
   String get statusLabel => 'الحالة:';
+
+  @override
+  String get setReminderButton => 'تعيين تذكير';
+
+  @override
+  String get uncompleteTaskButton => 'إلغاء إكمال المهمة';
+
+  @override
+  String get completeTaskButton => 'إكمال المهمة';
+
+  @override
+  String get completeSubtasksFirst => 'أكمل المهام الفرعية أولاً';
 }

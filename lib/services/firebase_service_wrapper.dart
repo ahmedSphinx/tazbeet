@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart';
+import 'dart:io' show Platform;
 import 'package:google_api_availability/google_api_availability.dart';
 import 'package:tazbeet/firebase_options.dart';
 
@@ -17,8 +18,8 @@ class FirebaseServiceWrapper {
     if (_isInitialized) return true;
     if (_hasError) return false;
 
-    // Check Google Play Services availability on Android
-    if (!kIsWeb) {
+    // Check Google Play Services availability on Android only
+    if (Platform.isAndroid) {
       try {
         final availability = await GoogleApiAvailability.instance.checkGooglePlayServicesAvailability();
         if (availability != GooglePlayServicesAvailability.success) {
@@ -32,7 +33,14 @@ class FirebaseServiceWrapper {
         return false;
       }
     }
+/* 
 
+
+
+1242 **  2688 
+
+
+ */
     try {
       // Initialize Firebase only if not already initialized
       if (Firebase.apps.isEmpty) {

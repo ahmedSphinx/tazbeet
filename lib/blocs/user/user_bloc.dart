@@ -27,7 +27,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       final user = await userRepository.getUser(firebaseUser.uid);
       if (user == null) {
         // Create user from Firebase user info
-        final newUser = model.User(id: firebaseUser.uid, name: firebaseUser.displayName ?? '', profileImageUrl: firebaseUser.photoURL ?? '', birthday: null, createdAt: DateTime.now(), updatedAt: DateTime.now());
+        final newUser = model.User(id: firebaseUser.uid, name: firebaseUser.displayName ?? '', profileImageUrl: firebaseUser.photoURL ?? '', birthday: null, createdAt: DateTime.now(), updatedAt: DateTime.now(), email: firebaseUser.email);
         await userRepository.saveUser(newUser);
         emit(UserLoaded(newUser));
       } else {
@@ -39,6 +39,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         // Only update if Firebase has actual data (not empty) and it's different from current user data
         final firebaseDisplayName = firebaseUser.displayName ?? '';
         final firebasePhotoUrl = firebaseUser.photoURL ?? '';
+        final firebaseEmail = firebaseUser.email ?? '';
 
         // For social auth users, update name if Firebase has a non-empty display name
         if (firebaseDisplayName.isNotEmpty && user.name != firebaseDisplayName) {
@@ -49,6 +50,12 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         // For social auth users, update profile image if Firebase has a non-empty photo URL
         if (firebasePhotoUrl.isNotEmpty && user.profileImageUrl != firebasePhotoUrl) {
           updatedUser = updatedUser.copyWith(profileImageUrl: firebasePhotoUrl);
+          updated = true;
+        }
+
+        // Update email if Firebase has a non-empty email and it's different
+        if (firebaseEmail.isNotEmpty && user.email != firebaseEmail) {
+          updatedUser = updatedUser.copyWith(email: firebaseEmail);
           updated = true;
         }
 

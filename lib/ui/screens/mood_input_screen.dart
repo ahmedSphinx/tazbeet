@@ -73,7 +73,6 @@ class _MoodInputScreenState extends State<MoodInputScreen> {
       MoodLevel.good: l10n.moodGood,
       MoodLevel.very_good: l10n.moodVeryGood,
     };
-
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.moodCheckInTitle),
@@ -132,14 +131,15 @@ class _MoodInputScreenState extends State<MoodInputScreen> {
 
   Widget _buildMoodButton(MoodLevel mood, String label) {
     final isSelected = _selectedMood == mood;
+    var primaryColor = Theme.of(context).colorScheme.primary;
 
     return GestureDetector(
       onTap: () => setState(() => _selectedMood = mood),
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isSelected ? Theme.of(context).primaryColor.withOpacity(0.1) : Colors.transparent,
-          border: Border.all(color: isSelected ? Theme.of(context).primaryColor : Colors.grey.shade300, width: isSelected ? 2 : 1),
+          color: isSelected ? primaryColor.withOpacity(0.1) : Colors.transparent,
+          border: Border.all(color: isSelected ? primaryColor : Colors.grey.shade300, width: isSelected ? 2 : 1),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -148,7 +148,7 @@ class _MoodInputScreenState extends State<MoodInputScreen> {
             const SizedBox(height: 4),
             Text(
               label,
-              style: TextStyle(fontSize: 12, color: isSelected ? Theme.of(context).primaryColor : Colors.grey.shade600, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal),
+              style: TextStyle(fontSize: 12, color: isSelected ? primaryColor : Colors.grey.shade600, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal),
             ),
           ],
         ),

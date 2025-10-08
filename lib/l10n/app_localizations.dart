@@ -279,6 +279,12 @@ abstract class AppLocalizations {
   /// **'Add'**
   String get add;
 
+  /// No description provided for @suggestTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest Times'**
+  String get suggestTimes;
+
   /// No description provided for @completedTasks.
   ///
   /// In en, this message translates to:
@@ -1731,6 +1737,24 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to delete this subtask?'**
   String get confirmDeleteSubtask;
 
+  /// No description provided for @collapse.
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse'**
+  String get collapse;
+
+  /// No description provided for @expand.
+  ///
+  /// In en, this message translates to:
+  /// **'Expand'**
+  String get expand;
+
+  /// No description provided for @copySuffix.
+  ///
+  /// In en, this message translates to:
+  /// **'(Copy)'**
+  String get copySuffix;
+
   /// No description provided for @highPriority.
   ///
   /// In en, this message translates to:
@@ -2019,6 +2043,48 @@ abstract class AppLocalizations {
   /// **'All notifications cleared!'**
   String get allNotificationsCleared;
 
+  /// No description provided for @checkPendingNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Pending'**
+  String get checkPendingNotifications;
+
+  /// No description provided for @cancelAllNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel All'**
+  String get cancelAllNotifications;
+
+  /// No description provided for @allNotificationsCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'All notifications cancelled!'**
+  String get allNotificationsCancelled;
+
+  /// No description provided for @moodCheckInNotificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood Check-In'**
+  String get moodCheckInNotificationTitle;
+
+  /// No description provided for @moodCheckInNotificationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'How are you feeling right now? Tap to record your mood.'**
+  String get moodCheckInNotificationBody;
+
+  /// No description provided for @testMoodNotificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Mood Notification'**
+  String get testMoodNotificationTitle;
+
+  /// No description provided for @testMoodNotificationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a test mood check-in notification.'**
+  String get testMoodNotificationBody;
+
   /// No description provided for @testReminderIn10Seconds.
   ///
   /// In en, this message translates to:
@@ -2288,6 +2354,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Status:'**
   String get statusLabel;
+
+  /// No description provided for @setReminderButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Reminder'**
+  String get setReminderButton;
+
+  /// No description provided for @uncompleteTaskButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Uncomplete Task'**
+  String get uncompleteTaskButton;
+
+  /// No description provided for @completeTaskButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Task'**
+  String get completeTaskButton;
+
+  /// No description provided for @completeSubtasksFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Subtasks First'**
+  String get completeSubtasksFirst;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

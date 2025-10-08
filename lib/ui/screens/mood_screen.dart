@@ -9,7 +9,6 @@ import '../../l10n/app_localizations.dart';
 import '../../models/mood.dart';
 import '../../utils/date_formatter.dart';
 import '../utils/page_transitions.dart';
-import 'mood_logging_screen.dart';
 import 'mood_history_screen.dart';
 
 class MoodScreen extends StatefulWidget {
@@ -25,13 +24,13 @@ class _MoodScreenState extends State<MoodScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    moodTabController = TabController(length: 3, vsync: this);
+    //moodTabController = TabController(length: 3, vsync: this);
     context.read<MoodBloc>().add(LoadMoods());
   }
 
   @override
   void dispose() {
-    moodTabController.dispose();
+    // moodTabController.dispose();
     super.dispose();
   }
 
@@ -122,6 +121,7 @@ class _MoodScreenState extends State<MoodScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildTodayMoods(List<Mood> moods) {
+
     return AnimationLimiter(
       child: ListView.builder(
         padding: const EdgeInsets.all(16),

@@ -36,7 +36,7 @@ import 'services/localization_service.dart';
 import 'ui/screens/splash_screen.dart';
 import 'ui/screens/mood_input_screen.dart';
 import 'ui/themes/app_themes.dart';
-
+/* flutter build appbundle --release */
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 

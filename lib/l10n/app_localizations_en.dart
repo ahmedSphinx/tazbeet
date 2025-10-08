@@ -101,6 +101,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get add => 'Add';
 
   @override
+  String get suggestTimes => 'Suggest Times';
+
+  @override
   String get completedTasks => 'Completed tasks';
 
   @override
@@ -841,6 +844,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmDeleteSubtask => 'Are you sure you want to delete this subtask?';
 
   @override
+  String get collapse => 'Collapse';
+
+  @override
+  String get expand => 'Expand';
+
+  @override
+  String get copySuffix => '(Copy)';
+
+  @override
   String get highPriority => 'High';
 
   @override
@@ -989,6 +1001,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get allNotificationsCleared => 'All notifications cleared!';
 
   @override
+  String get checkPendingNotifications => 'Check Pending';
+
+  @override
+  String get cancelAllNotifications => 'Cancel All';
+
+  @override
+  String get allNotificationsCancelled => 'All notifications cancelled!';
+
+  @override
+  String get moodCheckInNotificationTitle => 'Mood Check-In';
+
+  @override
+  String get moodCheckInNotificationBody => 'How are you feeling right now? Tap to record your mood.';
+
+  @override
+  String get testMoodNotificationTitle => 'Test Mood Notification';
+
+  @override
+  String get testMoodNotificationBody => 'This is a test mood check-in notification.';
+
+  @override
   String get testReminderIn10Seconds => 'Test Reminder in 10s';
 
   @override
@@ -1124,4 +1157,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statusLabel => 'Status:';
+
+  @override
+  String get setReminderButton => 'Set Reminder';
+
+  @override
+  String get uncompleteTaskButton => 'Uncomplete Task';
+
+  @override
+  String get completeTaskButton => 'Complete Task';
+
+  @override
+  String get completeSubtasksFirst => 'Complete Subtasks First';
 }

@@ -7,7 +7,6 @@ import 'package:tazbeet/blocs/task_list/task_list_event.dart';
 import 'package:tazbeet/blocs/task_list/task_list_state.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
 import 'package:tazbeet/models/task.dart';
-import 'package:tazbeet/ui/widgets/add_task_dialog.dart';
 import 'package:tazbeet/ui/widgets/edit_task_dialog.dart';
 import 'package:tazbeet/ui/widgets/error_display.dart';
 import 'package:tazbeet/ui/widgets/loading_skeleton.dart';

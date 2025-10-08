@@ -81,7 +81,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
             ),
           ],
         ),
-        floatingActionButton: _buildFAB(context),
+        floatingActionButton: _buildFAB(context, l10n),
       ),
     );
   }
@@ -269,6 +269,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
   }
 
   Widget _buildTaskDetails(BuildContext context, Task task, AppLocalizations l10n) {
+    AppLogging.logError(task.repeatRule!.getDisplayText(), name: 'TaskDetailsScreen');
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 500),
       opacity: isCompleted ? 0.5 : 1.0,
@@ -292,12 +293,12 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
               _buildDetailRow(Icons.calendar_today, l10n.dueDate, task.dueDate != null ? DateFormat.yMMMd().format(task.dueDate!) : l10n.noDueDate),
               _buildDetailRow(Icons.flag, l10n.priority, _getPriorityText(task.priority, l10n)),
               if (task.reminderIntervals.isNotEmpty) ...[_buildDetailRow(Icons.notifications, l10n.reminders, task.reminderIntervals.map((min) => '${min}m').join(', '))],
-              if (task.repeatRule != null) ...[_buildDetailRow(Icons.repeat, l10n.repeat, task.repeatRule!.toString())],
+              if (task.repeatRule != null) ...[_buildDetailRow(Icons.repeat, l10n.repeat, task.repeatRule!.getDisplayText())],
               const SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: () => _setReminder(context, task, l10n),
                 icon: const Icon(Icons.notifications_active),
-                label: Text(task.reminderDate != null ? l10n.editButton : 'Set Reminder'),
+                label: Text(task.reminderDate != null ? l10n.editButton : l10n.setReminderButton),
                 style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 40)),
               ),
             ],
@@ -479,7 +480,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
     );
   }
 
-  Widget _buildFAB(BuildContext context) {
+  Widget _buildFAB(BuildContext context, AppLocalizations l10n) {
     return BlocBuilder<TaskDetailsBloc, TaskDetailsState>(
       builder: (context, state) {
         if (state is TaskDetailsLoaded) {
@@ -488,7 +489,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
               onPressed: () => _uncompleteTask(context, state.task),
               backgroundColor: Colors.orange,
               icon: const Icon(Icons.undo),
-              label: const Text('Uncomplete Task'),
+              label: Text(l10n.uncompleteTaskButton /* 'Uncomplete Task' */),
             ).animate(controller: _fabAnimationController, autoPlay: false).shake(duration: 500.ms, hz: 4);
           }
           final canComplete = state.canComplete;
@@ -496,7 +497,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
             onPressed: canComplete ? () => _completeTask(context, state.task) : null,
             backgroundColor: canComplete ? Colors.green : Colors.grey,
             icon: const Icon(Icons.check),
-            label: Text(canComplete ? 'Complete Task' : 'Complete All Subtasks First'),
+            label: Text(canComplete ? l10n.completeTaskButton : l10n.completeSubtasksFirst /* 'Complete All Subtasks First' */),
           ).animate(controller: _fabAnimationController, autoPlay: false).shake(duration: 500.ms, hz: 4);
         }
         return const SizedBox.shrink();

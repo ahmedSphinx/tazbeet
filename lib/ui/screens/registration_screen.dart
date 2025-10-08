@@ -5,7 +5,7 @@ import 'package:tazbeet/blocs/auth/auth_bloc.dart';
 import 'package:tazbeet/blocs/auth/auth_event.dart';
 import 'package:tazbeet/blocs/auth/auth_state.dart';
 import 'package:tazbeet/ui/themes/app_themes.dart';
-import 'package:tazbeet/ui/screens/home_screen.dart';
+import 'package:tazbeet/ui/screens/main_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});

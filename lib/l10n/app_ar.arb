@@ -389,6 +389,9 @@
   "editSubtask": "تعديل المهمة الفرعية",
   "deleteSubtask": "حذف المهمة الفرعية",
   "subtaskCompleted": "تم إنجاز المهمة الفرعية",
+  "collapse": "طي",
+  "expand": "توسيع",
+  "copySuffix": "(نسخة)",
   "strictCompletionMode": "وضع الإنجاز الصارم",
   "flexibleCompletionMode": "وضع الإنجاز المرن",
   "maxSubtaskDepthReached": "تم الوصول إلى الحد الأقصى لعمق المهام الفرعية",
@@ -803,5 +806,61 @@
   "allNotificationsCleared": "تم مسح جميع الإشعارات!",
   "testReminderIn10Seconds": "اختبار تذكير في 10 ثواني",
   "testReminderScheduled": "تم جدولة تذكير الاختبار لمدة 10 ثواني من الآن",
-  "completedTasks": "مهمات مكتملة"
+  "completedTasks": "مهمات مكتملة",
+  "moodSettingsTitle": "إعدادات المزاج",
+  "moodSettingsSubtitle": "تكوين إشعارات فحص المزاج",
+  "enableMoodNotifications": "تفعيل إشعارات المزاج",
+  "moodCheckInTimes": "أوقات الفحص",
+  "add": "إضافة",
+  "suggestTimes": "اقتراح أوقات",
+  "moodHowAreYouFeeling": "كيف تشعر اليوم؟",
+  "moodSelectLevel": "اختر مستوى مزاجك",
+  "moodEnergyLevel": "مستوى الطاقة",
+  "moodFocusLevel": "مستوى التركيز",
+  "moodStressLevel": "مستوى التوتر",
+  "low": "منخفض",
+  "high": "عالي",
+  "moodNoteOptional": "ملاحظة (اختيارية)",
+  "moodNoteHint": "كيف تشعر؟",
+  "moodSaveButton": "حفظ المزاج",
+  "moodVeryBad": "سيء جداً",
+  "moodBad": "سيء",
+  "moodNeutral": "محايد",
+  "moodGood": "جيد",
+  "moodVeryGood": "جيد جداً",
+  "moodSavedSuccess": "تم حفظ المزاج بنجاح!",
+  "moodSaveFailed": "فشل في حفظ المزاج",
+  "save": "حفظ",
+  "deleteTaskConfirmationTitle": "حذف المهمة",
+  "confirmDeleteSubtask": "هل أنت متأكد من حذف هذه المهمة الفرعية؟",
+  "highPriority": "عالية",
+  "mediumPriority": "متوسطة",
+  "lowPriority": "منخفضة",
+  "checkPendingNotifications": "فحص المعلقة",
+  "cancelAllNotifications": "إلغاء الكل",
+  "allNotificationsCancelled": "تم إلغاء جميع الإشعارات!",
+  "moodCheckInNotificationTitle": "فحص المزاج",
+  "moodCheckInNotificationBody": "كيف تشعر الآن؟ اضغط لتسجيل مزاجك.",
+  "testMoodNotificationTitle": "اختبار إشعار المزاج",
+  "testMoodNotificationBody": "هذا إشعار اختبار لفحص المزاج.",
+  "updatePersonalInfo": "تحديث المعلومات الشخصية",
+  "motivationalQuoteHigh": "لديك هذا! 🚀",
+  "motivationalQuoteMedium": "استمر! 💪",
+  "motivationalQuoteLow": "خذ الأمر ببساطة! 😊",
+  "taskDetails": "تفاصيل المهمة",
+  "noDueDate": "لا يوجد تاريخ استحقاق",
+  "priority": "الأولوية",
+  "reminders": "التذكيرات",
+  "repeat": "تكرار",
+  "noSubtasks": "لا توجد مهام فرعية بعد",
+  "sessions": "الجلسات",
+  "avgSession": "متوسط الجلسة",
+  "startPomodoroSession": "بدء جلسة بومودورو",
+  "timeline": "الجدول الزمني",
+  "created": "تم الإنشاء",
+  "lastModified": "آخر تعديل",
+  "setReminderButton": "تعيين تذكير",
+  "uncompleteTaskButton": "إلغاء إكمال المهمة",
+  "completeTaskButton": "إكمال المهمة",
+  "completeSubtasksFirst": "أكمل المهام الفرعية أولاً"
 }

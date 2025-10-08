@@ -86,19 +86,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get regionalSection => 'Régional';
 
   @override
-  String get moodSettingsTitle => 'Mood Settings';
+  String get moodSettingsTitle => 'Paramètres d\'Humeur';
 
   @override
-  String get moodSettingsSubtitle => 'Configure mood check-in notifications';
+  String get moodSettingsSubtitle => 'Configurer les notifications de check-in d\'humeur';
 
   @override
-  String get enableMoodNotifications => 'Enable Mood Notifications';
+  String get enableMoodNotifications => 'Activer les notifications d\'humeur';
 
   @override
-  String get moodCheckInTimes => 'Check-in Times';
+  String get moodCheckInTimes => 'Heures de Check-in';
 
   @override
-  String get add => 'Add';
+  String get add => 'Ajouter';
+
+  @override
+  String get suggestTimes => 'Suggérer des heures';
 
   @override
   String get completedTasks => 'Tâches terminées';
@@ -312,61 +315,61 @@ class AppLocalizationsFr extends AppLocalizations {
   String get veryGood => 'Très Bon';
 
   @override
-  String get moodCheckInTitle => 'Mood Check-In';
+  String get moodCheckInTitle => 'Check-in d\'Humeur';
 
   @override
-  String get moodHowAreYouFeeling => 'How are you feeling?';
+  String get moodHowAreYouFeeling => 'Comment vous sentez-vous aujourd\'hui ?';
 
   @override
-  String get moodSelectLevel => 'Select your mood level';
+  String get moodSelectLevel => 'Sélectionnez votre niveau d\'humeur';
 
   @override
-  String get moodEnergyLevel => 'Energy Level';
+  String get moodEnergyLevel => 'Niveau d\'Énergie';
 
   @override
-  String get moodFocusLevel => 'Focus Level';
+  String get moodFocusLevel => 'Niveau de Concentration';
 
   @override
-  String get moodStressLevel => 'Stress Level';
+  String get moodStressLevel => 'Niveau de Stress';
 
   @override
-  String get low => 'Low';
+  String get low => 'Faible';
 
   @override
-  String get high => 'High';
+  String get high => 'Élevé';
 
   @override
-  String get moodNoteOptional => 'Add a note (optional)';
+  String get moodNoteOptional => 'Note (optionnel)';
 
   @override
-  String get moodNoteHint => 'How are you feeling?';
+  String get moodNoteHint => 'Comment vous sentez-vous ?';
 
   @override
-  String get moodSaveButton => 'Save Mood';
+  String get moodSaveButton => 'Sauvegarder l\'Humeur';
 
   @override
-  String get moodVeryBad => 'Very Bad';
+  String get moodVeryBad => 'Très Mauvais';
 
   @override
-  String get moodBad => 'Bad';
+  String get moodBad => 'Mauvais';
 
   @override
-  String get moodNeutral => 'Neutral';
+  String get moodNeutral => 'Neutre';
 
   @override
-  String get moodGood => 'Good';
+  String get moodGood => 'Bon';
 
   @override
-  String get moodVeryGood => 'Very Good';
+  String get moodVeryGood => 'Très Bon';
 
   @override
-  String get moodSavedSuccess => 'Mood saved successfully!';
+  String get moodSavedSuccess => 'Humeur sauvegardée avec succès !';
 
   @override
-  String get moodSaveFailed => 'Failed to save mood';
+  String get moodSaveFailed => 'Échec de la sauvegarde de l\'humeur';
 
   @override
-  String get save => 'Save';
+  String get save => 'Sauvegarder';
 
   @override
   String get noCategoriesYetDescription => 'Créez des catégories pour organiser vos tâches';
@@ -832,25 +835,34 @@ class AppLocalizationsFr extends AppLocalizations {
   String get searchHint => 'Rechercher des tâches...';
 
   @override
-  String get deleteTaskConfirmationTitle => 'Delete Task';
+  String get deleteTaskConfirmationTitle => 'Supprimer la Tâche';
 
   @override
-  String get deleteSubtask => 'Delete Subtask';
+  String get deleteSubtask => 'Supprimer la Sous-tâche';
 
   @override
-  String get confirmDeleteSubtask => 'Are you sure you want to delete this subtask?';
+  String get confirmDeleteSubtask => 'Êtes-vous sûr de supprimer cette sous-tâche ?';
 
   @override
-  String get highPriority => 'High';
+  String get collapse => 'Réduire';
 
   @override
-  String get mediumPriority => 'Medium';
+  String get expand => 'Développer';
 
   @override
-  String get lowPriority => 'Low';
+  String get copySuffix => '(Copie)';
 
   @override
-  String get addSubtask => 'Add Subtask';
+  String get highPriority => 'Élevée';
+
+  @override
+  String get mediumPriority => 'Moyenne';
+
+  @override
+  String get lowPriority => 'Faible';
+
+  @override
+  String get addSubtask => 'Ajouter une Sous-tâche';
 
   @override
   String get recurringTasksManager => 'Gestionnaire de Tâches Récurrentes';
@@ -989,10 +1001,31 @@ class AppLocalizationsFr extends AppLocalizations {
   String get allNotificationsCleared => 'Toutes les notifications effacées !';
 
   @override
-  String get testReminderIn10Seconds => 'Test Reminder in 10s';
+  String get checkPendingNotifications => 'Vérifier les En Attente';
 
   @override
-  String get testReminderScheduled => 'Test reminder scheduled for 10 seconds from now';
+  String get cancelAllNotifications => 'Annuler Tout';
+
+  @override
+  String get allNotificationsCancelled => 'Toutes les notifications annulées !';
+
+  @override
+  String get moodCheckInNotificationTitle => 'Check-in d\'Humeur';
+
+  @override
+  String get moodCheckInNotificationBody => 'Comment vous sentez-vous maintenant ? Touchez pour enregistrer votre humeur.';
+
+  @override
+  String get testMoodNotificationTitle => 'Notification de Test d\'Humeur';
+
+  @override
+  String get testMoodNotificationBody => 'Ceci est une notification de test pour le check-in d\'humeur.';
+
+  @override
+  String get testReminderIn10Seconds => 'Test de Rappel dans 10 Secondes';
+
+  @override
+  String get testReminderScheduled => 'Rappel de test programmé pour 10 secondes à partir de maintenant';
 
   @override
   String get upcoming => 'À venir';
@@ -1039,89 +1072,101 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get updatePersonalInfo => 'Update your personal information';
+  String get updatePersonalInfo => 'Mettre à Jour les Informations Personnelles';
 
   @override
-  String get sunday => 'Sunday';
+  String get sunday => 'Dimanche';
 
   @override
-  String get monday => 'Monday';
+  String get monday => 'Lundi';
 
   @override
-  String get tuesday => 'Tuesday';
+  String get tuesday => 'Mardi';
 
   @override
-  String get wednesday => 'Wednesday';
+  String get wednesday => 'Mercredi';
 
   @override
-  String get thursday => 'Thursday';
+  String get thursday => 'Jeudi';
 
   @override
-  String get friday => 'Friday';
+  String get friday => 'Vendredi';
 
   @override
-  String get saturday => 'Saturday';
+  String get saturday => 'Samedi';
 
   @override
-  String get focusMode => 'Focus Mode';
+  String get focusMode => 'Mode Focus';
 
   @override
-  String get motivationalQuoteHigh => 'You\'ve got this! 🚀';
+  String get motivationalQuoteHigh => 'Vous l\'avez ! 🚀';
 
   @override
-  String get motivationalQuoteMedium => 'Keep going! 💪';
+  String get motivationalQuoteMedium => 'Continuez ! 💪';
 
   @override
-  String get motivationalQuoteLow => 'Take it easy! 😊';
+  String get motivationalQuoteLow => 'Prenez-le doucement ! 😊';
 
   @override
-  String get taskDetails => 'Task Details';
+  String get taskDetails => 'Détails de la Tâche';
 
   @override
-  String get noDueDate => 'No due date';
+  String get noDueDate => 'Aucune date d\'échéance';
 
   @override
-  String get priority => 'Priority';
+  String get priority => 'Priorité';
 
   @override
-  String get reminders => 'Reminders';
+  String get reminders => 'Rappels';
 
   @override
-  String get repeat => 'Repeat';
+  String get repeat => 'Répéter';
 
   @override
-  String get noSubtasks => 'No subtasks yet';
+  String get noSubtasks => 'Aucune sous-tâche pour le moment';
 
   @override
-  String get subtasks => 'Subtasks';
+  String get subtasks => 'Sous-tâches';
 
   @override
   String get sessions => 'Sessions';
 
   @override
-  String get timeSpent => 'Time Spent';
+  String get timeSpent => 'Temps Passé';
 
   @override
-  String get avgSession => 'Avg Session';
+  String get avgSession => 'Session Moyenne';
 
   @override
-  String get pomodoroSessions => 'Pomodoro Sessions';
+  String get pomodoroSessions => 'Sessions Pomodoro';
 
   @override
-  String get startPomodoroSession => 'Start Pomodoro Session';
+  String get startPomodoroSession => 'Démarrer une Session Pomodoro';
 
   @override
-  String get timeline => 'Timeline';
+  String get timeline => 'Chronologie';
 
   @override
-  String get created => 'Created';
+  String get created => 'Créé';
 
   @override
-  String get lastModified => 'Last Modified';
+  String get lastModified => 'Dernière Modification';
 
   @override
-  String get taskProgress => 'Task Progress';
+  String get taskProgress => 'Progrès de la Tâche';
 
   @override
   String get statusLabel => 'Statut :';
+
+  @override
+  String get setReminderButton => 'Définir un Rappel';
+
+  @override
+  String get uncompleteTaskButton => 'Annuler l\'Achèvement de la Tâche';
+
+  @override
+  String get completeTaskButton => 'Achever la Tâche';
+
+  @override
+  String get completeSubtasksFirst => 'Achevez les Sous-tâches D\'abord';
 }

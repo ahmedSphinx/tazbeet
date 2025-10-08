@@ -9,7 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:tazbeet/l10n/app_localizations.dart';
 import 'package:tazbeet/services/app_logging.dart';
-import 'package:tazbeet/ui/screens/home_screen.dart';
+import 'package:tazbeet/ui/screens/main_screen.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../../blocs/user/user_event.dart';
 import '../../blocs/user/user_state.dart';
@@ -287,7 +287,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.profileScreenTitle)),
+      appBar: AppBar(
+        foregroundColor: Colors.white,
+        title: Text(
+          AppLocalizations.of(context)!.profileScreenTitle,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+      ),
       body: BlocListener<UserBloc, UserState>(
         listener: (context, state) {
           if (state is UserError) {

@@ -1,5 +1,7 @@
 import 'package:tazbeet/services/app_logging.dart';
 import 'package:tazbeet/services/navigation_service.dart';
+import 'package:tazbeet/services/settings_service.dart';
+import 'package:tazbeet/l10n/app_localizations.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -45,20 +47,15 @@ class NotificationService {
       },
     );
 
-    // Create notification channel for task reminders
+    // Create notification channels
     const AndroidNotificationChannel taskChannel = AndroidNotificationChannel('task_reminders', 'Task Reminders', description: 'Reminders for tasks', importance: Importance.max, playSound: true);
 
     final androidPlugin = _flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
     await androidPlugin?.createNotificationChannel(taskChannel);
 
     // Create notification channel for mood check-ins
-    const AndroidNotificationChannel moodChannel = AndroidNotificationChannel(
-      moodNotificationChannelId,
-      moodNotificationChannelName,
-      description: 'Notifications for mood check-ins',
-      importance: Importance.max,
-      playSound: true,
-    );
+
+    const AndroidNotificationChannel moodChannel = AndroidNotificationChannel(moodNotificationChannelId, moodNotificationChannelName, description: 'Mood check-in reminders', importance: Importance.max, playSound: true);
 
     await androidPlugin?.createNotificationChannel(moodChannel);
 
@@ -67,9 +64,9 @@ class NotificationService {
   }
 
   Future<void> _configureLocalTimeZone() async {
-    // Since flutter_native_timezone is removed, fallback to UTC
-    tz.setLocalLocation(tz.getLocation('UTC'));
-    AppLogging.logInfo('Local timezone configured to UTC (fallback)', name: 'NotificationService');
+    // Use device's local timezone for scheduling
+    // tz.local is already set to the device's timezone by default
+    AppLogging.logInfo('Using device local timezone for notifications: ${tz.local}', name: 'NotificationService');
   }
 
   Future<void> _requestPermissions() async {
@@ -95,7 +92,11 @@ class NotificationService {
     if (task.reminderDate == null) return;
 
     final now = tz.TZDateTime.now(tz.local);
-    final scheduledTime = tz.TZDateTime.from(task.reminderDate!, tz.local);
+    final offset = DateTime.now().timeZoneOffset;
+
+    // Convert task reminder date (assumed local) to UTC for scheduling
+    DateTime utcScheduled = task.reminderDate!.subtract(offset);
+    final scheduledTime = tz.TZDateTime.from(utcScheduled, tz.local);
 
     if (scheduledTime.isBefore(now)) {
       AppLogging.logWarning('Cannot schedule reminder for past date: ${task.reminderDate}', name: 'NotificationService-${task.title}');
@@ -217,28 +218,31 @@ class NotificationService {
 
  */
 
-  Future<void> scheduleMoodCheckInNotifications(List<String> times) async {
+  Future<void> scheduleMoodCheckInNotifications(List<String> times, {AppLocalizations? l10n}) async {
     try {
-      AppLogging.logInfo('Preparing to schedule mood check-in notifications...', name: 'NotificationService');
+      AppLogging.logInfo('Preparing to schedule mood check-in notifications for ${times.length} times...', name: 'NotificationService');
 
-      // 2. Check notification permissions
+      // Check notification permissions
       final notificationsEnabled = await areNotificationsEnabled();
       if (!notificationsEnabled) {
         AppLogging.logWarning('Notifications are disabled. Aborting mood check-in scheduling.', name: 'NotificationService');
         return;
       }
 
-      // 3. Cancel existing mood check-in notifications
+      // Cancel existing mood check-in notifications
       await cancelMoodCheckInNotifications();
 
       final now = tz.TZDateTime.now(tz.local);
+      final offset = DateTime.now().timeZoneOffset;
       int notificationIdBase = 100000;
 
       for (int i = 0; i < times.length; i++) {
         final timeString = times[i];
+
+        // Validate time format
         final timeParts = timeString.split(':');
         if (timeParts.length != 2) {
-          AppLogging.logWarning('Invalid time format: $timeString. Skipping.', name: 'NotificationService');
+          AppLogging.logWarning('Invalid time format: $timeString. Expected HH:MM. Skipping.', name: 'NotificationService');
           continue;
         }
 
@@ -246,57 +250,57 @@ class NotificationService {
         final int minute = int.tryParse(timeParts[1]) ?? -1;
 
         if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-          AppLogging.logWarning('Invalid time values: $hour:$minute. Skipping.', name: 'NotificationService');
+          AppLogging.logWarning('Invalid time values: $hour:$minute. Must be 00:00-23:59. Skipping.', name: 'NotificationService');
           continue;
         }
 
-        // Schedule for today or next day
-        tz.TZDateTime firstScheduledTime = tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
-        if (firstScheduledTime.isBefore(now)) {
-          firstScheduledTime = firstScheduledTime.add(const Duration(days: 1));
+        // Calculate local scheduled time (today or tomorrow)
+        DateTime localScheduled = DateTime(now.year, now.month, now.day, hour, minute);
+        if (localScheduled.isBefore(DateTime.now())) {
+          localScheduled = localScheduled.add(const Duration(days: 1));
         }
 
-        for (int day = 0; day < 7; day++) {
-          final tz.TZDateTime scheduledTime = firstScheduledTime.add(Duration(days: day));
-          final int notificationId = notificationIdBase + i * 7 + day;
+        // Convert to UTC for scheduling
+        DateTime utcScheduled = localScheduled.subtract(offset);
+        tz.TZDateTime scheduledTime = tz.TZDateTime.from(utcScheduled, tz.local);
 
-          AppLogging.logInfo('Scheduling test mood notification ID $notificationId at $scheduledTime', name: 'NotificationService');
+        final int notificationId = notificationIdBase + i;
 
-          // ❗️ Using task_reminders channel TEMPORARILY for testing
-          const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-            'task_reminders', // ← Use existing working channel temporarily
-            'Task Reminders',
-            channelDescription: 'TEMP: Mood Check-In via Task Reminders channel',
-            importance: Importance.max,
-            priority: Priority.high,
-            playSound: true,
-            enableVibration: true,
+        AppLogging.logInfo('Scheduling mood check-in notification ID $notificationId at $scheduledTime (repeats daily)', name: 'NotificationService');
+
+        const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+          moodNotificationChannelId,
+          moodNotificationChannelName,
+          channelDescription: 'Notifications for mood check-ins',
+          importance: Importance.max,
+          priority: Priority.max,
+          playSound: true,
+          enableVibration: true,
+        );
+
+        const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true);
+
+        const NotificationDetails platformDetails = NotificationDetails(android: androidDetails, iOS: iosDetails);
+
+        try {
+          await _flutterLocalNotificationsPlugin.zonedSchedule(
+            notificationId,
+            l10n?.moodCheckInNotificationTitle ?? 'Mood Check-In',
+            l10n?.moodCheckInNotificationBody ?? 'How are you feeling right now? Tap to record your mood.',
+            scheduledTime,
+            platformDetails,
+            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+            matchDateTimeComponents: DateTimeComponents.time, // Repeat daily at the same time
+            payload: 'mood_check_in',
           );
 
-          const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true);
-
-          const NotificationDetails platformDetails = NotificationDetails(android: androidDetails, iOS: iosDetails);
-
-          try {
-            await _flutterLocalNotificationsPlugin.zonedSchedule(
-              notificationId,
-              'Mood Check-In',
-              'How are you feeling right now? Tap to record your mood.',
-              scheduledTime,
-              platformDetails,
-              androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-              matchDateTimeComponents: DateTimeComponents.time, // Repeat daily at the same time
-              payload: 'mood_check_in',
-            );
-
-            AppLogging.logInfo('✅ Scheduled mood check-in notification ID $notificationId at $scheduledTime', name: 'NotificationService');
-          } catch (e) {
-            AppLogging.logError('❌ Failed to schedule mood notification ID $notificationId: $e', name: 'NotificationService');
-          }
+          //   AppLogging.logInfo('✅ Successfully scheduled mood check-in notification ID $notificationId', name: 'NotificationService');
+        } catch (e) {
+          AppLogging.logError('❌ Failed to schedule mood notification ID $notificationId: $e', name: 'NotificationService');
         }
       }
 
-      AppLogging.logInfo('🎉 Finished scheduling all mood check-in notifications.', name: 'NotificationService');
+      AppLogging.logInfo('🎉 Finished scheduling ${times.length}[${times.join(', ')}] mood check-in notifications.', name: 'NotificationService');
     } catch (e) {
       AppLogging.logError('Unhandled error in scheduleMoodCheckInNotifications: $e', name: 'NotificationService');
     }
@@ -304,10 +308,11 @@ class NotificationService {
 
   Future<void> cancelMoodCheckInNotifications() async {
     int notificationIdBase = 100000;
-    // Assuming max 10 times * 7 days = 70 mood notifications scheduled
-    for (int i = 0; i < 70; i++) {
+    // Cancel up to 100 mood notifications to handle legacy scheduling
+    for (int i = 0; i < 100; i++) {
       await _flutterLocalNotificationsPlugin.cancel(notificationIdBase + i);
     }
+    AppLogging.logInfo('Cancelled all mood check-in notifications', name: 'NotificationService');
   }
 
   Future<void> cancelTaskReminder(String taskId) async {
@@ -370,8 +375,10 @@ class NotificationService {
       final notificationId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
       // Calculate test time in local timezone
-      final now = tz.TZDateTime.now(tz.local);
-      var testTime = now.add(const Duration(seconds: 10));
+      final offset = DateTime.now().timeZoneOffset;
+     // final now = tz.TZDateTime.now(tz.local);
+      var localTestTime = DateTime.now().add(const Duration(seconds: 10));
+      var testTime = tz.TZDateTime.from(localTestTime.subtract(offset), tz.local);
 
       // Ensure test time is in the future
       if (testTime.isBefore(tz.TZDateTime.now(tz.local))) {
@@ -445,14 +452,14 @@ class NotificationService {
     }
   }
 
-  Future<void> showTestMoodNotificationNow() async {
+  Future<void> showTestMoodNotificationNow({AppLocalizations? l10n}) async {
     try {
       const notificationId = 2000; // Fixed ID for mood test
 
       await _flutterLocalNotificationsPlugin.show(
         notificationId,
-        'Test Mood Check-In',
-        'How are you feeling right now? Tap to record your mood.',
+        l10n?.testMoodNotificationTitle ?? 'Test Mood Check-In',
+        l10n?.testMoodNotificationBody ?? 'This is a test mood check-in notification.',
         const NotificationDetails(
           android: AndroidNotificationDetails(
             moodNotificationChannelId,
@@ -471,6 +478,40 @@ class NotificationService {
       AppLogging.logInfo('Showed immediate test mood notification', name: 'NotificationService');
     } catch (e) {
       AppLogging.logError('Failed to show immediate test mood notification: $e', name: 'NotificationService');
+      rethrow;
+    }
+  }
+
+  Future<void> scheduleTestMoodNotification({AppLocalizations? l10n}) async {
+    try {
+      const notificationId = 2000; // Fixed ID for scheduled mood test
+
+      final testTime = tz.TZDateTime.now(tz.local).add(const Duration(minutes: 1));
+
+      await _flutterLocalNotificationsPlugin.zonedSchedule(
+        notificationId,
+        l10n?.testMoodNotificationTitle ?? 'Test Mood Check-In',
+        l10n?.testMoodNotificationBody ?? 'This is a scheduled test mood check-in notification.',
+        testTime,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            moodNotificationChannelId,
+            moodNotificationChannelName,
+            channelDescription: 'Notifications for mood check-ins',
+            importance: Importance.max,
+            priority: Priority.max,
+            playSound: true,
+            enableVibration: true,
+          ),
+          iOS: DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
+        ),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        payload: 'mood_check_in',
+      );
+
+      AppLogging.logInfo('Scheduled test mood notification for $testTime', name: 'NotificationService');
+    } catch (e) {
+      AppLogging.logError('Failed to schedule test mood notification: $e', name: 'NotificationService');
       rethrow;
     }
   }
@@ -531,6 +572,44 @@ class NotificationService {
     } catch (e) {
       AppLogging.logError('Failed to get pending notifications: $e', name: 'NotificationService');
       return [];
+    }
+  }
+
+  Future<List<PendingNotificationRequest>> getPendingMoodNotifications() async {
+    try {
+      final allPending = await getPendingNotifications();
+      final moodNotifications = allPending
+          .where(
+            (notification) => notification.id >= 100000 && notification.id < 100010, // Mood notification IDs range
+          )
+          .toList();
+      AppLogging.logInfo('Found ${moodNotifications.length} pending mood notifications', name: 'NotificationService');
+      return moodNotifications;
+    } catch (e) {
+      AppLogging.logError('Failed to get pending mood notifications: $e', name: 'NotificationService');
+      return [];
+    }
+  }
+
+  Future<void> rescheduleMoodNotifications({AppLocalizations? l10n}) async {
+    try {
+      final settingsService = SettingsService();
+      await settingsService.initialize();
+      if (settingsService.settings.enableMoodNotifications) {
+        await scheduleMoodCheckInNotifications(settingsService.settings.moodCheckInTimes, l10n: l10n);
+        AppLogging.logInfo('Rescheduled mood check-in notifications', name: 'NotificationService');
+      }
+    } catch (e) {
+      AppLogging.logError('Failed to reschedule mood notifications: $e', name: 'NotificationService');
+    }
+  }
+
+  Future<void> cancelAllNotifications() async {
+    try {
+      await _flutterLocalNotificationsPlugin.cancelAll();
+      AppLogging.logInfo('Cancelled all notifications', name: 'NotificationService');
+    } catch (e) {
+      AppLogging.logError('Failed to cancel all notifications: $e', name: 'NotificationService');
     }
   }
 }

@@ -61,7 +61,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, WidgetsBindingObserver {
   late ScrollController _scrollController;
   late TextEditingController _searchController;
-   Timer? _debounceTimer;
+  Timer? _debounceTimer;
   bool _isRefreshing = false;
   bool _isConnected = true;
   int _selectedIndex = 0;
@@ -250,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
         }
       },
       child: Directionality(
-        textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+        textDirection: (AppLocalizations.of(context)?.localeName ?? 'en') == 'ar' ? TextDirection.rtl : TextDirection.ltr,
         child: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Theme.of(context).brightness == Brightness.dark ? Brightness.light : Brightness.dark),
           child: Scaffold(
@@ -301,15 +301,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
   String _getAppBarTitle() {
     switch (_selectedIndex) {
       case 0:
-        return AppLocalizations.of(context)!.appTitle;
+        return AppLocalizations.of(context)?.appTitle ?? 'Tasks';
       case 1:
-        return AppLocalizations.of(context)!.progressSaved;
+        return AppLocalizations.of(context)?.progressSaved ?? 'Progress';
       case 2:
-        return AppLocalizations.of(context)!.pomodoroSection;
+        return AppLocalizations.of(context)?.pomodoroSection ?? 'Pomodoro';
       case 3:
-        return AppLocalizations.of(context)!.allCategories;
+        return AppLocalizations.of(context)?.allCategories ?? 'Categories';
       default:
-        return AppLocalizations.of(context)!.moodTracking;
+        return AppLocalizations.of(context)?.moodTracking ?? 'Mood';
     }
   }
 
@@ -324,7 +324,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
             setState(() => _sortByPriority = !_sortByPriority);
           },
           onLongPress: _showFilterDialog,
-          tooltip: AppLocalizations.of(context)!.priorityLabel,
+          tooltip: AppLocalizations.of(context)?.priorityLabel ?? 'Priority',
         ),
         IconButton(
           icon: Icon(_isSearching || _searchController.text.isNotEmpty ? Icons.close : Icons.search, color: Colors.white),
@@ -339,7 +339,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
               }
             });
           },
-          tooltip: _isSearching || _searchController.text.isNotEmpty ? 'Close search' : AppLocalizations.of(context)!.searchHint,
+          tooltip: _isSearching || _searchController.text.isNotEmpty ? 'Close search' : (AppLocalizations.of(context)?.searchHint ?? 'Search'),
         ),
       ];
     } else if (_selectedIndex == 2) {
@@ -591,11 +591,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
       unselectedItemColor: Theme.of(context).colorScheme.onSurfaceVariant,
       type: BottomNavigationBarType.shifting,
       items: [
-        BottomNavigationBarItem(icon: const Icon(Icons.home), label: AppLocalizations.of(context)!.homeScreenTitle),
-        BottomNavigationBarItem(icon: const Icon(Icons.bar_chart), label: AppLocalizations.of(context)!.progressSaved),
-        BottomNavigationBarItem(icon: const Icon(Icons.timer), label: AppLocalizations.of(context)!.pomodoroSection),
-        BottomNavigationBarItem(icon: const Icon(Icons.folder), label: AppLocalizations.of(context)!.allCategories),
-        BottomNavigationBarItem(icon: const Icon(Icons.mood), label: AppLocalizations.of(context)!.moodTracking),
+        BottomNavigationBarItem(icon: const Icon(Icons.home), label: AppLocalizations.of(context)?.homeScreenTitle ?? 'Home'),
+        BottomNavigationBarItem(icon: const Icon(Icons.bar_chart), label: AppLocalizations.of(context)?.progressSaved ?? 'Progress'),
+        BottomNavigationBarItem(icon: const Icon(Icons.timer), label: AppLocalizations.of(context)?.pomodoroSection ?? 'Pomodoro'),
+        BottomNavigationBarItem(icon: const Icon(Icons.folder), label: AppLocalizations.of(context)?.allCategories ?? 'Categories'),
+        BottomNavigationBarItem(icon: const Icon(Icons.mood), label: AppLocalizations.of(context)?.moodTracking ?? 'Mood'),
       ],
     );
   }
@@ -610,11 +610,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildNavItem(0, Icons.home, AppLocalizations.of(context)!.homeScreenTitle),
-            _buildNavItem(1, Icons.bar_chart, AppLocalizations.of(context)!.progressSaved),
-            _buildNavItem(2, Icons.timer, AppLocalizations.of(context)!.pomodoroSection, key: _pomodoroKey),
-            _buildNavItem(3, Icons.folder, AppLocalizations.of(context)!.allCategories),
-            _buildNavItem(4, Icons.mood, AppLocalizations.of(context)!.moodTracking, key: _moodTrackingKey),
+            _buildNavItem(0, Icons.home, AppLocalizations.of(context)?.homeScreenTitle ?? 'Home'),
+            _buildNavItem(1, Icons.bar_chart, AppLocalizations.of(context)?.progressSaved ?? 'Progress'),
+            _buildNavItem(2, Icons.timer, AppLocalizations.of(context)?.pomodoroSection ?? 'Pomodoro', key: _pomodoroKey),
+            _buildNavItem(3, Icons.folder, AppLocalizations.of(context)?.allCategories ?? 'Categories'),
+            _buildNavItem(4, Icons.mood, AppLocalizations.of(context)?.moodTracking ?? 'Mood', key: _moodTrackingKey),
           ],
         ),
       ),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tazbeet/services/settings_service.dart' as settings;
@@ -38,6 +40,53 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
     }
   }
 
+  Future<void> _addSuggestedTimes() async {
+    try {
+      final settingsService = context.read<settings.SettingsService>();
+      final suggestedTimes = await settingsService.getSuggestedMoodCheckInTimes();
+
+      if (suggestedTimes.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No mood history available for suggestions')));
+        }
+        return;
+      }
+
+      // Convert suggested strings to TimeOfDay
+      final suggestedTimeOfDays = suggestedTimes.map((timeStr) {
+        final parts = timeStr.split(':');
+        return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
+      }).toList();
+
+      // Add new times that aren't already in the list
+      int addedCount = 0;
+      for (final time in suggestedTimeOfDays) {
+        if (!_checkInTimes.any((existing) => existing.hour == time.hour && existing.minute == time.minute)) {
+          _checkInTimes.add(time);
+          addedCount++;
+        }
+      }
+
+      if (addedCount > 0) {
+        setState(() {
+          _checkInTimes.sort((a, b) => a.hour.compareTo(b.hour) != 0 ? a.hour.compareTo(b.hour) : a.minute.compareTo(b.minute));
+        });
+        _saveSettings();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added $addedCount suggested check-in times from your mood history')));
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('All suggested times are already in your list')));
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to get suggestions: $e')));
+      }
+    }
+  }
+
   void _removeCheckInTime(int index) {
     setState(() {
       _checkInTimes.removeAt(index);
@@ -47,8 +96,9 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
 
   void _testMoodNotification() async {
     try {
+      final l10n = AppLocalizations.of(context)!;
       final notificationService = NotificationService();
-      await notificationService.showTestMoodNotificationNow();
+      await notificationService.showTestMoodNotificationNow(l10n: l10n);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Test mood notification sent!')));
       }
@@ -88,6 +138,7 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
   }
 
   void _saveSettings() {
+    final l10n = AppLocalizations.of(context)!;
     final settingsService = context.read<settings.SettingsService>();
     final timesAsString = _checkInTimes.map((t) => '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}').toList();
     settingsService.setMoodNotificationsEnabled(_enableMoodNotifications);
@@ -96,7 +147,7 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
     // Schedule or cancel mood notifications based on the updated settings
     final notificationService = NotificationService();
     if (_enableMoodNotifications) {
-      notificationService.scheduleMoodCheckInNotifications(timesAsString);
+      notificationService.scheduleMoodCheckInNotifications(timesAsString, l10n: l10n);
     } else {
       notificationService.cancelMoodCheckInNotifications();
     }
@@ -123,6 +174,7 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    log(_checkInTimes.toString(), name: 'MoodSettingsScreen');
     return Scaffold(
       appBar: AppBar(title: Text(l10n.moodSettingsTitle), elevation: 0),
       body: ListView(
@@ -151,15 +203,30 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(l10n.moodCheckInTimes, style: Theme.of(context).textTheme.titleMedium),
-                        ElevatedButton.icon(
-                          onPressed: _addCheckInTime,
-                          icon: const Icon(Icons.add),
-                          label: Text(l10n.add),
-                          style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                        Row(
+                          children: [
+                            ElevatedButton.icon(
+                              onPressed: _addSuggestedTimes,
+                              icon: const Icon(Icons.auto_awesome),
+                              label: Text(l10n.suggestTimes),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                                foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            ElevatedButton.icon(
+                              onPressed: _addCheckInTime,
+                              icon: const Icon(Icons.add),
+                              label: Text(l10n.add),
+                              style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -217,7 +284,7 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
                           child: ElevatedButton.icon(
                             onPressed: _testMoodNotification,
                             icon: const Icon(Icons.notifications_active),
-                            label: const Text('Test Notification'),
+                            label: Text(l10n.testNotification),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Theme.of(context).colorScheme.secondary,
                               foregroundColor: Theme.of(context).colorScheme.onSecondary,
@@ -230,7 +297,7 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
                           child: ElevatedButton.icon(
                             onPressed: _checkPendingNotifications,
                             icon: const Icon(Icons.list_alt),
-                            label: const Text('Check Pending'),
+                            label: Text(l10n.checkPendingNotifications),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Theme.of(context).colorScheme.tertiary,
                               foregroundColor: Theme.of(context).colorScheme.onTertiary,
@@ -239,6 +306,53 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 8),
+                    ElevatedButton.icon(
+                      onPressed: () async {
+                        try {
+                          final l10n = AppLocalizations.of(context)!;
+                          final notificationService = NotificationService();
+                          await notificationService.scheduleTestMoodNotification(l10n: l10n);
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Test mood notification scheduled for 1 minute from now!')));
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to schedule test notification: $e')));
+                          }
+                        }
+                      },
+                      icon: const Icon(Icons.schedule),
+                      label: const Text('Test Scheduled Notification'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    ElevatedButton.icon(
+                      onPressed: () async {
+                        try {
+                          final notificationService = NotificationService();
+                          await notificationService.cancelAllNotifications();
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.allNotificationsCancelled)));
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to cancel notifications: $e')));
+                          }
+                        }
+                      },
+                      icon: const Icon(Icons.clear_all),
+                      label: Text(l10n.cancelAllNotifications),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red.shade100,
+                        foregroundColor: Colors.red.shade800,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
                     ),
                   ],
                 ),

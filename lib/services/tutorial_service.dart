@@ -124,7 +124,7 @@ class TutorialService {
                 ...List.generate(totalSteps, (index) {
                   final isCompleted = index < step - 1;
                   final isCurrent = index == step - 1;
-                  final isUpcoming = index > step - 1;
+                //  final isUpcoming = index > step - 1;
 
                   return Container(
                     width: 6,

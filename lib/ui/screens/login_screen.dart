@@ -9,7 +9,7 @@ import 'package:tazbeet/blocs/auth/auth_state.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
 
 import 'package:tazbeet/ui/themes/app_themes.dart';
-import 'package:tazbeet/ui/screens/home_screen.dart';
+import 'package:tazbeet/ui/screens/main_screen.dart';
 import 'package:tazbeet/ui/screens/registration_screen.dart';
 
 class LoginScreen extends StatefulWidget {

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tazbeet/blocs/auth/auth_state.dart';
 import 'package:tazbeet/blocs/auth/auth_bloc.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
-import 'package:tazbeet/ui/screens/home_screen.dart';
+import 'package:tazbeet/ui/screens/main_screen.dart';
 import 'package:tazbeet/ui/screens/login_screen.dart';
 import 'package:tazbeet/ui/screens/profile_screen.dart';
 
@@ -23,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   late Animation<double> _textOpacityAnimation;
   late Animation<Offset> _textSlideAnimation;
   late Animation<double> _fadeAnimation;
-
+  var packageInfo = '';
   @override
   void initState() {
     super.initState();
@@ -55,6 +56,10 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
 
     Future.delayed(const Duration(milliseconds: 3000), () {
       _fadeController.forward();
+    });
+    PackageInfo.fromPlatform().then((info) {
+      packageInfo = info.version;
+      setState(() {});
     });
   }
 
@@ -265,7 +270,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                                   ),
                                 )
                                 .value,
-                            child: Text(AppLocalizations.of(context)!.splashVersion, style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.5))),
+                            child: Text(AppLocalizations.of(context)!.version(packageInfo), style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.5))),
                           ),
                         ],
                       ),

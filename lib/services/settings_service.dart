@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'notification_service.dart';
+import '../repositories/mood_repository.dart';
 
 enum ThemeMode { system, light, dark }
 
@@ -165,7 +166,7 @@ class AppSettings {
       enableHighContrast: json['enableHighContrast'] ?? false,
       enableLargeText: json['enableLargeText'] ?? false,
       enableScreenReader: json['enableScreenReader'] ?? false,
-      enableMoodNotifications: json['enableMoodNotifications'] ?? true,
+      enableMoodNotifications: json['enableMoodNotifications'] ?? false,
       moodCheckInTimes: List<String>.from(json['moodCheckInTimes'] ?? ['09:00', '15:00', '21:00']),
     );
   }
@@ -252,10 +253,48 @@ class SettingsService extends ChangeNotifier {
   }
 
   Future<void> setMoodCheckInTimes(List<String> times) async {
-    await updateSettings(_settings.copyWith(moodCheckInTimes: times));
-    if (_settings.enableMoodNotifications) {
-      await NotificationService().scheduleMoodCheckInNotifications(times);
+    // Validate times format (HH:MM)
+    final validTimes = <String>[];
+    for (final time in times) {
+      final parts = time.split(':');
+      if (parts.length == 2) {
+        final hour = int.tryParse(parts[0]);
+        final minute = int.tryParse(parts[1]);
+        if (hour != null && minute != null && hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59) {
+          validTimes.add(time);
+        }
+      }
     }
+
+    if (validTimes.isEmpty) {
+      // Fallback to defaults if all times are invalid
+      validTimes.addAll(['09:00', '15:00', '21:00']);
+    }
+
+    await updateSettings(_settings.copyWith(moodCheckInTimes: validTimes));
+    if (_settings.enableMoodNotifications) {
+      await NotificationService().scheduleMoodCheckInNotifications(validTimes);
+    }
+  }
+
+  Future<List<String>> getSuggestedMoodCheckInTimes() async {
+    final moodRepository = MoodRepository();
+    await moodRepository.init();
+    return await moodRepository.getSuggestedCheckInTimes();
+  }
+
+  Future<void> addSuggestedMoodCheckInTimes() async {
+    final suggestedTimes = await getSuggestedMoodCheckInTimes();
+    final currentTimes = List<String>.from(_settings.moodCheckInTimes);
+
+    // Add suggested times that are not already in the list
+    for (final time in suggestedTimes) {
+      if (!currentTimes.contains(time)) {
+        currentTimes.add(time);
+      }
+    }
+
+    await setMoodCheckInTimes(currentTimes);
   }
 
   // Get current Pomodoro durations based on preset

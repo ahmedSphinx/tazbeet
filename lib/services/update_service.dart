@@ -1,6 +1,7 @@
 import 'package:tazbeet/services/app_logging.dart';
 
 import 'package:flutter/foundation.dart';
+import 'dart:io' show Platform;
 import 'package:in_app_update/in_app_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,6 +43,11 @@ class UpdateService extends ChangeNotifier {
   }
 
   Future<UpdateInfo?> checkForUpdates() async {
+    if (!Platform.isAndroid) {
+      // InAppUpdate plugin only supports Android
+      AppLogging.logInfo('Update check skipped: Not running on Android');
+      return null;
+    }
     try {
       _setStatus(UpdateStatus.checking);
 
@@ -69,6 +75,11 @@ class UpdateService extends ChangeNotifier {
   }
 
   Future<bool> startFlexibleUpdate() async {
+    if (!Platform.isAndroid) {
+      // InAppUpdate plugin only supports Android
+      AppLogging.logInfo('Flexible update skipped: Not running on Android');
+      return false;
+    }
     try {
       if (_updateInfo == null || !_updateInfo!.isImmediateUpdate) {
         await InAppUpdate.startFlexibleUpdate();
@@ -84,6 +95,11 @@ class UpdateService extends ChangeNotifier {
   }
 
   Future<bool> startImmediateUpdate() async {
+    if (!Platform.isAndroid) {
+      // InAppUpdate plugin only supports Android
+      AppLogging.logInfo('Immediate update skipped: Not running on Android');
+      return false;
+    }
     try {
       if (_updateInfo?.isImmediateUpdate == true) {
         await InAppUpdate.performImmediateUpdate();

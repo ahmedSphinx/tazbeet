@@ -106,6 +106,7 @@
   "splashVersion": "Version 1.0.0",
   "loginSubtitle": "Organisez vos tâches et boostez votre productivité",
   "signInWithGoogle": "Se connecter avec Google",
+  "signInWithApple": "Se connecter avec Apple",
   "termsAndPrivacy": "En vous connectant, vous acceptez nos Conditions d'utilisation et notre Politique de confidentialité",
   "taskDescriptionLabel": "Description (Optional)",
   "dueDateLabel": "Due Date (Optional)",

@@ -225,6 +225,18 @@ abstract class AppLocalizations {
   /// **'Notifications'**
   String get notificationsSection;
 
+  /// No description provided for @notificationHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification History'**
+  String get notificationHistory;
+
+  /// No description provided for @notificationPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Preferences'**
+  String get notificationPreferences;
+
   /// No description provided for @pomodoroSection.
   ///
   /// In en, this message translates to:
@@ -1323,6 +1335,12 @@ abstract class AppLocalizations {
   /// **'Sign in with Google'**
   String get signInWithGoogle;
 
+  /// No description provided for @signInWithApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Apple'**
+  String get signInWithApple;
+
   /// No description provided for @termsAndPrivacy.
   ///
   /// In en, this message translates to:
@@ -1364,6 +1382,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No tasks yet'**
   String get noTasksYet;
+
+  /// No description provided for @noTasksInCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'No tasks in this category'**
+  String get noTasksInCategory;
+
+  /// No description provided for @addTaskToGetStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a task to get started'**
+  String get addTaskToGetStarted;
 
   /// No description provided for @error.
   ///
@@ -1626,13 +1656,13 @@ abstract class AppLocalizations {
   /// No description provided for @howAreYouFeeling.
   ///
   /// In en, this message translates to:
-  /// **'How are you feeling today?'**
+  /// **'😊 How are you feeling?'**
   String get howAreYouFeeling;
 
   /// No description provided for @tapToLogMood.
   ///
   /// In en, this message translates to:
-  /// **'Tap the + button to log your mood'**
+  /// **'Tap to log your mood'**
   String get tapToLogMood;
 
   /// No description provided for @yourMoodInsights.
@@ -2378,6 +2408,924 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Complete Subtasks First'**
   String get completeSubtasksFirst;
+
+  /// No description provided for @testNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Notifications'**
+  String get testNotifications;
+
+  /// No description provided for @tryAllNotificationFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'Try all notification features'**
+  String get tryAllNotificationFeatures;
+
+  /// No description provided for @customizeNotificationBehavior.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize notification behavior'**
+  String get customizeNotificationBehavior;
+
+  /// No description provided for @viewPastNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'View past notifications'**
+  String get viewPastNotifications;
+
+  /// No description provided for @notificationTesting.
+  ///
+  /// In en, this message translates to:
+  /// **'🧪 Notification Testing'**
+  String get notificationTesting;
+
+  /// No description provided for @quickTestGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'🎯 Quick Test Guide'**
+  String get quickTestGuide;
+
+  /// No description provided for @totalNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Notifications: {count}'**
+  String totalNotifications(int count);
+
+  /// No description provided for @notificationsEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled: ✅'**
+  String get notificationsEnabled;
+
+  /// No description provided for @notificationsDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled: ❌'**
+  String get notificationsDisabled;
+
+  /// No description provided for @basicNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Basic Notifications'**
+  String get basicNotifications;
+
+  /// No description provided for @testSimpleNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Test: Simple Notification'**
+  String get testSimpleNotification;
+
+  /// No description provided for @appearsIn10Seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Appears in 10 seconds'**
+  String get appearsIn10Seconds;
+
+  /// No description provided for @testTaskReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Test: Task Reminder'**
+  String get testTaskReminder;
+
+  /// No description provided for @withActionButtons15Seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'With action buttons - 15 seconds'**
+  String get withActionButtons15Seconds;
+
+  /// No description provided for @testMoodCheckIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Test: Mood Check-in'**
+  String get testMoodCheckIn;
+
+  /// No description provided for @testIn20Seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'20 seconds'**
+  String get testIn20Seconds;
+
+  /// No description provided for @priorityLevels.
+  ///
+  /// In en, this message translates to:
+  /// **'2. Priority Levels'**
+  String get priorityLevels;
+
+  /// No description provided for @testHighPriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Test: High Priority'**
+  String get testHighPriority;
+
+  /// No description provided for @urgentNotification10Seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Urgent notification - 10 seconds'**
+  String get urgentNotification10Seconds;
+
+  /// No description provided for @testLowPriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Test: Low Priority'**
+  String get testLowPriority;
+
+  /// No description provided for @silentNotification10Seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Silent notification - 10 seconds'**
+  String get silentNotification10Seconds;
+
+  /// No description provided for @notificationManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'3. Notification Management'**
+  String get notificationManagement;
+
+  /// No description provided for @viewNotificationHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'View Notification History'**
+  String get viewNotificationHistory;
+
+  /// No description provided for @seeAllPastNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'See all past notifications'**
+  String get seeAllPastNotifications;
+
+  /// No description provided for @configureNotificationSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Configure notification settings'**
+  String get configureNotificationSettings;
+
+  /// No description provided for @testingTips.
+  ///
+  /// In en, this message translates to:
+  /// **'Testing Tips'**
+  String get testingTips;
+
+  /// No description provided for @grantNotificationPermissions.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Grant notification permissions when prompted'**
+  String get grantNotificationPermissions;
+
+  /// No description provided for @keepAppInBackground.
+  ///
+  /// In en, this message translates to:
+  /// **'2. Keep app in background after scheduling'**
+  String get keepAppInBackground;
+
+  /// No description provided for @checkHistoryAfterDelivery.
+  ///
+  /// In en, this message translates to:
+  /// **'3. Check notification history after delivery'**
+  String get checkHistoryAfterDelivery;
+
+  /// No description provided for @tryActionButtons.
+  ///
+  /// In en, this message translates to:
+  /// **'4. Try action buttons on task notifications'**
+  String get tryActionButtons;
+
+  /// No description provided for @testDNDMode.
+  ///
+  /// In en, this message translates to:
+  /// **'5. Test DND mode in preferences'**
+  String get testDNDMode;
+
+  /// No description provided for @notificationScheduledFor10Seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'⏰ Notification scheduled for 10 seconds'**
+  String get notificationScheduledFor10Seconds;
+
+  /// No description provided for @taskNotificationIn15Seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'⏰ Task notification in 15 seconds (has action buttons!)'**
+  String get taskNotificationIn15Seconds;
+
+  /// No description provided for @moodNotificationIn20Seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'⏰ Mood notification in 20 seconds'**
+  String get moodNotificationIn20Seconds;
+
+  /// No description provided for @highPriorityNotificationIn10Seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'⏰ High priority notification in 10 seconds'**
+  String get highPriorityNotificationIn10Seconds;
+
+  /// No description provided for @lowPriorityNotificationIn10Seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'⏰ Low priority (silent) notification in 10 seconds'**
+  String get lowPriorityNotificationIn10Seconds;
+
+  /// No description provided for @testNotificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Test Notification'**
+  String get testNotificationTitle;
+
+  /// No description provided for @testNotificationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The new notification system works!'**
+  String get testNotificationBody;
+
+  /// No description provided for @taskCompleteReport.
+  ///
+  /// In en, this message translates to:
+  /// **'📋 Task: Complete Report'**
+  String get taskCompleteReport;
+
+  /// No description provided for @dueInOneHour.
+  ///
+  /// In en, this message translates to:
+  /// **'Due in 1 hour - tap to view'**
+  String get dueInOneHour;
+
+  /// No description provided for @highPriorityAlert.
+  ///
+  /// In en, this message translates to:
+  /// **'🚨 High Priority Alert'**
+  String get highPriorityAlert;
+
+  /// No description provided for @urgentNotificationMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This is an urgent notification!'**
+  String get urgentNotificationMessage;
+
+  /// No description provided for @lowPriorityInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'ℹ️ Low Priority Info'**
+  String get lowPriorityInfo;
+
+  /// No description provided for @quietNotificationMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a quiet notification'**
+  String get quietNotificationMessage;
+
+  /// No description provided for @filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get filters;
+
+  /// No description provided for @searchNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Search notifications...'**
+  String get searchNotifications;
+
+  /// No description provided for @filterByType.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by Type'**
+  String get filterByType;
+
+  /// No description provided for @filterByStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by Status'**
+  String get filterByStatus;
+
+  /// No description provided for @notificationAnalyticsLast7Days.
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics (Last 7 Days)'**
+  String get notificationAnalyticsLast7Days;
+
+  /// No description provided for @notificationAnalyticsSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent'**
+  String get notificationAnalyticsSent;
+
+  /// No description provided for @notificationAnalyticsDelivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get notificationAnalyticsDelivered;
+
+  /// No description provided for @notificationAnalyticsOpened.
+  ///
+  /// In en, this message translates to:
+  /// **'Opened'**
+  String get notificationAnalyticsOpened;
+
+  /// No description provided for @notificationAnalyticsAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Action Rate'**
+  String get notificationAnalyticsAction;
+
+  /// No description provided for @notificationStatusDelivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get notificationStatusDelivered;
+
+  /// No description provided for @notificationStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get notificationStatusPending;
+
+  /// No description provided for @notificationStatusFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get notificationStatusFailed;
+
+  /// No description provided for @notificationStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get notificationStatusCancelled;
+
+  /// No description provided for @notificationStatusExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get notificationStatusExpired;
+
+  /// No description provided for @doNotDisturb.
+  ///
+  /// In en, this message translates to:
+  /// **'Do Not Disturb'**
+  String get doNotDisturb;
+
+  /// No description provided for @scheduledQuietHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled Quiet Hours'**
+  String get scheduledQuietHours;
+
+  /// No description provided for @allowUrgentNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow Urgent Notifications During DND'**
+  String get allowUrgentNotifications;
+
+  /// No description provided for @smartScheduling.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Scheduling'**
+  String get smartScheduling;
+
+  /// No description provided for @enableSmartScheduling.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Smart Scheduling'**
+  String get enableSmartScheduling;
+
+  /// No description provided for @maxNotificationsPerHour.
+  ///
+  /// In en, this message translates to:
+  /// **'Max Notifications Per Hour'**
+  String get maxNotificationsPerHour;
+
+  /// No description provided for @minimumMinutesBetweenSameType.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum Minutes Between Same Type'**
+  String get minimumMinutesBetweenSameType;
+
+  /// No description provided for @groupSimilarNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Group Similar Notifications'**
+  String get groupSimilarNotifications;
+
+  /// No description provided for @respectSystemDND.
+  ///
+  /// In en, this message translates to:
+  /// **'Respect System Do Not Disturb'**
+  String get respectSystemDND;
+
+  /// No description provided for @notificationTypes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Types'**
+  String get notificationTypes;
+
+  /// No description provided for @taskReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Reminders'**
+  String get taskReminders;
+
+  /// No description provided for @moodCheckIns.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood Check-ins'**
+  String get moodCheckIns;
+
+  /// No description provided for @pomodoroNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro'**
+  String get pomodoroNotifications;
+
+  /// No description provided for @emergencyNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency'**
+  String get emergencyNotifications;
+
+  /// No description provided for @enabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get enabled;
+
+  /// No description provided for @adaptiveTiming.
+  ///
+  /// In en, this message translates to:
+  /// **'Adaptive Timing'**
+  String get adaptiveTiming;
+
+  /// No description provided for @openSystemSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open System Settings'**
+  String get openSystemSettings;
+
+  /// No description provided for @viewHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'View History'**
+  String get viewHistory;
+
+  /// No description provided for @emergencyAlertsWillBypassQuietHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency alerts will bypass quiet hours'**
+  String get emergencyAlertsWillBypassQuietHours;
+
+  /// No description provided for @intelligentNotificationManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Intelligent Notification Management'**
+  String get intelligentNotificationManagement;
+
+  /// No description provided for @automaticallyOptimizeNotificationTiming.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically optimize notification timing to avoid interrupting you'**
+  String get automaticallyOptimizeNotificationTiming;
+
+  /// No description provided for @combineNotificationsOfTheSameType.
+  ///
+  /// In en, this message translates to:
+  /// **'Combine notifications of the same type into groups'**
+  String get combineNotificationsOfTheSameType;
+
+  /// No description provided for @honorDeviceDoNotDisturbSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Honor device Do Not Disturb settings'**
+  String get honorDeviceDoNotDisturbSettings;
+
+  /// No description provided for @customizeEachNotificationType.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize each notification type'**
+  String get customizeEachNotificationType;
+
+  /// No description provided for @disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get disabled;
+
+  /// No description provided for @enable.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable'**
+  String get enable;
+
+  /// No description provided for @showBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Badge'**
+  String get showBadge;
+
+  /// No description provided for @enableActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Actions'**
+  String get enableActions;
+
+  /// No description provided for @showActionButtons.
+  ///
+  /// In en, this message translates to:
+  /// **'Show action buttons'**
+  String get showActionButtons;
+
+  /// No description provided for @advancedSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Settings'**
+  String get advancedSettings;
+
+  /// No description provided for @expertOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Expert options for power users'**
+  String get expertOptions;
+
+  /// No description provided for @badgeOnlyMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Badge Only Mode'**
+  String get badgeOnlyMode;
+
+  /// No description provided for @badgeOnlyModeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Show badge without sound or popup'**
+  String get badgeOnlyModeSubtitle;
+
+  /// No description provided for @deliveryTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery Tracking'**
+  String get deliveryTracking;
+
+  /// No description provided for @trackWhenNotificationsAreDelivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Track when notifications are delivered and opened'**
+  String get trackWhenNotificationsAreDelivered;
+
+  /// No description provided for @trackNotificationInteractionStatistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Track notification interaction statistics'**
+  String get trackNotificationInteractionStatistics;
+
+  /// No description provided for @learnFromYourBehaviorToOptimizeNotificationTiming.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn from your behavior to optimize notification timing'**
+  String get learnFromYourBehaviorToOptimizeNotificationTiming;
+
+  /// No description provided for @moodCheckIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood Check-in'**
+  String get moodCheckIn;
+
+  /// No description provided for @masterToggleForAllNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Master toggle for all notifications'**
+  String get masterToggleForAllNotifications;
+
+  /// No description provided for @activeNotificationsMuted.
+  ///
+  /// In en, this message translates to:
+  /// **'Active - Notifications muted'**
+  String get activeNotificationsMuted;
+
+  /// No description provided for @configureQuietHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Configure quiet hours'**
+  String get configureQuietHours;
+
+  /// No description provided for @setAutomaticQuietHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Set automatic quiet hours'**
+  String get setAutomaticQuietHours;
+
+  /// No description provided for @sendTestNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Test Notification'**
+  String get sendTestNotification;
+
+  /// No description provided for @taskDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Due'**
+  String get taskDue;
+
+  /// No description provided for @pomodoroWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro Work'**
+  String get pomodoroWork;
+
+  /// No description provided for @pomodoroBreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro Break'**
+  String get pomodoroBreak;
+
+  /// No description provided for @pomodoroComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro Complete'**
+  String get pomodoroComplete;
+
+  /// No description provided for @medium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get medium;
+
+  /// No description provided for @urgent.
+  ///
+  /// In en, this message translates to:
+  /// **'Urgent'**
+  String get urgent;
+
+  /// No description provided for @notificationPreferencesInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Preferences Info'**
+  String get notificationPreferencesInfo;
+
+  /// No description provided for @notificationPreferencesInfoDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Configure how and when you receive notifications. Customize each notification type, set quiet hours, and control notification behavior.'**
+  String get notificationPreferencesInfoDetails;
+
+  /// No description provided for @smartSchedulingInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart scheduling learns from your usage patterns to deliver notifications at optimal times.'**
+  String get smartSchedulingInfo;
+
+  /// No description provided for @dndInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Do Not Disturb mode silences all notifications except emergencies during specified hours.'**
+  String get dndInfo;
+
+  /// No description provided for @manualDND.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual DND'**
+  String get manualDND;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @resetSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Settings'**
+  String get resetSettings;
+
+  /// No description provided for @resetSettingsConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to reset all settings to default?'**
+  String get resetSettingsConfirmation;
+
+  /// No description provided for @searchSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Search Settings'**
+  String get searchSettings;
+
+  /// No description provided for @typeToFilterSettingsSections.
+  ///
+  /// In en, this message translates to:
+  /// **'Type to filter settings sections'**
+  String get typeToFilterSettingsSections;
+
+  /// No description provided for @searchSettingsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search...'**
+  String get searchSettingsHint;
+
+  /// No description provided for @increaseContrastForBetterVisibility.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase contrast for better visibility'**
+  String get increaseContrastForBetterVisibility;
+
+  /// No description provided for @taskCompletionSounds.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Completion Sounds'**
+  String get taskCompletionSounds;
+
+  /// No description provided for @enableTaskCompletionSound.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Task Completion Sound'**
+  String get enableTaskCompletionSound;
+
+  /// No description provided for @playSoundWhenTasksAreCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Play sound when tasks are completed'**
+  String get playSoundWhenTasksAreCompleted;
+
+  /// No description provided for @soundSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound Selection'**
+  String get soundSelection;
+
+  /// No description provided for @testSound.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Sound'**
+  String get testSound;
+
+  /// No description provided for @customDurationsMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Durations (minutes)'**
+  String get customDurationsMinutes;
+
+  /// No description provided for @workDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Duration'**
+  String get workDuration;
+
+  /// No description provided for @shortBreakDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Short Break Duration'**
+  String get shortBreakDuration;
+
+  /// No description provided for @longBreakDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Long Break Duration'**
+  String get longBreakDuration;
+
+  /// No description provided for @helpImproveTheAppWithUsageData.
+  ///
+  /// In en, this message translates to:
+  /// **'Help improve the app with usage data'**
+  String get helpImproveTheAppWithUsageData;
+
+  /// No description provided for @sendCrashReportsToHelpFixIssues.
+  ///
+  /// In en, this message translates to:
+  /// **'Send crash reports to help fix issues'**
+  String get sendCrashReportsToHelpFixIssues;
+
+  /// No description provided for @failedToCheckForUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to check for updates'**
+  String get failedToCheckForUpdates;
+
+  /// No description provided for @mood.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood'**
+  String get mood;
+
+  /// No description provided for @appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @taskSounds.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Sounds'**
+  String get taskSounds;
+
+  /// No description provided for @pomodoro.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro'**
+  String get pomodoro;
+
+  /// No description provided for @backup.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup'**
+  String get backup;
+
+  /// No description provided for @privacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get privacy;
+
+  /// No description provided for @regional.
+  ///
+  /// In en, this message translates to:
+  /// **'Regional'**
+  String get regional;
+
+  /// No description provided for @updates.
+  ///
+  /// In en, this message translates to:
+  /// **'Updates'**
+  String get updates;
+
+  /// No description provided for @calendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get calendar;
+
+  /// No description provided for @clearDateFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear date filter'**
+  String get clearDateFilter;
+
+  /// No description provided for @tasksForDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks for {date}'**
+  String tasksForDate(String date);
+
+  /// No description provided for @tasksDue.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} tasks due'**
+  String tasksDue(int count);
+
+  /// No description provided for @undatedTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks without dates'**
+  String get undatedTasks;
+
+  /// No description provided for @monthView.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get monthView;
+
+  /// No description provided for @weekView.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get weekView;
+
+  /// No description provided for @calendarView.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar View'**
+  String get calendarView;
+
+  /// No description provided for @rescheduleTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Reschedule Task'**
+  String get rescheduleTask;
+
+  /// No description provided for @taskRescheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Task rescheduled'**
+  String get taskRescheduled;
+
+  /// No description provided for @undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// No description provided for @viewDayTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'View day tasks'**
+  String get viewDayTasks;
+
+  /// No description provided for @noTasksForThisDay.
+  ///
+  /// In en, this message translates to:
+  /// **'No tasks for this day'**
+  String get noTasksForThisDay;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

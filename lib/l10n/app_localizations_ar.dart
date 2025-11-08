@@ -74,6 +74,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notificationsSection => 'الإشعارات';
 
   @override
+  String get notificationHistory => 'سجل الإشعارات';
+
+  @override
+  String get notificationPreferences => 'إعدادات الإشعارات';
+
+  @override
   String get pomodoroSection => 'مؤقت بومودورو';
 
   @override
@@ -631,6 +637,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get signInWithGoogle => 'تسجيل الدخول باستخدام جوجل';
 
   @override
+  String get signInWithApple => 'تسجيل الدخول باستخدام آبل';
+
+  @override
   String get termsAndPrivacy => 'بتسجيل الدخول، أنت توافق على شروط الخدمة وسياسة الخصوصية الخاصة بنا';
 
   @override
@@ -650,6 +659,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noTasksYet => 'لا توجد مهام بعد';
+
+  @override
+  String get noTasksInCategory => 'لا توجد مهام في هذه الفئة';
+
+  @override
+  String get addTaskToGetStarted => 'أضف مهمة للبدء';
 
   @override
   String error(String message) {
@@ -785,10 +800,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get insights => 'الإحصائيات';
 
   @override
-  String get howAreYouFeeling => 'كيف تشعر؟';
+  String get howAreYouFeeling => '😊 كيف تشعر؟';
 
   @override
-  String get tapToLogMood => 'اضغط على زر + لتسجيل حالتك المزاجية';
+  String get tapToLogMood => 'اضغط لتسجيل مزاجك';
 
   @override
   String get yourMoodInsights => 'إحصائيات حالتك المزاجية';
@@ -1169,4 +1184,469 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get completeSubtasksFirst => 'أكمل المهام الفرعية أولاً';
+
+  @override
+  String get testNotifications => 'اختبار الإشعارات';
+
+  @override
+  String get tryAllNotificationFeatures => 'جرب جميع ميزات الإشعارات';
+
+  @override
+  String get customizeNotificationBehavior => 'تخصيص سلوك الإشعارات';
+
+  @override
+  String get viewPastNotifications => 'عرض الإشعارات السابقة';
+
+  @override
+  String get notificationTesting => '🧪 اختبار الإشعارات';
+
+  @override
+  String get quickTestGuide => '🎯 دليل الاختبار السريع';
+
+  @override
+  String totalNotifications(int count) {
+    return 'إجمالي الإشعارات: $count';
+  }
+
+  @override
+  String get notificationsEnabled => 'مفعّل: ✅';
+
+  @override
+  String get notificationsDisabled => 'مفعّل: ❌';
+
+  @override
+  String get basicNotifications => '1. الإشعارات الأساسية';
+
+  @override
+  String get testSimpleNotification => 'اختبار: إشعار بسيط';
+
+  @override
+  String get appearsIn10Seconds => 'يظهر خلال 10 ثوانٍ';
+
+  @override
+  String get testTaskReminder => 'اختبار: تذكير بمهمة';
+
+  @override
+  String get withActionButtons15Seconds => 'مع أزرار الإجراءات - 15 ثانية';
+
+  @override
+  String get testMoodCheckIn => 'اختبار: تسجيل المزاج';
+
+  @override
+  String get testIn20Seconds => '20 ثانية';
+
+  @override
+  String get priorityLevels => '2. مستويات الأولوية';
+
+  @override
+  String get testHighPriority => 'اختبار: أولوية عالية';
+
+  @override
+  String get urgentNotification10Seconds => 'إشعار عاجل - 10 ثوانٍ';
+
+  @override
+  String get testLowPriority => 'اختبار: أولوية منخفضة';
+
+  @override
+  String get silentNotification10Seconds => 'إشعار صامت - 10 ثوانٍ';
+
+  @override
+  String get notificationManagement => '3. إدارة الإشعارات';
+
+  @override
+  String get viewNotificationHistory => 'عرض سجل الإشعارات';
+
+  @override
+  String get seeAllPastNotifications => 'عرض جميع الإشعارات السابقة';
+
+  @override
+  String get configureNotificationSettings => 'تكوين إعدادات الإشعارات';
+
+  @override
+  String get testingTips => 'نصائح الاختبار';
+
+  @override
+  String get grantNotificationPermissions => '1. امنح أذونات الإشعارات عند المطالبة';
+
+  @override
+  String get keepAppInBackground => '2. احتفظ بالتطبيق في الخلفية بعد الجدولة';
+
+  @override
+  String get checkHistoryAfterDelivery => '3. تحقق من سجل الإشعارات بعد التسليم';
+
+  @override
+  String get tryActionButtons => '4. جرب أزرار الإجراءات في إشعارات المهام';
+
+  @override
+  String get testDNDMode => '5. اختبر وضع عدم الإزعاج في التفضيلات';
+
+  @override
+  String get notificationScheduledFor10Seconds => '⏰ تم جدولة الإشعار لمدة 10 ثوانٍ';
+
+  @override
+  String get taskNotificationIn15Seconds => '⏰ إشعار المهمة خلال 15 ثانية (يحتوي على أزرار إجراءات!)';
+
+  @override
+  String get moodNotificationIn20Seconds => '⏰ إشعار المزاج خلال 20 ثانية';
+
+  @override
+  String get highPriorityNotificationIn10Seconds => '⏰ إشعار عالي الأولوية خلال 10 ثوانٍ';
+
+  @override
+  String get lowPriorityNotificationIn10Seconds => '⏰ إشعار منخفض الأولوية (صامت) خلال 10 ثوانٍ';
+
+  @override
+  String get testNotificationTitle => '✅ إشعار اختباري';
+
+  @override
+  String get testNotificationBody => 'نظام الإشعارات الجديد يعمل!';
+
+  @override
+  String get taskCompleteReport => '📋 مهمة: إكمال التقرير';
+
+  @override
+  String get dueInOneHour => 'مستحق خلال ساعة واحدة - اضغط للعرض';
+
+  @override
+  String get highPriorityAlert => '🚨 تنبيه عالي الأولوية';
+
+  @override
+  String get urgentNotificationMessage => 'هذا إشعار عاجل!';
+
+  @override
+  String get lowPriorityInfo => 'ℹ️ معلومات منخفضة الأولوية';
+
+  @override
+  String get quietNotificationMessage => 'هذا إشعار هادئ';
+
+  @override
+  String get filters => 'الفلاتر';
+
+  @override
+  String get searchNotifications => 'البحث في الإشعارات...';
+
+  @override
+  String get filterByType => 'تصفية حسب النوع';
+
+  @override
+  String get filterByStatus => 'تصفية حسب الحالة';
+
+  @override
+  String get notificationAnalyticsLast7Days => 'التحليلات (آخر 7 أيام)';
+
+  @override
+  String get notificationAnalyticsSent => 'تم الإرسال';
+
+  @override
+  String get notificationAnalyticsDelivered => 'تم التسليم';
+
+  @override
+  String get notificationAnalyticsOpened => 'تم الفتح';
+
+  @override
+  String get notificationAnalyticsAction => 'معدل الإجراء';
+
+  @override
+  String get notificationStatusDelivered => 'تم التسليم';
+
+  @override
+  String get notificationStatusPending => 'قيد الانتظار';
+
+  @override
+  String get notificationStatusFailed => 'فشل';
+
+  @override
+  String get notificationStatusCancelled => 'تم الإلغاء';
+
+  @override
+  String get notificationStatusExpired => 'منتهي الصلاحية';
+
+  @override
+  String get doNotDisturb => 'عدم الإزعاج';
+
+  @override
+  String get scheduledQuietHours => 'ساعات الهدوء المجدولة';
+
+  @override
+  String get allowUrgentNotifications => 'السماح بالإشعارات العاجلة أثناء عدم الإزعاج';
+
+  @override
+  String get smartScheduling => 'الجدولة الذكية';
+
+  @override
+  String get enableSmartScheduling => 'تفعيل الجدولة الذكية';
+
+  @override
+  String get maxNotificationsPerHour => 'الحد الأقصى للإشعارات في الساعة';
+
+  @override
+  String get minimumMinutesBetweenSameType => 'الحد الأدنى من الدقائق بين نفس النوع';
+
+  @override
+  String get groupSimilarNotifications => 'تجميع الإشعارات المتشابهة';
+
+  @override
+  String get respectSystemDND => 'احترام وضع عدم الإزعاج للنظام';
+
+  @override
+  String get notificationTypes => 'أنواع الإشعارات';
+
+  @override
+  String get taskReminders => 'تذكيرات المهام';
+
+  @override
+  String get moodCheckIns => 'تسجيلات المزاج';
+
+  @override
+  String get pomodoroNotifications => 'بومودورو';
+
+  @override
+  String get emergencyNotifications => 'الطوارئ';
+
+  @override
+  String get enabled => 'مفعّل';
+
+  @override
+  String get adaptiveTiming => 'التوقيت التكيفي';
+
+  @override
+  String get openSystemSettings => 'فتح إعدادات النظام';
+
+  @override
+  String get viewHistory => 'عرض السجل';
+
+  @override
+  String get emergencyAlertsWillBypassQuietHours => 'تنبيهات الطوارئ ستتجاوز ساعات الهدوء';
+
+  @override
+  String get intelligentNotificationManagement => 'إدارة الإشعارات الذكية';
+
+  @override
+  String get automaticallyOptimizeNotificationTiming => 'تحسين توقيت الإشعارات تلقائيًا لتجنب مقاطعتك';
+
+  @override
+  String get combineNotificationsOfTheSameType => 'دمج الإشعارات من نفس النوع في مجموعات';
+
+  @override
+  String get honorDeviceDoNotDisturbSettings => 'احترام إعدادات عدم الإزعاج للجهاز';
+
+  @override
+  String get customizeEachNotificationType => 'تخصيص كل نوع إشعار';
+
+  @override
+  String get disabled => 'معطل';
+
+  @override
+  String get enable => 'تفعيل';
+
+  @override
+  String get showBadge => 'إظهار الشارة';
+
+  @override
+  String get enableActions => 'تفعيل الإجراءات';
+
+  @override
+  String get showActionButtons => 'إظهار أزرار الإجراءات';
+
+  @override
+  String get advancedSettings => 'الإعدادات المتقدمة';
+
+  @override
+  String get expertOptions => 'خيارات الخبراء للمستخدمين المتقدمين';
+
+  @override
+  String get badgeOnlyMode => 'وضع الشارة فقط';
+
+  @override
+  String get badgeOnlyModeSubtitle => 'إظهار الشارة بدون صوت أو نافذة منبثقة';
+
+  @override
+  String get deliveryTracking => 'تتبع التسليم';
+
+  @override
+  String get trackWhenNotificationsAreDelivered => 'تتبع متى يتم تسليم الإشعارات وفتحها';
+
+  @override
+  String get trackNotificationInteractionStatistics => 'تتبع إحصائيات تفاعل الإشعارات';
+
+  @override
+  String get learnFromYourBehaviorToOptimizeNotificationTiming => 'التعلم من سلوكك لتحسين توقيت الإشعارات';
+
+  @override
+  String get moodCheckIn => 'تسجيل المزاج';
+
+  @override
+  String get masterToggleForAllNotifications => 'التبديل الرئيسي لجميع الإشعارات';
+
+  @override
+  String get activeNotificationsMuted => 'نشط - الإشعارات مكتومة';
+
+  @override
+  String get configureQuietHours => 'تكوين ساعات الهدوء';
+
+  @override
+  String get setAutomaticQuietHours => 'تعيين ساعات الهدوء التلقائية';
+
+  @override
+  String get sendTestNotification => 'إرسال إشعار تجريبي';
+
+  @override
+  String get taskDue => 'مهمة مستحقة';
+
+  @override
+  String get pomodoroWork => 'بومودورو عمل';
+
+  @override
+  String get pomodoroBreak => 'بومودورو استراحة';
+
+  @override
+  String get pomodoroComplete => 'بومودورو مكتمل';
+
+  @override
+  String get medium => 'متوسط';
+
+  @override
+  String get urgent => 'عاجل';
+
+  @override
+  String get notificationPreferencesInfo => 'معلومات تفضيلات الإشعارات';
+
+  @override
+  String get notificationPreferencesInfoDetails => 'قم بتكوين كيفية ووقت استلام الإشعارات. خصص كل نوع إشعار، وعيّن ساعات الهدوء، وتحكم في سلوك الإشعارات.';
+
+  @override
+  String get smartSchedulingInfo => 'تتعلم الجدولة الذكية من أنماط استخدامك لتقديم الإشعارات في الأوقات المثلى.';
+
+  @override
+  String get dndInfo => 'يُسكت وضع عدم الإزعاج جميع الإشعارات باستثناء حالات الطوارئ خلال الساعات المحددة.';
+
+  @override
+  String get manualDND => 'عدم الإزعاج اليدوي';
+
+  @override
+  String get close => 'إغلاق';
+
+  @override
+  String get resetSettings => 'إعادة تعيين الإعدادات';
+
+  @override
+  String get resetSettingsConfirmation => 'هل أنت متأكد أنك تريد إعادة تعيين جميع الإعدادات إلى الافتراضية؟';
+
+  @override
+  String get searchSettings => 'البحث في الإعدادات';
+
+  @override
+  String get typeToFilterSettingsSections => 'اكتب لتصفية أقسام الإعدادات';
+
+  @override
+  String get searchSettingsHint => 'بحث...';
+
+  @override
+  String get increaseContrastForBetterVisibility => 'زيادة التباين لرؤية أفضل';
+
+  @override
+  String get taskCompletionSounds => 'أصوات إكمال المهام';
+
+  @override
+  String get enableTaskCompletionSound => 'تفعيل صوت إكمال المهمة';
+
+  @override
+  String get playSoundWhenTasksAreCompleted => 'تشغيل الصوت عند إكمال المهام';
+
+  @override
+  String get soundSelection => 'اختيار الصوت';
+
+  @override
+  String get testSound => 'اختبار الصوت';
+
+  @override
+  String get customDurationsMinutes => 'مدد مخصصة (بالدقائق)';
+
+  @override
+  String get workDuration => 'مدة العمل';
+
+  @override
+  String get shortBreakDuration => 'مدة الاستراحة القصيرة';
+
+  @override
+  String get longBreakDuration => 'مدة الاستراحة الطويلة';
+
+  @override
+  String get helpImproveTheAppWithUsageData => 'ساعد في تحسين التطبيق ببيانات الاستخدام';
+
+  @override
+  String get sendCrashReportsToHelpFixIssues => 'إرسال تقارير الأعطال للمساعدة في إصلاح المشاكل';
+
+  @override
+  String get failedToCheckForUpdates => 'فشل التحقق من التحديثات';
+
+  @override
+  String get mood => 'المزاج';
+
+  @override
+  String get appearance => 'المظهر';
+
+  @override
+  String get notifications => 'الإشعارات';
+
+  @override
+  String get taskSounds => 'أصوات المهام';
+
+  @override
+  String get pomodoro => 'بومودورو';
+
+  @override
+  String get backup => 'النسخ الاحتياطي';
+
+  @override
+  String get privacy => 'الخصوصية';
+
+  @override
+  String get regional => 'الإقليمي';
+
+  @override
+  String get updates => 'التحديثات';
+
+  @override
+  String get calendar => 'التقويم';
+
+  @override
+  String get clearDateFilter => 'مسح تصفية التاريخ';
+
+  @override
+  String tasksForDate(String date) {
+    return 'مهام ليوم $date';
+  }
+
+  @override
+  String tasksDue(int count) {
+    return '$count مهمة مستحقة';
+  }
+
+  @override
+  String get undatedTasks => 'مهام بدون تواريخ';
+
+  @override
+  String get monthView => 'شهر';
+
+  @override
+  String get weekView => 'أسبوع';
+
+  @override
+  String get calendarView => 'عرض التقويم';
+
+  @override
+  String get rescheduleTask => 'إعادة جدولة المهمة';
+
+  @override
+  String get taskRescheduled => 'تم إعادة جدولة المهمة';
+
+  @override
+  String get undo => 'تراجع';
+
+  @override
+  String get viewDayTasks => 'عرض مهام اليوم';
+
+  @override
+  String get noTasksForThisDay => 'لا توجد مهام لهذا اليوم';
 }

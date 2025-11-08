@@ -17,8 +17,7 @@
 -keep class com.google.firebase.** { *; }
 -keep class com.google.android.gms.** { *; }
 
-# Keep Facebook SDK
--keep class com.facebook.** { *; }
+# Facebook SDK rules removed
 
 # Keep Google Sign In
 -keep class com.google.android.gms.auth.** { *; }

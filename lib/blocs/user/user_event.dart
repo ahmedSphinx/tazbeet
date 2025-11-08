@@ -9,10 +9,12 @@ abstract class UserEvent extends Equatable {
 }
 
 class LoadUser extends UserEvent {
-  const LoadUser();
+  final bool forceRefresh;
+
+  const LoadUser({this.forceRefresh = false});
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [forceRefresh];
 }
 
 class UpdateUser extends UserEvent {

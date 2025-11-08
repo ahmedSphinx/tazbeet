@@ -6,7 +6,7 @@ import 'package:tazbeet/models/mood.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
 
 class MoodInputScreen extends StatefulWidget {
-  const MoodInputScreen({Key? key}) : super(key: key);
+  const MoodInputScreen({super.key});
 
   @override
   State<MoodInputScreen> createState() => _MoodInputScreenState();

@@ -106,6 +106,7 @@
   "splashVersion": "Versión 1.0.0",
   "loginSubtitle": "Organiza tus tareas y aumenta tu productividad",
   "signInWithGoogle": "Iniciar sesión con Google",
+  "signInWithApple": "Iniciar sesión con Apple",
   "termsAndPrivacy": "Al iniciar sesión, aceptas nuestros Términos de Servicio y Política de Privacidad",
   "taskDescriptionLabel": "Description (Optional)",
   "dueDateLabel": "Due Date (Optional)",

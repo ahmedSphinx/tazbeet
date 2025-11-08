@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:tazbeet/services/app_logging.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,11 +17,13 @@ class UserRepository {
     _box = await Hive.openBox<User>(_boxName);
   }
 
-  Future<User?> getUser(String userId) async {
-    // Try local first
-    final localUser = _box.get(userId);
-    if (localUser != null) {
-      return localUser;
+  Future<User?> getUser(String userId, {bool forceRefresh = false}) async {
+    // Try local first unless force refresh
+    if (!forceRefresh) {
+      final localUser = _box.get(userId);
+      if (localUser != null) {
+        return localUser;
+      }
     }
 
     // Fetch from Firestore if available
@@ -34,6 +38,7 @@ class UserRepository {
             data.forEach((key, value) {
               convertedData[key.toString()] = value;
             });
+            log(convertedData.toString());
             final user = User.fromJson(convertedData);
             await _box.put(userId, user);
             return user;

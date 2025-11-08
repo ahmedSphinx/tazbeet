@@ -269,7 +269,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
   }
 
   Widget _buildTaskDetails(BuildContext context, Task task, AppLocalizations l10n) {
-    AppLogging.logError(task.repeatRule!.getDisplayText(), name: 'TaskDetailsScreen');
+    // AppLogging.logError(task.repeatRule!.getDisplayText(), name: 'TaskDetailsScreen');
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 500),
       opacity: isCompleted ? 0.5 : 1.0,

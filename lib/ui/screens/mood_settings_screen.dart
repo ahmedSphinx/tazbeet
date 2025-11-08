@@ -8,7 +8,7 @@ import 'package:tazbeet/l10n/app_localizations.dart';
 import '../../services/notification_service.dart';
 
 class MoodSettingsScreen extends StatefulWidget {
-  const MoodSettingsScreen({Key? key}) : super(key: key);
+  const MoodSettingsScreen({super.key});
 
   @override
   State<MoodSettingsScreen> createState() => _MoodSettingsScreenState();

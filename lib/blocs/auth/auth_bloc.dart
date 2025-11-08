@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:tazbeet/services/app_logging.dart';
 import 'package:tazbeet/services/auth_service.dart';
 import 'package:tazbeet/services/data_sync_service.dart';
+import 'package:tazbeet/services/admin_service.dart';
 import 'package:tazbeet/models/user.dart' as model;
 import 'package:tazbeet/repositories/category_repository.dart';
 import 'package:tazbeet/repositories/user_repository.dart';
@@ -14,12 +15,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthService _authService;
   final DataSyncService _dataSyncService = DataSyncService();
   final CategoryRepository _categoryRepository = CategoryRepository();
+  final AdminService _adminService = AdminService();
   StreamSubscription<firebase_auth.User?>? _authSubscription;
 
   AuthBloc(this._authService) : super(AuthInitial()) {
     on<AuthStarted>(_onAuthStarted);
     on<AuthSignInRequested>(_onSignInRequested);
-    on<AuthFacebookSignInRequested>(_onFacebookSignInRequested);
+    on<AuthAppleSignInRequested>(_onAppleSignInRequested);
+    // Facebook sign-in removed
     on<AuthEmailSignInRequested>(_onEmailSignInRequested);
     on<AuthEmailSignUpRequested>(_onEmailSignUpRequested);
     on<AuthSignOutRequested>(_onSignOutRequested);
@@ -28,23 +31,36 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLoggedOut>(_onLoggedOut);
   }
 
-  void _onAuthStarted(AuthStarted event, Emitter<AuthState> emit) {
+  void _onAuthStarted(AuthStarted event, Emitter<AuthState> emit) async {
     AppLogging.logInfo('Auth started - initializing authentication state monitoring', name: 'AuthBloc');
     emit(AuthLoading());
-    _authSubscription = _authService.authStateChanges!.listen(
-      (user) {
-        AppLogging.logInfo('Auth state changed - user: ${user?.uid ?? 'null'}', name: 'AuthBloc');
-        if (user != null) {
-          add(AuthLoggedIn());
-        } else {
-          add(AuthLoggedOut());
-        }
-      },
-      onError: (error) {
-        AppLogging.logError('Error in auth state changes stream', name: 'AuthBloc', error: error);
-        emit(AuthError('Authentication state monitoring failed: $error'));
-      },
-    );
+
+    try {
+      _authSubscription = _authService.authStateChanges!.listen(
+        (user) {
+          AppLogging.logInfo('Auth state changed - user: ${user?.uid ?? 'null'}', name: 'AuthBloc');
+          if (user != null) {
+            add(AuthLoggedIn());
+          } else {
+            add(AuthLoggedOut());
+          }
+        },
+        onError: (error) {
+          AppLogging.logError('Error in auth state changes stream', name: 'AuthBloc', error: error);
+          emit(AuthError('Authentication state monitoring failed: $error'));
+        },
+      );
+
+      // Fallback: if no state change after 3 seconds, emit Unauthenticated
+      await Future.delayed(const Duration(seconds: 3));
+      if (state is AuthLoading) {
+        AppLogging.logWarning('Auth timeout - no state change received, emitting AuthUnauthenticated', name: 'AuthBloc');
+        emit(AuthUnauthenticated());
+      }
+    } catch (e) {
+      AppLogging.logError('Error initializing auth state monitoring', name: 'AuthBloc', error: e);
+      emit(AuthUnauthenticated());
+    }
   }
 
   void _onSignInRequested(AuthSignInRequested event, Emitter<AuthState> emit) async {
@@ -59,10 +75,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         // Save user data to Firestore after successful sign-in
         try {
           final user = userCredential.user!;
+          // Determine if this user should be admin (first user)
+          final isAdmin = await _determineAdminStatus();
+
           // Create user model
-          final userModel = model.User(id: user.uid, name: user.displayName ?? '', profileImageUrl: user.photoURL ?? '', birthday: null, createdAt: DateTime.now(), updatedAt: DateTime.now(), email: user.email);
+          final userModel = model.User(
+            id: user.uid,
+            name: user.displayName ?? '',
+            profileImageUrl: user.photoURL ?? '',
+            birthday: null,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+            email: user.email,
+            isAdmin: isAdmin,
+          );
           await _dataSyncService.saveUserData(userModel);
-          AppLogging.logInfo('User data saved to Firestore successfully', name: 'AuthBloc');
+          AppLogging.logInfo('User data saved to Firestore successfully (isAdmin: $isAdmin)', name: 'AuthBloc');
         } catch (saveError) {
           AppLogging.logError('Failed to save user data to Firestore', name: 'AuthBloc', error: saveError);
           // Continue authentication even if saving fails
@@ -95,22 +123,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  void _onFacebookSignInRequested(AuthFacebookSignInRequested event, Emitter<AuthState> emit) async {
-    AppLogging.logInfo('Facebook sign-in requested', name: 'AuthBloc');
+  void _onAppleSignInRequested(AuthAppleSignInRequested event, Emitter<AuthState> emit) async {
+    AppLogging.logInfo('Apple sign-in requested', name: 'AuthBloc');
     emit(AuthLoading());
     try {
-      AppLogging.logInfo('Calling AuthService.signInWithFacebook()', name: 'AuthBloc');
-      final userCredential = await _authService.signInWithFacebook();
+      AppLogging.logInfo('Calling AuthService.signInWithApple()', name: 'AuthBloc');
+      final userCredential = await _authService.signInWithApple();
       if (userCredential != null) {
-        AppLogging.logInfo('Facebook sign-in successful for user: ${userCredential.user!.uid}', name: 'AuthBloc');
+        AppLogging.logInfo('Apple sign-in successful for user: ${userCredential.user!.uid}', name: 'AuthBloc');
 
         // Save user data to Firestore after successful sign-in
         try {
           final user = userCredential.user!;
+          // Determine if this user should be admin (first user)
+          final isAdmin = await _determineAdminStatus();
+
           // Create user model
-          final userModel = model.User(id: user.uid, name: user.displayName ?? '', profileImageUrl: user.photoURL ?? '', birthday: null, createdAt: DateTime.now(), updatedAt: DateTime.now(), email: user.email);
+          final userModel = model.User(
+            id: user.uid,
+            name: user.displayName ?? '',
+            profileImageUrl: user.photoURL ?? '',
+            birthday: null,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+            email: user.email,
+            isAdmin: isAdmin,
+          );
           await _dataSyncService.saveUserData(userModel);
-          AppLogging.logInfo('User data saved to Firestore successfully', name: 'AuthBloc');
+          AppLogging.logInfo('User data saved to Firestore successfully (isAdmin: $isAdmin)', name: 'AuthBloc');
         } catch (saveError) {
           AppLogging.logError('Failed to save user data to Firestore', name: 'AuthBloc', error: saveError);
           // Continue authentication even if saving fails
@@ -134,14 +174,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
         emit(AuthAuthenticated(userCredential.user!));
       } else {
-        AppLogging.logInfo('Facebook sign-in cancelled by user', name: 'AuthBloc');
+        AppLogging.logInfo('Apple sign-in cancelled by user', name: 'AuthBloc');
         emit(AuthUnauthenticated());
       }
     } catch (e) {
-      AppLogging.logError('Facebook sign-in failed', name: 'AuthBloc', error: e);
-      emit(AuthError('Failed to sign in with Facebook: $e'));
+      AppLogging.logError('Apple sign-in failed', name: 'AuthBloc', error: e);
+      emit(AuthError('Failed to sign in with Apple: $e'));
     }
   }
+
+  // Facebook sign-in handler removed
 
   void _onEmailSignInRequested(AuthEmailSignInRequested event, Emitter<AuthState> emit) async {
     AppLogging.logInfo('Email sign-in requested for: ${event.email}', name: 'AuthBloc');
@@ -155,10 +197,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         // Save minimal user data to Firestore after successful sign-in (without auto-populating name/birthday)
         try {
           final user = userCredential.user!;
+          // Determine if this user should be admin (first user)
+          final isAdmin = await _determineAdminStatus();
+
           // Create user model with minimal data - name and birthday will be set during profile completion
-          final userModel = model.User(id: user.uid, name: '', profileImageUrl: '', birthday: null, createdAt: DateTime.now(), updatedAt: DateTime.now(), email: user.email);
+          final userModel = model.User(id: user.uid, name: '', profileImageUrl: '', birthday: null, createdAt: DateTime.now(), updatedAt: DateTime.now(), email: user.email, isAdmin: isAdmin);
           await _dataSyncService.saveUserData(userModel);
-          AppLogging.logInfo('Minimal user data saved to Firestore successfully', name: 'AuthBloc');
+          AppLogging.logInfo('Minimal user data saved to Firestore successfully (isAdmin: $isAdmin)', name: 'AuthBloc');
         } catch (saveError) {
           AppLogging.logError('Failed to save user data to Firestore', name: 'AuthBloc', error: saveError);
           // Continue authentication even if saving fails
@@ -209,10 +254,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         // Save minimal user data to Firestore after successful sign-up (without auto-populating name/birthday)
         try {
           final user = userCredential.user!;
+          // Determine if this user should be admin (first user)
+          final isAdmin = await _determineAdminStatus();
+
           // Create user model with minimal data - name and birthday will be set during profile completion
-          final userModel = model.User(id: user.uid, name: '', profileImageUrl: '', birthday: null, createdAt: DateTime.now(), updatedAt: DateTime.now(), email: user.email);
+          final userModel = model.User(id: user.uid, name: '', profileImageUrl: '', birthday: null, createdAt: DateTime.now(), updatedAt: DateTime.now(), email: user.email, isAdmin: isAdmin);
           await _dataSyncService.saveUserData(userModel);
-          AppLogging.logInfo('Minimal user data saved to Firestore successfully', name: 'AuthBloc');
+          AppLogging.logInfo('Minimal user data saved to Firestore successfully (isAdmin: $isAdmin)', name: 'AuthBloc');
         } catch (saveError) {
           AppLogging.logError('Failed to save user data to Firestore', name: 'AuthBloc', error: saveError);
           // Continue authentication even if saving fails
@@ -256,6 +304,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       AppLogging.logInfo('Default categories created successfully for first-time user', name: 'AuthBloc');
     } else {
       AppLogging.logInfo('Returning user detected, skipping default categories creation', name: 'AuthBloc');
+    }
+  }
+
+  /// Determine if user should be admin (first user gets admin rights)
+  Future<bool> _determineAdminStatus() async {
+    try {
+      final isFirst = await _adminService.isFirstUser();
+      if (isFirst) {
+        AppLogging.logInfo('First user detected - granting admin privileges', name: 'AuthBloc');
+      }
+      return isFirst;
+    } catch (e) {
+      AppLogging.logError('Error determining admin status: $e', name: 'AuthBloc', error: e);
+      return false;
     }
   }
 

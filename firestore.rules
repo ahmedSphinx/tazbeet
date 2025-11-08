@@ -1,0 +1,92 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      // Anyone can read their own user document
+      allow read: if isOwner(userId) || isAdmin();
+      
+      // Users can create their own document
+      allow create: if isOwner(userId) && 
+                      request.resource.data.id == userId &&
+                      // Prevent setting isAdmin to true on creation (except for first user)
+                      (request.resource.data.isAdmin == false || !exists(/databases/$(database)/documents/users/$(userId)));
+      
+      // Users can update their own document, but CANNOT change isAdmin field
+      allow update: if (isOwner(userId) && 
+                        request.resource.data.isAdmin == resource.data.isAdmin) ||
+                       // Admins can update any user
+                       isAdmin();
+      
+      // Only admins can delete users
+      allow delete: if isAdmin();
+      
+      // User's tasks subcollection
+      match /tasks/{taskId} {
+        allow read, write: if isOwner(userId) || isAdmin();
+      }
+      
+      // User's categories subcollection
+      match /categories/{categoryId} {
+        allow read, write: if isOwner(userId) || isAdmin();
+      }
+      
+      // User's moods subcollection
+      match /moods/{moodId} {
+        allow read, write: if isOwner(userId) || isAdmin();
+      }
+      
+      // User's notification preferences subcollection
+      match /notification_preferences/{prefId} {
+        allow read, write: if isOwner(userId) || isAdmin();
+      }
+      
+      // User's notification history subcollection
+      match /notification_history/{notificationId} {
+        allow read, write: if isOwner(userId) || isAdmin();
+      }
+    }
+    
+    // Global categories collection (read by all, write by admins only)
+    match /categories/{categoryId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // Admin settings
+    match /admin_settings/{settingId} {
+      // Anyone can read (needed for maintenance mode check)
+      allow read: if true;
+      // Only admins can write
+      allow write: if isAdmin();
+    }
+    
+    // Admin activity log (admins only)
+    match /admin_activity_log/{activityId} {
+      allow read, write: if isAdmin();
+    }
+    
+    // Notification items (admins can create, users can read their own)
+    match /notification_items/{notificationId} {
+      allow read: if isAuthenticated();
+      allow create: if isAdmin();
+      allow update, delete: if isAdmin();
+    }
+  }
+}
+

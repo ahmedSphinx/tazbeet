@@ -29,6 +29,7 @@ class Task extends Equatable {
   final int pomodoroCount;
   final Duration timeSpent;
   final List<Map<String, dynamic>> pomodoroSessions;
+  final String? userId; // For admin panel - which user this task belongs to
 
   const Task({
     required this.id,
@@ -56,6 +57,7 @@ class Task extends Equatable {
     this.pomodoroCount = 0,
     this.timeSpent = Duration.zero,
     this.pomodoroSessions = const [],
+    this.userId, // For admin panel
   });
 
   Task copyWith({
@@ -84,6 +86,7 @@ class Task extends Equatable {
     int? pomodoroCount,
     Duration? timeSpent,
     List<Map<String, dynamic>>? pomodoroSessions,
+    String? userId,
   }) {
     return Task(
       id: id ?? this.id,
@@ -111,6 +114,7 @@ class Task extends Equatable {
       pomodoroCount: pomodoroCount ?? this.pomodoroCount,
       timeSpent: timeSpent ?? this.timeSpent,
       pomodoroSessions: pomodoroSessions ?? this.pomodoroSessions,
+      userId: userId ?? this.userId,
     );
   }
 
@@ -141,6 +145,7 @@ class Task extends Equatable {
       'pomodoroCount': pomodoroCount,
       'timeSpent': timeSpent.inMilliseconds,
       'pomodoroSessions': pomodoroSessions,
+      'userId': userId, // For admin panel
     };
   }
 
@@ -180,6 +185,7 @@ class Task extends Equatable {
         pomodoroCount: _safeConvert(json['pomodoroCount'], 0),
         timeSpent: json['timeSpent'] is int ? Duration(milliseconds: json['timeSpent']) : Duration.zero,
         pomodoroSessions: json['pomodoroSessions'] is List ? List<Map<String, dynamic>>.from(json['pomodoroSessions']) : [],
+        userId: json['userId'], // For admin panel
       );
     } catch (e) {
       // If parsing fails, return a basic task with required fields
@@ -278,5 +284,6 @@ class Task extends Equatable {
     pomodoroCount,
     timeSpent,
     pomodoroSessions,
+    userId,
   ];
 }

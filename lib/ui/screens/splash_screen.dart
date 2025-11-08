@@ -3,10 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tazbeet/blocs/auth/auth_state.dart';
 import 'package:tazbeet/blocs/auth/auth_bloc.dart';
+import 'package:tazbeet/blocs/user/user_bloc.dart';
+import 'package:tazbeet/blocs/user/user_state.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
 import 'package:tazbeet/ui/screens/main_screen.dart';
 import 'package:tazbeet/ui/screens/login_screen.dart';
 import 'package:tazbeet/ui/screens/profile_screen.dart';
+import 'package:tazbeet/ui/screens/maintenance_screen.dart';
+
+import '../../services/app_logging.dart';
+import '../../services/maintenance_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -51,15 +57,82 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     // Start animations
     _logoController.forward();
     Future.delayed(const Duration(milliseconds: 500), () {
-      _textController.forward();
+      if (mounted) {
+        _textController.forward();
+      }
     });
 
     Future.delayed(const Duration(milliseconds: 3000), () {
-      _fadeController.forward();
+      if (mounted) {
+        _fadeController.forward();
+      }
     });
+
     PackageInfo.fromPlatform().then((info) {
       packageInfo = info.version;
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
+    });
+
+    // Check maintenance mode and navigate accordingly
+    _checkMaintenanceModeAndNavigate();
+  }
+
+  Future<void> _checkMaintenanceModeAndNavigate() async {
+    // Wait a bit for animations to start
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    if (!mounted) return;
+
+    try {
+      // Check maintenance mode
+      final settings = await MaintenanceService().getSettings();
+
+      if (!mounted) return;
+
+      if (settings.maintenanceMode) {
+        // Check if user is admin
+        final userState = context.read<UserBloc>().state;
+        if (userState is UserLoaded && userState.user.isAdmin) {
+          AppLogging.logInfo('🔧 Maintenance mode active, but user is admin - allowing access');
+          // Continue to normal flow
+        } else {
+          // Show maintenance screen for non-admin users
+          AppLogging.logInfo('🔧 Maintenance mode active - showing maintenance screen');
+          _hasNavigated = true;
+
+          Future.delayed(const Duration(milliseconds: 3000), () {
+            if (!mounted) return;
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MaintenanceScreen(settings: settings)));
+          });
+          return;
+        }
+      }
+    } catch (e) {
+      AppLogging.logError('Error checking maintenance mode: $e');
+      // Continue to normal flow on error
+    }
+
+    // Fallback: if no auth state change after 4 seconds, check and navigate
+    Future.delayed(const Duration(milliseconds: 4000), () {
+      if (!mounted) return;
+
+      // Check if navigation already happened
+      if (_hasNavigated) {
+        AppLogging.logInfo('✅ Navigation already completed, fallback not needed');
+        return;
+      }
+
+      final authState = context.read<AuthBloc>().state;
+      AppLogging.logInfo('🔍 Fallback check - Auth State: $authState');
+
+      // If still in initial or loading state, force navigation to login
+      if (authState is AuthInitial || authState is AuthLoading) {
+        _hasNavigated = true;
+        AppLogging.logWarning('⚠️ Auth stuck in ${authState.runtimeType}, forcing navigation to LoginScreen');
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginScreen()));
+      }
     });
   }
 
@@ -71,40 +144,67 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     super.dispose();
   }
 
+  bool _hasNavigated = false; // Track if navigation already happened
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is AuthAuthenticated || state is AuthUnauthenticated || state is AuthProfileIncomplete) {
+        AppLogging.logInfo('🔔 Auth State Changed: ${state.runtimeType}');
+
+        // Navigate based on auth state after splash animation
+        if (state is AuthAuthenticated || state is AuthUnauthenticated || state is AuthProfileIncomplete || state is AuthError) {
+          // Prevent multiple navigation attempts
+          if (_hasNavigated) {
+            AppLogging.logInfo('⚠️ Navigation already triggered, skipping');
+            return;
+          }
+
+          _hasNavigated = true;
+          AppLogging.logInfo('✅ Valid state received, navigating in 3.5 seconds...');
+
           Future.delayed(const Duration(milliseconds: 3500), () {
-            if (mounted) {
-              Widget nextScreen;
-              if (state is AuthAuthenticated) {
-                nextScreen = const HomeScreen();
-              } else if (state is AuthProfileIncomplete) {
-                nextScreen = const ProfileScreen(isProfileCompletion: true);
-              } else {
-                nextScreen = const LoginScreen();
-              }
-
-              Navigator.of(context).pushReplacement(
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) => nextScreen,
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    const begin = Offset(1.0, 0.0);
-                    const end = Offset.zero;
-                    const curve = Curves.easeInOutCubic;
-
-                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                    var offsetAnimation = animation.drive(tween);
-
-                    return SlideTransition(position: offsetAnimation, child: child);
-                  },
-                  transitionDuration: const Duration(milliseconds: 800),
-                ),
-              );
+            if (!mounted) {
+              AppLogging.logWarning('⚠️ Widget not mounted, skipping navigation');
+              return;
             }
+
+            Widget nextScreen;
+            String screenName;
+
+            if (state is AuthAuthenticated) {
+              nextScreen = const HomeScreen();
+              screenName = 'HomeScreen';
+            } else if (state is AuthProfileIncomplete) {
+              nextScreen = const ProfileScreen(isProfileCompletion: true);
+              screenName = 'ProfileScreen';
+            } else {
+              // AuthUnauthenticated or AuthError
+              nextScreen = const LoginScreen();
+              screenName = 'LoginScreen';
+            }
+
+            AppLogging.logInfo('🚀 Navigating to $screenName');
+
+            Navigator.of(context).pushReplacement(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) => nextScreen,
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  const begin = Offset(1.0, 0.0);
+                  const end = Offset.zero;
+                  const curve = Curves.easeInOutCubic;
+
+                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                  var offsetAnimation = animation.drive(tween);
+
+                  return SlideTransition(position: offsetAnimation, child: child);
+                },
+                transitionDuration: const Duration(milliseconds: 800),
+              ),
+            );
           });
+        } else {
+          AppLogging.logInfo('⏳ Waiting for valid auth state (current: ${state.runtimeType})');
         }
       },
       child: Scaffold(

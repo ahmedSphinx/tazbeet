@@ -36,6 +36,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -52,11 +53,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               final confirmed = await showDialog<bool>(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: const Text('Reset Settings'),
-                  content: const Text('Are you sure you want to reset all settings to their default values? This action cannot be undone.'),
+                  title: Text(l10n.resetSettings),
+                  content: Text(l10n.resetSettingsConfirmation),
                   actions: [
-                    TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
-                    ElevatedButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Reset')),
+                    TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(l10n.cancelButton)),
+                    ElevatedButton(onPressed: () => Navigator.of(context).pop(true), child: Text(l10n.resetButton)),
                   ],
                 ),
               );
@@ -76,12 +77,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Padding(
                 padding: const EdgeInsets.all(AppSpacing.md),
                 child: Semantics(
-                  label: 'Search settings',
-                  hint: 'Type to filter settings sections',
+                  label: l10n.searchSettings,
+                  hint: l10n.typeToFilterSettingsSections,
                   child: TextField(
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.search),
-                      hintText: 'Search settings...',
+                      hintText: l10n.searchSettingsHint,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
                       contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
                     ),
@@ -107,6 +108,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildProfileSection() {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       margin: EdgeInsets.zero,
       child: ListTile(
@@ -122,6 +124,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildMoodSection() {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       margin: EdgeInsets.zero,
       child: ListTile(
@@ -137,9 +140,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildAppearanceSection(settings.SettingsService settingsService, ColorCustomizationService colorService) {
+    final l10n = AppLocalizations.of(context)!;
     return AnimatedExpansionCard(
       leading: const Icon(Icons.palette),
-      title: Text(AppLocalizations.of(context)!.appearanceSection),
+      title: Text(l10n.appearanceSection),
       children: [
         _buildThemeSettings(settingsService),
         _buildAccessibilitySettings(settingsService),
@@ -149,14 +153,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildThemeSettings(settings.SettingsService settingsService) {
+    final l10n = AppLocalizations.of(context)!;
     String getThemeModeName(settings.ThemeMode mode) {
       switch (mode) {
         case settings.ThemeMode.system:
-          return AppLocalizations.of(context)!.systemTheme;
+          return l10n.systemTheme;
         case settings.ThemeMode.light:
-          return AppLocalizations.of(context)!.lightTheme;
+          return l10n.lightTheme;
         case settings.ThemeMode.dark:
-          return AppLocalizations.of(context)!.darkTheme;
+          return l10n.darkTheme;
       }
     }
 
@@ -166,7 +171,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Column(
         children: [
           ListTile(
-            title: Text(AppLocalizations.of(context)!.themeLabel),
+            title: Text(l10n.themeLabel),
             subtitle: Text(getThemeModeName(settingsService.settings.themeMode)),
             trailing: DropdownButton<settings.ThemeMode>(
               value: settingsService.settings.themeMode,
@@ -186,30 +191,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildAccessibilitySettings(settings.SettingsService settingsService) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: AppCardStyles.standard(context),
       margin: EdgeInsets.zero,
       child: Column(
         children: [
           SwitchListTile(
-            title: const Text('High Contrast'),
-            subtitle: const Text('Increase contrast for better visibility'),
+            title: Text(l10n.highContrast),
+            subtitle: Text(l10n.increaseContrastForBetterVisibility),
             value: settingsService.settings.enableHighContrast,
             onChanged: (value) {
               settingsService.updateSettings(settingsService.settings.copyWith(enableHighContrast: value));
             },
           ),
           SwitchListTile(
-            title: const Text('Large Text'),
-            subtitle: const Text('Use larger font sizes'),
+            title: Text(l10n.largeText),
+            subtitle: Text(l10n.useLargerFontSizes),
             value: settingsService.settings.enableLargeText,
             onChanged: (value) {
               settingsService.updateSettings(settingsService.settings.copyWith(enableLargeText: value));
             },
           ),
           SwitchListTile(
-            title: const Text('Screen Reader'),
-            subtitle: const Text('Enable screen reader support'),
+            title: Text(l10n.screenReader),
+            subtitle: Text(l10n.enableScreenReaderSupport),
             value: settingsService.settings.enableScreenReader,
             onChanged: (value) {
               settingsService.updateSettings(settingsService.settings.copyWith(enableScreenReader: value));
@@ -221,20 +227,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildNotificationsSection(settings.SettingsService settingsService) {
-    return AnimatedExpansionCard(leading: const Icon(Icons.notifications), title: Text(AppLocalizations.of(context)!.notificationsSection), children: [_buildNotificationSettings(settingsService)]);
+    final l10n = AppLocalizations.of(context)!;
+    return AnimatedExpansionCard(leading: const Icon(Icons.notifications), title: Text(l10n.notificationsSection), children: [_buildNotificationSettings(settingsService)]);
   }
 
   Widget _buildNotificationSettings(settings.SettingsService settingsService) {
+    final l10n = AppLocalizations.of(context)!;
     String getNotificationFrequencyName(settings.NotificationFrequency frequency) {
       switch (frequency) {
         case settings.NotificationFrequency.immediate:
-          return 'Immediate';
+          return l10n.immediate;
         case settings.NotificationFrequency.hourly:
-          return 'Hourly';
+          return l10n.hourly;
         case settings.NotificationFrequency.daily:
-          return 'Daily';
+          return l10n.daily;
         case settings.NotificationFrequency.weekly:
-          return 'Weekly';
+          return l10n.weekly;
       }
     }
 
@@ -243,10 +251,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
       margin: EdgeInsets.zero,
       child: Column(
         children: [
-          SwitchListTile(title: const Text('Enable Notifications'), value: settingsService.settings.enableNotifications, onChanged: (value) => settingsService.setNotificationsEnabled(value)),
+          // NEW: Navigation to advanced notification features
+       ListTile(
+            leading: const Icon(Icons.history, color: Colors.green),
+            title: Text(l10n.notificationHistory),
+            subtitle: Text(l10n.viewPastNotifications),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.pushNamed(context, '/notification_history'),
+          ),
+          const Divider(height: 1),
+             ListTile(
+            leading: const Icon(Icons.settings_outlined, color: Colors.blue),
+            title: Text(l10n.notificationPreferences),
+            subtitle: Text(l10n.customizeNotificationBehavior),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.pushNamed(context, '/notification_preferences'),
+          ),
+         /*  const Divider(height: 1),
+          ListTile(
+            leading: const Icon(Icons.science, color: Colors.deepPurple),
+            title: Text(l10n.testNotifications),
+            subtitle: Text(l10n.tryAllNotificationFeatures),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.pushNamed(context, '/notification_test'),
+          ), */
+          /*    const Divider(height: 1),
+          SwitchListTile(title: Text(l10n.enableNotifications), value: settingsService.settings.enableNotifications, onChanged: (value) => settingsService.setNotificationsEnabled(value)),
           if (settingsService.settings.enableNotifications) ...[
             ListTile(
-              title: const Text('Notification Frequency'),
+              title: Text(l10n.notificationFrequency),
               subtitle: Text(getNotificationFrequencyName(settingsService.settings.notificationFrequency)),
               trailing: DropdownButton<settings.NotificationFrequency>(
                 value: settingsService.settings.notificationFrequency,
@@ -261,29 +294,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             SwitchListTile(
-              title: const Text('Sound'),
+              title: Text(l10n.sound),
               value: settingsService.settings.enableSound,
               onChanged: (value) {
                 settingsService.updateSettings(settingsService.settings.copyWith(enableSound: value));
               },
             ),
             SwitchListTile(
-              title: const Text('Vibration'),
+              title: Text(l10n.vibration),
               value: settingsService.settings.enableVibration,
               onChanged: (value) {
                 settingsService.updateSettings(settingsService.settings.copyWith(enableVibration: value));
               },
             ),
           ],
+        */
         ],
       ),
     );
   }
 
   Widget _buildTaskSoundsSection() {
+    final l10n = AppLocalizations.of(context)!;
     return AnimatedExpansionCard(
       leading: const Icon(Icons.music_note),
-      title: const Text('Task Completion Sounds'),
+      title: Text(l10n.taskCompletionSounds),
       children: [
         Consumer<TaskSoundService>(
           builder: (context, taskSoundService, child) {
@@ -293,8 +328,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Column(
                 children: [
                   SwitchListTile(
-                    title: const Text('Enable Task Completion Sound'),
-                    subtitle: const Text('Play sound when tasks are completed'),
+                    title: Text(l10n.enableTaskCompletionSound),
+                    subtitle: Text(l10n.playSoundWhenTasksAreCompleted),
                     value: taskSoundService.soundEnabled,
                     onChanged: (value) {
                       taskSoundService.setSoundEnabled(value);
@@ -302,7 +337,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   if (taskSoundService.soundEnabled) ...[
                     ListTile(
-                      title: const Text('Sound Selection'),
+                      title: Text(l10n.soundSelection),
                       subtitle: Text(taskSoundService.availableSounds[taskSoundService.selectedSound] ?? 'Unknown'),
                       trailing: DropdownButton<String>(
                         value: taskSoundService.selectedSound,
@@ -317,7 +352,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
                     ListTile(
-                      title: const Text('Volume'),
+                      title: Text(l10n.volume),
                       subtitle: Slider(
                         value: taskSoundService.volume,
                         onChanged: (value) {
@@ -336,7 +371,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           taskSoundService.playTaskCompletionSound();
                         },
                         icon: const Icon(Icons.play_arrow),
-                        label: const Text('Test Sound'),
+                        label: Text(l10n.testSound),
                         style: AppButtonStyles.primary(context),
                       ),
                     ),
@@ -355,16 +390,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildPomodoroSettings(settings.SettingsService settingsService) {
+    final l10n = AppLocalizations.of(context)!;
     String getPomodoroPresetName(settings.PomodoroPreset preset) {
       switch (preset) {
         case settings.PomodoroPreset.classic:
-          return 'Classic (25/5/15)';
+          return l10n.classicPreset;
         case settings.PomodoroPreset.short:
-          return 'Short (15/3/10)';
+          return l10n.shortPreset;
         case settings.PomodoroPreset.long:
-          return 'Long (50/10/30)';
+          return l10n.longPreset;
         case settings.PomodoroPreset.custom:
-          return 'Custom';
+          return l10n.custom;
       }
     }
 
@@ -373,7 +409,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Column(
         children: [
           ListTile(
-            title: const Text('Pomodoro Preset'),
+            title: Text(l10n.pomodoroPreset),
             subtitle: Text(getPomodoroPresetName(settingsService.settings.pomodoroPreset)),
             trailing: DropdownButton<settings.PomodoroPreset>(
               value: settingsService.settings.pomodoroPreset,
@@ -394,15 +430,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildCustomPomodoroSettings(settings.SettingsService settingsService) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Custom Durations (minutes)'),
+          Text(l10n.customDurationsMinutes),
           const SizedBox(height: AppSpacing.md),
           _buildDurationSlider(
-            label: 'Work Duration',
+            label: l10n.workDuration,
             value: settingsService.settings.customWorkDuration.toDouble(),
             min: 5,
             max: 60,
@@ -410,7 +447,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: AppSpacing.md),
           _buildDurationSlider(
-            label: 'Short Break Duration',
+            label: l10n.shortBreakDuration,
             value: settingsService.settings.customShortBreakDuration.toDouble(),
             min: 1,
             max: 15,
@@ -418,7 +455,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: AppSpacing.md),
           _buildDurationSlider(
-            label: 'Long Break Duration',
+            label: l10n.longBreakDuration,
             value: settingsService.settings.customLongBreakDuration.toDouble(),
             min: 5,
             max: 30,
@@ -426,7 +463,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: AppSpacing.md),
           _buildDurationSlider(
-            label: 'Sessions to Long Break',
+            label: l10n.sessionsToLongBreak,
             value: settingsService.settings.sessionsUntilLongBreak.toDouble(),
             min: 2,
             max: 8,
@@ -439,11 +476,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildDurationSlider({required String label, required double value, required double min, required double max, required ValueChanged<double> onChanged}) {
     return Tooltip(
-      message: 'Adjust the $label duration in minutes',
+      message: 'Adjust the duration in minutes: $label',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('$label: ${value.toInt()} min'),
+          Text('$label: ${value.toInt()} minutes'),
           Slider(value: value, min: min, max: max, divisions: (max - min).toInt(), label: '${value.toInt()}', onChanged: onChanged),
         ],
       ),
@@ -455,14 +492,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildBackupSettings(settings.SettingsService settingsService) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: AppCardStyles.standard(context),
       margin: EdgeInsets.zero,
       child: Column(
         children: [
           SwitchListTile(
-            title: const Text('Auto Backup'),
-            subtitle: const Text('Automatically backup your data'),
+            title: Text(l10n.autoBackup),
+            subtitle: Text(l10n.automaticallyBackupData),
             value: settingsService.settings.enableAutoBackup,
             onChanged: (value) {
               settingsService.updateSettings(settingsService.settings.copyWith(enableAutoBackup: value));
@@ -470,8 +508,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           if (settingsService.settings.enableAutoBackup)
             ListTile(
-              title: const Text('Backup Frequency'),
-              subtitle: Text('${settingsService.settings.backupFrequencyDays} days'),
+              title: Text(l10n.backupFrequency),
+              subtitle: Text(l10n.days(settingsService.settings.backupFrequencyDays)),
               trailing: DropdownButton<int>(
                 value: settingsService.settings.backupFrequencyDays,
                 onChanged: (value) {
@@ -480,7 +518,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   }
                 },
                 items: [1, 3, 7, 14, 30].map((days) {
-                  return DropdownMenuItem(value: days, child: Text('$days days'));
+                  return DropdownMenuItem(value: days, child: Text(l10n.days(days)));
                 }).toList(),
               ),
             ),
@@ -494,22 +532,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildPrivacySettings(settings.SettingsService settingsService) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: AppCardStyles.standard(context),
       margin: EdgeInsets.zero,
       child: Column(
         children: [
           SwitchListTile(
-            title: const Text('Analytics'),
-            subtitle: const Text('Help improve the app with usage data'),
+            title: Text(l10n.analytics),
+            subtitle: Text(l10n.helpImproveTheAppWithUsageData),
             value: settingsService.settings.enableAnalytics,
             onChanged: (value) {
               settingsService.updateSettings(settingsService.settings.copyWith(enableAnalytics: value));
             },
           ),
           SwitchListTile(
-            title: const Text('Crash Reporting'),
-            subtitle: const Text('Send crash reports to help fix issues'),
+            title: Text(l10n.crashReporting),
+            subtitle: Text(l10n.sendCrashReportsToHelpFixIssues),
             value: settingsService.settings.enableCrashReporting,
             onChanged: (value) {
               settingsService.updateSettings(settingsService.settings.copyWith(enableCrashReporting: value));
@@ -525,13 +564,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildRegionalSettings(settings.SettingsService settingsService) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: AppCardStyles.standard(context),
       margin: EdgeInsets.zero,
       child: Column(
         children: [
           ListTile(
-            title: const Text('Language'),
+            title: Text(l10n.language),
             subtitle: Text(settingsService.settings.language),
             trailing: DropdownButton<String>(
               value: settingsService.settings.language,
@@ -546,7 +586,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           ListTile(
-            title: const Text('Date Format'),
+            title: Text(l10n.dateFormat),
             subtitle: Text(settingsService.settings.dateFormat),
             trailing: DropdownButton<String>(
               value: settingsService.settings.dateFormat,
@@ -561,7 +601,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           ListTile(
-            title: const Text('Time Format'),
+            title: Text(l10n.timeFormat),
             subtitle: Text(settingsService.settings.timeFormat),
             trailing: DropdownButton<String>(
               value: settingsService.settings.timeFormat,
@@ -598,6 +638,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildUpdatesSection() {
+    final l10n = AppLocalizations.of(context)!;
     return AnimatedExpansionCard(
       leading: const Icon(Icons.system_update),
       title: Text(AppLocalizations.of(context)!.appUpdates),
@@ -633,7 +674,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const Divider(),
                     ListTile(
                       title: Text(AppLocalizations.of(context)!.updateError),
-                      subtitle: const Text('Failed to check for updates'),
+                      subtitle: Text(l10n.failedToCheckForUpdates),
                       trailing: TextButton(onPressed: () => _checkForUpdates(updateService), child: Text(AppLocalizations.of(context)!.retry), style: AppButtonStyles.secondary(context)),
                     ),
                   ],
@@ -647,14 +688,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   String _getUpdateStatusText(UpdateService updateService) {
+    final l10n = AppLocalizations.of(context)!;
     if (updateService.isChecking) {
-      return AppLocalizations.of(context)!.downloadingUpdate;
+      return l10n.downloadingUpdate;
     } else if (updateService.isUpdateAvailable) {
-      return AppLocalizations.of(context)!.updateAvailable;
+      return l10n.updateAvailable;
     } else if (updateService.hasError) {
-      return AppLocalizations.of(context)!.updateError;
+      return l10n.updateError;
     } else {
-      return AppLocalizations.of(context)!.noUpdatesAvailable;
+      return l10n.noUpdatesAvailable;
     }
   }
 
@@ -671,17 +713,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   List<Widget> _filteredSections(settings.SettingsService settingsService, ColorCustomizationService colorService) {
+    final l10n = AppLocalizations.of(context)!;
     final allSections = [
-      {'title': 'profile', 'widget': _buildProfileSection()},
-      {'title': 'mood', 'widget': _buildMoodSection()},
-      {'title': 'appearance', 'widget': _buildAppearanceSection(settingsService, colorService)},
-      {'title': 'notifications', 'widget': _buildNotificationsSection(settingsService)},
-      {'title': 'task sounds', 'widget': _buildTaskSoundsSection()},
-      {'title': 'pomodoro', 'widget': _buildPomodoroSection(settingsService)},
-      {'title': 'backup', 'widget': _buildBackupSection(settingsService)},
-      {'title': 'privacy', 'widget': _buildPrivacySection(settingsService)},
-      {'title': 'regional', 'widget': _buildRegionalSection(settingsService)},
-      {'title': 'updates', 'widget': _buildUpdatesSection()},
+      {'title': l10n.profile, 'widget': _buildProfileSection()},
+      {'title': l10n.mood, 'widget': _buildMoodSection()},
+      {'title': l10n.appearance, 'widget': _buildAppearanceSection(settingsService, colorService)},
+      {'title': l10n.notifications, 'widget': _buildNotificationsSection(settingsService)},
+      {'title': l10n.taskSounds, 'widget': _buildTaskSoundsSection()},
+      {'title': l10n.pomodoro, 'widget': _buildPomodoroSection(settingsService)},
+      {'title': l10n.backup, 'widget': _buildBackupSection(settingsService)},
+      {'title': l10n.privacy, 'widget': _buildPrivacySection(settingsService)},
+      {'title': l10n.regional, 'widget': _buildRegionalSection(settingsService)},
+      {'title': l10n.updates, 'widget': _buildUpdatesSection()},
     ];
 
     final filtered = _searchQuery.isEmpty ? allSections : allSections.where((section) => (section['title'] as String).contains(_searchQuery)).toList();

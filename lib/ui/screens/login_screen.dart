@@ -130,6 +130,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   }
 
   Widget _buildLoginContent(BuildContext context, bool isDark) {
+    var height = MediaQuery.of(context).size.height;
     return SafeArea(
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -139,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               children: [
-                const SizedBox(height: 60),
+                SizedBox(height: height * 0.05),
                 // Animated Logo Section
                 AnimationConfiguration.staggeredList(
                   position: 0,
@@ -163,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     ),
                   ),
                 ),
-                const SizedBox(height: 40),
+                SizedBox(height: height * 0.05),
 
                 // Animated Title Section
                 AnimationConfiguration.staggeredList(
@@ -200,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     ),
                   ),
                 ),
-                const SizedBox(height: 60),
+                SizedBox(height: height * 0.05),
 
                 // Animated Email/Password Form
                 AnimationConfiguration.staggeredList(
@@ -228,7 +229,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: height * 0.04),
 
                 // Animated Social Sign In
                 AnimationConfiguration.staggeredList(
@@ -236,18 +237,10 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   duration: const Duration(milliseconds: 800),
                   child: SlideAnimation(
                     verticalOffset: 30.0,
-                    child: FadeInAnimation(
-                      child: Column(
-                        children: [
-                          _buildDivider(context),
-                          const SizedBox(height: 16),
-                          Row(mainAxisAlignment: MainAxisAlignment.center, children: [_buildGoogleSignInButton(context), const SizedBox(width: 16), _buildFacebookSignInButton(context)]),
-                        ],
-                      ),
-                    ),
+                    child: FadeInAnimation(child: Column(children: [_buildDivider(context), const SizedBox(height: 16), _buildGoogleSignInButton(context), const SizedBox(height: 16), _buildAppleSignInButton(context)])),
                   ),
                 ),
-                const SizedBox(height: 40),
+                SizedBox(height: height * 0.05),
 
                 // Animated Terms Text
                 AnimationConfiguration.staggeredList(
@@ -264,7 +257,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     ),
                   ),
                 ),
-                const SizedBox(height: 40),
+                SizedBox(height: height * 0.05),
               ],
             ),
           ),
@@ -275,46 +268,57 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
   Widget _buildGoogleSignInButton(BuildContext context) {
     return Container(
-      width: 50,
+      width: MediaQuery.of(context).size.width * 0.9,
       height: 50,
-      decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)),
+      ),
 
-      child: Padding(
-        padding: const EdgeInsets.all(3.0),
-        child: IconButton(
-          onPressed: () {
-            context.read<AuthBloc>().add(AuthSignInRequested());
-          },
-          icon: Container(
-            width: 50,
-            height: 50,
-            decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-            child: Image.asset('assets/images/google.png', fit: BoxFit.cover),
-          ),
+      child: IconButton(
+        onPressed: () {
+          context.read<AuthBloc>().add(AuthSignInRequested());
+        },
+        icon: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('assets/images/google.png'),
+            const SizedBox(width: 16),
+            Text(AppLocalizations.of(context)!.signInWithGoogle, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.8))),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildFacebookSignInButton(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        context.read<AuthBloc>().add(AuthFacebookSignInRequested());
-      },
-      icon: Container(
-        width: 50,
-        height: 50,
-        decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-        child: Image.asset(
-          'assets/images/facebook.png',
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return const Icon(Icons.facebook, size: 24, color: Color(0xFF1877F2));
-          },
+  Widget _buildAppleSignInButton(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.9,
+      height: 50,
+      decoration: BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)),
+      ),
+
+      child: IconButton(
+        onPressed: () {
+          context.read<AuthBloc>().add(AuthAppleSignInRequested());
+        },
+        icon: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.apple, color: Colors.white),
+            const SizedBox(width: 16),
+            Text(AppLocalizations.of(context)!.signInWithApple, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white)),
+          ],
         ),
       ),
     );
   }
+
+  // Facebook sign-in UI removed
 
   Widget _buildDivider(BuildContext context) {
     return Row(

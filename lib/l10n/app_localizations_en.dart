@@ -74,6 +74,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificationsSection => 'Notifications';
 
   @override
+  String get notificationHistory => 'Notification History';
+
+  @override
+  String get notificationPreferences => 'Notification Preferences';
+
+  @override
   String get pomodoroSection => 'Pomodoro Timer';
 
   @override
@@ -631,6 +637,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signInWithGoogle => 'Sign in with Google';
 
   @override
+  String get signInWithApple => 'Sign in with Apple';
+
+  @override
   String get termsAndPrivacy => 'By signing in, you agree to our Terms of Service and Privacy Policy';
 
   @override
@@ -650,6 +659,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noTasksYet => 'No tasks yet';
+
+  @override
+  String get noTasksInCategory => 'No tasks in this category';
+
+  @override
+  String get addTaskToGetStarted => 'Add a task to get started';
 
   @override
   String error(String message) {
@@ -785,10 +800,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get insights => 'Insights';
 
   @override
-  String get howAreYouFeeling => 'How are you feeling today?';
+  String get howAreYouFeeling => '😊 How are you feeling?';
 
   @override
-  String get tapToLogMood => 'Tap the + button to log your mood';
+  String get tapToLogMood => 'Tap to log your mood';
 
   @override
   String get yourMoodInsights => 'Your Mood Insights';
@@ -1169,4 +1184,469 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get completeSubtasksFirst => 'Complete Subtasks First';
+
+  @override
+  String get testNotifications => 'Test Notifications';
+
+  @override
+  String get tryAllNotificationFeatures => 'Try all notification features';
+
+  @override
+  String get customizeNotificationBehavior => 'Customize notification behavior';
+
+  @override
+  String get viewPastNotifications => 'View past notifications';
+
+  @override
+  String get notificationTesting => '🧪 Notification Testing';
+
+  @override
+  String get quickTestGuide => '🎯 Quick Test Guide';
+
+  @override
+  String totalNotifications(int count) {
+    return 'Total Notifications: $count';
+  }
+
+  @override
+  String get notificationsEnabled => 'Enabled: ✅';
+
+  @override
+  String get notificationsDisabled => 'Enabled: ❌';
+
+  @override
+  String get basicNotifications => '1. Basic Notifications';
+
+  @override
+  String get testSimpleNotification => 'Test: Simple Notification';
+
+  @override
+  String get appearsIn10Seconds => 'Appears in 10 seconds';
+
+  @override
+  String get testTaskReminder => 'Test: Task Reminder';
+
+  @override
+  String get withActionButtons15Seconds => 'With action buttons - 15 seconds';
+
+  @override
+  String get testMoodCheckIn => 'Test: Mood Check-in';
+
+  @override
+  String get testIn20Seconds => '20 seconds';
+
+  @override
+  String get priorityLevels => '2. Priority Levels';
+
+  @override
+  String get testHighPriority => 'Test: High Priority';
+
+  @override
+  String get urgentNotification10Seconds => 'Urgent notification - 10 seconds';
+
+  @override
+  String get testLowPriority => 'Test: Low Priority';
+
+  @override
+  String get silentNotification10Seconds => 'Silent notification - 10 seconds';
+
+  @override
+  String get notificationManagement => '3. Notification Management';
+
+  @override
+  String get viewNotificationHistory => 'View Notification History';
+
+  @override
+  String get seeAllPastNotifications => 'See all past notifications';
+
+  @override
+  String get configureNotificationSettings => 'Configure notification settings';
+
+  @override
+  String get testingTips => 'Testing Tips';
+
+  @override
+  String get grantNotificationPermissions => '1. Grant notification permissions when prompted';
+
+  @override
+  String get keepAppInBackground => '2. Keep app in background after scheduling';
+
+  @override
+  String get checkHistoryAfterDelivery => '3. Check notification history after delivery';
+
+  @override
+  String get tryActionButtons => '4. Try action buttons on task notifications';
+
+  @override
+  String get testDNDMode => '5. Test DND mode in preferences';
+
+  @override
+  String get notificationScheduledFor10Seconds => '⏰ Notification scheduled for 10 seconds';
+
+  @override
+  String get taskNotificationIn15Seconds => '⏰ Task notification in 15 seconds (has action buttons!)';
+
+  @override
+  String get moodNotificationIn20Seconds => '⏰ Mood notification in 20 seconds';
+
+  @override
+  String get highPriorityNotificationIn10Seconds => '⏰ High priority notification in 10 seconds';
+
+  @override
+  String get lowPriorityNotificationIn10Seconds => '⏰ Low priority (silent) notification in 10 seconds';
+
+  @override
+  String get testNotificationTitle => '✅ Test Notification';
+
+  @override
+  String get testNotificationBody => 'The new notification system works!';
+
+  @override
+  String get taskCompleteReport => '📋 Task: Complete Report';
+
+  @override
+  String get dueInOneHour => 'Due in 1 hour - tap to view';
+
+  @override
+  String get highPriorityAlert => '🚨 High Priority Alert';
+
+  @override
+  String get urgentNotificationMessage => 'This is an urgent notification!';
+
+  @override
+  String get lowPriorityInfo => 'ℹ️ Low Priority Info';
+
+  @override
+  String get quietNotificationMessage => 'This is a quiet notification';
+
+  @override
+  String get filters => 'Filters';
+
+  @override
+  String get searchNotifications => 'Search notifications...';
+
+  @override
+  String get filterByType => 'Filter by Type';
+
+  @override
+  String get filterByStatus => 'Filter by Status';
+
+  @override
+  String get notificationAnalyticsLast7Days => 'Analytics (Last 7 Days)';
+
+  @override
+  String get notificationAnalyticsSent => 'Sent';
+
+  @override
+  String get notificationAnalyticsDelivered => 'Delivered';
+
+  @override
+  String get notificationAnalyticsOpened => 'Opened';
+
+  @override
+  String get notificationAnalyticsAction => 'Action Rate';
+
+  @override
+  String get notificationStatusDelivered => 'Delivered';
+
+  @override
+  String get notificationStatusPending => 'Pending';
+
+  @override
+  String get notificationStatusFailed => 'Failed';
+
+  @override
+  String get notificationStatusCancelled => 'Cancelled';
+
+  @override
+  String get notificationStatusExpired => 'Expired';
+
+  @override
+  String get doNotDisturb => 'Do Not Disturb';
+
+  @override
+  String get scheduledQuietHours => 'Scheduled Quiet Hours';
+
+  @override
+  String get allowUrgentNotifications => 'Allow Urgent Notifications During DND';
+
+  @override
+  String get smartScheduling => 'Smart Scheduling';
+
+  @override
+  String get enableSmartScheduling => 'Enable Smart Scheduling';
+
+  @override
+  String get maxNotificationsPerHour => 'Max Notifications Per Hour';
+
+  @override
+  String get minimumMinutesBetweenSameType => 'Minimum Minutes Between Same Type';
+
+  @override
+  String get groupSimilarNotifications => 'Group Similar Notifications';
+
+  @override
+  String get respectSystemDND => 'Respect System Do Not Disturb';
+
+  @override
+  String get notificationTypes => 'Notification Types';
+
+  @override
+  String get taskReminders => 'Task Reminders';
+
+  @override
+  String get moodCheckIns => 'Mood Check-ins';
+
+  @override
+  String get pomodoroNotifications => 'Pomodoro';
+
+  @override
+  String get emergencyNotifications => 'Emergency';
+
+  @override
+  String get enabled => 'Enabled';
+
+  @override
+  String get adaptiveTiming => 'Adaptive Timing';
+
+  @override
+  String get openSystemSettings => 'Open System Settings';
+
+  @override
+  String get viewHistory => 'View History';
+
+  @override
+  String get emergencyAlertsWillBypassQuietHours => 'Emergency alerts will bypass quiet hours';
+
+  @override
+  String get intelligentNotificationManagement => 'Intelligent Notification Management';
+
+  @override
+  String get automaticallyOptimizeNotificationTiming => 'Automatically optimize notification timing to avoid interrupting you';
+
+  @override
+  String get combineNotificationsOfTheSameType => 'Combine notifications of the same type into groups';
+
+  @override
+  String get honorDeviceDoNotDisturbSettings => 'Honor device Do Not Disturb settings';
+
+  @override
+  String get customizeEachNotificationType => 'Customize each notification type';
+
+  @override
+  String get disabled => 'Disabled';
+
+  @override
+  String get enable => 'Enable';
+
+  @override
+  String get showBadge => 'Show Badge';
+
+  @override
+  String get enableActions => 'Enable Actions';
+
+  @override
+  String get showActionButtons => 'Show action buttons';
+
+  @override
+  String get advancedSettings => 'Advanced Settings';
+
+  @override
+  String get expertOptions => 'Expert options for power users';
+
+  @override
+  String get badgeOnlyMode => 'Badge Only Mode';
+
+  @override
+  String get badgeOnlyModeSubtitle => 'Show badge without sound or popup';
+
+  @override
+  String get deliveryTracking => 'Delivery Tracking';
+
+  @override
+  String get trackWhenNotificationsAreDelivered => 'Track when notifications are delivered and opened';
+
+  @override
+  String get trackNotificationInteractionStatistics => 'Track notification interaction statistics';
+
+  @override
+  String get learnFromYourBehaviorToOptimizeNotificationTiming => 'Learn from your behavior to optimize notification timing';
+
+  @override
+  String get moodCheckIn => 'Mood Check-in';
+
+  @override
+  String get masterToggleForAllNotifications => 'Master toggle for all notifications';
+
+  @override
+  String get activeNotificationsMuted => 'Active - Notifications muted';
+
+  @override
+  String get configureQuietHours => 'Configure quiet hours';
+
+  @override
+  String get setAutomaticQuietHours => 'Set automatic quiet hours';
+
+  @override
+  String get sendTestNotification => 'Send Test Notification';
+
+  @override
+  String get taskDue => 'Task Due';
+
+  @override
+  String get pomodoroWork => 'Pomodoro Work';
+
+  @override
+  String get pomodoroBreak => 'Pomodoro Break';
+
+  @override
+  String get pomodoroComplete => 'Pomodoro Complete';
+
+  @override
+  String get medium => 'Medium';
+
+  @override
+  String get urgent => 'Urgent';
+
+  @override
+  String get notificationPreferencesInfo => 'Notification Preferences Info';
+
+  @override
+  String get notificationPreferencesInfoDetails => 'Configure how and when you receive notifications. Customize each notification type, set quiet hours, and control notification behavior.';
+
+  @override
+  String get smartSchedulingInfo => 'Smart scheduling learns from your usage patterns to deliver notifications at optimal times.';
+
+  @override
+  String get dndInfo => 'Do Not Disturb mode silences all notifications except emergencies during specified hours.';
+
+  @override
+  String get manualDND => 'Manual DND';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get resetSettings => 'Reset Settings';
+
+  @override
+  String get resetSettingsConfirmation => 'Are you sure you want to reset all settings to default?';
+
+  @override
+  String get searchSettings => 'Search Settings';
+
+  @override
+  String get typeToFilterSettingsSections => 'Type to filter settings sections';
+
+  @override
+  String get searchSettingsHint => 'Search...';
+
+  @override
+  String get increaseContrastForBetterVisibility => 'Increase contrast for better visibility';
+
+  @override
+  String get taskCompletionSounds => 'Task Completion Sounds';
+
+  @override
+  String get enableTaskCompletionSound => 'Enable Task Completion Sound';
+
+  @override
+  String get playSoundWhenTasksAreCompleted => 'Play sound when tasks are completed';
+
+  @override
+  String get soundSelection => 'Sound Selection';
+
+  @override
+  String get testSound => 'Test Sound';
+
+  @override
+  String get customDurationsMinutes => 'Custom Durations (minutes)';
+
+  @override
+  String get workDuration => 'Work Duration';
+
+  @override
+  String get shortBreakDuration => 'Short Break Duration';
+
+  @override
+  String get longBreakDuration => 'Long Break Duration';
+
+  @override
+  String get helpImproveTheAppWithUsageData => 'Help improve the app with usage data';
+
+  @override
+  String get sendCrashReportsToHelpFixIssues => 'Send crash reports to help fix issues';
+
+  @override
+  String get failedToCheckForUpdates => 'Failed to check for updates';
+
+  @override
+  String get mood => 'Mood';
+
+  @override
+  String get appearance => 'Appearance';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get taskSounds => 'Task Sounds';
+
+  @override
+  String get pomodoro => 'Pomodoro';
+
+  @override
+  String get backup => 'Backup';
+
+  @override
+  String get privacy => 'Privacy';
+
+  @override
+  String get regional => 'Regional';
+
+  @override
+  String get updates => 'Updates';
+
+  @override
+  String get calendar => 'Calendar';
+
+  @override
+  String get clearDateFilter => 'Clear date filter';
+
+  @override
+  String tasksForDate(String date) {
+    return 'Tasks for $date';
+  }
+
+  @override
+  String tasksDue(int count) {
+    return '$count tasks due';
+  }
+
+  @override
+  String get undatedTasks => 'Tasks without dates';
+
+  @override
+  String get monthView => 'Month';
+
+  @override
+  String get weekView => 'Week';
+
+  @override
+  String get calendarView => 'Calendar View';
+
+  @override
+  String get rescheduleTask => 'Reschedule Task';
+
+  @override
+  String get taskRescheduled => 'Task rescheduled';
+
+  @override
+  String get undo => 'Undo';
+
+  @override
+  String get viewDayTasks => 'View day tasks';
+
+  @override
+  String get noTasksForThisDay => 'No tasks for this day';
 }

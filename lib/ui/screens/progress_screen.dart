@@ -103,7 +103,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 Expanded(
                   child: _buildProgressMetric(
                     AppLocalizations.of(context)!.streak,
-                    '$streak ${AppLocalizations.of(context)!.days(streak)}',
+                    AppLocalizations.of(context)!.days(streak),
                     streak / 30.0, // Normalize to 0-1 scale
                     Icons.local_fire_department,
                     color: Colors.orange,

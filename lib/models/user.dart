@@ -19,10 +19,12 @@ class User extends Equatable {
   final DateTime updatedAt;
   @HiveField(6)
   final String? email;
+  @HiveField(7)
+  final bool isAdmin;
 
-  const User({required this.id, required this.name, this.profileImageUrl, this.birthday, required this.createdAt, required this.updatedAt, this.email});
+  const User({required this.id, required this.name, this.profileImageUrl, this.birthday, required this.createdAt, required this.updatedAt, required this.email, required this.isAdmin});
 
-  User copyWith({String? id, String? name, String? profileImageUrl, DateTime? birthday, DateTime? createdAt, DateTime? updatedAt, String? email}) {
+  User copyWith({String? id, String? name, String? profileImageUrl, DateTime? birthday, DateTime? createdAt, DateTime? updatedAt, String? email, bool? isAdmin}) {
     return User(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -31,11 +33,21 @@ class User extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       email: email ?? this.email,
+      isAdmin: isAdmin ?? this.isAdmin,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'name': name, 'profileImageUrl': profileImageUrl, 'birthday': birthday?.toIso8601String(), 'createdAt': createdAt.toIso8601String(), 'updatedAt': updatedAt.toIso8601String(), 'email': email};
+    return {
+      'id': id,
+      'name': name,
+      'profileImageUrl': profileImageUrl,
+      'birthday': birthday?.toIso8601String(),
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+      'email': email,
+      'isAdmin': isAdmin,
+    };
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -46,10 +58,11 @@ class User extends Equatable {
       birthday: json['birthday'] != null ? DateTime.parse(json['birthday']) : null,
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
-      email: json['email'],
+      email: json['email'] ?? '',
+      isAdmin: json['isAdmin'] ?? false,
     );
   }
 
   @override
-  List<Object?> get props => [id, name, profileImageUrl, birthday, createdAt, updatedAt, email];
+  List<Object?> get props => [id, name, profileImageUrl, birthday, createdAt, updatedAt, email, isAdmin];
 }

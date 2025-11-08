@@ -15,7 +15,9 @@ class AuthLoggedOut extends AuthEvent {}
 
 class AuthSignInRequested extends AuthEvent {}
 
-class AuthFacebookSignInRequested extends AuthEvent {}
+class AuthAppleSignInRequested extends AuthEvent {}
+
+// Facebook sign-in event removed
 
 class AuthEmailSignInRequested extends AuthEvent {
   final String email;

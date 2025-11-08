@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:tazbeet/services/app_logging.dart';
 import 'package:tazbeet/services/firebase_service_wrapper.dart';
 
@@ -44,7 +44,7 @@ class AuthService {
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
       if (googleAuth.accessToken == null || googleAuth.idToken == null) {
-        AppLogging.logError ('Failed to obtain authentication tokens', name: 'AuthService', error: 'Missing tokens');
+        AppLogging.logError('Failed to obtain authentication tokens', name: 'AuthService', error: 'Missing tokens');
         throw Exception('Failed to obtain authentication tokens from Google');
       }
 
@@ -78,52 +78,78 @@ class AuthService {
     }
   }
 
-  // Sign in with Facebook
-  Future<UserCredential?> signInWithFacebook() async {
+  // Sign in with Apple
+  Future<UserCredential?> signInWithApple() async {
     if (_auth == null) {
       AppLogging.logInfo('Firebase Auth not available', name: 'AuthService');
       return null;
     }
 
-    AppLogging.logInfo('Starting Facebook Sign-In process', name: 'AuthService');
+    AppLogging.logInfo('Starting Apple Sign-In process', name: 'AuthService');
     try {
-      // Trigger the sign-in flow
-      AppLogging.logInfo('Requesting Facebook login', name: 'AuthService');
-      final LoginResult loginResult = await FacebookAuth.instance.login(permissions: ['email', 'public_profile']);
+      // Request credential for the currently signed in Apple account
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
 
-      if (loginResult.status != LoginStatus.success) {
-        AppLogging.logInfo('Facebook login failed or was cancelled', name: 'AuthService');
-        return null;
-      }
+      AppLogging.logInfo('Apple user authenticated: ${appleCredential.email}', name: 'AuthService');
 
-      AppLogging.logInfo('Facebook login successful', name: 'AuthService');
+      // Create a new Firebase credential
+      final oauthCredential = OAuthProvider("apple.com").credential(
+        idToken: appleCredential.identityToken,
+        accessToken: appleCredential.authorizationCode,
+      );
 
-      // Create a credential from the access token
-      final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
-
-      AppLogging.logInfo('Signing in with Firebase using Facebook credential', name: 'AuthService');
-      // Once signed in, return the UserCredential
-      final userCredential = await _auth.signInWithCredential(facebookAuthCredential);
+      AppLogging.logInfo('Signing in with Firebase using Apple credential', name: 'AuthService');
+      // Sign in the user with Firebase
+      final userCredential = await _auth.signInWithCredential(oauthCredential);
       AppLogging.logInfo('Successfully signed in user: ${userCredential.user?.uid}', name: 'AuthService');
       return userCredential;
+    } on SignInWithAppleAuthorizationException catch (e) {
+      AppLogging.logError('Apple Sign-In authorization error', name: 'AuthService', error: e);
+      switch (e.code) {
+        case AuthorizationErrorCode.canceled:
+          throw Exception('User canceled Apple Sign-In');
+        case AuthorizationErrorCode.failed:
+          throw Exception('Apple Sign-In failed');
+        case AuthorizationErrorCode.invalidResponse:
+          throw Exception('Invalid response from Apple');
+        case AuthorizationErrorCode.notHandled:
+          throw Exception('Apple Sign-In not handled');
+        case AuthorizationErrorCode.unknown:
+          throw Exception('Unknown Apple Sign-In error');
+        default:
+          throw Exception('Apple Sign-In failed: ${e.message}');
+      }
     } on FirebaseAuthException catch (e) {
-      AppLogging.logError('Firebase Auth error during Facebook Sign-In', name: 'AuthService', error: e);
+      AppLogging.logError('Firebase Auth error during Apple Sign-In', name: 'AuthService', error: e);
       switch (e.code) {
         case 'account-exists-with-different-credential':
           throw Exception('Account exists with different sign-in method');
         case 'invalid-credential':
-          throw Exception('Invalid Facebook credential');
+          throw Exception('Invalid Apple credential');
         case 'user-disabled':
           throw Exception('User account has been disabled');
         case 'user-not-found':
           throw Exception('User not found');
+        case 'wrong-password':
+          throw Exception('Wrong password');
         default:
           throw Exception('Authentication failed: ${e.message}');
       }
     } catch (e) {
-      AppLogging.logError('Unexpected error during Facebook Sign-In', name: 'AuthService', error: e);
-      throw Exception('Failed to sign in with Facebook: $e');
+      AppLogging.logError('Unexpected error during Apple Sign-In', name: 'AuthService', error: e);
+      throw Exception('Failed to sign in with Apple: $e');
     }
+  }
+
+  // Sign in with Facebook
+  Future<UserCredential?> signInWithFacebook() async {
+    AppLogging.logInfo('Facebook Sign-In has been removed', name: 'AuthService');
+    return null;
   }
 
   // Sign out
@@ -137,8 +163,6 @@ class AuthService {
     try {
       AppLogging.logInfo('Signing out from Google', name: 'AuthService');
       await _googleSignIn.signOut();
-      AppLogging.logInfo('Signing out from Facebook', name: 'AuthService');
-      await FacebookAuth.instance.logOut();
       AppLogging.logInfo('Signing out from Firebase', name: 'AuthService');
       await _auth.signOut();
 

@@ -24,10 +24,20 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         emit(UserError('No logged in user'));
         return;
       }
-      final user = await userRepository.getUser(firebaseUser.uid);
+      final user = await userRepository.getUser(firebaseUser.uid, forceRefresh: event.forceRefresh);
       if (user == null) {
         // Create user from Firebase user info
-        final newUser = model.User(id: firebaseUser.uid, name: firebaseUser.displayName ?? '', profileImageUrl: firebaseUser.photoURL ?? '', birthday: null, createdAt: DateTime.now(), updatedAt: DateTime.now(), email: firebaseUser.email);
+        // For development/testing: set first user as admin
+        final newUser = model.User(
+          id: firebaseUser.uid,
+          name: firebaseUser.displayName ?? '',
+          profileImageUrl: firebaseUser.photoURL ?? '',
+          birthday: null,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          email: firebaseUser.email,
+          isAdmin: false,
+        );
         await userRepository.saveUser(newUser);
         emit(UserLoaded(newUser));
       } else {

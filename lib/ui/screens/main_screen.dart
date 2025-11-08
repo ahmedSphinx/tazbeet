@@ -1,4 +1,4 @@
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unrelated_type_equality_checks
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,25 +8,17 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tazbeet/blocs/task_list/task_list_bloc.dart';
 import 'package:tazbeet/blocs/task_list/task_list_event.dart';
-import 'package:tazbeet/blocs/task_list/task_list_state.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
 import 'package:tazbeet/services/app_logging.dart';
 import 'package:tazbeet/ui/screens/mood_settings_screen.dart';
-import 'package:tazbeet/ui/screens/notifications_dashboard.dart';
 import 'package:tazbeet/ui/screens/recurring_tasks_screen.dart';
 import 'package:tazbeet/ui/screens/splash_screen.dart';
-import 'package:tazbeet/ui/widgets/edit_task_dialog.dart';
 import 'package:tazbeet/ui/widgets/empty_state.dart';
-import 'package:tazbeet/ui/widgets/error_display.dart';
-import 'package:tazbeet/ui/widgets/loading_skeleton.dart';
-import 'package:tazbeet/ui/widgets/progress_indicator_card.dart';
-import 'package:tazbeet/ui/widgets/quick_actions_card.dart';
 import 'package:tazbeet/ui/widgets/task_item.dart';
 import 'dart:async';
 
 import '../../blocs/category/category_bloc.dart';
 import '../../blocs/category/category_event.dart';
-import '../../blocs/category/category_state.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/auth/auth_event.dart';
 import '../../blocs/auth/auth_state.dart';
@@ -36,12 +28,12 @@ import '../../blocs/user/user_bloc.dart';
 import '../../blocs/user/user_state.dart';
 import '../../models/task.dart';
 import '../../services/tutorial_service.dart';
+import '../../services/analytics_service.dart';
+import '../screens/admin_panel_screen.dart';
 
-import '../widgets/hero_section.dart';
+import '../widgets/home_screen_body.dart';
 import '../widgets/search_bar.dart';
 import '../widgets/add_task_dialog.dart';
-import '../widgets/filter_dialog.dart';
-import '../widgets/home_screen_body.dart';
 import 'ambient_screen.dart';
 import 'category_screen.dart';
 import 'emergency_screen.dart';
@@ -99,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     if (_isConnected) {
       context.read<TaskListBloc>().add(LoadTasks());
       context.read<CategoryBloc>().add(LoadCategories());
-      context.read<UserBloc>().add(LoadUser());
+      context.read<UserBloc>().add(LoadUser(forceRefresh: true));
 
       // Wait for data to load
       await Future.delayed(const Duration(seconds: 1));
@@ -120,9 +112,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     // Load initial data
     context.read<TaskListBloc>().add(LoadTasks());
     context.read<CategoryBloc>().add(LoadCategories());
-    context.read<UserBloc>().add(LoadUser());
+    context.read<UserBloc>().add(LoadUser(forceRefresh: true));
 
     // Listen for connectivity changes
+
     Connectivity().onConnectivityChanged.listen((result) {
       _isConnected = result != ConnectivityResult.none;
     });
@@ -504,6 +497,25 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
   Widget _buildDrawerFooter() {
     return Column(
       children: [
+        BlocBuilder<UserBloc, UserState>(
+          builder: (context, userState) {
+            if (userState is UserLoaded && userState.user.isAdmin) {
+              return ListTile(
+                leading: const Icon(Icons.admin_panel_settings),
+                title: const Text('Admin Panel'),
+                onTap: () {
+                  // Track admin panel access
+                  final analytics = context.read<AnalyticsService>();
+                  analytics.logCustomEvent(name: 'admin_panel_opened', parameters: {'user_id': userState.user.id});
+
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminPanelScreen()));
+                },
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
         ListTile(
           leading: const Icon(Icons.wb_sunny_outlined),
           title: Text(AppLocalizations.of(context)!.ambientMode),
@@ -520,14 +532,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
             Navigator.push(context, MaterialPageRoute(builder: (context) => const EmergencyScreen()));
           },
         ),
-        ListTile(
+        /*  ListTile(
           leading: const Icon(Icons.notifications),
           title: Text(AppLocalizations.of(context)!.notificationsSection),
           onTap: () {
             Navigator.pop(context);
             Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationsDashboard()));
           },
-        ),
+        ), */
         ListTile(
           leading: const Icon(Icons.replay),
           title: Text(AppLocalizations.of(context)!.recurringTasksManager),
@@ -685,279 +697,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     const CategoryScreen(),
     const MoodScreen(),
   ];
-}
-
-class HomeScreenBody extends StatefulWidget {
-  final String? selectedCategoryId;
-  final bool sortByPriority;
-  final String searchQuery;
-  final TaskPriority? filterPriority;
-  final bool? filterCompleted;
-  final Function(String?)? onCategoryChanged;
-  final GlobalKey? categoryFilterKey;
-
-  const HomeScreenBody({super.key, this.selectedCategoryId, this.sortByPriority = false, this.searchQuery = '', this.filterPriority, this.filterCompleted, this.onCategoryChanged, this.categoryFilterKey});
-
-  @override
-  State<HomeScreenBody> createState() => _HomeScreenBodyState();
-}
-
-class _HomeScreenBodyState extends State<HomeScreenBody> {
-  String? _selectedCategoryId;
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocListener<TaskListBloc, TaskListState>(
-      listener: (context, state) {
-        if (state is TaskListError) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating));
-        }
-      },
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            /*    // Hero Section
-            _buildHeroSection(), */
-
-            /*  // Quick Actions Card
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: _buildQuickActionsCard(),
-            ), */
-
-            /*   // Progress Cards Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: _buildProgressSection(),
-            ), */
-            const SizedBox(height: 24),
-
-            // Category Filter
-            _buildCategoryFilter(),
-
-            // Task List
-            _buildTaskListSection(),
-
-            const SizedBox(height: 24),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeroSection() {
-    return BlocBuilder<UserBloc, UserState>(
-      builder: (context, userState) {
-        String userName = AppLocalizations.of(context)!.appTitle;
-        if (userState is UserLoaded) {
-          userName = userState.user.name;
-        }
-
-        return BlocBuilder<TaskListBloc, TaskListState>(
-          builder: (context, taskState) {
-            int todayTasks = 0;
-            int completedTasks = 0;
-
-            if (taskState is TaskListLoaded) {
-              final today = DateTime.now();
-              final todayStart = DateTime(today.year, today.month, today.day);
-              final todayEnd = todayStart.add(const Duration(days: 1));
-
-              todayTasks = taskState.tasks.where((task) {
-                final taskDate = task.dueDate ?? task.createdAt;
-                return taskDate.isAfter(todayStart) && taskDate.isBefore(todayEnd);
-              }).length;
-
-              completedTasks = taskState.tasks.where((task) => task.isCompleted).length;
-            }
-
-            return HeroSection(
-              userName: userName,
-              todayTasks: todayTasks,
-              completedTasks: completedTasks,
-              onViewAllTasks: () {
-                // Navigate to all tasks view
-              },
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildQuickActionsCard() {
-    return QuickActionsCard(
-      onAddTask: () {
-        // Show add task dialog
-        _showAddTaskDialog();
-      },
-      onStartPomodoro: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const PomodoroScreen()));
-      },
-      onViewProgress: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const ProgressScreen()));
-      },
-      onAddCategory: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryScreen()));
-      },
-    );
-  }
-
-  Widget _buildProgressSection() {
-    return BlocBuilder<TaskListBloc, TaskListState>(
-      builder: (context, taskState) {
-        int todayTasks = 0;
-        int completedTasks = 0;
-
-        if (taskState is TaskListLoaded) {
-          final today = DateTime.now();
-          final todayStart = DateTime(today.year, today.month, today.day);
-          final todayEnd = todayStart.add(const Duration(days: 1));
-
-          todayTasks = taskState.tasks.where((task) {
-            final taskDate = task.dueDate ?? task.createdAt;
-            return taskDate.isAfter(todayStart) && taskDate.isBefore(todayEnd);
-          }).length;
-
-          completedTasks = taskState.tasks.where((task) => task.isCompleted).length;
-        }
-
-        return Row(
-          children: [
-            Expanded(
-              child: ProgressIndicatorCard(
-                title: AppLocalizations.of(context)!.daily,
-                progress: todayTasks > 0 ? completedTasks / todayTasks : 0.0,
-                currentValue: completedTasks,
-                targetValue: 8,
-                icon: Icons.today,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: CircularProgressCard(title: AppLocalizations.of(context)!.weeklyProgress, progress: 0.75, centerText: '75%', color: Theme.of(context).colorScheme.secondary),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildCategoryFilter() {
-    return BlocBuilder<CategoryBloc, CategoryState>(
-      builder: (context, state) {
-        if (state is CategoryLoaded && state.categories.isNotEmpty) {
-          return Container(
-            key: widget.categoryFilterKey,
-            height: 60,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                _buildCategoryChip(null, AppLocalizations.of(context)!.allCategories, Icons.align_horizontal_left_rounded, Theme.of(context).colorScheme.primary),
-                ...state.categories.map((category) => _buildCategoryChip(category.id, category.name, Icons.folder, (category.color))),
-              ],
-            ),
-          );
-        }
-        return const SizedBox.shrink();
-      },
-    );
-  }
-
-  Widget _buildCategoryChip(String? categoryId, String label, IconData icon, Color color) {
-    final isSelected = _selectedCategoryId == categoryId;
-    return Container(
-      margin: const EdgeInsets.only(right: 8),
-      child: FilterChip(
-        label: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 16, color: color),
-            const SizedBox(width: 4),
-            Text(label, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: isSelected ? Theme.of(context).colorScheme.onPrimaryContainer : Theme.of(context).colorScheme.onSurface)),
-          ],
-        ),
-        selected: isSelected,
-        onSelected: (selected) {
-          setState(() {
-            _selectedCategoryId = selected ? categoryId : null;
-          });
-          widget.onCategoryChanged?.call(_selectedCategoryId);
-        },
-        backgroundColor: !isSelected ? color.withValues(alpha: 0.4) : Theme.of(context).colorScheme.surface,
-        selectedColor: Theme.of(context).colorScheme.primaryContainer,
-        checkmarkColor: Theme.of(context).colorScheme.onPrimaryContainer,
-      ),
-    );
-  }
-
-  Widget _buildTaskListSection() {
-    return BlocBuilder<TaskListBloc, TaskListState>(
-      builder: (context, state) {
-        if (state is TaskListLoading) {
-          return const LoadingSkeleton();
-        } else if (state is TaskListLoaded) {
-          return TaskListSection(
-            tasks: state.tasks,
-            selectedCategoryId: _selectedCategoryId,
-            sortByPriority: widget.sortByPriority,
-            searchQuery: widget.searchQuery,
-            filterPriority: widget.filterPriority,
-            filterCompleted: widget.filterCompleted,
-            onTaskToggle: (taskId) {
-              context.read<TaskListBloc>().add(ToggleTaskCompletion(taskId));
-            },
-            onTaskEdit: (task) {
-              _showEditTaskDialog(task);
-            },
-            onTaskDelete: (taskId) {
-              context.read<TaskListBloc>().add(DeleteTask(taskId));
-            },
-          );
-        } else if (state is TaskListError) {
-          return ErrorDisplay(
-            message: state.message,
-            onRetry: () {
-              context.read<TaskListBloc>().add(LoadTasks());
-            },
-          );
-        }
-        return const SizedBox.shrink();
-      },
-    );
-  }
-
-  void _showAddTaskDialog() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (context) => AddTaskDialog(
-        onTaskAdded: (task) {
-          context.read<TaskListBloc>().add(AddTask(task));
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.taskCompleted), backgroundColor: Colors.green, behavior: SnackBarBehavior.floating));
-        },
-      ),
-    );
-  }
-
-  void _showEditTaskDialog(Task task) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (context) => EditTaskDialog(
-        task: task,
-        onTaskUpdated: (updatedTask) {
-          context.read<TaskListBloc>().add(UpdateTask(updatedTask));
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.settingsSaved), backgroundColor: Colors.blue, behavior: SnackBarBehavior.floating));
-        },
-      ),
-    );
-  }
 }
 
 // New optimized widgets will be created below

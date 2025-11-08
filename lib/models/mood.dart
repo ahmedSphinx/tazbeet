@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:tazbeet/services/app_logging.dart';
+import 'package:tazbeet/services/app_logging_service.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

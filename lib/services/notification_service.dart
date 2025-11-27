@@ -1,4 +1,4 @@
-import 'package:tazbeet/services/app_logging.dart';
+import 'package:tazbeet/services/app_logging_service.dart';
 import 'package:tazbeet/services/navigation_service.dart';
 import 'package:tazbeet/services/settings_service.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';

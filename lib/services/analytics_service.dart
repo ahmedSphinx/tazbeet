@@ -2,7 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 
-import 'app_logging.dart';
+import 'app_logging_service.dart';
 
 /// خدمة Firebase Analytics و Crashlytics
 ///
@@ -16,7 +16,7 @@ class AnalyticsService {
   late FirebaseCrashlytics _crashlytics;
 
   bool _initialized = false;
-
+  
   /// تهيئة الخدمة
   Future<void> initialize() async {
     if (_initialized) return;

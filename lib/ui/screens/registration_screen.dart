@@ -62,7 +62,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
             // Handle successful authentication
             if (state is AuthAuthenticated) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const HomeScreen()), (Route<dynamic> route) => false);
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const MainScreen()), (Route<dynamic> route) => false);
               });
               return _buildLoadingScreen(context);
             }

@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:tazbeet/services/app_logging.dart';
+import 'package:tazbeet/services/app_logging_service.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive_flutter/hive_flutter.dart';

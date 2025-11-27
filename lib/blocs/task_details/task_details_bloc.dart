@@ -1,4 +1,4 @@
-import 'package:tazbeet/services/app_logging.dart';
+import 'package:tazbeet/services/app_logging_service.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';

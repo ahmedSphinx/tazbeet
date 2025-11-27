@@ -11,7 +11,7 @@ import 'package:tazbeet/ui/screens/login_screen.dart';
 import 'package:tazbeet/ui/screens/profile_screen.dart';
 import 'package:tazbeet/ui/screens/maintenance_screen.dart';
 
-import '../../services/app_logging.dart';
+import '../../services/app_logging_service.dart';
 import '../../services/maintenance_service.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -173,8 +173,8 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
             String screenName;
 
             if (state is AuthAuthenticated) {
-              nextScreen = const HomeScreen();
-              screenName = 'HomeScreen';
+              nextScreen = const MainScreen();
+              screenName = 'MainScreen';
             } else if (state is AuthProfileIncomplete) {
               nextScreen = const ProfileScreen(isProfileCompletion: true);
               screenName = 'ProfileScreen';

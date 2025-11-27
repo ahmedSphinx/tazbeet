@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:tazbeet/services/app_logging.dart';
+import 'package:tazbeet/services/app_logging_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../repositories/mood_repository.dart';

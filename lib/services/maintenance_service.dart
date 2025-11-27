@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/app_settings.dart';
 import '../services/firebase_service_wrapper.dart';
-import '../services/app_logging.dart';
+import 'app_logging_service.dart';
 
 /// خدمة إدارة وضع الصيانة وإعدادات التطبيق العامة
 class MaintenanceService {

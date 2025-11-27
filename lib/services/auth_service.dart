@@ -3,7 +3,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:tazbeet/services/app_logging.dart';
+import 'package:tazbeet/services/app_logging_service.dart';
 import 'package:tazbeet/services/firebase_service_wrapper.dart';
 
 class AuthService {
@@ -208,7 +208,7 @@ class AuthService {
             AppLogging.logInfo('Opened, cleared, and closed box: $boxName', name: 'AuthService');
           }
         } catch (e) {
-          AppLogging.logInfo('Error clearing box $boxName: $e', name: 'AuthService');
+          AppLogging.logError('Error clearing box $boxName: $e', name: 'AuthService');
           // Continue with other boxes
         }
       }

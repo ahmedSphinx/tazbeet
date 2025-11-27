@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:tazbeet/services/app_logging.dart';
+import 'package:tazbeet/services/app_logging_service.dart';
 import '../../models/notification_item.dart';
 import '../../models/task.dart';
 import '../../repositories/notification_repository.dart';

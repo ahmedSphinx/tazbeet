@@ -1,0 +1,242 @@
+{
+    "version": "1.0.0",
+    "lastUpdated": "2025-11-27",
+    "designSystem": {
+        "spacing": {
+            "description": "8px base unit system",
+            "xs": 4,
+            "sm": 8,
+            "md": 16,
+            "lg": 24,
+            "xl": 32,
+            "xxl": 48,
+            "xxxl": 64
+        },
+        "typography": {
+            "fontFamily": "TajawalR",
+            "scale": {
+                "caption": {
+                    "size": 10,
+                    "lineHeight": 1.4,
+                    "weight": "regular",
+                    "letterSpacing": 0.4
+                },
+                "label": {
+                    "size": 12,
+                    "lineHeight": 1.5,
+                    "weight": "medium",
+                    "letterSpacing": 0.5
+                },
+                "body": {
+                    "size": 14,
+                    "lineHeight": 1.5,
+                    "weight": "regular",
+                    "letterSpacing": 0.25
+                },
+                "bodyLarge": {
+                    "size": 16,
+                    "lineHeight": 1.5,
+                    "weight": "regular",
+                    "letterSpacing": 0.15
+                },
+                "subtitle": {
+                    "size": 18,
+                    "lineHeight": 1.4,
+                    "weight": "semibold",
+                    "letterSpacing": 0.15
+                },
+                "title": {
+                    "size": 24,
+                    "lineHeight": 1.3,
+                    "weight": "bold",
+                    "letterSpacing": 0
+                },
+                "headline": {
+                    "size": 32,
+                    "lineHeight": 1.25,
+                    "weight": "bold",
+                    "letterSpacing": 0
+                },
+                "display": {
+                    "size": 40,
+                    "lineHeight": 1.2,
+                    "weight": "bold",
+                    "letterSpacing": -0.5
+                }
+            }
+        },
+        "elevation": {
+            "description": "Material Design 3 elevation system",
+            "tokens": {
+                "level0": {
+                    "elevation": 0,
+                    "shadowColor": "transparent",
+                    "description": "Surface level"
+                },
+                "level1": {
+                    "elevation": 1,
+                    "shadowColor": "rgba(0,0,0,0.05)",
+                    "description": "Raised surface"
+                },
+                "level2": {
+                    "elevation": 2,
+                    "shadowColor": "rgba(0,0,0,0.08)",
+                    "description": "Cards, chips"
+                },
+                "level3": {
+                    "elevation": 4,
+                    "shadowColor": "rgba(0,0,0,0.12)",
+                    "description": "Raised cards, dropdowns"
+                },
+                "level4": {
+                    "elevation": 6,
+                    "shadowColor": "rgba(0,0,0,0.16)",
+                    "description": "FAB, app bar"
+                },
+                "level5": {
+                    "elevation": 8,
+                    "shadowColor": "rgba(0,0,0,0.20)",
+                    "description": "Navigation drawer, modal bottom sheet"
+                }
+            }
+        },
+        "borderRadius": {
+            "description": "Consistent corner radius",
+            "xs": 4,
+            "sm": 8,
+            "md": 12,
+            "lg": 16,
+            "xl": 20,
+            "xxl": 24,
+            "full": 9999
+        },
+        "colors": {
+            "light": {
+                "primary": "#6366F1",
+                "secondary": "#EC4899",
+                "tertiary": "#10B981",
+                "accent": "#F59E0B",
+                "surface": "#FFFFFF",
+                "background": "#F8FAFC",
+                "error": "#DC2626",
+                "success": "#059669",
+                "warning": "#D97706",
+                "info": "#0284C7",
+                "priority": {
+                    "high": "#DC2626",
+                    "medium": "#D97706",
+                    "low": "#059669"
+                }
+            },
+            "dark": {
+                "primary": "#8B5CF6",
+                "secondary": "#F472B6",
+                "tertiary": "#34D399",
+                "accent": "#FBBF24",
+                "surface": "#1E293B",
+                "background": "#0F172A",
+                "error": "#EF4444",
+                "success": "#10B981",
+                "warning": "#F59E0B",
+                "info": "#0EA5E9",
+                "priority": {
+                    "high": "#EF4444",
+                    "medium": "#F59E0B",
+                    "low": "#10B981"
+                }
+            }
+        },
+        "iconSizes": {
+            "xs": 16,
+            "sm": 20,
+            "md": 24,
+            "lg": 32,
+            "xl": 40,
+            "xxl": 48
+        },
+        "touchTargets": {
+            "minimum": 48,
+            "comfortable": 56,
+            "large": 64
+        },
+        "animation": {
+            "durations": {
+                "instant": 100,
+                "fast": 200,
+                "normal": 300,
+                "slow": 500
+            },
+            "curves": {
+                "standard": "Curves.easeInOut",
+                "decelerate": "Curves.easeOut",
+                "accelerate": "Curves.easeIn",
+                "emphasized": "Curves.easeInOutCubic"
+            }
+        },
+        "components": {
+            "statCard": {
+                "minHeight": 120,
+                "padding": {
+                    "horizontal": 12,
+                    "vertical": 12
+                },
+                "iconSize": 32,
+                "valueSize": 32,
+                "labelSize": 12,
+                "borderWidth": 1.5,
+                "borderRadius": 16,
+                "elevation": 2
+            },
+            "categoryChip": {
+                "height": 40,
+                "padding": {
+                    "horizontal": 12,
+                    "vertical": 8
+                },
+                "iconSize": 18,
+                "fontSize": 14,
+                "borderRadius": 20,
+                "spacing": 6
+            },
+            "taskCard": {
+                "padding": {
+                    "horizontal": 16,
+                    "vertical": 12
+                },
+                "borderRadius": 12,
+                "elevation": 1,
+                "priorityIndicatorWidth": 4
+            },
+            "fab": {
+                "size": 64,
+                "iconSize": 28,
+                "elevation": 8,
+                "borderRadius": 16,
+                "position": {
+                    "bottom": 24,
+                    "right": 24
+                }
+            },
+            "searchBar": {
+                "height": 48,
+                "padding": {
+                    "horizontal": 16,
+                    "vertical": 12
+                },
+                "borderRadius": 12,
+                "iconSize": 24
+            }
+        }
+    },
+    "accessibility": {
+        "minimumContrastRatio": 4.5,
+        "largeTextContrastRatio": 3.0,
+        "minimumTouchTarget": 48,
+        "focusIndicatorWidth": 2
+    },
+    "performance": {
+        "targetFrameRate": 60,
+        "maxLayoutTime": 16,
+        "targetLoadTime": 200
+    }
+}

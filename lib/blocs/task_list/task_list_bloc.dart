@@ -1,4 +1,4 @@
-import 'package:tazbeet/services/app_logging.dart';
+import 'package:tazbeet/services/app_logging_service.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -146,7 +146,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
           await _dataSyncService.syncToFirestore(user.uid);
         } catch (e) {
           // Log error but don't fail the operation
-          AppLogging.logInfo('Failed to sync task completion toggle to Firestore: $e');
+          AppLogging.logError('Failed to sync task completion toggle to Firestore: $e');
         }
       }
     }

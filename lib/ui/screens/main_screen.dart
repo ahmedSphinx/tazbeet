@@ -1,5 +1,6 @@
 // ignore_for_file: unused_element, unrelated_type_equality_checks
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tazbeet/blocs/task_list/task_list_bloc.dart';
 import 'package:tazbeet/blocs/task_list/task_list_event.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
-import 'package:tazbeet/services/app_logging.dart';
+import 'package:tazbeet/services/app_logging_service.dart';
 import 'package:tazbeet/ui/screens/mood_settings_screen.dart';
 import 'package:tazbeet/ui/screens/recurring_tasks_screen.dart';
 import 'package:tazbeet/ui/screens/splash_screen.dart';
@@ -31,42 +32,39 @@ import '../../services/tutorial_service.dart';
 import '../../services/analytics_service.dart';
 import '../screens/admin_panel_screen.dart';
 
-import '../widgets/home_screen_body.dart';
 import '../widgets/search_bar.dart';
 import '../widgets/add_task_dialog.dart';
 import 'ambient_screen.dart';
 import 'category_screen.dart';
 import 'emergency_screen.dart';
+import 'home_screen_redesigned.dart';
 import 'mood_screen.dart';
 import 'pomodoro_screen.dart';
 import 'progress_screen.dart';
 import 'settings_screen.dart';
 import 'task_details_screen.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<MainScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, WidgetsBindingObserver {
+class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, WidgetsBindingObserver {
   late ScrollController _scrollController;
   late TextEditingController _searchController;
+  late TabController moodTabController;
   Timer? _debounceTimer;
   bool _isRefreshing = false;
   bool _isConnected = true;
   int _selectedIndex = 0;
-  String? _selectedCategoryId;
-  TaskPriority? _filterPriority;
-  bool? _filterCompleted;
-  bool _sortByPriority = false;
   bool _isSearching = false;
 
   // Tutorial keys
   final GlobalKey _addTaskKey = GlobalKey();
   final GlobalKey _pomodoroKey = GlobalKey();
-  final GlobalKey _categoryFilterKey = GlobalKey();
+  final GlobalKey _categoryFilterKey = GlobalKey(); // Kept for tutorial service
   final GlobalKey _moodTrackingKey = GlobalKey();
   final GlobalKey _taskDetailsKey = GlobalKey();
 
@@ -162,10 +160,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     setState(() {
       _selectedIndex = index;
       _searchController.clear();
-      _filterPriority = null;
-      _filterCompleted = null;
-      _selectedCategoryId = null;
-      _sortByPriority = false;
       _isSearching = false;
     });
 
@@ -185,27 +179,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
   }
 
   void _showFilterDialog() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (context) => FilterDialog(
-        initialPriority: _filterPriority,
-        initialCompleted: _filterCompleted,
-        onPriorityChanged: (priority) {
-          setState(() => _filterPriority = priority);
-        },
-        onCompletedChanged: (completed) {
-          setState(() => _filterCompleted = completed);
-        },
-        onClear: () {
-          setState(() {
-            _filterPriority = null;
-            _filterCompleted = null;
-          });
-        },
-      ),
-    );
+    // Filter dialog not needed - HomeScreenRedesigned manages its own filters
+    // This method kept for compatibility but does nothing
   }
 
   void _showAddTaskDialog() {
@@ -249,9 +224,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
           child: Scaffold(
             appBar: _buildAppBar(),
             drawer: _buildDrawer(),
+            backgroundColor: Theme.of(context).colorScheme.background,
             body: _buildBody(),
             bottomNavigationBar: hasShownTutorial ? _buildBottomNavigationBar() : _buildBottomNavigationBarTutorial(),
-            floatingActionButton: _buildFloatingActionButton(),
+            // FAB removed - HomeScreenRedesigned has its own FAB
+            floatingActionButton: _selectedIndex == 0 ? null : _buildFloatingActionButton(),
           ),
         ),
       ),
@@ -314,7 +291,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
           onPressed: () {
             _checkAndShowTutorial();
             HapticFeedback.lightImpact();
-            setState(() => _sortByPriority = !_sortByPriority);
+            // Sort functionality handled by HomeScreenRedesigned
           },
           onLongPress: _showFilterDialog,
           tooltip: AppLocalizations.of(context)?.priorityLabel ?? 'Priority',
@@ -499,6 +476,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
       children: [
         BlocBuilder<UserBloc, UserState>(
           builder: (context, userState) {
+            if (userState is UserLoaded) {
+              AppLogging.logError('User state: ${userState.user}');
+            }
             if (userState is UserLoaded && userState.user.isAdmin) {
               return ListTile(
                 leading: const Icon(Icons.admin_panel_settings),
@@ -513,6 +493,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
                 },
               );
             }
+            if (kDebugMode) return Text('nnnnooo');
             return const SizedBox.shrink();
           },
         ),
@@ -682,21 +663,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     );
   }
 
-  List<Widget> get _screens => [
-    HomeScreenBody(
-      selectedCategoryId: _selectedCategoryId,
-      sortByPriority: _sortByPriority,
-      searchQuery: _searchController.text,
-      filterPriority: _filterPriority,
-      filterCompleted: _filterCompleted,
-      onCategoryChanged: (id) => setState(() => _selectedCategoryId = id),
-      categoryFilterKey: _categoryFilterKey,
-    ),
-    const ProgressScreen(),
-    const PomodoroScreen(),
-    const CategoryScreen(),
-    const MoodScreen(),
-  ];
+  List<Widget> get _screens => [const HomeScreenRedesigned(), const ProgressScreen(), const PomodoroScreen(), const CategoryScreen(), const MoodScreen()];
 }
 
 // New optimized widgets will be created below

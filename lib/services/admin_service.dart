@@ -3,7 +3,7 @@ import '../models/user.dart';
 import '../models/task.dart';
 import '../models/category.dart';
 import '../services/firebase_service_wrapper.dart';
-import '../services/app_logging.dart';
+import 'app_logging_service.dart';
 
 class AdminService {
   FirebaseFirestore? get _firestore => FirebaseServiceWrapper.firestore;

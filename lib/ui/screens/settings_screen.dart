@@ -667,7 +667,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       subtitle: Text(AppLocalizations.of(context)!.version(updateService.updateInfo?.version ?? '')),
                       trailing: updateService.isDownloading
                           ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                          : ElevatedButton(onPressed: () => _startUpdate(updateService), child: Text(AppLocalizations.of(context)!.installUpdate), style: AppButtonStyles.primary(context)),
+                          : ElevatedButton(onPressed: () => _startUpdate(updateService), style: AppButtonStyles.primary(context), child: Text(AppLocalizations.of(context)!.installUpdate)),
                     ),
                   ],
                   if (updateService.hasError) ...[
@@ -675,7 +675,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ListTile(
                       title: Text(AppLocalizations.of(context)!.updateError),
                       subtitle: Text(l10n.failedToCheckForUpdates),
-                      trailing: TextButton(onPressed: () => _checkForUpdates(updateService), child: Text(AppLocalizations.of(context)!.retry), style: AppButtonStyles.secondary(context)),
+                      trailing: TextButton(onPressed: () => _checkForUpdates(updateService), style: AppButtonStyles.secondary(context), child: Text(AppLocalizations.of(context)!.retry)),
                     ),
                   ],
                 ],

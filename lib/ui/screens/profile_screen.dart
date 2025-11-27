@@ -8,7 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:tazbeet/l10n/app_localizations.dart';
-import 'package:tazbeet/services/app_logging.dart';
+import 'package:tazbeet/services/app_logging_service.dart';
 import 'package:tazbeet/ui/screens/main_screen.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../../blocs/user/user_event.dart';
@@ -16,6 +16,7 @@ import '../../blocs/user/user_state.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/auth/auth_event.dart';
 import '../../models/user.dart';
+import 'splash_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final bool isProfileCompletion;
@@ -248,7 +249,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           AppLogging.logInfo('Dispatched AuthProfileCompleted event', name: '_saveProfile');
 
           // Navigate to home screen after profile completion
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const MainScreen()));
           AppLogging.logInfo('Navigated to home screen after profile completion', name: '_saveProfile');
         } else {
           // Normal profile editing - go back
@@ -293,6 +294,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
           AppLocalizations.of(context)!.profileScreenTitle,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
         ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            tooltip: AppLocalizations.of(context)!.signOut,
+            onPressed: () {
+              context.read<AuthBloc>().add(AuthSignOutRequested());
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SplashScreen()), (route) => false);
+            },
+            icon: Icon(Icons.logout_outlined, color: Colors.red),
+          ),
+        ],
       ),
       body: BlocListener<UserBloc, UserState>(
         listener: (context, state) {

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-import 'package:tazbeet/services/app_logging.dart';
+import 'package:tazbeet/services/app_logging_service.dart';
 import 'package:tazbeet/services/auth_service.dart';
 import 'package:tazbeet/services/data_sync_service.dart';
 import 'package:tazbeet/services/admin_service.dart';

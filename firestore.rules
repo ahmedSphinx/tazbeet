@@ -60,6 +60,11 @@ service cloud.firestore {
       match /notification_history/{notificationId} {
         allow read, write: if isOwner(userId) || isAdmin();
       }
+      
+      // User's settings subcollection
+      match /settings/{settingId} {
+        allow read, write: if isOwner(userId) || isAdmin();
+      }
     }
     
     // Global categories collection (read by all, write by admins only)

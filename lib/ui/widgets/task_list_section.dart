@@ -2,12 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
 import 'package:tazbeet/models/task.dart';
-import 'package:tazbeet/ui/screens/task_details_screen.dart';
 import 'package:tazbeet/ui/widgets/task_item.dart';
 import 'package:tazbeet/ui/widgets/empty_state.dart';
-import 'package:tazbeet/blocs/task_list/task_list_bloc.dart';
-import 'package:tazbeet/blocs/task_list/task_list_event.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TaskListSection extends StatelessWidget {
   final List<Task> tasks;
@@ -19,6 +15,9 @@ class TaskListSection extends StatelessWidget {
   final Function(String) onTaskToggle;
   final Function(Task) onTaskEdit;
   final Function(String) onTaskDelete;
+  final bool batchSelectionMode;
+  final Function(String)? onTaskSelected;
+  final Set<String>? selectedTaskIds;
 
   const TaskListSection({
     super.key,
@@ -31,6 +30,9 @@ class TaskListSection extends StatelessWidget {
     required this.onTaskToggle,
     required this.onTaskEdit,
     required this.onTaskDelete,
+    this.batchSelectionMode = false,
+    this.onTaskSelected,
+    this.selectedTaskIds,
   });
 
   @override
@@ -62,97 +64,65 @@ class TaskListSection extends StatelessWidget {
       });
     }
 
-    return ListView.builder(
+    return ReorderableListView(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: groupOrder.where((k) => groups.containsKey(k) && groups[k]!.isNotEmpty).length,
-      itemBuilder: (context, groupIndex) {
-        final key = groupOrder.where((k) => groups.containsKey(k) && groups[k]!.isNotEmpty).elementAt(groupIndex);
-        final tasksInGroup = groups[key]!;
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, 2))],
-              ),
-              child: Row(
-                children: [
-                  Icon(_getGroupIcon(key), color: _getGroupColor(context, key)),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      groupTitles[key] ?? key,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            AnimationLimiter(
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: tasksInGroup.length,
-                itemBuilder: (context, index) {
-                  final task = tasksInGroup[index];
-                  return AnimationConfiguration.staggeredList(
-                    position: index,
-                    duration: const Duration(milliseconds: 375),
-                    child: SlideAnimation(
-                      verticalOffset: 50.0,
-                      curve: Curves.easeOutCubic,
-                      child: FadeInAnimation(
-                        curve: Curves.easeOut,
-                        child: ScaleAnimation(
-                          scale: 0.95,
-                          curve: Curves.easeOutBack,
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: TaskItem(
-                              task: task,
-                              onEdit: () => onTaskEdit(task),
-                              onDelete: () => onTaskDelete(task.id),
-                              onToggle: task.subtasks.isEmpty
-                                  ? () => onTaskToggle(task.id)
-                                  : () async {
-                                      await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => TaskDetailsScreen(taskId: task.id)),
-                                      );
-                                      context.read<TaskListBloc>().add(LoadTasks());
-                                    },
-                              onLongTap: () async {
-                                await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => TaskDetailsScreen(taskId: task.id)),
-                                );
-                                context.read<TaskListBloc>().add(LoadTasks());
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        );
+      onReorder: (oldIndex, newIndex) {
+        // TODO: Implement reorder logic and update the backend/state
       },
+      children: [
+        for (final groupKey in groupOrder.where((k) => groups.containsKey(k) && groups[k]!.isNotEmpty))
+          Column(
+            key: ValueKey(groupKey),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, 2))],
+                ),
+                child: Row(
+                  children: [
+                    Icon(_getGroupIcon(groupKey), color: _getGroupColor(context, groupKey)),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(groupTitles[groupKey] ?? groupKey, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+              ),
+              AnimationLimiter(
+                child: Column(
+                  children: AnimationConfiguration.toStaggeredList(
+                    duration: const Duration(milliseconds: 375),
+                    childAnimationBuilder: (widget) => SlideAnimation(horizontalOffset: 50.0, child: FadeInAnimation(child: widget)),
+                    children: [
+                      for (final task in groups[groupKey]!)
+                        TaskItem(
+                          key: ValueKey(task.id),
+                          task: task,
+                          onToggle: () => onTaskToggle(task.id),
+                          onEdit: () => onTaskEdit(task),
+                          onDelete: () => onTaskDelete(task.id),
+                          batchSelectionMode: batchSelectionMode,
+                          onTaskSelected: onTaskSelected,
+                          selected: selectedTaskIds?.contains(task.id) ?? false,
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+      ],
     );
   }
 
   Map<String, List<Task>> _applyFilters(List<Task> tasks) {
-    var filteredTasks = selectedCategoryId == null
-        ? tasks
-        : tasks.where((task) => task.categoryId == selectedCategoryId).toList();
+    var filteredTasks = selectedCategoryId == null ? tasks : tasks.where((task) => task.categoryId == selectedCategoryId).toList();
 
     // Apply search filter
     if (searchQuery.isNotEmpty) {

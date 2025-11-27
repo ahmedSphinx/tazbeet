@@ -1,16 +1,19 @@
 // ignore_for_file: unused_element
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:tazbeet/blocs/auth/auth_bloc.dart';
 import 'package:tazbeet/blocs/auth/auth_event.dart';
 import 'package:tazbeet/blocs/auth/auth_state.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
-
 import 'package:tazbeet/ui/themes/app_themes.dart';
 import 'package:tazbeet/ui/screens/main_screen.dart';
 import 'package:tazbeet/ui/screens/registration_screen.dart';
+import 'package:tazbeet/ui/widgets/floating_shapes.dart'; // We'll create this later
+import 'package:tazbeet/ui/widgets/password_strength_indicator.dart'; // We'll create this later
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,14 +25,15 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
-
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final LocalAuthentication _localAuth = LocalAuthentication();
 
   bool _obscurePassword = true;
   bool _rememberMe = false;
   bool _isLoading = false;
+  bool _isBiometricAvailable = false;
   String? _emailError;
   String? _passwordError;
 
@@ -39,6 +43,16 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     _animationController = AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(CurvedAnimation(parent: _animationController, curve: Curves.elasticOut));
     _animationController.forward();
+    _checkBiometrics();
+  }
+
+  Future<void> _checkBiometrics() async {
+    try {
+      _isBiometricAvailable = await _localAuth.canCheckBiometrics && await _localAuth.isDeviceSupported();
+    } catch (e) {
+      _isBiometricAvailable = false;
+    }
+    if (mounted) setState(() {});
   }
 
   @override
@@ -55,37 +69,48 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isDark ? [const Color(0xFF0F172A), const Color(0xFF1E293B), const Color(0xFF334155)] : [const Color(0xFFF8FAFC), const Color(0xFFE2E8F0), const Color(0xFFCBD5E1)],
+      body: Stack(
+        children: [
+          // Animated gradient background
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 500),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: isDark ? [const Color(0xFF0F172A), const Color(0xFF1E293B), const Color(0xFF334155)] : [const Color(0xFFF8FAFC), const Color(0xFFE2E8F0), const Color(0xFFCBD5E1)],
+              ),
+            ),
           ),
-        ),
-        child: BlocListener<AuthBloc, AuthState>(
-          listener: (context, state) {
-            if (state is AuthLoading) {
-              setState(() => _isLoading = true);
-            } else {
-              setState(() => _isLoading = false);
-            }
 
-            // Handle successful authentication
-            if (state is AuthAuthenticated) {
-              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const HomeScreen()), (Route<dynamic> route) => false);
-            }
+          // Floating shapes background
+          Positioned.fill(child: FloatingShapes(color: Theme.of(context).colorScheme.primary, numberOfShapes: 8)),
 
-            if (state is AuthError) {
-              _showErrorSnackBar(context, state.message);
-            }
-          },
-          child: BlocBuilder<AuthBloc, AuthState>(
-            builder: (context, state) {
-              return _buildLoginContent(context, isDark);
+          // Main content
+          BlocListener<AuthBloc, AuthState>(
+            listener: (context, state) {
+              if (state is AuthLoading) {
+                setState(() => _isLoading = true);
+              } else {
+                setState(() => _isLoading = false);
+              }
+
+              // Handle successful authentication
+              if (state is AuthAuthenticated) {
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const MainScreen()), (Route<dynamic> route) => false);
+              }
+
+              if (state is AuthError) {
+                _showErrorSnackBar(context, state.message);
+              }
             },
+            child: BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                return _buildLoginContent(context, isDark);
+              },
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -267,37 +292,101 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   }
 
   Widget _buildGoogleSignInButton(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.9,
-      height: 50,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)),
-      ),
-
-      child: IconButton(
-        onPressed: () {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          HapticFeedback.mediumImpact();
           context.read<AuthBloc>().add(AuthSignInRequested());
         },
-        icon: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset('assets/images/google.png'),
-            const SizedBox(width: 16),
-            Text(AppLocalizations.of(context)!.signInWithGoogle, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.8))),
-          ],
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.9,
+          height: 50,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: Image.asset('assets/images/google.png', height: 24)),
+              Text(
+                AppLocalizations.of(context)!.signInWithGoogle,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.black87, fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildAppleSignInButton(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.9,
-      height: 50,
-      decoration: BoxDecoration(
-        color: Colors.black,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          HapticFeedback.mediumImpact();
+          context.read<AuthBloc>().add(AuthAppleSignInRequested());
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.9,
+          height: 50,
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.apple, color: Colors.white, size: 28),
+              const SizedBox(width: 16),
+              Text(
+                AppLocalizations.of(context)!.signInWithApple,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  } /* 
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.apple,
+                  color: Colors.white,
+                  size: 28,
+                ),
+                const SizedBox(width: 16),
+                Text(
+                  AppLocalizations.of(context)!.signInWithApple,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)),
       ),
@@ -311,13 +400,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           children: [
             Icon(Icons.apple, color: Colors.white),
             const SizedBox(width: 16),
-            Text(AppLocalizations.of(context)!.signInWithApple, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white)),
+            Text(AppLocalizations.of(context)!.signInWithA*pple, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white)),
           ],
         ),
       ),
     );
   }
-
+ */
   // Facebook sign-in UI removed
 
   Widget _buildDivider(BuildContext context) {
@@ -353,50 +442,44 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           _validateEmail();
         }
       },
-      child: TextFormField(
-        controller: _emailController,
-        keyboardType: TextInputType.emailAddress,
-        textInputAction: TextInputAction.next,
-        autocorrect: false,
-        enableSuggestions: false,
-        decoration: InputDecoration(
-          labelText: 'Email Address',
-          hintText: 'your@email.com',
-          errorText: _emailError,
-          prefixIcon: Icon(Icons.email_outlined, color: _emailError != null ? Theme.of(context).colorScheme.error : null),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: _emailError != null ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.outline),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: _emailError != null ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.outline.withValues(alpha: 0.5)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: Theme.of(context).colorScheme.error, width: 2),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: Theme.of(context).colorScheme.error, width: 2),
-          ),
-          filled: true,
-          fillColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0.8),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          gradient: LinearGradient(colors: [Theme.of(context).colorScheme.surface.withOpacity(0.7), Theme.of(context).colorScheme.surface.withOpacity(0.4)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+          border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.3), width: 1.5),
+          boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.shadow.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
         ),
-        style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
-        onChanged: (value) {
-          if (_emailError != null) {
-            setState(() => _emailError = null);
-          }
-        },
-        validator: (value) {
-          return _validateEmail();
-        },
+        child: TextFormField(
+          controller: _emailController,
+          keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
+          autocorrect: false,
+          enableSuggestions: false,
+          decoration: InputDecoration(
+            labelText: 'Email Address',
+            hintText: 'your@email.com',
+            errorText: _emailError,
+            prefixIcon: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: Icon(
+                _emailError != null ? Icons.error_outline : Icons.email_outlined,
+                color: _emailError != null ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.primary.withOpacity(0.7),
+                key: ValueKey(_emailError != null),
+              ),
+            ),
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          ),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
+          onChanged: (value) {
+            if (_emailError != null) {
+              setState(() => _emailError = null);
+            }
+            // Add haptic feedback
+            HapticFeedback.selectionClick();
+          },
+          validator: (value) => _validateEmail(),
+        ),
       ),
     );
   }
@@ -408,53 +491,67 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           _validatePassword();
         }
       },
-      child: TextFormField(
-        controller: _passwordController,
-        obscureText: _obscurePassword,
-        textInputAction: TextInputAction.done,
-        onFieldSubmitted: (_) => _handleLogin(),
-        decoration: InputDecoration(
-          labelText: 'Password',
-          hintText: 'Enter your password',
-          errorText: _passwordError,
-          prefixIcon: Icon(Icons.lock_outline, color: _passwordError != null ? Theme.of(context).colorScheme.error : null),
-          suffixIcon: IconButton(
-            icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility, color: _passwordError != null ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
-            onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              gradient: LinearGradient(colors: [Theme.of(context).colorScheme.surface.withOpacity(0.7), Theme.of(context).colorScheme.surface.withOpacity(0.4)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+              border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.3), width: 1.5),
+              boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.shadow.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+            ),
+            child: TextFormField(
+              controller: _passwordController,
+              obscureText: _obscurePassword,
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: (_) => _handleLogin(),
+              decoration: InputDecoration(
+                labelText: 'Password',
+                hintText: 'Enter your password',
+                errorText: _passwordError,
+                prefixIcon: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: Icon(
+                    _passwordError != null ? Icons.error_outline : Icons.lock_outline,
+                    color: _passwordError != null ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.primary.withOpacity(0.7),
+                    key: ValueKey(_passwordError != null),
+                  ),
+                ),
+                suffixIcon: IconButton(
+                  icon: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6), key: ValueKey(_obscurePassword)),
+                  ),
+                  onPressed: () {
+                    setState(() => _obscurePassword = !_obscurePassword);
+                    HapticFeedback.selectionClick();
+                  },
+                ),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              ),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
+              onChanged: (value) {
+                if (_passwordError != null) {
+                  setState(() => _passwordError = null);
+                }
+                // Add haptic feedback
+                HapticFeedback.selectionClick();
+                // Trigger rebuild for password strength
+                setState(() {});
+              },
+              validator: (value) => _validatePassword(),
+            ),
           ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: _passwordError != null ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.outline),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: _passwordError != null ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.outline.withValues(alpha: 0.5)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: Theme.of(context).colorScheme.error, width: 2),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: Theme.of(context).colorScheme.error, width: 2),
-          ),
-          filled: true,
-          fillColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0.8),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        ),
-        style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
-        onChanged: (value) {
-          if (_passwordError != null) {
-            setState(() => _passwordError = null);
-          }
-        },
-        validator: (value) {
-          return _validatePassword();
-        },
+          if (_passwordController.text.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: PasswordStrengthIndicator(password: _passwordController.text),
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -465,20 +562,51 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       height: 56,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        boxShadow: _isLoading ? [] : [BoxShadow(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 5))],
+        boxShadow: _isLoading ? [] : [BoxShadow(color: Theme.of(context).colorScheme.primary.withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 5), spreadRadius: 0)],
       ),
-      child: ElevatedButton(
-        onPressed: _isLoading ? null : _handleLogin,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: _isLoading ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3) : Theme.of(context).colorScheme.primary,
-          foregroundColor: _isLoading ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5) : Theme.of(context).colorScheme.onPrimary,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: _isLoading
+              ? null
+              : () {
+                  HapticFeedback.mediumImpact();
+                  _handleLogin();
+                },
+          customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: Ink(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              gradient: LinearGradient(
+                colors: _isLoading
+                    ? [Theme.of(context).colorScheme.onSurface.withOpacity(0.3), Theme.of(context).colorScheme.onSurface.withOpacity(0.3)]
+                    : [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.primary.withOpacity(0.8)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              child: Center(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: _isLoading
+                      ? SizedBox(height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.onPrimary)))
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Sign In',
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onPrimary),
+                            ),
+                            if (_isBiometricAvailable) ...[const SizedBox(width: 8), Icon(Icons.fingerprint, color: Theme.of(context).colorScheme.onPrimary)],
+                          ],
+                        ),
+                ),
+              ),
+            ),
+          ),
         ),
-        child: _isLoading
-            ? SizedBox(height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.onPrimary)))
-            : Text('Sign In', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600)),
       ),
     );
   }

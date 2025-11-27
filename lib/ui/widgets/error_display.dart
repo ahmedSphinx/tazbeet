@@ -1,4 +1,4 @@
-import 'package:tazbeet/services/app_logging.dart';
+import 'package:tazbeet/services/app_logging_service.dart';
 
 import 'package:flutter/material.dart';
 

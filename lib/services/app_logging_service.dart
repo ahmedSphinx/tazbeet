@@ -1,5 +1,3 @@
-
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 
 class AppLogging {
@@ -27,9 +25,8 @@ class AppLogging {
       print('$_red[ERROR] ${name ?? 'AppError'}: $message$_reset');
       if (error != null) print('$_red  Error: $error$_reset');
       if (stackTrace != null) print('$_red  StackTrace: $stackTrace$_reset');
-
     } else {
-      FirebaseCrashlytics.instance.recordError(error, stackTrace);
+      //  FirebaseCrashlytics.instance.recordError(error, stackTrace);
     }
   }
 }

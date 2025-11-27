@@ -123,7 +123,7 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
             content: Column(
               children: [
                 Text('${moodNotifications.length} mood notifications scheduled\nTotal pending: ${pending.length}'),
-                for (var notification in moodNotifications) Text(notification.title.toString() + ' at ' + (notification.body?.toString() ?? '')),
+                for (var notification in moodNotifications) Text('${notification.title} at ${notification.body?.toString() ?? ''}'),
               ],
             ),
             actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('OK'))],

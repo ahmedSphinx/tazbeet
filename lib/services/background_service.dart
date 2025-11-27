@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:tazbeet/services/app_logging.dart';
+import 'package:tazbeet/services/app_logging_service.dart';
 import 'dart:io';
 import 'package:workmanager/workmanager.dart' as wm;
 import 'package:hive_flutter/hive_flutter.dart';

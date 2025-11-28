@@ -8,7 +8,7 @@ enum TaskSortOption { dueDate, priority, title, createdDate }
 class HomeScreenController {
   final ValueNotifier<DateTime?> selectedDate = ValueNotifier<DateTime?>(null);
   final ValueNotifier<String?> selectedCategoryId = ValueNotifier<String?>(null);
-  final ValueNotifier<bool> showCalendar = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> showCalendar = ValueNotifier<bool>(true);
   final ValueNotifier<TaskPriority?> filterPriority = ValueNotifier<TaskPriority?>(null);
   final ValueNotifier<String> searchQuery = ValueNotifier<String>('');
   final ValueNotifier<TaskSortOption> sortOption = ValueNotifier<TaskSortOption>(TaskSortOption.dueDate);

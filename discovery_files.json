@@ -1,0 +1,776 @@
+{
+    "projectRoot": "/Volumes/work/tazbeet",
+    "pubspec": true,
+    "totalFiles": 156,
+    "libFilesCount": 140,
+    "testFilesCount": 4,
+    "assetFilesCount": 12,
+    "libFiles": [
+        {
+            "path": "lib/_archive/home_active_filters_bar.dart",
+            "size": 5814,
+            "lines": 183
+        },
+        {
+            "path": "lib/_archive/home_calendar_panel.dart",
+            "size": 2389,
+            "lines": 59
+        },
+        {
+            "path": "lib/_archive/home_screen_body.dart",
+            "size": 13483,
+            "lines": 364
+        },
+        {
+            "path": "lib/_archive/home_task_list_container.dart",
+            "size": 6958,
+            "lines": 211
+        },
+        {
+            "path": "lib/_archive/home_undated_section.dart",
+            "size": 5482,
+            "lines": 177
+        },
+        {
+            "path": "lib/blocs/auth/auth_bloc.dart",
+            "size": 16653,
+            "lines": 390
+        },
+        {
+            "path": "lib/blocs/auth/auth_event.dart",
+            "size": 963,
+            "lines": 44
+        },
+        {
+            "path": "lib/blocs/auth/auth_state.dart",
+            "size": 805,
+            "lines": 42
+        },
+        {
+            "path": "lib/blocs/category/category_bloc.dart",
+            "size": 3271,
+            "lines": 87
+        },
+        {
+            "path": "lib/blocs/category/category_event.dart",
+            "size": 755,
+            "lines": 38
+        },
+        {
+            "path": "lib/blocs/category/category_state.dart",
+            "size": 642,
+            "lines": 31
+        },
+        {
+            "path": "lib/blocs/mood/mood_bloc.dart",
+            "size": 5130,
+            "lines": 154
+        },
+        {
+            "path": "lib/blocs/mood/mood_event.dart",
+            "size": 1215,
+            "lines": 68
+        },
+        {
+            "path": "lib/blocs/mood/mood_state.dart",
+            "size": 1143,
+            "lines": 58
+        },
+        {
+            "path": "lib/blocs/notification/notification_bloc.dart",
+            "size": 24522,
+            "lines": 584
+        },
+        {
+            "path": "lib/blocs/notification/notification_event.dart",
+            "size": 6913,
+            "lines": 268
+        },
+        {
+            "path": "lib/blocs/notification/notification_state.dart",
+            "size": 7394,
+            "lines": 218
+        },
+        {
+            "path": "lib/blocs/task_details/task_details_bloc.dart",
+            "size": 12030,
+            "lines": 330
+        },
+        {
+            "path": "lib/blocs/task_details/task_details_event.dart",
+            "size": 2080,
+            "lines": 102
+        },
+        {
+            "path": "lib/blocs/task_details/task_details_state.dart",
+            "size": 753,
+            "lines": 33
+        },
+        {
+            "path": "lib/blocs/task_list/task_list_bloc.dart",
+            "size": 11500,
+            "lines": 301
+        },
+        {
+            "path": "lib/blocs/task_list/task_list_event.dart",
+            "size": 2407,
+            "lines": 123
+        },
+        {
+            "path": "lib/blocs/task_list/task_list_state.dart",
+            "size": 629,
+            "lines": 31
+        },
+        {
+            "path": "lib/blocs/user/user_bloc.dart",
+            "size": 3800,
+            "lines": 103
+        },
+        {
+            "path": "lib/blocs/user/user_event.dart",
+            "size": 644,
+            "lines": 36
+        },
+        {
+            "path": "lib/blocs/user/user_state.dart",
+            "size": 562,
+            "lines": 31
+        },
+        {
+            "path": "lib/firebase_options.dart",
+            "size": 2778,
+            "lines": 77
+        },
+        {
+            "path": "lib/l10n/app_ar.arb",
+            "size": 51013,
+            "lines": 1049
+        },
+        {
+            "path": "lib/l10n/app_en.arb",
+            "size": 24930,
+            "lines": 656
+        },
+        {
+            "path": "lib/l10n/app_en.arb.backup",
+            "size": 14791,
+            "lines": 436
+        },
+        {
+            "path": "lib/l10n/app_es.arb",
+            "size": 24875,
+            "lines": 647
+        },
+        {
+            "path": "lib/l10n/app_fr.arb",
+            "size": 19236,
+            "lines": 521
+        },
+        {
+            "path": "lib/l10n/app_localizations.dart",
+            "size": 91226,
+            "lines": 3363
+        },
+        {
+            "path": "lib/l10n/app_localizations_ar.dart",
+            "size": 43358,
+            "lines": 1652
+        },
+        {
+            "path": "lib/l10n/app_localizations_en.dart",
+            "size": 36438,
+            "lines": 1652
+        },
+        {
+            "path": "lib/l10n/app_localizations_es.dart",
+            "size": 37829,
+            "lines": 1652
+        },
+        {
+            "path": "lib/l10n/app_localizations_fr.dart",
+            "size": 38040,
+            "lines": 1652
+        },
+        {
+            "path": "lib/main.dart",
+            "size": 17235,
+            "lines": 418
+        },
+        {
+            "path": "lib/models/app_settings.dart",
+            "size": 3138,
+            "lines": 76
+        },
+        {
+            "path": "lib/models/category.dart",
+            "size": 1679,
+            "lines": 69
+        },
+        {
+            "path": "lib/models/mood.dart",
+            "size": 2848,
+            "lines": 127
+        },
+        {
+            "path": "lib/models/mood.g.dart",
+            "size": 2949,
+            "lines": 122
+        },
+        {
+            "path": "lib/models/notification_item.dart",
+            "size": 9213,
+            "lines": 332
+        },
+        {
+            "path": "lib/models/notification_item.g.dart",
+            "size": 9319,
+            "lines": 347
+        },
+        {
+            "path": "lib/models/notification_preferences.dart",
+            "size": 9456,
+            "lines": 311
+        },
+        {
+            "path": "lib/models/notification_preferences.g.dart",
+            "size": 5517,
+            "lines": 192
+        },
+        {
+            "path": "lib/models/repeat_rule.dart",
+            "size": 5034,
+            "lines": 185
+        },
+        {
+            "path": "lib/models/task.dart",
+            "size": 9926,
+            "lines": 293
+        },
+        {
+            "path": "lib/models/user.dart",
+            "size": 2084,
+            "lines": 68
+        },
+        {
+            "path": "lib/models/user.g.dart",
+            "size": 1606,
+            "lines": 62
+        },
+        {
+            "path": "lib/repositories/category_repository.dart",
+            "size": 4318,
+            "lines": 158
+        },
+        {
+            "path": "lib/repositories/mood_repository.dart",
+            "size": 4968,
+            "lines": 137
+        },
+        {
+            "path": "lib/repositories/notification_repository.dart",
+            "size": 12636,
+            "lines": 326
+        },
+        {
+            "path": "lib/repositories/task_repository.dart",
+            "size": 2817,
+            "lines": 108
+        },
+        {
+            "path": "lib/repositories/user_repository.dart",
+            "size": 2547,
+            "lines": 89
+        },
+        {
+            "path": "lib/services/admin_service.dart",
+            "size": 8742,
+            "lines": 270
+        },
+        {
+            "path": "lib/services/ambient_service.dart",
+            "size": 5809,
+            "lines": 206
+        },
+        {
+            "path": "lib/services/analytics_service.dart",
+            "size": 12867,
+            "lines": 354
+        },
+        {
+            "path": "lib/services/app_logging_service.dart",
+            "size": 1166,
+            "lines": 32
+        },
+        {
+            "path": "lib/services/auth_service.dart",
+            "size": 13397,
+            "lines": 317
+        },
+        {
+            "path": "lib/services/background_service.dart",
+            "size": 4662,
+            "lines": 141
+        },
+        {
+            "path": "lib/services/color_customization_service.dart",
+            "size": 2084,
+            "lines": 70
+        },
+        {
+            "path": "lib/services/data_management_service.dart",
+            "size": 5559,
+            "lines": 158
+        },
+        {
+            "path": "lib/services/data_sync_service.dart",
+            "size": 18685,
+            "lines": 466
+        },
+        {
+            "path": "lib/services/emergency_service.dart",
+            "size": 4913,
+            "lines": 170
+        },
+        {
+            "path": "lib/services/firebase_service_wrapper.dart",
+            "size": 4075,
+            "lines": 138
+        },
+        {
+            "path": "lib/services/localization_service.dart",
+            "size": 1570,
+            "lines": 43
+        },
+        {
+            "path": "lib/services/maintenance_service.dart",
+            "size": 5818,
+            "lines": 159
+        },
+        {
+            "path": "lib/services/navigation_service.dart",
+            "size": 650,
+            "lines": 21
+        },
+        {
+            "path": "lib/services/notification_service.dart",
+            "size": 27187,
+            "lines": 615
+        },
+        {
+            "path": "lib/services/notification_service_enhanced.dart",
+            "size": 19523,
+            "lines": 498
+        },
+        {
+            "path": "lib/services/pomodoro_service.dart",
+            "size": 10335,
+            "lines": 330
+        },
+        {
+            "path": "lib/services/progress_service.dart",
+            "size": 6235,
+            "lines": 179
+        },
+        {
+            "path": "lib/services/repeat_service.dart",
+            "size": 6183,
+            "lines": 175
+        },
+        {
+            "path": "lib/services/settings_service.dart",
+            "size": 12520,
+            "lines": 341
+        },
+        {
+            "path": "lib/services/task_sound_service.dart",
+            "size": 3601,
+            "lines": 97
+        },
+        {
+            "path": "lib/services/tutorial_service.dart",
+            "size": 10313,
+            "lines": 253
+        },
+        {
+            "path": "lib/services/update_service.dart",
+            "size": 5458,
+            "lines": 173
+        },
+        {
+            "path": "lib/ui/controllers/home_screen_controller.dart",
+            "size": 4000,
+            "lines": 117
+        },
+        {
+            "path": "lib/ui/design_system/ds_border_radius.dart",
+            "size": 1372,
+            "lines": 44
+        },
+        {
+            "path": "lib/ui/design_system/ds_colors.dart",
+            "size": 2802,
+            "lines": 76
+        },
+        {
+            "path": "lib/ui/design_system/ds_components.dart",
+            "size": 15818,
+            "lines": 414
+        },
+        {
+            "path": "lib/ui/design_system/ds_elevation.dart",
+            "size": 1654,
+            "lines": 50
+        },
+        {
+            "path": "lib/ui/design_system/ds_spacing.dart",
+            "size": 1020,
+            "lines": 33
+        },
+        {
+            "path": "lib/ui/design_system/ds_typography.dart",
+            "size": 2333,
+            "lines": 55
+        },
+        {
+            "path": "lib/ui/screens/add_task_screen.dart",
+            "size": 8940,
+            "lines": 213
+        },
+        {
+            "path": "lib/ui/screens/admin_panel_screen.dart",
+            "size": 49309,
+            "lines": 1384
+        },
+        {
+            "path": "lib/ui/screens/ambient_screen.dart",
+            "size": 6273,
+            "lines": 155
+        },
+        {
+            "path": "lib/ui/screens/category_screen.dart",
+            "size": 11917,
+            "lines": 279
+        },
+        {
+            "path": "lib/ui/screens/data_management_screen.dart",
+            "size": 7504,
+            "lines": 220
+        },
+        {
+            "path": "lib/ui/screens/edit_task_screen.dart",
+            "size": 13328,
+            "lines": 352
+        },
+        {
+            "path": "lib/ui/screens/emergency_screen.dart",
+            "size": 8178,
+            "lines": 198
+        },
+        {
+            "path": "lib/ui/screens/home_screen_redesigned.dart",
+            "size": 32583,
+            "lines": 777
+        },
+        {
+            "path": "lib/ui/screens/login_screen.dart",
+            "size": 29132,
+            "lines": 721
+        },
+        {
+            "path": "lib/ui/screens/main_screen.dart",
+            "size": 39394,
+            "lines": 1024
+        },
+        {
+            "path": "lib/ui/screens/maintenance_screen.dart",
+            "size": 5770,
+            "lines": 157
+        },
+        {
+            "path": "lib/ui/screens/mood_history_screen.dart",
+            "size": 6865,
+            "lines": 208
+        },
+        {
+            "path": "lib/ui/screens/mood_input_screen.dart",
+            "size": 6823,
+            "lines": 182
+        },
+        {
+            "path": "lib/ui/screens/mood_logging_screen.dart",
+            "size": 4395,
+            "lines": 137
+        },
+        {
+            "path": "lib/ui/screens/mood_screen.dart",
+            "size": 10669,
+            "lines": 279
+        },
+        {
+            "path": "lib/ui/screens/mood_settings_screen.dart",
+            "size": 15733,
+            "lines": 366
+        },
+        {
+            "path": "lib/ui/screens/notification_history_screen.dart",
+            "size": 24116,
+            "lines": 627
+        },
+        {
+            "path": "lib/ui/screens/notification_preferences_screen.dart",
+            "size": 28186,
+            "lines": 649
+        },
+        {
+            "path": "lib/ui/screens/notification_test_screen.dart",
+            "size": 11624,
+            "lines": 270
+        },
+        {
+            "path": "lib/ui/screens/notifications_dashboard.dart",
+            "size": 13216,
+            "lines": 345
+        },
+        {
+            "path": "lib/ui/screens/pomodoro_screen.dart",
+            "size": 17064,
+            "lines": 448
+        },
+        {
+            "path": "lib/ui/screens/profile_screen.dart",
+            "size": 16220,
+            "lines": 387
+        },
+        {
+            "path": "lib/ui/screens/progress_screen.dart",
+            "size": 14720,
+            "lines": 372
+        },
+        {
+            "path": "lib/ui/screens/recurring_tasks_screen.dart",
+            "size": 605,
+            "lines": 16
+        },
+        {
+            "path": "lib/ui/screens/registration_screen.dart",
+            "size": 14207,
+            "lines": 356
+        },
+        {
+            "path": "lib/ui/screens/settings_screen.dart",
+            "size": 29965,
+            "lines": 740
+        },
+        {
+            "path": "lib/ui/screens/splash_screen.dart",
+            "size": 16506,
+            "lines": 387
+        },
+        {
+            "path": "lib/ui/screens/task_details_screen.dart",
+            "size": 28525,
+            "lines": 720
+        },
+        {
+            "path": "lib/ui/themes/app_themes.dart",
+            "size": 11426,
+            "lines": 308
+        },
+        {
+            "path": "lib/ui/themes/design_system.dart",
+            "size": 9778,
+            "lines": 224
+        },
+        {
+            "path": "lib/ui/utils/page_transitions.dart",
+            "size": 2926,
+            "lines": 97
+        },
+        {
+            "path": "lib/ui/widgets/add_task_dialog.dart",
+            "size": 10545,
+            "lines": 243
+        },
+        {
+            "path": "lib/ui/widgets/animated_expansion_card.dart",
+            "size": 3422,
+            "lines": 106
+        },
+        {
+            "path": "lib/ui/widgets/calendar_section.dart",
+            "size": 11604,
+            "lines": 260
+        },
+        {
+            "path": "lib/ui/widgets/circular_progress_card.dart",
+            "size": 1757,
+            "lines": 64
+        },
+        {
+            "path": "lib/ui/widgets/color_customization_widget.dart",
+            "size": 4015,
+            "lines": 126
+        },
+        {
+            "path": "lib/ui/widgets/edit_task_dialog.dart",
+            "size": 14276,
+            "lines": 363
+        },
+        {
+            "path": "lib/ui/widgets/empty_state.dart",
+            "size": 1647,
+            "lines": 47
+        },
+        {
+            "path": "lib/ui/widgets/error_display.dart",
+            "size": 1347,
+            "lines": 35
+        },
+        {
+            "path": "lib/ui/widgets/filter_dialog.dart",
+            "size": 6042,
+            "lines": 161
+        },
+        {
+            "path": "lib/ui/widgets/floating_shapes.dart",
+            "size": 2836,
+            "lines": 91
+        },
+        {
+            "path": "lib/ui/widgets/gradient_card.dart",
+            "size": 2180,
+            "lines": 76
+        },
+        {
+            "path": "lib/ui/widgets/hero_section.dart",
+            "size": 6809,
+            "lines": 188
+        },
+        {
+            "path": "lib/ui/widgets/home/home_category_filter.dart",
+            "size": 6273,
+            "lines": 158
+        },
+        {
+            "path": "lib/ui/widgets/home/home_header.dart",
+            "size": 3197,
+            "lines": 69
+        },
+        {
+            "path": "lib/ui/widgets/home/home_quick_stats.dart",
+            "size": 7084,
+            "lines": 193
+        },
+        {
+            "path": "lib/ui/widgets/home/home_search_bar.dart",
+            "size": 900,
+            "lines": 28
+        },
+        {
+            "path": "lib/ui/widgets/home/home_sort_menu.dart",
+            "size": 2044,
+            "lines": 51
+        },
+        {
+            "path": "lib/ui/widgets/loading_skeleton.dart",
+            "size": 2432,
+            "lines": 73
+        },
+        {
+            "path": "lib/ui/widgets/notification_preview_card.dart",
+            "size": 7831,
+            "lines": 226
+        },
+        {
+            "path": "lib/ui/widgets/notification_quick_actions.dart",
+            "size": 5921,
+            "lines": 148
+        },
+        {
+            "path": "lib/ui/widgets/notification_stats_widget.dart",
+            "size": 9580,
+            "lines": 247
+        },
+        {
+            "path": "lib/ui/widgets/password_strength_indicator.dart",
+            "size": 2032,
+            "lines": 67
+        },
+        {
+            "path": "lib/ui/widgets/priority_indicator.dart",
+            "size": 1227,
+            "lines": 49
+        },
+        {
+            "path": "lib/ui/widgets/progress_indicator_card.dart",
+            "size": 5320,
+            "lines": 148
+        },
+        {
+            "path": "lib/ui/widgets/quick_actions_card.dart",
+            "size": 5125,
+            "lines": 155
+        },
+        {
+            "path": "lib/ui/widgets/recurring_tasks_manager.dart",
+            "size": 8414,
+            "lines": 218
+        },
+        {
+            "path": "lib/ui/widgets/repeat_config_widget.dart",
+            "size": 7701,
+            "lines": 221
+        },
+        {
+            "path": "lib/ui/widgets/search_bar.dart",
+            "size": 1650,
+            "lines": 44
+        },
+        {
+            "path": "lib/ui/widgets/subtask_widget.dart",
+            "size": 18608,
+            "lines": 411
+        },
+        {
+            "path": "lib/ui/widgets/task_item.dart",
+            "size": 11841,
+            "lines": 273
+        },
+        {
+            "path": "lib/ui/widgets/task_list_section.dart",
+            "size": 8575,
+            "lines": 246
+        },
+        {
+            "path": "lib/utils/date_formatter.dart",
+            "size": 3999,
+            "lines": 109
+        },
+        {
+            "path": "lib/utils/date_range.dart",
+            "size": 205,
+            "lines": 5
+        }
+    ],
+    "testFiles": [
+        "test/calendar_helpers_test.dart",
+        "test/date_range_test.dart",
+        "test/home_screen_controller_test.dart",
+        "test/widget_test.dart"
+    ],
+    "assets": [
+        "assets/fonts/TajawalR.ttf",
+        "assets/images/577055404_122179497464487393_4075678464144731046_n.jpg",
+        "assets/images/empty_tasks.png",
+        "assets/images/google.png",
+        "assets/logo/logo.png",
+        "assets/sounds/forest.mp3",
+        "assets/sounds/new-notification-020-352772.mp3",
+        "assets/sounds/ocean.mp3",
+        "assets/sounds/rain.mp3",
+        "assets/sounds/task_complete_1.mp3",
+        "assets/sounds/task_complete_2.mp3",
+        "assets/sounds/white_noise.mp3"
+    ],
+    "unreadableFiles": []
+}

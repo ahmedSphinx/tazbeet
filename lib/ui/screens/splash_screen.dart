@@ -6,7 +6,7 @@ import 'package:tazbeet/blocs/auth/auth_bloc.dart';
 import 'package:tazbeet/blocs/user/user_bloc.dart';
 import 'package:tazbeet/blocs/user/user_state.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
-import 'package:tazbeet/ui/screens/main_screen.dart';
+import 'package:tazbeet/ui/screens/home/main_screen.dart';
 import 'package:tazbeet/ui/screens/login_screen.dart';
 import 'package:tazbeet/ui/screens/profile_screen.dart';
 import 'package:tazbeet/ui/screens/maintenance_screen.dart';
@@ -94,7 +94,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
       if (settings.maintenanceMode) {
         // Check if user is admin
         final userState = context.read<UserBloc>().state;
-        if (userState is UserLoaded && userState.user.isAdmin) {
+        if (userState is UserLoaded && userState.user.isAdmin!) {
           AppLogging.logInfo('🔧 Maintenance mode active, but user is admin - allowing access');
           // Continue to normal flow
         } else {
@@ -114,26 +114,8 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
       // Continue to normal flow on error
     }
 
-    // Fallback: if no auth state change after 4 seconds, check and navigate
-    Future.delayed(const Duration(milliseconds: 4000), () {
-      if (!mounted) return;
-
-      // Check if navigation already happened
-      if (_hasNavigated) {
-        AppLogging.logInfo('✅ Navigation already completed, fallback not needed');
-        return;
-      }
-
-      final authState = context.read<AuthBloc>().state;
-      AppLogging.logInfo('🔍 Fallback check - Auth State: $authState');
-
-      // If still in initial or loading state, force navigation to login
-      if (authState is AuthInitial || authState is AuthLoading) {
-        _hasNavigated = true;
-        AppLogging.logWarning('⚠️ Auth stuck in ${authState.runtimeType}, forcing navigation to LoginScreen');
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginScreen()));
-      }
-    });
+    // Note: Fallback timer removed - AuthBloc handles timeout with 3s fallback
+    // This prevents competing timers and race conditions
   }
 
   @override

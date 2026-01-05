@@ -95,22 +95,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get moodSettingsTitle => 'إعدادات المزاج';
 
   @override
-  String get moodSettingsSubtitle => 'تكوين إشعارات فحص المزاج';
+  String get moodSettingsSubtitle => 'إدارة تسجيل المزاج والإشعارات';
 
   @override
   String get enableMoodNotifications => 'تفعيل إشعارات المزاج';
 
   @override
-  String get moodCheckInTimes => 'أوقات الفحص';
+  String get moodCheckInTimes => 'أوقات فحص المزاج';
 
   @override
   String get add => 'إضافة';
 
   @override
-  String get suggestTimes => 'اقتراح أوقات';
+  String get suggestTimes => 'اقتراح الأوقات';
 
   @override
-  String get completedTasks => 'مهمات مكتملة';
+  String get completedTasks => 'المهام المكتملة';
 
   @override
   String get work => 'عمل';
@@ -215,7 +215,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get color => 'اللون:';
 
   @override
-  String get pickAColor => 'اختر لونًا';
+  String get pickAColor => 'اختر لوناً';
 
   @override
   String get select => 'اختر';
@@ -324,7 +324,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get moodCheckInTitle => 'فحص المزاج';
 
   @override
-  String get moodHowAreYouFeeling => 'كيف تشعر اليوم؟';
+  String get moodHowAreYouFeeling => 'كيف تشعر؟';
 
   @override
   String get moodSelectLevel => 'اختر مستوى مزاجك';
@@ -348,7 +348,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get moodNoteOptional => 'ملاحظة (اختيارية)';
 
   @override
-  String get moodNoteHint => 'كيف تشعر؟';
+  String get moodNoteHint => 'أضف ملاحظة عن مزاجك...';
 
   @override
   String get moodSaveButton => 'حفظ المزاج';
@@ -369,7 +369,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get moodVeryGood => 'جيد جداً';
 
   @override
-  String get moodSavedSuccess => 'تم حفظ المزاج بنجاح!';
+  String get moodSavedSuccess => 'تم حفظ المزاج بنجاح';
 
   @override
   String get moodSaveFailed => 'فشل في حفظ المزاج';
@@ -441,6 +441,89 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get startLoggingMoods => 'ابدأ في تسجيل مزاجك لرؤية تاريخك';
+
+  @override
+  String get moodHistoryTitle => 'تاريخ المزاج';
+
+  @override
+  String get startTracking => 'ابدأ رحلة تتبع مزاجك';
+
+  @override
+  String get quickMoodCheckIn => 'فحص المزاج السريع';
+
+  @override
+  String moodsForDate(Object date) {
+    return 'مزاجيات لـ $date';
+  }
+
+  @override
+  String get close => 'إغلاق';
+
+  @override
+  String get filter => 'تصفية';
+
+  @override
+  String get all => 'الكل';
+
+  @override
+  String get positive => 'إيجابي';
+
+  @override
+  String get negative => 'سلبي';
+
+  @override
+  String get recent => 'الحديث';
+
+  @override
+  String get energy => 'الطاقة';
+
+  @override
+  String get focus => 'التركيز';
+
+  @override
+  String get stress => 'التوتر';
+
+  @override
+  String get howAreYou => 'كيف حالك؟';
+
+  @override
+  String get yourMood => 'مزاجك';
+
+  @override
+  String get howAreYouFeelingRightNow => 'كيف تشعر الآن؟';
+
+  @override
+  String get tapOptionBestDescribesMood => 'اضغط على الخيار الذي يصف مزاجك بشكل أفضل';
+
+  @override
+  String get addNoteOptional => 'أضف ملاحظة (اختيارية)';
+
+  @override
+  String get whatsOnYourMind => 'ما الذي يدور في ذهنك؟';
+
+  @override
+  String get moodAdded => 'تمت إضافة المزاج';
+
+  @override
+  String get moodUpdated => 'تم تحديث المزاج';
+
+  @override
+  String get somethingWentWrong => 'حدث خطأ ما';
+
+  @override
+  String get reallyStruggling => 'أعاني حقًا';
+
+  @override
+  String get notGreat => 'ليس جيدًا';
+
+  @override
+  String get okay => 'حسنًا';
+
+  @override
+  String get prettyGood => 'جيد جدًا';
+
+  @override
+  String get great => 'رائع';
 
   @override
   String percent(int value) {
@@ -732,7 +815,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get pomodoroPreset => 'إعدادات بومودورو';
 
   @override
-  String get classicPreset => 'كلاسيكي (25/5/15)';
+  String get classicPreset => 'كلاسيكي';
+
+  @override
+  String get quickstart => 'بداية سريعة';
+
+  @override
+  String get deepWork => 'عمل عميق';
+
+  @override
+  String get students => 'طلاب';
 
   @override
   String get shortPreset => 'قصير (15/3/10)';
@@ -815,7 +907,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get averageMood => 'متوسط المزاج';
 
   @override
-  String get mostCommonMood => 'المزاج الأكثر شيوعًا';
+  String get mostCommonMood => 'المزاج الأكثر شيوعاً';
 
   @override
   String get currentStreak => 'السلسلة الحالية';
@@ -828,15 +920,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get averageStress => 'متوسط التوتر';
-
-  @override
-  String get energy => 'الطاقة';
-
-  @override
-  String get focus => 'التركيز';
-
-  @override
-  String get stress => 'التوتر';
 
   @override
   String metricValue(String label, int value) {
@@ -868,13 +951,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get copySuffix => '(نسخة)';
 
   @override
-  String get highPriority => 'عالية';
+  String get highPriority => 'أولوية عالية';
 
   @override
-  String get mediumPriority => 'متوسطة';
+  String get mediumPriority => 'أولوية متوسطة';
 
   @override
-  String get lowPriority => 'منخفضة';
+  String get lowPriority => 'أولوية منخفضة';
 
   @override
   String get addSubtask => 'إضافة مهمة فرعية';
@@ -1002,7 +1085,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get testNotificationSent => 'تم إرسال إشعار الاختبار!';
+  String get testNotificationSent => 'تم إرسال إشعار تجريبي';
 
   @override
   String reminder(String date) {
@@ -1093,7 +1176,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sunday => 'الأحد';
 
   @override
-  String get monday => 'الاثنين';
+  String get monday => 'الإثنين';
 
   @override
   String get tuesday => 'الثلاثاء';
@@ -1524,9 +1607,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get manualDND => 'عدم الإزعاج اليدوي';
 
   @override
-  String get close => 'إغلاق';
-
-  @override
   String get resetSettings => 'إعادة تعيين الإعدادات';
 
   @override
@@ -1649,4 +1729,565 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noTasksForThisDay => 'لا توجد مهام لهذا اليوم';
+
+  @override
+  String get noInternetConnection => 'لا يوجد اتصال بالإنترنت';
+
+  @override
+  String get pullToRefresh => 'اسحب للأسفل للتحديث عند الاتصال';
+
+  @override
+  String get showCalendar => 'عرض التقويم';
+
+  @override
+  String get minutes => 'دقيقة';
+
+  @override
+  String get recommendedForAdhd => 'موصى به لمن يعاني من ADHD';
+
+  @override
+  String get mostPopular => 'الأكثر شعبية';
+
+  @override
+  String get stopPomodoroConfirmation => 'هل أنت متأكد من إيقاف الجلسة الحالية؟ سيتم فقدان تقدمك.';
+
+  @override
+  String get whatsHappeningRightNow => 'ما الذي يحدث الآن؟';
+
+  @override
+  String get wantToShareMore => 'هل تريد مشاركة المزيد؟';
+
+  @override
+  String get dontHaveAccount => 'ليس لديك حساب؟';
+
+  @override
+  String get failedToAccessGallery => 'فشل في الوصول إلى المعرض';
+
+  @override
+  String get nameRequiredForProfile => 'الاسم مطلوب للملف الشخصي';
+
+  @override
+  String get birthdayRequiredForProfile => 'تاريخ الميلاد مطلوب للملف الشخصي';
+
+  @override
+  String get failedToUploadImage => 'فشل في رفع الصورة';
+
+  @override
+  String get userNotAuthenticated => 'المستخدم غير مصادق عليه';
+
+  @override
+  String get notificationPermissionRequired => 'إذن الإشعارات مطلوب';
+
+  @override
+  String get notificationPermissionMessage => 'يرجى تمكين الإشعارات لضبط التذكيرات';
+
+  @override
+  String get grantPermission => 'منح الإذن';
+
+  @override
+  String get cannotSetReminderWithoutPermission => 'لا يمكن ضبط التذكير بدون إذن الإشعارات';
+
+  @override
+  String get customColors => 'ألوان مخصصة';
+
+  @override
+  String get personalizeAppTheme => 'تخصيص مظهر التطبيق';
+
+  @override
+  String get primaryColor => 'اللون الأساسي';
+
+  @override
+  String get choosePrimaryColor => 'اختر اللون الأساسي';
+
+  @override
+  String subtasksCount(int count) {
+    return '$count مهام فرعية';
+  }
+
+  @override
+  String get deliveryLabel => 'التسليم';
+
+  @override
+  String get openLabel => 'فتح';
+
+  @override
+  String get actionLabel => 'إجراء';
+
+  @override
+  String get averageResponseTime => 'متوسط وقت الاستجابة';
+
+  @override
+  String get helpUsUnderstandState => 'ساعدنا على فهم حالتك الحالية';
+
+  @override
+  String get optionalAddContext => 'اختياري: أضف سياقًا';
+
+  @override
+  String get optionalWriteNote => 'اختياري: اكتب ملاحظة';
+
+  @override
+  String get imGratefulFor => 'أنا ممتن لـ';
+
+  @override
+  String get todayI => 'اليوم أنا';
+
+  @override
+  String get imFeeling => 'أنا أشعر بـ';
+
+  @override
+  String get whatsWeighingOnYou => 'ما الذي يثقل عليك؟';
+
+  @override
+  String get whatsMakingTodayTough => 'ما الذي يجعل اليوم صعبًا؟';
+
+  @override
+  String get whatsGoingWell => 'ما الذي يسير بشكل جيد؟';
+
+  @override
+  String get whatMadeTodayGreat => 'ما الذي جعل اليوم رائعًا؟';
+
+  @override
+  String get howsYourDayGoing => 'كيف يسير يومك؟';
+
+  @override
+  String get chooseEmojiFeeling => 'اختر رمزًا تعبيريًا يمثل شعورك';
+
+  @override
+  String get dayStreak => 'يوم متتالي';
+
+  @override
+  String get moodSaved => 'تم حفظ المزاج';
+
+  @override
+  String get testButton => 'اختبار';
+
+  @override
+  String get clearAllNotifications => 'مسح جميع الإشعارات';
+
+  @override
+  String get clearAllNotificationsConfirmation => 'هل أنت متأكد من أنك تريد مسح جميع الإشعارات؟';
+
+  @override
+  String get generateRecurringConfirmation => 'هل أنت متأكد من أنك تريد إنشاء مثيلات متكررة؟';
+
+  @override
+  String get includeSpecificTime => 'تضمين وقت محدد';
+
+  @override
+  String get repeatSameTimeEachDay => 'التكرار في نفس الوقت كل يوم';
+
+  @override
+  String get syncStatus => 'حالة المزامنة';
+
+  @override
+  String get pendingOperations => 'عمليات معلقة';
+
+  @override
+  String get someSyncOperationsFailed => 'فشلت بعض عمليات المزامنة';
+
+  @override
+  String get retryButton => 'إعادة المحاولة';
+
+  @override
+  String get clearFailedButton => 'مسح الفاشلة';
+
+  @override
+  String get closeButton => 'إغلاق';
+
+  @override
+  String get syncStatusSuccess => 'نجح';
+
+  @override
+  String get syncStatusSyncing => 'جاري المزامنة';
+
+  @override
+  String get syncStatusIdle => 'في الانتظار';
+
+  @override
+  String get syncStatusFailed => 'فشل';
+
+  @override
+  String get moodInsightsSubtitle => 'تابع أنماطك العاطفية واحصل على رؤى';
+
+  @override
+  String get yourMoodJourney => 'رحلتك المزاجية';
+
+  @override
+  String get aIPoweredAnalysis => 'تحليل مدعوم بالذكاء الاصطناعي';
+
+  @override
+  String get thisWeek => 'هذا الأسبوع';
+
+  @override
+  String get goodDays => 'أيام جيدة';
+
+  @override
+  String get neutralDays => 'أيام محايدة';
+
+  @override
+  String get challengingDays => 'أيام صعبة';
+
+  @override
+  String get dominantMood => 'المزاج السائد';
+
+  @override
+  String get hiThere => 'مرحباً!';
+
+  @override
+  String get howIsYourDay => 'كيف يومك؟';
+
+  @override
+  String get imHereForYou => 'أنا هنا من أجلك!';
+
+  @override
+  String get itsOkayToHaveToughDays => 'من الطبيعي أن تكون لديك أيام صعبة';
+
+  @override
+  String get sendingYouStrength => 'أرسل لك القوة';
+
+  @override
+  String get everyDayIsANewOpportunity => 'كل يوم هو فرصة جديدة';
+
+  @override
+  String get findingBalance => 'إيجاد التوازن';
+
+  @override
+  String get sometimesNeutralIsExactlyWhereWeNeedToBe => 'أحياناً المحايد هو بالضبط حيث نحتاج أن نكون';
+
+  @override
+  String get youreDoingGreat => 'أنت تفعل رائعاً!';
+
+  @override
+  String get keepShiningBright => 'استمر بالتألق بقوة!';
+
+  @override
+  String get absolutelyAmazing => 'مذهل تماماً!';
+
+  @override
+  String get yourJoyIsContagious => 'فرحك معدي!';
+
+  @override
+  String get moodIntensity => 'شدة المزاج';
+
+  @override
+  String get smartView => 'ذكي';
+
+  @override
+  String get timelineView => 'الخط الزمني';
+
+  @override
+  String get patternsView => 'الأنماط';
+
+  @override
+  String get goodIntensity => 'شدة جيدة';
+
+  @override
+  String get veryGoodIntensity => 'شدة جيدة جداً';
+
+  @override
+  String get noMoodRecorded => 'لا يوجد مزاج مسجل';
+
+  @override
+  String get goodMorning => 'صباح الخير!';
+
+  @override
+  String get howAreYouFeelingToday => 'كيف تشعر اليوم؟';
+
+  @override
+  String get todayYoureFeeling => 'اليوم تشعر';
+
+  @override
+  String get addAnother => 'إضافة آخر';
+
+  @override
+  String get earlierToday => 'في وقت سابق اليوم';
+
+  @override
+  String get struggling => 'تكافح';
+
+  @override
+  String get down => 'منخفض';
+
+  @override
+  String get wantToShareMoreDetails => 'هل تريد مشاركة المزيد من التفاصيل؟';
+
+  @override
+  String get guidedCheckIn => 'فحص موجه';
+
+  @override
+  String get detailedEntry => 'مدخلة مفصلة';
+
+  @override
+  String get quickInsights => 'رؤى سريعة';
+
+  @override
+  String get recentMoods => 'الأمزجة الحديثة';
+
+  @override
+  String get noInsightsYet => 'لا توجد رؤى بعد';
+
+  @override
+  String get trackYourMoodForAWeek => 'تتبع مزاجك لمدة أسبوع لرؤية الرؤى';
+
+  @override
+  String get daysStreak => 'أيام متتالية';
+
+  @override
+  String get moodBuddyFeelingSad => 'هل تشعر بالحزن؟';
+
+  @override
+  String get moodBuddyTipSad => 'جرب نزهة لطيفة أو استمع إلى موسيقى هادئة';
+
+  @override
+  String get moodBuddyFeelingDown => 'هل تشعر بالانخفاض؟';
+
+  @override
+  String get moodBuddyTipDown => 'تواصل مع صديق أو مارس التنفس العميق';
+
+  @override
+  String get moodBuddyFeelingOkay => 'هل تشعر بالرضا؟';
+
+  @override
+  String get moodBuddyTipOkay => 'حافظ على التوازن مع تمرين خفيف أو هوايات';
+
+  @override
+  String get moodBuddyFeelingGood => 'هل تشعر بالرضا؟';
+
+  @override
+  String get moodBuddyTipGood => 'شارك إيجابيتك وساعد الآخرين';
+
+  @override
+  String get moodBuddyFeelingGreat => 'هل تشعر بالرائع؟';
+
+  @override
+  String get moodBuddyTipGreat => 'وجّه هذه الطاقة في مشاريع إبداعية';
+
+  @override
+  String get moodPatternsTitle => 'أنماطك المزاجية';
+
+  @override
+  String get moodPatternsSubtitle => 'اكتشف الاتجاهات في رفاهيتك العاطفية';
+
+  @override
+  String get moodSuggestionsTitle => 'اقتراحات مخصصة';
+
+  @override
+  String get moodSuggestionsSubtitle => 'توصيات مدعومة بالذكاء الاصطناعي بناءً على مزاجك';
+
+  @override
+  String get veryBadIntensity => 'شدة سيئة جداً';
+
+  @override
+  String get badIntensity => 'شدة سيئة';
+
+  @override
+  String get neutralIntensity => 'شدة محايدة';
+
+  @override
+  String get insightGenerallyPositive => 'إيجابي بشكل عام 😊';
+
+  @override
+  String get insightNeedsSupport => 'يحتاج دعم 🤗';
+
+  @override
+  String get insightGreatConsistency => 'اتساق رائع! 🔥';
+
+  @override
+  String get insightMissingToday => 'مفقود اليوم 📝';
+
+  @override
+  String get pleaseTryAgainLater => 'يرجى المحاولة مرة أخرى لاحقاً';
+
+  @override
+  String get icon => 'أيقونة';
+
+  @override
+  String get categories => 'الفئات';
+
+  @override
+  String get searchCategories => 'البحث عن الفئات...';
+
+  @override
+  String get keyInsights => 'رؤى رئيسية';
+
+  @override
+  String get patternAnalysis => 'تحليل الأنماط';
+
+  @override
+  String get aiPredictions => 'تنبؤات الذكاء الاصطناعي';
+
+  @override
+  String get positiveTrend => 'اتجاه إيجابي';
+
+  @override
+  String get yourOverallMoodIsGenerallyPositive => 'مزاجك العام إيجابي بشكل عام';
+
+  @override
+  String get supportNeeded => 'دعم مطلوب';
+
+  @override
+  String get youMightBenefitFromAdditionalSupport => 'قد تستفيد من دعم إضافي';
+
+  @override
+  String get greatConsistency => 'اتساق رائع';
+
+  @override
+  String youveBeenTrackingYourMoodForDays(Object days) {
+    return 'كنت تتتبع مزاجك لمدة $days يوم';
+  }
+
+  @override
+  String get missingToday => 'مفقود اليوم';
+
+  @override
+  String get youHaventLoggedYourMoodTodayYet => 'لم تقم بتسجيل مزاجك اليوم بعد';
+
+  @override
+  String get recentImprovement => 'تحسن حديث';
+
+  @override
+  String get yourMoodHasBeenImprovingLately => 'مزاجك كان يتحسن مؤخراً';
+
+  @override
+  String get challengingPeriod => 'فترة صعبة';
+
+  @override
+  String get recentEntriesSuggestAChallengingTime => 'المدخلات الحديثة تشير إلى وقت صعب';
+
+  @override
+  String get moreDataNeeded => 'بيانات أكثر مطلوبة';
+
+  @override
+  String get trackYourMoodForAWeekToGetAIPredictions => 'تتبع مزاجك لمدة أسبوع للحصول على تنبؤات الذكاء الاصطناعي';
+
+  @override
+  String get positiveOutlook => 'نظرة إيجابية';
+
+  @override
+  String get basedOnRecentPatternsTomorrowLooksPromising => 'بناءً على الأنماط الحديثة، يبدو الغد واعداً';
+
+  @override
+  String get selfCareRecommended => 'رعاية الذات موصى بها';
+
+  @override
+  String get considerPrioritizingSelfCareActivitiesTomorrow => 'فكر في إعطاء الأولوية لأنشطة رعاية الذات غداً';
+
+  @override
+  String get balancedDayAhead => 'يوم متوازن قادم';
+
+  @override
+  String get tomorrowShouldBeATypicalDayForYou => 'يجب أن يكون الغد يوماً نموذجياً لك';
+
+  @override
+  String get errorTitle => 'عفواً! حدث خطأ ما';
+
+  @override
+  String get tryAgain => 'حاول مرة أخرى';
+
+  @override
+  String get deleteTask => 'حذف المهمة';
+
+  @override
+  String deleteTaskConfirmation(String task) {
+    return 'هل أنت متأكد من حذف \"$task\"؟';
+  }
+
+  @override
+  String get delete => 'حذف';
+
+  @override
+  String get search => 'بحث';
+
+  @override
+  String get options => 'خيارات';
+
+  @override
+  String get filtersAppliedSuccessfully => 'تم تطبيق الفلاتر بنجاح';
+
+  @override
+  String get closeSearch => 'إغلاق البحث';
+
+  @override
+  String get adminPanel => 'لوحة الإدارة';
+
+  @override
+  String get premium => 'مميز';
+
+  @override
+  String get dashboardOverview => 'لوحة المعلومات والنظرة العامة';
+
+  @override
+  String get statisticsAnalytics => 'الإحصاءات والتحليلات';
+
+  @override
+  String get focusTimeManagement => 'التركيز وإدارة الوقت';
+
+  @override
+  String get organizeManage => 'تنظيم وإدارة';
+
+  @override
+  String get wellnessEmotions => 'الرفاهية والعواطف';
+
+  @override
+  String get preferencesConfiguration => 'التفضيلات والتكوين';
+
+  @override
+  String get about => 'حول';
+
+  @override
+  String get appInformationHelp => 'معلومات التطبيق والمساعدة';
+
+  @override
+  String get biweekly => 'كل أسبوعين';
+
+  @override
+  String get monthly => 'شهري';
+
+  @override
+  String get repeatForever => '(إلى الأبد)';
+
+  @override
+  String repeatUntil(Object date) {
+    return 'حتى $date';
+  }
+
+  @override
+  String repeatCount(Object count) {
+    return '($count مرات)';
+  }
+
+  @override
+  String onDays(Object days) {
+    return 'في $days';
+  }
+
+  @override
+  String get recurringTaskGenerationFailed => 'فشل إنشاء المهمة المتكررة';
+
+  @override
+  String get recurringTaskRetry => 'إعادة المحاولة';
+
+  @override
+  String get recurringTaskRetryLater => 'إعادة المحاولة لاحقاً';
+
+  @override
+  String bulkGenerationComplete(String count) {
+    return 'تم إنشاء $count حالات متكررة';
+  }
+
+  @override
+  String recurringTaskNotification(String title) {
+    return 'تم إنشاء مهمة متكررة: $title';
+  }
+
+  @override
+  String recurringTaskError(String error) {
+    return 'خطأ في المهمة المتكررة: $error';
+  }
+
+  @override
+  String get noRecurringTasksFound => 'لم يتم العثور على مهام متكررة';
+
+  @override
+  String get recurringTasksOptimized => 'تم تحسين المهام المتكررة للأداء';
 }

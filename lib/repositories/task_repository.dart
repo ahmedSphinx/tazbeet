@@ -1,7 +1,8 @@
 import 'package:hive/hive.dart';
 import '../models/task.dart';
+import '../services/performance_monitor_service.dart';
 
-class TaskRepository {
+class TaskRepository with PerformanceMonitored {
   static const String _boxName = 'tasks';
 
   Future<void> init() async {
@@ -18,8 +19,10 @@ class TaskRepository {
   }
 
   Future<List<Task>> getAllTasks() async {
-    final box = await _getBox();
-    return box.values.toList();
+    return monitorAsync('TaskRepository.getAllTasks', () async {
+      final box = await _getBox();
+      return box.values.toList();
+    });
   }
 
   Future<Task?> getTaskById(String id) async {
@@ -55,8 +58,8 @@ class TaskRepository {
 
     return box.values.where((task) {
       if (task.dueDate == null) return false;
-      return task.dueDate!.isAfter(startOfDay) &&
-             task.dueDate!.isBefore(endOfDay);
+      // Include tasks due exactly at start of day (>= startOfDay AND < endOfDay)
+      return (task.dueDate!.isAfter(startOfDay) || task.dueDate!.isAtSameMomentAs(startOfDay)) && task.dueDate!.isBefore(endOfDay);
     }).toList();
   }
 
@@ -92,12 +95,7 @@ class TaskAdapter extends TypeAdapter<Task> {
       return Task.fromJson(convertedJson);
     } catch (e) {
       // If deserialization fails, create a basic task
-      return Task(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        title: 'Error Loading Task',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
+      return Task(id: DateTime.now().millisecondsSinceEpoch.toString(), title: 'Error Loading Task', createdAt: DateTime.now(), updatedAt: DateTime.now());
     }
   }
 

@@ -41,6 +41,18 @@ class Mood extends Equatable {
   final int focusLevel; // 1-10
   @HiveField(9)
   final int stressLevel; // 1-10
+  @HiveField(10)
+  final List<String>? _activities;
+  @HiveField(11)
+  final String? location;
+  @HiveField(12)
+  final List<String>? _people;
+  @HiveField(13)
+  final bool? _isQuickCheckIn;
+
+  List<String> get activities => _activities ?? const [];
+  List<String> get people => _people ?? const [];
+  bool get isQuickCheckIn => _isQuickCheckIn ?? false;
 
   const Mood({
     required this.id,
@@ -53,7 +65,13 @@ class Mood extends Equatable {
     this.energyLevel = 5,
     this.focusLevel = 5,
     this.stressLevel = 5,
-  });
+    this.location,
+    List<String>? activities,
+    List<String>? people,
+    bool? isQuickCheckIn,
+  }) : _activities = activities ?? const [],
+       _people = people ?? const [],
+       _isQuickCheckIn = isQuickCheckIn ?? false;
 
   Mood copyWith({
     String? id,
@@ -66,6 +84,10 @@ class Mood extends Equatable {
     int? energyLevel,
     int? focusLevel,
     int? stressLevel,
+    List<String>? activities,
+    String? location,
+    List<String>? people,
+    bool? isQuickCheckIn,
   }) {
     return Mood(
       id: id ?? this.id,
@@ -78,6 +100,10 @@ class Mood extends Equatable {
       energyLevel: energyLevel ?? this.energyLevel,
       focusLevel: focusLevel ?? this.focusLevel,
       stressLevel: stressLevel ?? this.stressLevel,
+      activities: activities ?? this.activities,
+      location: location ?? this.location,
+      people: people ?? this.people,
+      isQuickCheckIn: isQuickCheckIn ?? this.isQuickCheckIn,
     );
   }
 
@@ -93,6 +119,10 @@ class Mood extends Equatable {
       'energyLevel': energyLevel,
       'focusLevel': focusLevel,
       'stressLevel': stressLevel,
+      'activities': activities,
+      'location': location,
+      'people': people,
+      'isQuickCheckIn': isQuickCheckIn,
     };
   }
 
@@ -108,20 +138,13 @@ class Mood extends Equatable {
       energyLevel: json['energyLevel'] ?? 5,
       focusLevel: json['focusLevel'] ?? 5,
       stressLevel: json['stressLevel'] ?? 5,
+      activities: List<String>.from(json['activities'] ?? []),
+      location: json['location'],
+      people: List<String>.from(json['people'] ?? []),
+      isQuickCheckIn: json['isQuickCheckIn'] ?? false,
     );
   }
 
   @override
-  List<Object?> get props => [
-        id,
-        level,
-        note,
-        date,
-        createdAt,
-        updatedAt,
-        tags,
-        energyLevel,
-        focusLevel,
-        stressLevel,
-      ];
+  List<Object?> get props => [id, level, note, date, createdAt, updatedAt, tags, energyLevel, focusLevel, stressLevel, activities, location, people, isQuickCheckIn];
 }

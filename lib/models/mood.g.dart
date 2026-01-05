@@ -27,13 +27,14 @@ class MoodAdapter extends TypeAdapter<Mood> {
       energyLevel: fields[7] as int,
       focusLevel: fields[8] as int,
       stressLevel: fields[9] as int,
+      location: fields[11] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Mood obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -53,7 +54,15 @@ class MoodAdapter extends TypeAdapter<Mood> {
       ..writeByte(8)
       ..write(obj.focusLevel)
       ..writeByte(9)
-      ..write(obj.stressLevel);
+      ..write(obj.stressLevel)
+      ..writeByte(10)
+      ..write(obj._activities)
+      ..writeByte(11)
+      ..write(obj.location)
+      ..writeByte(12)
+      ..write(obj._people)
+      ..writeByte(13)
+      ..write(obj._isQuickCheckIn);
   }
 
   @override

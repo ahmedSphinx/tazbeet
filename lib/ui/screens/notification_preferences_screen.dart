@@ -584,6 +584,8 @@ class _NotificationPreferencesScreenState extends State<NotificationPreferencesS
         return l10n.emergency;
       case NotificationType.system:
         return l10n.system;
+      case NotificationType.userSignup:
+        return 'New User';
     }
   }
 
@@ -607,6 +609,8 @@ class _NotificationPreferencesScreenState extends State<NotificationPreferencesS
         return Icons.warning;
       case NotificationType.system:
         return Icons.settings;
+      case NotificationType.userSignup:
+        return Icons.person_add;
     }
   }
 
@@ -630,6 +634,8 @@ class _NotificationPreferencesScreenState extends State<NotificationPreferencesS
         return Colors.red;
       case NotificationType.system:
         return Colors.grey;
+      case NotificationType.userSignup:
+        return Colors.indigo;
     }
   }
 

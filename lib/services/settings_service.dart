@@ -18,7 +18,7 @@ enum PomodoroPreset {
   custom,
 }
 
-class AppSettings {
+class UserSettings {
   final ThemeMode themeMode;
   final bool enableNotifications;
   final NotificationFrequency notificationFrequency;
@@ -41,8 +41,16 @@ class AppSettings {
   final bool enableScreenReader;
   final bool enableMoodNotifications;
   final List<String> moodCheckInTimes; // Stored as HH:MM strings
+  final bool voiceTaskEnabled;
+  final bool hasSeenVoiceTaskTutorial;
+  final bool autoStartRecording;
+  final bool showTranscription;
+  final bool keepAudioFiles;
+  final bool instantMode;
+  final Duration silenceTimeout;
+  final double confidenceThreshold;
 
-  const AppSettings({
+  const UserSettings({
     this.themeMode = ThemeMode.system,
     this.enableNotifications = true,
     this.notificationFrequency = NotificationFrequency.immediate,
@@ -65,9 +73,17 @@ class AppSettings {
     this.enableScreenReader = false,
     this.enableMoodNotifications = false,
     this.moodCheckInTimes = const ['09:00', '15:00', '21:00'], // Default times
+    this.voiceTaskEnabled = true,
+    this.hasSeenVoiceTaskTutorial = false,
+    this.autoStartRecording = false,
+    this.showTranscription = true,
+    this.keepAudioFiles = true,
+    this.instantMode = false,
+    this.silenceTimeout = const Duration(seconds: 3),
+    this.confidenceThreshold = 0.7,
   });
 
-  AppSettings copyWith({
+  UserSettings copyWith({
     ThemeMode? themeMode,
     bool? enableNotifications,
     NotificationFrequency? notificationFrequency,
@@ -90,8 +106,16 @@ class AppSettings {
     bool? enableScreenReader,
     bool? enableMoodNotifications,
     List<String>? moodCheckInTimes,
+    bool? voiceTaskEnabled,
+    bool? hasSeenVoiceTaskTutorial,
+    bool? autoStartRecording,
+    bool? showTranscription,
+    bool? keepAudioFiles,
+    bool? instantMode,
+    Duration? silenceTimeout,
+    double? confidenceThreshold,
   }) {
-    return AppSettings(
+    return UserSettings(
       themeMode: themeMode ?? this.themeMode,
       enableNotifications: enableNotifications ?? this.enableNotifications,
       notificationFrequency: notificationFrequency ?? this.notificationFrequency,
@@ -114,6 +138,14 @@ class AppSettings {
       enableScreenReader: enableScreenReader ?? this.enableScreenReader,
       enableMoodNotifications: enableMoodNotifications ?? this.enableMoodNotifications,
       moodCheckInTimes: moodCheckInTimes ?? this.moodCheckInTimes,
+      voiceTaskEnabled: voiceTaskEnabled ?? this.voiceTaskEnabled,
+      hasSeenVoiceTaskTutorial: hasSeenVoiceTaskTutorial ?? this.hasSeenVoiceTaskTutorial,
+      autoStartRecording: autoStartRecording ?? this.autoStartRecording,
+      showTranscription: showTranscription ?? this.showTranscription,
+      keepAudioFiles: keepAudioFiles ?? this.keepAudioFiles,
+      instantMode: instantMode ?? this.instantMode,
+      silenceTimeout: silenceTimeout ?? this.silenceTimeout,
+      confidenceThreshold: confidenceThreshold ?? this.confidenceThreshold,
     );
   }
 
@@ -141,11 +173,19 @@ class AppSettings {
       'enableScreenReader': enableScreenReader,
       'enableMoodNotifications': enableMoodNotifications,
       'moodCheckInTimes': moodCheckInTimes,
+      'voiceTaskEnabled': voiceTaskEnabled,
+      'hasSeenVoiceTaskTutorial': hasSeenVoiceTaskTutorial,
+      'autoStartRecording': autoStartRecording,
+      'showTranscription': showTranscription,
+      'keepAudioFiles': keepAudioFiles,
+      'instantMode': instantMode,
+      'silenceTimeout': silenceTimeout.inMilliseconds,
+      'confidenceThreshold': confidenceThreshold,
     };
   }
 
-  factory AppSettings.fromJson(Map<String, dynamic> json) {
-    return AppSettings(
+  factory UserSettings.fromJson(Map<String, dynamic> json) {
+    return UserSettings(
       themeMode: ThemeMode.values[json['themeMode'] ?? 0],
       enableNotifications: json['enableNotifications'] ?? true,
       notificationFrequency: NotificationFrequency.values[json['notificationFrequency'] ?? 0],
@@ -168,6 +208,14 @@ class AppSettings {
       enableScreenReader: json['enableScreenReader'] ?? false,
       enableMoodNotifications: json['enableMoodNotifications'] ?? false,
       moodCheckInTimes: List<String>.from(json['moodCheckInTimes'] ?? ['09:00', '15:00', '21:00']),
+      voiceTaskEnabled: json['voiceTaskEnabled'] ?? true,
+      hasSeenVoiceTaskTutorial: json['hasSeenVoiceTaskTutorial'] ?? false,
+      autoStartRecording: json['autoStartRecording'] ?? false,
+      showTranscription: json['showTranscription'] ?? true,
+      keepAudioFiles: json['keepAudioFiles'] ?? true,
+      instantMode: json['instantMode'] ?? false,
+      silenceTimeout: Duration(milliseconds: json['silenceTimeout'] ?? 3000),
+      confidenceThreshold: (json['confidenceThreshold'] ?? 0.7).toDouble(),
     );
   }
 }
@@ -177,9 +225,9 @@ class SettingsService extends ChangeNotifier {
   factory SettingsService() => _instance;
   SettingsService._internal();
 
-  AppSettings _settings = const AppSettings();
+  UserSettings _settings = const UserSettings();
 
-  AppSettings get settings => _settings;
+  UserSettings get settings => _settings;
 
   Future<void> initialize() async {
     final prefs = await SharedPreferences.getInstance();
@@ -193,26 +241,26 @@ class SettingsService extends ChangeNotifier {
           decodedJson.forEach((key, value) {
             convertedJson[key.toString()] = value;
           });
-          _settings = AppSettings.fromJson(convertedJson);
+          _settings = UserSettings.fromJson(convertedJson);
         }
       } catch (e) {
         AppLogging.logInfo('Error loading settings: $e');
         // Clear corrupted data and use default settings
         await prefs.remove('app_settings');
-        _settings = const AppSettings();
+        _settings = const UserSettings();
       }
     }
     notifyListeners();
   }
 
-  Future<void> updateSettings(AppSettings newSettings) async {
+  Future<void> updateSettings(UserSettings newSettings) async {
     _settings = newSettings;
     await _saveSettings();
     notifyListeners();
   }
 
   Future<void> resetToDefaults() async {
-    _settings = const AppSettings();
+    _settings = const UserSettings();
     await _saveSettings();
     notifyListeners();
   }
@@ -251,6 +299,49 @@ class SettingsService extends ChangeNotifier {
       await NotificationService().cancelMoodCheckInNotifications();
     }
   }
+
+  // Voice Task Settings
+  Future<void> setVoiceTaskEnabled(bool enabled) async {
+    await updateSettings(_settings.copyWith(voiceTaskEnabled: enabled));
+  }
+
+  Future<void> setHasSeenVoiceTaskTutorial(bool seen) async {
+    await updateSettings(_settings.copyWith(hasSeenVoiceTaskTutorial: seen));
+  }
+
+  Future<void> setAutoStartRecording(bool enabled) async {
+    await updateSettings(_settings.copyWith(autoStartRecording: enabled));
+  }
+
+  Future<void> setShowTranscription(bool show) async {
+    await updateSettings(_settings.copyWith(showTranscription: show));
+  }
+
+  Future<void> setKeepAudioFiles(bool keep) async {
+    await updateSettings(_settings.copyWith(keepAudioFiles: keep));
+  }
+
+  Future<void> setInstantMode(bool enabled) async {
+    await updateSettings(_settings.copyWith(instantMode: enabled));
+  }
+
+  Future<void> setSilenceTimeout(Duration timeout) async {
+    await updateSettings(_settings.copyWith(silenceTimeout: timeout));
+  }
+
+  Future<void> setConfidenceThreshold(double threshold) async {
+    await updateSettings(_settings.copyWith(confidenceThreshold: threshold));
+  }
+
+  // Voice Task Getters
+  bool get voiceTaskEnabled => _settings.voiceTaskEnabled;
+  bool get hasSeenVoiceTaskTutorial => _settings.hasSeenVoiceTaskTutorial;
+  bool get autoStartRecording => _settings.autoStartRecording;
+  bool get showTranscription => _settings.showTranscription;
+  bool get keepAudioFiles => _settings.keepAudioFiles;
+  bool get instantMode => _settings.instantMode;
+  Duration get silenceTimeout => _settings.silenceTimeout;
+  double get confidenceThreshold => _settings.confidenceThreshold;
 
   Future<void> setMoodCheckInTimes(List<String> times) async {
     // Validate times format (HH:MM)

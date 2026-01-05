@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/repeat_rule.dart';
 
 class RepeatConfigWidget extends StatefulWidget {
@@ -183,8 +184,8 @@ class _RepeatConfigWidgetState extends State<RepeatConfigWidget> {
 
         // Include Time Option
         SwitchListTile(
-          title: const Text('Include specific time'),
-          subtitle: const Text('Repeat at the same time each day'),
+          title: Text(AppLocalizations.of(context)!.includeSpecificTime),
+          subtitle: Text(AppLocalizations.of(context)!.repeatSameTimeEachDay),
           value: _includeTime,
           onChanged: (value) {
             setState(() {

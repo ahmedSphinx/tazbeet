@@ -513,6 +513,8 @@ class _NotificationHistoryScreenState extends State<NotificationHistoryScreen> {
         return 'Emergency';
       case NotificationType.system:
         return 'System';
+      case NotificationType.userSignup:
+        return 'New User';
     }
   }
 
@@ -536,6 +538,8 @@ class _NotificationHistoryScreenState extends State<NotificationHistoryScreen> {
         return Icons.warning;
       case NotificationType.system:
         return Icons.settings;
+      case NotificationType.userSignup:
+        return Icons.person_add;
     }
   }
 
@@ -559,6 +563,8 @@ class _NotificationHistoryScreenState extends State<NotificationHistoryScreen> {
         return Colors.red;
       case NotificationType.system:
         return Colors.grey;
+      case NotificationType.userSignup:
+        return Colors.indigo;
     }
   }
 

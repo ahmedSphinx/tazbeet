@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
+import '../../l10n/app_localizations.dart';
+
 /// Widget displaying notification statistics and analytics
 class NotificationStatsWidget extends StatelessWidget {
   final Map<String, dynamic> analytics;
@@ -29,7 +31,7 @@ class NotificationStatsWidget extends StatelessWidget {
             const SizedBox(height: 24),
 
             // Delivery and Engagement Chart
-            _buildEngagementChart(analytics, theme),
+            _buildEngagementChart(analytics, theme, context),
 
             const SizedBox(height: 24),
 
@@ -39,7 +41,7 @@ class NotificationStatsWidget extends StatelessWidget {
             const SizedBox(height: 16),
 
             // Response Time
-            if (analytics['averageResponseTime'] != null) _buildResponseTime(analytics['averageResponseTime'] as Duration, theme),
+            if (analytics['averageResponseTime'] != null) _buildResponseTime(analytics['averageResponseTime'] as Duration, theme, context),
           ],
         ),
       ),
@@ -87,7 +89,7 @@ class NotificationStatsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildEngagementChart(Map<String, dynamic> analytics, ThemeData theme) {
+  Widget _buildEngagementChart(Map<String, dynamic> analytics, ThemeData theme, context) {
     final deliveryRate = (analytics['deliveryRate'] ?? 0.0) as double;
     final openRate = (analytics['openRate'] ?? 0.0) as double;
     final actionRate = (analytics['actionRate'] ?? 0.0) as double;
@@ -115,11 +117,11 @@ class NotificationStatsWidget extends StatelessWidget {
                       getTitlesWidget: (value, meta) {
                         switch (value.toInt()) {
                           case 0:
-                            return const Text('Delivery', style: TextStyle(fontSize: 10));
+                            return Text(AppLocalizations.of(context)!.deliveryLabel, style: const TextStyle(fontSize: 10));
                           case 1:
-                            return const Text('Open', style: TextStyle(fontSize: 10));
+                            return Text(AppLocalizations.of(context)!.openLabel, style: const TextStyle(fontSize: 10));
                           case 2:
-                            return const Text('Action', style: TextStyle(fontSize: 10));
+                            return Text(AppLocalizations.of(context)!.actionLabel, style: const TextStyle(fontSize: 10));
                           default:
                             return const Text('');
                         }
@@ -201,7 +203,7 @@ class NotificationStatsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildResponseTime(Duration responseTime, ThemeData theme) {
+  Widget _buildResponseTime(Duration responseTime, ThemeData theme, context) {
     final seconds = responseTime.inSeconds;
     final minutes = seconds ~/ 60;
     final remainingSeconds = seconds % 60;
@@ -216,7 +218,7 @@ class NotificationStatsWidget extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Average Response Time', style: TextStyle(fontSize: 12)),
+              Text(AppLocalizations.of(context)!.averageResponseTime, style: const TextStyle(fontSize: 12)),
               Text(minutes > 0 ? '${minutes}m ${remainingSeconds}s' : '${seconds}s', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
             ],
           ),

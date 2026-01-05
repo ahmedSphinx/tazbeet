@@ -3,15 +3,23 @@ import '../models/mood.dart';
 
 class MoodRepository {
   static const String _boxName = 'moods';
-  late Box<Mood> _box;
 
   Future<void> init() async {
     // Adapter registration removed to avoid duplicate registration error.
-    _box = await Hive.openBox<Mood>(_boxName);
+    await _getBox();
+  }
+
+  /// Safe getter for the Hive box - prevents crash if called before init
+  Future<Box<Mood>> _getBox() async {
+    if (!Hive.isBoxOpen(_boxName)) {
+      return await Hive.openBox<Mood>(_boxName);
+    }
+    return Hive.box<Mood>(_boxName);
   }
 
   Future<List<Mood>> getAllMoods() async {
-    final moods = _box.values.toList();
+    final box = await _getBox();
+    final moods = box.values.toList();
 
     moods.sort((a, b) => b.date.compareTo(a.date));
     return moods;
@@ -25,23 +33,28 @@ class MoodRepository {
   }
 
   Future<Mood?> getMoodById(String id) async {
-    return _box.get(id);
+    final box = await _getBox();
+    return box.get(id);
   }
 
   Future<void> addMood(Mood mood) async {
-    await _box.put(mood.id, mood);
+    final box = await _getBox();
+    await box.put(mood.id, mood);
   }
 
   Future<void> updateMood(Mood mood) async {
-    await _box.put(mood.id, mood);
+    final box = await _getBox();
+    await box.put(mood.id, mood);
   }
 
   Future<void> deleteMood(String id) async {
-    await _box.delete(id);
+    final box = await _getBox();
+    await box.delete(id);
   }
 
   Future<void> deleteAllMoods() async {
-    await _box.clear();
+    final box = await _getBox();
+    await box.clear();
   }
 
   Future<Map<String, dynamic>> getMoodStatistics() async {

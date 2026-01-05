@@ -24,7 +24,7 @@ class UserAdapter extends TypeAdapter<User> {
       createdAt: fields[4] as DateTime,
       updatedAt: fields[5] as DateTime,
       email: fields[6] as String?,
-      isAdmin: fields[7] as bool,
+      isAdmin: fields[7] as bool?,
     );
   }
 

@@ -3,6 +3,7 @@ import '../models/user.dart';
 import '../models/task.dart';
 import '../models/category.dart';
 import '../services/firebase_service_wrapper.dart';
+import '../services/notification_service.dart';
 import 'app_logging_service.dart';
 
 class AdminService {
@@ -19,6 +20,46 @@ class AdminService {
     } catch (e) {
       AppLogging.logError('Error checking if first user: $e');
       return false;
+    }
+  }
+
+  /// Send notification to all admin users about new user signup
+  Future<void> notifyAdminsOfNewUser(User newUser) async {
+    try {
+      final adminUsers = await getAllAdmins();
+
+      if (adminUsers.isEmpty) {
+        AppLogging.logInfo('No admin users found to notify about new signup', name: 'AdminService');
+        return;
+      }
+
+      final notificationService = NotificationService();
+
+      // Show immediate notification to admins (this will show on the current device if admin)
+      await notificationService.showImmediateNotification('New User Signup', '${newUser.name} (${newUser.email}) just joined Tazbeet', payload: 'admin_new_user_${newUser.id}');
+
+      AppLogging.logInfo('Sent new user notification to ${adminUsers.length} admin users', name: 'AdminService');
+    } catch (e) {
+      AppLogging.logError('Failed to send admin notifications for new user: $e', name: 'AdminService');
+    }
+  }
+
+  Future<List<User>> getAllAdmins() async {
+    if (_firestore == null) return [];
+
+    try {
+      final querySnapshot = await _firestore!.collection('users').where('isAdmin', isEqualTo: true).get();
+      return querySnapshot.docs.map((doc) {
+        final data = doc.data();
+        final Map<String, dynamic> convertedData = {};
+        data.forEach((key, value) {
+          convertedData[key.toString()] = value;
+        });
+        return User.fromJson(convertedData);
+      }).toList();
+    } catch (e) {
+      AppLogging.logError('Error fetching admin users: $e');
+      return [];
     }
   }
 

@@ -1,0 +1,2194 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:tazbeet/blocs/task_list/task_list_bloc.dart';
+import 'package:tazbeet/blocs/task_list/task_list_event.dart';
+import 'package:tazbeet/blocs/task_list/task_list_state.dart';
+import 'package:tazbeet/blocs/category/category_bloc.dart';
+import 'package:tazbeet/blocs/category/category_state.dart';
+import 'package:tazbeet/l10n/app_localizations.dart';
+import 'package:tazbeet/models/task.dart';
+import 'package:tazbeet/services/app_logging_service.dart';
+import 'package:tazbeet/ui/controllers/home_screen_controller.dart';
+import 'package:tazbeet/ui/design_system/ds_spacing.dart';
+import 'package:tazbeet/ui/design_system/ds_typography.dart';
+import 'package:tazbeet/ui/design_system/ds_colors.dart';
+import 'package:tazbeet/ui/design_system/ds_border_radius.dart';
+import 'package:tazbeet/ui/design_system/ds_elevation.dart';
+import 'package:tazbeet/ui/design_system/ds_components.dart';
+import 'package:tazbeet/ui/widgets/edit_task_dialog.dart';
+import '../add_task_screen.dart';
+import '../task_details_screen.dart';
+
+/// Complete Redesigned Home Screen
+/// Following WCAG AA standards and design system tokens
+class HomeScreen extends StatefulWidget {
+  final GlobalKey<ScaffoldState> scaffoldGlobalKey;
+
+  const HomeScreen({super.key, required this.scaffoldGlobalKey});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late final HomeScreenController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = HomeScreenController();
+    // Load persisted calendar view mode
+    _controller.loadCalendarViewMode();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(children: [_buildBackgroundGradient(context), _buildMainContent(context)]),
+      //  floatingActionButton: DSEnhancedFAB(onPressed: () => _showAddTaskDialog(context), icon: Icons.add_rounded, tooltip: 'Add Task', heroTag: 'home_fab'),
+    );
+  }
+
+  // ==========================================================================
+  // ERROR AND EMPTY STATES
+  // ==========================================================================
+
+  Widget _buildErrorWidget(BuildContext context, String error, VoidCallback onRetry) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(DSSpacing.lg),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
+            const SizedBox(height: DSSpacing.md),
+            Text(AppLocalizations.of(context)!.errorTitle, style: DSTypography.title(context), textAlign: TextAlign.center),
+            const SizedBox(height: DSSpacing.sm),
+            Text(
+              error,
+              style: DSTypography.body(context).copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: DSSpacing.lg),
+            ElevatedButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(Icons.refresh),
+              label: Text(AppLocalizations.of(context)!.tryAgain),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: DSSpacing.lg, vertical: DSSpacing.md),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context, String title, String subtitle, {VoidCallback? onAction, String? actionText}) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(DSSpacing.lg),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.inbox_outlined, size: 64, color: Theme.of(context).colorScheme.onSurfaceVariant),
+            const SizedBox(height: DSSpacing.md),
+            Text(title, style: DSTypography.title(context), textAlign: TextAlign.center),
+            const SizedBox(height: DSSpacing.sm),
+            Text(
+              subtitle,
+              style: DSTypography.body(context).copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+              textAlign: TextAlign.center,
+            ),
+            if (onAction != null && actionText != null) ...[
+              const SizedBox(height: DSSpacing.lg),
+              ElevatedButton.icon(
+                onPressed: onAction,
+                icon: const Icon(Icons.add),
+                label: Text(actionText),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: DSSpacing.lg, vertical: DSSpacing.md),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ==========================================================================
+  // LOADING SKELETONS
+  // ==========================================================================
+
+  Widget _buildLoadingSkeleton(BuildContext context) {
+    return SliverPadding(
+      padding: const EdgeInsets.all(DSSpacing.md),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) => Container(
+            margin: const EdgeInsets.only(bottom: DSSpacing.sm),
+            height: 80,
+            decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainerHighest, borderRadius: DSBorderRadius.lgRadius),
+          ),
+          childCount: 5,
+        ),
+      ),
+    );
+  }
+
+  // ==========================================================================
+  // ANIMATED TASK CARD
+  // ==========================================================================
+
+  Widget _buildAnimatedTaskCard(BuildContext context, Task task) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      decoration: BoxDecoration(color: task.isCompleted ? Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3) : null, borderRadius: DSBorderRadius.lgRadius),
+      child: _buildSwipeableTaskCard(context, task),
+    );
+  }
+
+  // ==========================================================================
+  // SWIPEABLE TASK CARD
+  // ==========================================================================
+
+  Widget _buildSwipeableTaskCard(BuildContext context, Task task) {
+    return Dismissible(
+      key: Key(task.id),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: DSSpacing.md),
+        decoration: BoxDecoration(color: Theme.of(context).colorScheme.error, borderRadius: DSBorderRadius.lgRadius),
+        child: Icon(Icons.delete, color: Theme.of(context).colorScheme.onError),
+      ),
+      secondaryBackground: Container(
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.only(left: DSSpacing.md),
+        decoration: BoxDecoration(color: task.isCompleted ? Theme.of(context).colorScheme.outline : Theme.of(context).colorScheme.error, borderRadius: DSBorderRadius.lgRadius),
+        child: Icon(Icons.delete_forever_outlined, color: Theme.of(context).colorScheme.onError),
+      ),
+      confirmDismiss: (direction) async {
+        HapticFeedback.mediumImpact();
+        if (direction == DismissDirection.endToStart) {
+          // Delete action
+          return await showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text(AppLocalizations.of(context)!.deleteTask),
+                  content: Text(AppLocalizations.of(context)!.deleteTaskConfirmation(task.title)),
+                  actions: [
+                    TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancelButton)),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: Text(AppLocalizations.of(context)!.delete, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                    ),
+                  ],
+                ),
+              ) ??
+              false;
+        } else {
+          // Complete action - only allow if task is not already completed
+          return !task.isCompleted;
+        }
+      },
+      onDismissed: (direction) {
+        if (direction == DismissDirection.endToStart) {
+          // Delete task
+          _deleteTask(context, task);
+        } else {
+          // Complete task
+          context.read<TaskListBloc>().add(ToggleTaskCompletion(task.id));
+        }
+      },
+      child: RepaintBoundary(
+        child: DSTaskCard(
+          task: task,
+          onTap: () {
+            HapticFeedback.lightImpact();
+            _navigateToTaskDetails(context, task);
+          },
+          onToggle: () {
+            HapticFeedback.lightImpact();
+            context.read<TaskListBloc>().add(ToggleTaskCompletion(task.id));
+          },
+          onDelete: () {
+            HapticFeedback.mediumImpact();
+            _deleteTask(context, task);
+          },
+          onLongPress: () {
+            HapticFeedback.heavyImpact();
+            _showQuickActions(context, task);
+          },
+        ),
+      ),
+    );
+  }
+
+  // ==========================================================================
+  // BACKGROUND
+  // ==========================================================================
+
+  Widget _buildBackgroundGradient(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDark ? [const Color(0xFF0F172A), const Color(0xFF1E293B), const Color(0xFF334155)] : [const Color(0xFFF8FAFC), const Color(0xFFE2E8F0), const Color(0xFFCBD5E1)],
+        ),
+      ),
+    );
+  }
+
+  // ==========================================================================
+  // MAIN CONTENT
+  // ==========================================================================
+
+  Widget _buildMainContent(BuildContext context) {
+    return BlocListener<TaskListBloc, TaskListState>(
+      listener: _handleTaskListError,
+      child: RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: ValueListenableBuilder<bool>(
+          valueListenable: _controller.showCalendar,
+          builder: (context, showCalendar, _) {
+            return CustomScrollView(
+              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+              slivers: [
+                // App Bar
+                _buildAppBar(context),
+
+                // Today's Progress Header
+                SliverToBoxAdapter(child: _buildTodayHeader(context)),
+                SliverToBoxAdapter(child: _buildCategoryFilter(context)),
+                SliverToBoxAdapter(child: _buildQuickStats(context)),
+
+                // Calendar Section (NEW)
+                //  if (showCalendar) SliverToBoxAdapter(child: _buildCalendarSection(context)),
+
+                // Category Filter
+
+                // Quick Stats
+
+                // Active Filters
+                SliverToBoxAdapter(child: _buildActiveFilters(context)),
+
+                // Task List Header
+                SliverToBoxAdapter(child: _buildTaskListHeader(context)),
+                // Task List
+                _buildTaskList(context),
+
+                // Undated Tasks Section
+                SliverToBoxAdapter(child: _buildUndatedSection(context)),
+
+                // Completed Tasks Section (NEW)
+                SliverToBoxAdapter(child: _buildCompletedSection(context)),
+
+                // Bottom Padding for FAB
+                const SliverToBoxAdapter(child: SizedBox(height: 80)),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  // ==========================================================================
+  // APP BAR
+  // ==========================================================================
+
+  Widget _buildAppBar(BuildContext context) {
+    return SliverAppBar(
+      floating: true,
+      snap: true,
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      leading: IconButton(
+        icon: const Icon(Icons.menu_rounded),
+        onPressed: () {
+          AppLogging.logEvent('Menu Button Pressed', name: 'MenuButton');
+          widget.scaffoldGlobalKey.currentState?.openDrawer();
+        },
+      ),
+      title: Text(AppLocalizations.of(context)!.appTitle, style: DSTypography.title(context).copyWith(color: Theme.of(context).colorScheme.primary)),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.search_rounded, color: _controller.searchQuery.value.isNotEmpty ? Colors.white : null),
+          onPressed: () => _showSearchDialog(context),
+          tooltip: AppLocalizations.of(context)!.search,
+        ),
+        IconButton(
+          icon: Icon(Icons.sort, color: _controller.sortOption.value != TaskSortOption.none ? Colors.white : null),
+          onPressed: () => _showOptionsMenu(context),
+          tooltip: AppLocalizations.of(context)!.options,
+        ),
+      ],
+    );
+  }
+
+  // ==========================================================================
+  // TODAY HEADER
+  // ==========================================================================
+
+  Widget _buildTodayHeader(BuildContext context) {
+    return BlocBuilder<TaskListBloc, TaskListState>(
+      builder: (context, state) {
+        if (state is! TaskListLoaded) return const SizedBox.shrink();
+
+        final today = DateTime.now();
+        final todayStart = DateTime(today.year, today.month, today.day);
+        final todayEnd = todayStart.add(const Duration(days: 1));
+
+        final todayTasks = state.tasks.where((task) {
+          final d = task.dueDate;
+          return d != null && !d.isBefore(todayStart) && d.isBefore(todayEnd);
+        }).length;
+
+        final completedToday = state.tasks.where((task) {
+          final d = task.dueDate;
+          return task.isCompleted && d != null && !d.isBefore(todayStart) && d.isBefore(todayEnd);
+        }).length;
+
+        return RepaintBoundary(
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(DSSpacing.md, DSSpacing.md, DSSpacing.md, DSSpacing.sm),
+            padding: const EdgeInsets.all(DSSpacing.md),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.6), Theme.of(context).colorScheme.secondaryContainer.withValues(alpha: 0.6)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: DSBorderRadius.lgRadius,
+              boxShadow: DSElevation.getBoxShadow(context, DSElevation.level2),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(AppLocalizations.of(context)!.today, style: DSTypography.subtitle(context).copyWith(color: Theme.of(context).colorScheme.onPrimaryContainer)),
+                      const SizedBox(height: DSSpacing.xs),
+                      Text('$completedToday / $todayTasks ${AppLocalizations.of(context)!.completedTasks}', style: DSTypography.body(context).copyWith(color: Theme.of(context).colorScheme.onPrimaryContainer)),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(DSSpacing.sm),
+                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15), shape: BoxShape.circle),
+                  child: Icon(todayTasks > 0 && completedToday == todayTasks ? Icons.check_circle_rounded : Icons.today_rounded, size: 28, color: Theme.of(context).colorScheme.primary),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // ==========================================================================
+  // CATEGORY FILTER
+  // ==========================================================================
+
+  Widget _buildCategoryFilter(BuildContext context) {
+    return BlocBuilder<CategoryBloc, CategoryState>(
+      builder: (context, state) {
+        if (state is! CategoryLoaded || state.categories.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        return ValueListenableBuilder<String?>(
+          valueListenable: _controller.selectedCategoryId,
+          builder: (context, selectedCategoryId, _) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(DSSpacing.md, DSSpacing.md, DSSpacing.sm, DSSpacing.sm),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.filter_list_rounded, size: 18, color: Theme.of(context).colorScheme.primary),
+                          const SizedBox(width: DSSpacing.sm),
+                          Text(
+                            AppLocalizations.of(context)!.categoryName,
+                            style: DSTypography.label(context).copyWith(fontWeight: FontWeight.w600, color: DSColors.getOnSurfaceColor(context)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                // Chips
+                SizedBox(
+                  height: 56,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: DSSpacing.md, vertical: DSSpacing.sm),
+                    children: [
+                      DSCategoryChip(
+                        id: null,
+                        label: AppLocalizations.of(context)!.allCategories,
+                        icon: Icons.apps_rounded,
+                        color: Theme.of(context).colorScheme.primary,
+                        isSelected: selectedCategoryId == null,
+                        onTap: () => _controller.setCategory(null),
+                      ),
+                      ...state.categories.map(
+                        (c) => DSCategoryChip(id: c.id, label: c.name, icon: Icons.folder_rounded, color: c.color, isSelected: selectedCategoryId == c.id, onTap: () => _controller.setCategory(c.id)),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // ==========================================================================
+  // QUICK STATS
+  // ==========================================================================
+
+  Widget _buildQuickStats(BuildContext context) {
+    return RepaintBoundary(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: DSSpacing.md, vertical: DSSpacing.sm),
+        child: BlocBuilder<TaskListBloc, TaskListState>(
+          builder: (context, state) {
+            if (state is! TaskListLoaded) {
+              return const SizedBox.shrink();
+            }
+
+            final now = DateTime.now();
+            final overdueCount = state.tasks.where((t) => !t.isCompleted && t.dueDate != null && t.dueDate!.isBefore(now)).length;
+
+            final highPriorityCount = state.tasks.where((t) => !t.isCompleted && t.priority == TaskPriority.high).length;
+
+            final undatedCount = state.tasks.where((t) => t.dueDate == null).length;
+
+            // Calculate completion rate
+            final totalTasks = state.tasks.length;
+            final completedTasks = state.tasks.where((t) => t.isCompleted).length;
+            final completionRate = totalTasks > 0 ? (completedTasks / totalTasks * 100).round() : 0;
+
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                if (!(constraints.maxWidth < 156156200)) {
+                  return Column(
+                    children: [
+                      DSStatCard(
+                        icon: Icons.warning_amber_rounded,
+                        value: '$overdueCount',
+                        label: AppLocalizations.of(context)!.overdue,
+                        color: DSColors.getOverdueColor(context),
+                        onTap: () => _controller.setOverdueFilter(),
+                      ),
+                      const SizedBox(height: DSSpacing.sm),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: DSStatCard(
+                              icon: Icons.priority_high_rounded,
+                              value: '$highPriorityCount',
+                              label: AppLocalizations.of(context)!.highPriority,
+                              color: DSColors.getHighPriorityColor(context),
+                              onTap: () => _controller.setPriorityFilter(TaskPriority.high),
+                            ),
+                          ),
+                          const SizedBox(width: DSSpacing.sm),
+                          Expanded(
+                            child: DSStatCard(
+                              icon: Icons.event_busy_rounded,
+                              value: '$undatedCount',
+                              label: AppLocalizations.of(context)!.noDueDate,
+                              color: DSColors.getUndatedColor(context),
+                              onTap: () => _controller.setUndatedFilter(),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: DSSpacing.sm),
+                      DSStatCard(
+                        icon: Icons.pie_chart_rounded,
+                        value: '$completionRate%',
+                        label: 'Completion Rate',
+                        color: completionRate >= 75
+                            ? Colors.green
+                            : completionRate >= 50
+                            ? Colors.orange
+                            : Colors.red,
+                        semanticLabel: 'Task completion rate: $completionRate percent',
+                      ),
+                    ],
+                  );
+                } else {
+                  return Row(
+                    children: [
+                      if (overdueCount != 0) ...[
+                        Expanded(
+                          child: DSStatCard(
+                            icon: Icons.warning_amber_rounded,
+                            value: '$overdueCount',
+                            label: AppLocalizations.of(context)!.overdue,
+                            color: DSColors.getOverdueColor(context),
+                            onTap: () => _controller.setOverdueFilter(),
+                          ),
+                        ),
+                        const SizedBox(width: DSSpacing.sm),
+                      ],
+                      Expanded(
+                        child: DSStatCard(
+                          icon: Icons.priority_high_rounded,
+                          value: '$highPriorityCount',
+                          label: AppLocalizations.of(context)!.highPriority,
+                          color: DSColors.getHighPriorityColor(context),
+                          onTap: () => _controller.setPriorityFilter(TaskPriority.high),
+                        ),
+                      ),
+                      const SizedBox(width: DSSpacing.sm),
+                      Expanded(
+                        child: DSStatCard(
+                          icon: Icons.event_busy_rounded,
+                          value: '$undatedCount',
+                          label: AppLocalizations.of(context)!.noDueDate,
+                          color: DSColors.getUndatedColor(context),
+                          onTap: () => _controller.setUndatedFilter(),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  // ==========================================================================
+  // ACTIVE FILTERS
+  // ==========================================================================
+
+  Widget _buildActiveFilters(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: _controller.showCalendar,
+      builder: (context, showCalendar, _) {
+        return AnimatedBuilder(
+          animation: Listenable.merge([
+            _controller.selectedDate,
+            _controller.selectedCategoryId,
+            _controller.showOverdueOnly,
+            _controller.showUndatedOnly,
+          ]),
+          builder: (context, _) {
+            final selectedDate = _controller.selectedDate.value;
+            final selectedCategoryId = _controller.selectedCategoryId.value;
+            final showOverdueOnly = _controller.showOverdueOnly.value;
+            final showUndatedOnly = _controller.showUndatedOnly.value;
+            
+            final hasFilters = selectedDate != null || selectedCategoryId != null || showOverdueOnly || showUndatedOnly;
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: DSSpacing.md, vertical: DSSpacing.sm),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              // Calendar toggle button
+                              if (!showCalendar)
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        PageRouteBuilder(
+                                          pageBuilder: (context, animation, secondaryAnimation) => CalendarViewPage(controller: _controller, scaffoldGlobalKey: widget.scaffoldGlobalKey),
+                                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                            const begin = Offset(0.0, 1.0);
+                                            const end = Offset.zero;
+                                            const curve = Curves.easeInOutCubic;
+                                            var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                            var offsetAnimation = animation.drive(tween);
+                                            return SlideTransition(
+                                              position: offsetAnimation,
+                                              child: FadeTransition(opacity: animation, child: child),
+                                            );
+                                          },
+                                          transitionDuration: const Duration(milliseconds: 400),
+                                        ),
+                                      );
+                                    },
+                                    icon: const Icon(Icons.calendar_month_rounded, size: 20),
+                                    label: Text(
+                                      AppLocalizations.of(context)!.showCalendar,
+                                      style: DSTypography.label(context).copyWith(fontWeight: FontWeight.w600, color: DSColors.getOnPrimaryColor(context)),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(horizontal: DSSpacing.md, vertical: DSSpacing.sm),
+                                      elevation: 2,
+                                    ),
+                                  ),
+                                ),
+                              if (!showCalendar && hasFilters) const SizedBox(height: DSSpacing.sm),
+
+                              // Active filter chips & clear action
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        children: [
+                                          if (showOverdueOnly)
+                                            Padding(
+                                              padding: const EdgeInsets.only(right: DSSpacing.sm),
+                                              child: Chip(
+                                                avatar: Icon(Icons.warning_amber_rounded, size: 16, color: DSColors.getOverdueColor(context)),
+                                                label: Text(AppLocalizations.of(context)!.overdue),
+                                                onDeleted: () {
+                                                  HapticFeedback.lightImpact();
+                                                  _controller.clearSpecialFilters();
+                                                },
+                                                deleteIcon: const Icon(Icons.close, size: 18),
+                                              ),
+                                            ),
+                                          if (showUndatedOnly)
+                                            Padding(
+                                              padding: const EdgeInsets.only(right: DSSpacing.sm),
+                                              child: Chip(
+                                                avatar: Icon(Icons.event_busy_rounded, size: 16, color: DSColors.getUndatedColor(context)),
+                                                label: Text(
+                                                  AppLocalizations.of(context)!.noDueDate,
+                                                  style: DSTypography.label(context).copyWith(fontWeight: FontWeight.w600, color: DSColors.getOnSurfaceColor(context)),
+                                                ),
+                                                onDeleted: () {
+                                                  HapticFeedback.lightImpact();
+                                                  _controller.clearSpecialFilters();
+                                                },
+                                                deleteIcon: const Icon(Icons.close, size: 18),
+                                              ),
+                                            ),
+                                          if (selectedDate != null)
+                                            Padding(
+                                              padding: const EdgeInsets.only(right: DSSpacing.sm),
+                                              child: Chip(
+                                                avatar: const Icon(Icons.calendar_today, size: 16),
+                                                label: Text('${selectedDate.day}/${selectedDate.month}/${selectedDate.year}'),
+                                                onDeleted: () {
+                                                  HapticFeedback.lightImpact();
+                                                  _controller.clearDate();
+                                                },
+                                                deleteIcon: const Icon(Icons.close, size: 18),
+                                              ),
+                                            ),
+                                          if (selectedCategoryId != null)
+                                            BlocBuilder<CategoryBloc, CategoryState>(
+                                              builder: (context, state) {
+                                                if (state is! CategoryLoaded || state.categories.isEmpty) {
+                                                  return const SizedBox.shrink();
+                                                }
+                                                final category = state.categories.firstWhere((c) => c.id == selectedCategoryId, orElse: () => state.categories.first);
+                                                return Chip(
+                                                  label: Text(category.name),
+                                                  avatar: const Icon(Icons.folder, size: 16),
+                                                  onDeleted: () => _controller.setCategory(null),
+                                                  deleteIcon: const Icon(Icons.close, size: 18),
+                                                );
+                                              },
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  // Clear all filters button
+                                  if (hasFilters)
+                                    TextButton.icon(
+                                      onPressed: _controller.clearAllFilters,
+                                      icon: const Icon(Icons.clear_all, size: 18),
+                                      label: Text(AppLocalizations.of(context)!.clearAllButton),
+                                      style: TextButton.styleFrom(visualDensity: VisualDensity.compact),
+                                    ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // ==========================================================================
+  // TASK LIST HEADER
+  // ==========================================================================
+
+  Widget _buildTaskListHeader(BuildContext context) {
+    return BlocBuilder<TaskListBloc, TaskListState>(
+      builder: (context, state) {
+        int taskCount = 0;
+        if (state is TaskListLoaded) {
+          taskCount = state.tasks.where((t) => !t.isCompleted).length;
+        }
+
+        return DSSectionHeader(title: AppLocalizations.of(context)!.todayTasks, icon: Icons.task_alt_rounded, badge: '$taskCount');
+      },
+    );
+  }
+
+  // ==========================================================================
+  // TASK LIST
+  // ==========================================================================
+
+  Widget _buildTaskList(BuildContext context) {
+    return ValueListenableBuilder<String?>(
+      valueListenable: _controller.selectedCategoryId,
+      builder: (context, selectedCategoryId, _) {
+        return ValueListenableBuilder<DateTime?>(
+          valueListenable: _controller.selectedDate,
+          builder: (context, selectedDate, _) {
+            return ValueListenableBuilder<String>(
+              valueListenable: _controller.searchQuery,
+              builder: (context, searchQuery, _) {
+                return ValueListenableBuilder<bool>(
+                  valueListenable: _controller.showOverdueOnly,
+                  builder: (context, showOverdueOnly, _) {
+                    return ValueListenableBuilder<bool>(
+                      valueListenable: _controller.showUndatedOnly,
+                      builder: (context, showUndatedOnly, _) {
+                        return ValueListenableBuilder<TaskSortOption>(
+                          valueListenable: _controller.sortOption,
+                          builder: (context, sortOption, _) {
+                            return ValueListenableBuilder<bool>(
+                              valueListenable: _controller.sortAscending,
+                              builder: (context, sortAscending, _) {
+                                return BlocBuilder<TaskListBloc, TaskListState>(
+                                  builder: (context, state) {
+                                    if (state is TaskListLoading) {
+                                      return _buildLoadingSkeleton(context);
+                                    }
+
+                                    if (state is TaskListError) {
+                                      return SliverFillRemaining(
+                                        hasScrollBody: false,
+                                        child: _buildErrorWidget(context, state.message, () {
+                                          context.read<TaskListBloc>().add(LoadTasks());
+                                        }),
+                                      );
+                                    }
+
+                                    if (state is TaskListLoaded) {
+                                      final now = DateTime.now();
+                                      final todayStart = DateTime(now.year, now.month, now.day);
+
+                                      // Start with incomplete tasks
+                                      var tasks = state.tasks.where((t) => !t.isCompleted).toList();
+
+                                      // Apply special filters (overdue or undated)
+                                      if (showOverdueOnly) {
+                                        tasks = tasks.where((t) => t.dueDate != null && t.dueDate!.isBefore(todayStart)).toList();
+                                      } else if (showUndatedOnly) {
+                                        tasks = tasks.where((t) => t.dueDate == null).toList();
+                                      }
+                                      // Note: Don't filter by default - show all tasks (dated and undated)
+
+                                      // Apply category filter
+                                      if (selectedCategoryId != null) {
+                                        tasks = tasks.where((t) => t.categoryId == selectedCategoryId).toList();
+                                      }
+
+                                      // Apply date filter (works with all filter combinations)
+                                      if (selectedDate != null) {
+                                        final start = DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
+                                        final end = start.add(const Duration(days: 1));
+                                        tasks = tasks.where((t) {
+                                          final d = t.dueDate;
+                                          return d != null && !d.isBefore(start) && d.isBefore(end);
+                                        }).toList();
+                                      }
+
+                                      // Apply search filter
+                                      if (searchQuery.isNotEmpty) {
+                                        final query = searchQuery.toLowerCase();
+                                        tasks = tasks.where((t) {
+                                          return t.title.toLowerCase().contains(query) || (t.description?.toLowerCase().contains(query) ?? false);
+                                        }).toList();
+                                      }
+
+                                      // Apply sort
+                                      tasks = _controller.sortTasks(tasks);
+
+                                      // Determine empty state message
+                                      String emptyTitle;
+                                      String emptyMessage;
+                                      if (searchQuery.isNotEmpty) {
+                                        emptyTitle = AppLocalizations.of(context)!.noTasksFound;
+                                        emptyMessage = AppLocalizations.of(context)!.addTaskToGetStarted;
+                                      } else if (showOverdueOnly) {
+                                        emptyTitle = AppLocalizations.of(context)!.noOverdueTasks;
+                                        emptyMessage = AppLocalizations.of(context)!.addTaskToGetStarted;
+                                      } else if (showUndatedOnly) {
+                                        emptyTitle = AppLocalizations.of(context)!.noTasksFound;
+                                        emptyMessage = AppLocalizations.of(context)!.addTaskToGetStarted;
+                                      } else if (selectedDate != null) {
+                                        emptyTitle = AppLocalizations.of(context)!.noTasksForThisDay;
+                                        emptyMessage = AppLocalizations.of(context)!.addTaskToGetStarted;
+                                      } else {
+                                        emptyTitle = AppLocalizations.of(context)!.noTasksYet;
+                                        emptyMessage = AppLocalizations.of(context)!.addTaskToGetStarted;
+                                      }
+
+                                      if (tasks.isEmpty) {
+                                        return SliverFillRemaining(
+                                          hasScrollBody: false,
+                                          child: _buildEmptyState(context, emptyTitle, emptyMessage, onAction: () => _showAddTaskDialog(context), actionText: 'Add Task'),
+                                        );
+                                      }
+
+                                      return SliverList(
+                                        delegate: SliverChildBuilderDelegate((context, index) {
+                                          final task = tasks[index];
+                                          return _buildAnimatedTaskCard(context, task);
+                                        }, childCount: tasks.length),
+                                      );
+                                    }
+
+                                    return SliverToBoxAdapter(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(DSSpacing.xl),
+                                        child: Center(
+                                          child: Text('Error loading tasks', style: DSTypography.body(context).copyWith(color: Theme.of(context).colorScheme.error)),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // ==========================================================================
+  // UNDATED SECTION
+  // ==========================================================================
+
+  Widget _buildUndatedSection(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: _controller.showUndatedOnly,
+      builder: (context, showUndatedOnly, _) {
+        return ValueListenableBuilder<String>(
+          valueListenable: _controller.searchQuery,
+          builder: (context, searchQuery, _) {
+            // Hide this section only if "Undated Only" filter is active (search should show matching undated tasks)
+            if (showUndatedOnly) {
+              return const SizedBox.shrink();
+            }
+
+            return BlocBuilder<TaskListBloc, TaskListState>(
+              builder: (context, state) {
+                if (state is! TaskListLoaded) return const SizedBox.shrink();
+
+                final undatedTasks = state.tasks.where((t) => t.dueDate == null && !t.isCompleted).toList();
+
+                // Apply search filter to undated tasks
+                List<Task> filteredUndatedTasks = undatedTasks;
+                if (searchQuery.isNotEmpty) {
+                  final query = searchQuery.toLowerCase();
+                  filteredUndatedTasks = undatedTasks.where((t) {
+                    return t.title.toLowerCase().contains(query) || (t.description?.toLowerCase().contains(query) ?? false);
+                  }).toList();
+                }
+
+                if (filteredUndatedTasks.isEmpty) return const SizedBox.shrink();
+
+                return Padding(
+                  padding: const EdgeInsets.all(DSSpacing.md),
+                  child: RepaintBoundary(
+                    child: ExpansionTile(
+                      initiallyExpanded: true, // Collapsed by default to reduce clutter
+                      title: Row(
+                        children: [
+                          Text(AppLocalizations.of(context)!.noDueDate, style: DSTypography.subtitle(context)),
+                          const SizedBox(width: DSSpacing.sm),
+
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: DSSpacing.sm, vertical: DSSpacing.xs),
+                            decoration: BoxDecoration(color: DSColors.getUndatedColor(context), borderRadius: DSBorderRadius.fullRadius),
+                            child: Text(
+                              '${filteredUndatedTasks.length}',
+                              style: DSTypography.caption(context).copyWith(color: Theme.of(context).colorScheme.onErrorContainer, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ],
+                      ),
+                      leading: Icon(Icons.event_busy_rounded, color: DSColors.getUndatedColor(context)),
+                      children: filteredUndatedTasks
+                          .map(
+                            (task) => Padding(
+                              padding: const EdgeInsets.only(top: DSSpacing.xs),
+                              child: _buildAnimatedTaskCard(context, task),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // ==========================================================================
+  // COMPLETED SECTION
+  // ==========================================================================
+
+  Widget _buildCompletedSection(BuildContext context) {
+    return BlocBuilder<TaskListBloc, TaskListState>(
+      builder: (context, state) {
+        if (state is! TaskListLoaded) return const SizedBox.shrink();
+
+        final completedTasks = state.tasks.where((t) => t.isCompleted).toList();
+
+        if (completedTasks.isEmpty) return const SizedBox.shrink();
+
+        // Sort by completion date (most recent first)
+        completedTasks.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+
+        // Group tasks by completion date
+        final Map<String, List<Task>> groupedTasks = {};
+        for (final task in completedTasks) {
+          final dateKey = _formatDateTitle(task.updatedAt);
+          if (!groupedTasks.containsKey(dateKey)) {
+            groupedTasks[dateKey] = [];
+          }
+          groupedTasks[dateKey]!.add(task);
+        }
+
+        return Padding(
+          padding: const EdgeInsets.all(DSSpacing.md),
+          child: ExpansionTile(
+            initiallyExpanded: false,
+            title: Row(
+              children: [
+                Text(AppLocalizations.of(context)!.completedTasks, style: DSTypography.subtitle(context)),
+                const SizedBox(width: DSSpacing.sm),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: DSSpacing.sm, vertical: DSSpacing.xs),
+                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.primaryContainer, borderRadius: DSBorderRadius.fullRadius),
+                  child: Text(
+                    '${completedTasks.length}',
+                    style: DSTypography.caption(context).copyWith(color: Theme.of(context).colorScheme.onPrimaryContainer, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
+            leading: Icon(Icons.check_circle_rounded, color: Colors.green.shade600),
+            children: groupedTasks.entries.map((entry) {
+              final dateTitle = entry.key;
+              final tasksForDate = entry.value;
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Date title
+                  Padding(
+                    padding: const EdgeInsets.only(top: DSSpacing.md, left: DSSpacing.sm, right: DSSpacing.sm, bottom: DSSpacing.xs),
+                    child: Row(
+                      children: [
+                        Icon(Icons.calendar_today_rounded, size: 16, color: Theme.of(context).colorScheme.primary),
+                        const SizedBox(width: DSSpacing.xs),
+                        Text(
+                          dateTitle,
+                          style: DSTypography.label(context).copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
+                        ),
+                        const Spacer(),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: DSSpacing.xs, vertical: 2),
+                          decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1), borderRadius: DSBorderRadius.fullRadius),
+                          child: Text(
+                            '${tasksForDate.length}',
+                            style: DSTypography.caption(context).copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Tasks for this date
+                  ...tasksForDate.map((task) {
+                    return Padding(
+                      padding: const EdgeInsets.only(left: DSSpacing.sm, right: DSSpacing.sm, top: DSSpacing.xs),
+                      child: Opacity(
+                        opacity: 0.7,
+                        child: DSTaskCard(
+                          task: task,
+                          onTap: () => _navigateToTaskDetails(context, task),
+                          onToggle: () => context.read<TaskListBloc>().add(ToggleTaskCompletion(task.id)),
+                          onDelete: () => _deleteTask(context, task),
+                          onLongPress: () => _showQuickActions(context, task),
+                        ),
+                      ),
+                    );
+                  }),
+                ],
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
+  }
+
+  // Helper method to format date titles
+  String _formatDateTitle(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final taskDate = DateTime(date.year, date.month, date.day);
+
+    if (taskDate.isAtSameMomentAs(today)) {
+      return 'Today';
+    } else if (taskDate.isAtSameMomentAs(yesterday)) {
+      return 'Yesterday';
+    } else if (taskDate.isAfter(today.subtract(const Duration(days: 7)))) {
+      // Within the last week, show day name
+      return _formatDayName(date);
+    } else {
+      // Older dates, show full date
+      return _formatFullDate(date);
+    }
+  }
+
+  String _formatDayName(DateTime date) {
+    final days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    return days[date.weekday - 1];
+  }
+
+  String _formatFullDate(DateTime date) {
+    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  }
+
+  // ==========================================================================
+  // HELPERS
+  // ==========================================================================
+
+  void _handleTaskListError(BuildContext context, TaskListState state) {
+    if (state is TaskListError) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.error_outline, color: Colors.white),
+              const SizedBox(width: 12),
+              Expanded(child: Text(state.message)),
+            ],
+          ),
+          backgroundColor: Colors.red.shade700,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: DSBorderRadius.mdRadius),
+          margin: const EdgeInsets.all(DSSpacing.md),
+        ),
+      );
+    }
+  }
+
+  Future<void> _onRefresh() async {
+    context.read<TaskListBloc>().add(LoadTasks());
+    await Future.delayed(const Duration(milliseconds: 500));
+  }
+
+  void _showAddTaskDialog(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => AddTaskScreen(
+          onTaskAdded: (task) {
+            context.read<TaskListBloc>().add(AddTask(task));
+          },
+        ),
+      ),
+    );
+  }
+
+  void _showEditTaskDialog(BuildContext context, Task task) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => EditTaskDialog(
+        task: task,
+        onTaskUpdated: (updatedTask) {
+          context.read<TaskListBloc>().add(UpdateTask(updatedTask));
+        },
+      ),
+    );
+  }
+
+  void _navigateToTaskDetails(BuildContext context, Task task) async {
+    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => TaskDetailsScreen(taskId: task.id)));
+
+    // Refresh if task was modified
+    if (result == true) {
+      context.read<TaskListBloc>().add(LoadTasks());
+    }
+  }
+
+  void _deleteTask(BuildContext context, Task task) async {
+    // Capture the bloc reference before any async operations
+    final taskListBloc = context.read<TaskListBloc>();
+
+    // Show confirmation dialog
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.warning_amber_rounded, color: Colors.orange),
+            const SizedBox(width: 12),
+            const Text('Delete Task?'),
+          ],
+        ),
+        content: Text('Are you sure you want to delete "${task.title}"?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    // Delete task
+    taskListBloc.add(DeleteTask(task.id));
+
+    // Show undo snackbar
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.taskDeleted),
+        action: SnackBarAction(
+          label: AppLocalizations.of(context)!.undo,
+          onPressed: () {
+            if (context.mounted) {
+              taskListBloc.add(AddTask(task));
+            }
+          },
+        ),
+        duration: const Duration(seconds: 5),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: DSBorderRadius.mdRadius),
+        margin: const EdgeInsets.all(DSSpacing.md),
+      ),
+    );
+  }
+
+  void _showQuickActions(BuildContext context, Task task) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: const Text('View Details'),
+              onTap: () {
+                Navigator.pop(context);
+                _navigateToTaskDetails(context, task);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.edit),
+              title: const Text('Quick Edit'),
+              onTap: () {
+                Navigator.pop(context);
+                _showEditTaskDialog(context, task);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.delete, color: Colors.red),
+              title: const Text('Delete', style: TextStyle(color: Colors.red)),
+              onTap: () {
+                Navigator.pop(context);
+                _deleteTask(context, task);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showSearchDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final searchController = TextEditingController(text: _controller.searchQuery.value);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(DSSpacing.lg),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Handle bar
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    margin: const EdgeInsets.only(bottom: DSSpacing.md),
+                    decoration: BoxDecoration(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(2)),
+                  ),
+                ),
+                // Header
+                Row(
+                  children: [
+                    Icon(Icons.search, color: Theme.of(context).colorScheme.primary),
+                    const SizedBox(width: DSSpacing.sm),
+                    Text('Search Tasks', style: DSTypography.title(context)),
+                    const Spacer(),
+                    IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+                  ],
+                ),
+                const SizedBox(height: DSSpacing.md),
+                // Search field
+                TextField(
+                  controller: searchController,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    hintText: l10n.searchHint,
+                    prefixIcon: const Icon(Icons.search),
+                    suffixIcon: ValueListenableBuilder<String>(
+                      valueListenable: _controller.searchQuery,
+                      builder: (context, query, _) {
+                        if (query.isEmpty) return const SizedBox.shrink();
+                        return IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            searchController.clear();
+                            _controller.setSearchQuery('');
+                          },
+                        );
+                      },
+                    ),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                  ),
+                  onChanged: (value) {
+                    HapticFeedback.selectionClick();
+                    _controller.setSearchQuery(value);
+                  },
+                  onSubmitted: (_) => Navigator.pop(context),
+                ),
+                const SizedBox(height: DSSpacing.md),
+                // Quick filters
+                Text('Quick Filters', style: DSTypography.subtitle(context)),
+                const SizedBox(height: DSSpacing.sm),
+                Wrap(
+                  spacing: DSSpacing.sm,
+                  runSpacing: DSSpacing.sm,
+                  children: [
+                    _buildQuickFilterChip(
+                      context,
+                      icon: Icons.warning_amber_rounded,
+                      label: l10n.overdue,
+                      color: DSColors.getOverdueColor(context),
+                      onTap: () {
+                        _controller.setOverdueFilter();
+                        Navigator.pop(context);
+                      },
+                    ),
+                    _buildQuickFilterChip(
+                      context,
+                      icon: Icons.event_busy_rounded,
+                      label: l10n.noDueDate,
+                      color: DSColors.getUndatedColor(context),
+                      onTap: () {
+                        _controller.setUndatedFilter();
+                        Navigator.pop(context);
+                      },
+                    ),
+                    _buildQuickFilterChip(
+                      context,
+                      icon: Icons.priority_high,
+                      label: l10n.highPriorityLabel,
+                      color: DSColors.getHighPriorityColor(context),
+                      onTap: () {
+                        searchController.text = 'priority:high';
+                        _controller.setSearchQuery('priority:high');
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: DSSpacing.lg),
+                // Action buttons
+                Row(
+                  children: [
+                    // Clear search button
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          searchController.clear();
+                          _controller.setSearchQuery('');
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.clear),
+                        label: Text('Clear'),
+                        style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: DSSpacing.md)),
+                      ),
+                    ),
+                    const SizedBox(width: DSSpacing.sm),
+                    // Search button
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.search),
+                        label: Text('Search'),
+                        style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: DSSpacing.md)),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuickFilterChip(BuildContext context, {required IconData icon, required String label, required Color color, required VoidCallback onTap}) {
+    return ActionChip(
+      avatar: Icon(icon, size: 18, color: color),
+      label: Text(label),
+      onPressed: onTap,
+      backgroundColor: color.withValues(alpha: 0.1),
+      side: BorderSide(color: color.withValues(alpha: 0.3)),
+    );
+  }
+
+  void _showOptionsMenu(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Handle bar
+                Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(top: DSSpacing.md, bottom: DSSpacing.sm),
+                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(2)),
+                ),
+                // Header
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: DSSpacing.lg),
+                  child: Row(
+                    children: [
+                      Icon(Icons.tune, color: Theme.of(context).colorScheme.primary),
+                      const SizedBox(width: DSSpacing.sm),
+                      Text('Sort & Filter', style: DSTypography.title(context)),
+                      const Spacer(),
+                      IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+                    ],
+                  ),
+                ),
+                const Divider(),
+                // Sort section
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: DSSpacing.lg, vertical: DSSpacing.sm),
+                  child: Row(
+                    children: [
+                      Icon(Icons.sort, size: 20, color: Theme.of(context).colorScheme.outline),
+                      const SizedBox(width: DSSpacing.sm),
+                      Text('Sort By', style: DSTypography.subtitle(context)),
+                    ],
+                  ),
+                ),
+                ValueListenableBuilder<TaskSortOption>(
+                  valueListenable: _controller.sortOption,
+                  builder: (context, currentSort, _) {
+                    return Column(
+                      children: [
+                        /*   _buildSortOption(
+                          context,
+                          icon: Icons.sort,
+                          title: 'None',
+                          isSelected: currentSort == TaskSortOption.none,
+                          onTap: () {
+                            _controller.setSortOption(TaskSortOption.none);
+                            Navigator.pop(context);
+                          },
+                        ), */
+                        _buildSortOption(
+                          context,
+                          icon: Icons.calendar_today,
+                          title: l10n.dueDateLabel,
+                          isSelected: currentSort == TaskSortOption.dueDate,
+                          onTap: () {
+                            _controller.setSortOption(TaskSortOption.dueDate);
+                            Navigator.pop(context);
+                          },
+                        ),
+                        _buildSortOption(
+                          context,
+                          icon: Icons.priority_high,
+                          title: l10n.priorityLabel,
+                          isSelected: currentSort == TaskSortOption.priority,
+                          onTap: () {
+                            _controller.setSortOption(TaskSortOption.priority);
+                            Navigator.pop(context);
+                          },
+                        ),
+                        _buildSortOption(
+                          context,
+                          icon: Icons.sort_by_alpha,
+                          title: l10n.taskTitleLabel,
+                          isSelected: currentSort == TaskSortOption.title,
+                          onTap: () {
+                            _controller.setSortOption(TaskSortOption.title);
+                            Navigator.pop(context);
+                          },
+                        ),
+                        _buildSortOption(
+                          context,
+                          icon: Icons.access_time,
+                          title: 'Created At',
+                          isSelected: currentSort == TaskSortOption.createdDate,
+                          onTap: () {
+                            _controller.setSortOption(TaskSortOption.createdDate);
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                const Divider(),
+                // Filter section
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: DSSpacing.lg, vertical: DSSpacing.sm),
+                  child: Row(
+                    children: [
+                      Icon(Icons.filter_list, size: 20, color: Theme.of(context).colorScheme.outline),
+                      const SizedBox(width: DSSpacing.sm),
+                      Text(l10n.filterTasksTitle, style: DSTypography.subtitle(context)),
+                    ],
+                  ),
+                ),
+                ValueListenableBuilder<bool>(
+                  valueListenable: _controller.showOverdueOnly,
+                  builder: (context, showOverdue, _) {
+                    return ValueListenableBuilder<bool>(
+                      valueListenable: _controller.showUndatedOnly,
+                      builder: (context, showUndated, _) {
+                        return Column(
+                          children: [
+                            _buildFilterOption(
+                              context,
+                              icon: Icons.warning_amber_rounded,
+                              title: l10n.overdue,
+                              subtitle: 'Show overdue tasks',
+                              isSelected: showOverdue,
+                              color: DSColors.getOverdueColor(context),
+                              onTap: () {
+                                if (showOverdue) {
+                                  _controller.clearSpecialFilters();
+                                } else {
+                                  _controller.setOverdueFilter();
+                                }
+                                Navigator.pop(context);
+                              },
+                            ),
+                            _buildFilterOption(
+                              context,
+                              icon: Icons.event_busy_rounded,
+                              title: l10n.noDueDate,
+                              subtitle: 'Show tasks without due date',
+                              isSelected: showUndated,
+                              color: DSColors.getUndatedColor(context),
+                              onTap: () {
+                                if (showUndated) {
+                                  _controller.clearSpecialFilters();
+                                } else {
+                                  _controller.setUndatedFilter();
+                                }
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+                const SizedBox(height: DSSpacing.md),
+                // Clear all filters button
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: DSSpacing.lg, vertical: DSSpacing.sm),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        _controller.sortOption.value = TaskSortOption.none;
+                        _controller.clearAllFilters();
+
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(Icons.clear_all),
+                      label: Text(l10n.clearAllButton),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: DSSpacing.md),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSortOption(BuildContext context, {required IconData icon, required String title, required bool isSelected, required VoidCallback onTap}) {
+    return ListTile(
+      leading: Icon(icon, color: isSelected ? Theme.of(context).colorScheme.primary : null),
+      title: Text(
+        title,
+        style: TextStyle(fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal, color: isSelected ? Theme.of(context).colorScheme.primary : null),
+      ),
+      trailing: isSelected ? Icon(Icons.check_circle, color: Theme.of(context).colorScheme.primary) : Icon(Icons.circle_outlined, color: Theme.of(context).colorScheme.outline),
+      onTap: onTap,
+    );
+  }
+
+  Widget _buildFilterOption(BuildContext context, {required IconData icon, required String title, required String subtitle, required bool isSelected, required Color color, required VoidCallback onTap}) {
+    return ListTile(
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(color: isSelected ? color.withValues(alpha: 0.2) : color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
+        child: Icon(icon, color: color, size: 20),
+      ),
+      title: Text(
+        title,
+        style: TextStyle(fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal, color: isSelected ? color : null),
+      ),
+      subtitle: Text(subtitle, style: TextStyle(fontSize: 12)),
+      trailing: isSelected ? Icon(Icons.check_circle, color: color) : Icon(Icons.circle_outlined, color: Theme.of(context).colorScheme.outline),
+      onTap: onTap,
+    );
+  }
+}
+
+// =============================================================================
+// CALENDAR DATA SOURCE
+// =============================================================================
+
+/// Custom data source for Syncfusion calendar to display tasks as appointments
+class _TaskDataSource extends CalendarDataSource {
+  final BuildContext context;
+
+  _TaskDataSource(List<Task> tasks, this.context) {
+    appointments = tasks.map((task) {
+      return Appointment(startTime: task.dueDate!, endTime: task.dueDate!.add(const Duration(hours: 1)), subject: task.title, color: _getPriorityColor(task.priority, context), isAllDay: true);
+    }).toList();
+  }
+
+  Color _getPriorityColor(TaskPriority priority, BuildContext context) {
+    switch (priority) {
+      case TaskPriority.high:
+        return DSColors.getHighPriorityColor(context);
+      case TaskPriority.medium:
+        return DSColors.getMediumPriorityColor(context);
+      case TaskPriority.low:
+        return DSColors.getLowPriorityColor(context);
+    }
+  }
+}
+
+// ==========================================================================
+// CALENDAR VIEW PAGE - Full Screen Calendar Experience
+// ==========================================================================
+
+class CalendarViewPage extends StatefulWidget {
+  final HomeScreenController controller;
+  final GlobalKey<ScaffoldState> scaffoldGlobalKey;
+
+  const CalendarViewPage({super.key, required this.controller, required this.scaffoldGlobalKey});
+
+  @override
+  State<CalendarViewPage> createState() => _CalendarViewPageState();
+}
+
+class _CalendarViewPageState extends State<CalendarViewPage> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
+
+    _fadeAnimation = CurvedAnimation(parent: _animationController, curve: Curves.easeInOut);
+
+    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic));
+
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          // App Bar with Hero Animation
+          SliverAppBar(
+            expandedHeight: 120,
+            floating: false,
+            pinned: true,
+            elevation: 0,
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            flexibleSpace: FlexibleSpaceBar(
+              title: Hero(
+                tag: 'calendar_title',
+                child: Material(
+                  color: Colors.transparent,
+                  child: Text(AppLocalizations.of(context)!.calendar, style: DSTypography.title(context).copyWith(color: Colors.white, fontSize: 20)),
+                ),
+              ),
+              background: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.primary.withOpacity(0.8)]),
+                ),
+              ),
+            ),
+          ),
+
+          // Calendar Section with Animation
+          SliverToBoxAdapter(
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: SlideTransition(position: _slideAnimation, child: _buildCalendarCard(context)),
+            ),
+          ),
+
+          // Selected Date Info
+          SliverToBoxAdapter(
+            child: FadeTransition(opacity: _fadeAnimation, child: _buildSelectedDateInfo(context)),
+          ),
+
+          // Task List Header - Dynamic based on selected date
+          SliverToBoxAdapter(
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: ValueListenableBuilder<DateTime?>(
+                valueListenable: widget.controller.selectedDate,
+                builder: (context, selectedDate, _) {
+                  final isToday = selectedDate == null || _isToday(selectedDate);
+                  final headerText = isToday ? AppLocalizations.of(context)!.todayTasks : '${AppLocalizations.of(context)!.viewDayTasks} - ${_formatDate(selectedDate)}';
+
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(DSSpacing.md, DSSpacing.lg, DSSpacing.md, DSSpacing.sm),
+                    child: Row(
+                      children: [
+                        Icon(isToday ? Icons.today_rounded : Icons.event_rounded, color: Theme.of(context).colorScheme.primary, size: 24),
+                        const SizedBox(width: DSSpacing.sm),
+                        Expanded(
+                          child: Text(headerText, style: DSTypography.title(context).copyWith(fontSize: 20), maxLines: 1, overflow: TextOverflow.ellipsis),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+
+          // Task List
+          _buildTaskListSliver(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCalendarCard(BuildContext context) {
+    return BlocBuilder<TaskListBloc, TaskListState>(
+      builder: (context, state) {
+        List<Task> tasks = [];
+        if (state is TaskListLoaded) {
+          tasks = state.tasks.where((t) => t.dueDate != null).toList();
+        }
+
+        return ValueListenableBuilder<CalendarViewMode>(
+          valueListenable: widget.controller.calendarViewMode,
+          builder: (context, viewMode, _) {
+            return Container(
+              margin: const EdgeInsets.all(DSSpacing.md),
+              decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: DSBorderRadius.lgRadius, boxShadow: DSElevation.getBoxShadow(context, DSElevation.level3)),
+              child: Column(
+                children: [
+                  // View Mode Toggle
+                  Padding(
+                    padding: const EdgeInsets.all(DSSpacing.md),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SegmentedButton<CalendarViewMode>(
+                          segments: [
+                            ButtonSegment(value: CalendarViewMode.day, label: Text(AppLocalizations.of(context)!.today), icon: const Icon(Icons.today_rounded, size: 18)),
+                            ButtonSegment(value: CalendarViewMode.week, label: Text(AppLocalizations.of(context)!.week), icon: const Icon(Icons.view_week_rounded, size: 18)),
+                            ButtonSegment(value: CalendarViewMode.month, label: Text(AppLocalizations.of(context)!.month), icon: const Icon(Icons.calendar_month_rounded, size: 18)),
+                          ],
+                          selected: {viewMode},
+                          onSelectionChanged: (Set<CalendarViewMode> selected) {
+                            widget.controller.setCalendarViewMode(selected.first);
+                          },
+                          style: ButtonStyle(visualDensity: VisualDensity.comfortable),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(height: 1),
+                  // Calendar Widget
+                  SizedBox(
+                    height: _getCalendarHeight(viewMode),
+                    child: SfCalendar(
+                      view: _getSfCalendarView(viewMode),
+                      dataSource: _TaskDataSource(tasks, context),
+                      showNavigationArrow: true,
+                      showDatePickerButton: true,
+                      showTodayButton: true,
+                      todayHighlightColor: Theme.of(context).colorScheme.primary,
+                      selectionDecoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
+                        border: Border.all(color: Theme.of(context).colorScheme.primary, width: 2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      onTap: (CalendarTapDetails details) {
+                        if (details.date != null) {
+                          widget.controller.setDate(details.date!);
+                          widget.controller.clearSpecialFilters();
+                        }
+                      },
+                      monthViewSettings: MonthViewSettings(
+                        appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
+                        showAgenda: false,
+                        numberOfWeeksInView: 5,
+                        monthCellStyle: MonthCellStyle(
+                          backgroundColor: Theme.of(context).colorScheme.surface,
+                          todayBackgroundColor: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.2),
+                          trailingDatesBackgroundColor: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+                          leadingDatesBackgroundColor: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+                        ),
+                      ),
+                      headerStyle: CalendarHeaderStyle(
+                        textStyle: DSTypography.subtitle(context).copyWith(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.bold),
+                        backgroundColor: Colors.transparent,
+                      ),
+                      viewHeaderStyle: ViewHeaderStyle(
+                        dayTextStyle: DSTypography.caption(context).copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
+                        dateTextStyle: DSTypography.body(context).copyWith(color: Theme.of(context).colorScheme.onSurface),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: DSSpacing.sm),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildSelectedDateInfo(BuildContext context) {
+    return ValueListenableBuilder<DateTime?>(
+      valueListenable: widget.controller.selectedDate,
+      builder: (context, selectedDate, _) {
+        if (selectedDate == null) return const SizedBox.shrink();
+
+        final formattedDate = _formatDate(selectedDate);
+        final isToday = _isToday(selectedDate);
+
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: DSSpacing.md, vertical: DSSpacing.sm),
+          padding: const EdgeInsets.all(DSSpacing.md),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primaryContainer, Theme.of(context).colorScheme.primaryContainer.withOpacity(0.7)]),
+            borderRadius: DSBorderRadius.lgRadius,
+            boxShadow: DSElevation.getBoxShadow(context, DSElevation.level1),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(DSSpacing.sm),
+                decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary, borderRadius: DSBorderRadius.mdRadius),
+                child: Icon(isToday ? Icons.today_rounded : Icons.event_rounded, color: Colors.white, size: 24),
+              ),
+              const SizedBox(width: DSSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      isToday ? AppLocalizations.of(context)!.today : formattedDate,
+                      style: DSTypography.subtitle(context).copyWith(color: Theme.of(context).colorScheme.onPrimaryContainer, fontWeight: FontWeight.bold),
+                    ),
+                    if (!isToday) Text(_getRelativeDate(selectedDate), style: DSTypography.caption(context).copyWith(color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7))),
+                  ],
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.close_rounded, color: Theme.of(context).colorScheme.onPrimaryContainer),
+                onPressed: () {
+                  widget.controller.clearDate();
+                },
+                tooltip: AppLocalizations.of(context)!.clearDateFilter,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildTaskListSliver(BuildContext context) {
+    return BlocBuilder<TaskListBloc, TaskListState>(
+      builder: (context, state) {
+        if (state is TaskListLoading) {
+          return const SliverFillRemaining(child: Center(child: CircularProgressIndicator()));
+        }
+
+        if (state is! TaskListLoaded) {
+          return const SliverToBoxAdapter(child: SizedBox.shrink());
+        }
+
+        return ValueListenableBuilder<DateTime?>(
+          valueListenable: widget.controller.selectedDate,
+          builder: (context, selectedDate, _) {
+            // Default to today if no date is selected
+            final targetDate = selectedDate ?? DateTime.now();
+            final startOfDay = DateTime(targetDate.year, targetDate.month, targetDate.day);
+            final endOfDay = startOfDay.add(const Duration(days: 1));
+
+            // ALWAYS filter by the target date (selected or today)
+            List<Task> filteredTasks = state.tasks.where((task) {
+              if (task.dueDate == null) return false;
+              return task.dueDate!.isAfter(startOfDay.subtract(const Duration(seconds: 1))) && task.dueDate!.isBefore(endOfDay);
+            }).toList();
+
+            // Filter out completed tasks
+            filteredTasks = filteredTasks.where((task) => !task.isCompleted).toList();
+
+            if (filteredTasks.isEmpty) {
+              return SliverFillRemaining(
+                hasScrollBody: false,
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(DSSpacing.xl),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.event_available_rounded, size: 80, color: Theme.of(context).colorScheme.primary.withOpacity(0.3)),
+                        const SizedBox(height: DSSpacing.md),
+                        Text(
+                          selectedDate != null ? AppLocalizations.of(context)!.noTasksForThisDay : AppLocalizations.of(context)!.noTasksYet,
+                          style: DSTypography.subtitle(context).copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: DSSpacing.sm),
+                        Text(
+                          AppLocalizations.of(context)!.addTaskToGetStarted,
+                          style: DSTypography.body(context).copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.7)),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: DSSpacing.lg),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => AddTaskScreen(
+                                  onTaskAdded: (task) {
+                                    context.read<TaskListBloc>().add(LoadTasks());
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.add),
+                          label: Text(AppLocalizations.of(context)!.addTaskTitle),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
+
+            return SliverPadding(
+              padding: const EdgeInsets.fromLTRB(DSSpacing.md, 0, DSSpacing.md, DSSpacing.xl),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final task = filteredTasks[index];
+                  return TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    duration: Duration(milliseconds: 300 + (index * 50)),
+                    curve: Curves.easeOutCubic,
+                    builder: (context, value, child) {
+                      return Transform.translate(
+                        offset: Offset(0, 20 * (1 - value)),
+                        child: Opacity(opacity: value, child: child),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: DSSpacing.sm),
+                      child: DSTaskCard(
+                        task: task,
+                        onTap: () async {
+                          await Navigator.push(context, MaterialPageRoute(builder: (context) => TaskDetailsScreen(taskId: task.id)));
+                          context.read<TaskListBloc>().add(LoadTasks());
+                        },
+                        onToggle: () {
+                          context.read<TaskListBloc>().add(ToggleTaskCompletion(task.id));
+                        },
+                        onDelete: () => _deleteTask(context, task),
+                        onLongPress: () => _showQuickActions(context, task),
+                      ),
+                    ),
+                  );
+                }, childCount: filteredTasks.length),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _deleteTask(BuildContext context, Task task) async {
+    // Capture the bloc reference before any async operations
+    final taskListBloc = context.read<TaskListBloc>();
+
+    // Show confirmation dialog
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.warning_amber_rounded, color: Colors.orange),
+            const SizedBox(width: 12),
+            const Text('Delete Task?'),
+          ],
+        ),
+        content: Text('Are you sure you want to delete "${task.title}"?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    // Delete task
+    taskListBloc.add(DeleteTask(task.id));
+
+    // Show undo snackbar
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.taskDeleted),
+        action: SnackBarAction(
+          label: AppLocalizations.of(context)!.undo,
+          onPressed: () {
+            if (context.mounted) {
+              taskListBloc.add(AddTask(task));
+            }
+          },
+        ),
+        duration: const Duration(seconds: 5),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: DSBorderRadius.mdRadius),
+        margin: const EdgeInsets.all(DSSpacing.md),
+      ),
+    );
+  }
+
+  void _showEditTaskDialog(BuildContext context, Task task) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => EditTaskDialog(
+        task: task,
+        onTaskUpdated: (updatedTask) {
+          context.read<TaskListBloc>().add(LoadTasks());
+        },
+      ),
+    );
+  }
+
+  void _showQuickActions(BuildContext context, Task task) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: const Text('View Details'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => TaskDetailsScreen(taskId: task.id)));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.edit),
+              title: const Text('Quick Edit'),
+              onTap: () {
+                Navigator.pop(context);
+                _showEditTaskDialog(context, task);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.delete, color: Colors.red),
+              title: const Text('Delete', style: TextStyle(color: Colors.red)),
+              onTap: () {
+                Navigator.pop(context);
+                _deleteTask(context, task);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  CalendarView _getSfCalendarView(CalendarViewMode mode) {
+    switch (mode) {
+      case CalendarViewMode.day:
+        return CalendarView.day;
+      case CalendarViewMode.week:
+        return CalendarView.week;
+      case CalendarViewMode.month:
+        return CalendarView.month;
+    }
+  }
+
+  double _getCalendarHeight(CalendarViewMode mode) {
+    switch (mode) {
+      case CalendarViewMode.day:
+        return 350;
+      case CalendarViewMode.week:
+        return 250;
+      case CalendarViewMode.month:
+        return 380;
+    }
+  }
+
+  String _formatDate(DateTime date) {
+    final months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  }
+
+  bool _isToday(DateTime date) {
+    final now = DateTime.now();
+    return date.year == now.year && date.month == now.month && date.day == now.day;
+  }
+
+  String _getRelativeDate(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final targetDate = DateTime(date.year, date.month, date.day);
+    final difference = targetDate.difference(today).inDays;
+
+    if (difference == 0) return AppLocalizations.of(context)!.today;
+    if (difference == 1) return AppLocalizations.of(context)!.tomorrow;
+    if (difference == -1) return 'Yesterday';
+    if (difference > 1 && difference <= 7) return 'In $difference days';
+    if (difference < -1 && difference >= -7) return '${-difference} days ago';
+    return '';
+  }
+}

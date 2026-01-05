@@ -1,6 +1,14 @@
+import 'package:flutter/foundation.dart';
 import 'package:tazbeet/services/app_logging_service.dart';
 import 'package:tazbeet/services/navigation_service.dart';
 import 'package:tazbeet/services/analytics_service.dart';
+import 'package:tazbeet/services/error_notification_service.dart';
+import 'package:tazbeet/services/sync_status_service.dart';
+import 'package:tazbeet/services/performance_monitor_service.dart';
+import 'package:tazbeet/services/memory_manager_service.dart';
+import 'package:tazbeet/services/animation_optimizer_service.dart';
+import 'package:tazbeet/services/code_quality_monitor_service.dart';
+import 'package:tazbeet/services/sync_queue.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +28,8 @@ import 'package:tazbeet/services/ambient_service.dart';
 import 'package:tazbeet/services/update_service.dart';
 import 'package:tazbeet/services/firebase_service_wrapper.dart';
 import 'models/mood.dart';
+import 'models/mood_achievement.dart';
+import 'models/mood_streak.dart';
 import 'models/user.dart';
 import 'models/notification_item.dart';
 import 'models/notification_preferences.dart';
@@ -30,6 +40,7 @@ import 'blocs/notification/notification_event.dart';
 import 'repositories/task_repository.dart';
 import 'repositories/category_repository.dart';
 import 'repositories/mood_repository.dart';
+import 'services/mood_achievement_service.dart';
 
 import 'repositories/user_repository.dart';
 import 'repositories/notification_repository.dart';
@@ -39,7 +50,7 @@ import 'services/emergency_service.dart';
 import 'services/settings_service.dart' as settings;
 import 'services/localization_service.dart';
 import 'ui/screens/splash_screen.dart';
-import 'ui/screens/mood_input_screen.dart';
+import 'ui/screens/home/mood/mood_input_screen.dart';
 import 'ui/screens/notification_history_screen.dart';
 import 'ui/screens/notification_preferences_screen.dart';
 import 'ui/screens/notification_test_screen.dart';
@@ -67,6 +78,9 @@ void main() async {
   // Register Hive adapters
   Hive.registerAdapter(MoodLevelAdapter());
   Hive.registerAdapter(MoodAdapter());
+  Hive.registerAdapter(MoodAchievementTypeAdapter());
+  Hive.registerAdapter(MoodAchievementAdapter());
+  Hive.registerAdapter(MoodStreakAdapter());
   Hive.registerAdapter(UserAdapter());
   // Notification adapters
   Hive.registerAdapter(NotificationTypeAdapter());
@@ -95,6 +109,9 @@ void main() async {
     await notificationService.scheduleMoodCheckInNotifications(settingsService.settings.moodCheckInTimes);
   }
 
+  // Initialize sync queue
+  await syncQueue.initialize();
+
   // Initialize auth service
   final authService = AuthService();
 
@@ -104,6 +121,29 @@ void main() async {
 
   // Initialize update service
   final updateService = UpdateService();
+  if (kDebugMode) {
+    // Initialize sync status service
+    final syncStatusService = SyncStatusService();
+    await syncStatusService.initialize();
+
+    // Initialize performance monitor service (singleton)
+    if (kDebugMode) {
+      PerformanceMonitorService();
+      AppLogging.logInfo('Performance monitor initialized');
+
+      // Initialize memory manager service (singleton)
+      MemoryManagerService().initialize();
+      AppLogging.logInfo('Memory manager initialized');
+
+      // Initialize animation optimizer service (singleton)
+      AnimationOptimizerService().initialize();
+      AppLogging.logInfo('Animation optimizer initialized');
+
+      // Initialize code quality monitor service (singleton)
+      CodeQualityMonitorService();
+      AppLogging.logInfo('Code quality monitor initialized');
+    }
+  }
 
   // Perform automatic update check
   await updateService.checkForUpdatesAutomatically();
@@ -115,6 +155,10 @@ void main() async {
   final userRepository = UserRepository();
   final notificationRepository = NotificationRepository();
   final colorCustomizationService = ColorCustomizationService();
+
+  // Initialize mood achievement service
+  final moodAchievementService = MoodAchievementService();
+  await moodAchievementService.init();
 
   await taskRepository.init();
   await categoryRepository.init();
@@ -204,7 +248,9 @@ class Tazbeet extends StatelessWidget {
             create: (context) => TaskListBloc(taskRepository: context.read<TaskRepository>(), categoryRepository: context.read<CategoryRepository>(), notificationService: notificationService),
           ),
           BlocProvider<TaskDetailsBloc>(create: (context) => TaskDetailsBloc(taskRepository: context.read<TaskRepository>())),
-          BlocProvider<CategoryBloc>(create: (context) => CategoryBloc(categoryRepository: context.read<CategoryRepository>())),
+          BlocProvider<CategoryBloc>(
+            create: (context) => CategoryBloc(categoryRepository: context.read<CategoryRepository>(), taskRepository: context.read<TaskRepository>()),
+          ),
           BlocProvider<MoodBloc>(create: (context) => MoodBloc(context.read<MoodRepository>())),
           BlocProvider<UserBloc>(create: (context) => UserBloc(context.read<UserRepository>())),
           BlocProvider<NotificationBloc>(
@@ -215,8 +261,8 @@ class Tazbeet extends StatelessWidget {
           providers: [
             ChangeNotifierProvider.value(value: settingsService),
             ChangeNotifierProvider.value(value: colorCustomizationService),
-            ChangeNotifierProvider.value(value: AmbientService()),
-            ChangeNotifierProvider.value(value: EmergencyService()),
+            ChangeNotifierProvider<AmbientService>(create: (_) => AmbientService()),
+            ChangeNotifierProvider<EmergencyService>(create: (_) => EmergencyService()),
             ChangeNotifierProvider.value(value: taskSoundService),
             ChangeNotifierProvider.value(value: updateService),
             Provider<AnalyticsService>.value(value: analyticsService),
@@ -229,6 +275,7 @@ class Tazbeet extends StatelessWidget {
               return MaterialApp(
                 debugShowCheckedModeBanner: false,
                 navigatorKey: NavigationService.navigatorKey,
+                scaffoldMessengerKey: ErrorNotificationService.scaffoldMessengerKey ??= GlobalKey<ScaffoldMessengerState>(),
                 navigatorObservers: [analyticsService.getAnalyticsObserver()],
                 title: 'Tazbeet',
                 routes: {
@@ -259,161 +306,3 @@ class Tazbeet extends StatelessWidget {
     );
   }
 }
- /*
-
-import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  tz.initializeTimeZones(); // 📝 ضروري لتحديد المنطقة الزمنية المحلية
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(title: 'Reminder App', home: ReminderPage());
-  }
-}
-
-class ReminderPage extends StatefulWidget {
-  @override
-  _ReminderPageState createState() => _ReminderPageState();
-}
-
-class _ReminderPageState extends State<ReminderPage> {
-  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-  String _selectedRepeat = 'none'; // 📝 للاحتفاظ بخيار التكرار
-
-  @override
-  void initState() {
-    super.initState();
-    initializeNotifications();
-  }
-
-  void initializeNotifications() async {
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-    // 📝 إعداد Android
-    const AndroidInitializationSettings androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    // 📝 إعدادات تهيئة عامة
-    const InitializationSettings initSettings = InitializationSettings(android: androidSettings);
-
-    // 📝 تهيئة الإشعارات
-    await flutterLocalNotificationsPlugin.initialize(
-      initSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse response) {
-        // 📝 رد الفعل عند الضغط على الإشعار أو زر التفاعل
-        if (response.payload != null) {
-          A ppLogging.logInfo('تم الضغط على الإشعار مع الحمولة: ${response.payload}');
-        }
-      },
-    );
-  }
-
-  /// 🧠 دالة لجدولة تذكير بناءً على الوقت وخيار التكرار
-  Future<void> scheduleReminder(DateTime scheduledTime) async {
-    // 📝 تحويل الوقت إلى المنطقة الزمنية
-    final tz.TZDateTime scheduledDate = tz.TZDateTime.from(scheduledTime, tz.local);
-
-    // 📝 إعداد تفاصيل الإشعار (مع زر تفاعلي)
-    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-      'reminder_channel', // معرف القناة
-      'Reminders', // اسم القناة
-      channelDescription: 'Channel for Reminder notifications',
-      importance: Importance.max,
-      priority: Priority.high,
-      playSound: true,
-      actions: <AndroidNotificationAction>[
-        AndroidNotificationAction(
-          'done', // 📝 معرف الزر
-          'تم', // 📝 اسم الزر
-        ),
-      ],
-    );
-
-    // 📝 ضبط خصائص التذكير حسب التكرار
-    DateTimeComponents? repeatComponent;
-    if (_selectedRepeat == 'daily') {
-      repeatComponent = DateTimeComponents.time; // تكرار يومي
-    } else if (_selectedRepeat == 'weekly') {
-      repeatComponent = DateTimeComponents.dayOfWeekAndTime; // تكرار أسبوعي
-    }
-
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      0, // 📝 معرف الإشعار
-      '🔔 تذكير',
-      '📌 لا تنسَ مهمتك المجدولة!',
-      scheduledDate,
-      NotificationDetails(android: androidDetails),
-
-      payload: 'reminder_payload',
-      androidScheduleMode: AndroidScheduleMode.alarmClock, // 📝 معلومات إضافية
-    );
-  }
-
-  /// 🧠 دالة لإلغاء جميع الإشعارات
-  Future<void> cancelAllReminders() async {
-    await flutterLocalNotificationsPlugin.cancelAll();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('✅ تم إلغاء جميع التذكيرات')));
-  }
-
-  /// 🧠 دالة لاختيار وقت التذكير ثم جدولته
-  void _pickTimeAndScheduleReminder() async {
-    final TimeOfDay? picked = await showTimePicker(context: context, initialTime: TimeOfDay.now());
-
-    if (picked != null) {
-      final now = DateTime.now();
-
-      final scheduledDate = DateTime(now.year, now.month, now.day, picked.hour, picked.minute);
-
-      await scheduleReminder(scheduledDate);
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('🕑 تم جدولة التذكير')));
-    }
-  }
-
-  /// 🧠 واجهة المستخدم
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('📅 جدول التذكير')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // 📝 زر لاختيار الوقت
-            ElevatedButton(onPressed: _pickTimeAndScheduleReminder, child: Text('اختر وقت التذكير')),
-            SizedBox(height: 20),
-            // 📝 اختيار التكرار
-            DropdownButton<String>(
-              value: _selectedRepeat,
-              items: const [
-                DropdownMenuItem(value: 'none', child: Text('بدون تكرار')),
-                DropdownMenuItem(value: 'daily', child: Text('تكرار يومي')),
-                DropdownMenuItem(value: 'weekly', child: Text('تكرار أسبوعي')),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  _selectedRepeat = value!;
-                });
-              },
-            ),
-            SizedBox(height: 20),
-            // 📝 زر لإلغاء التذكيرات
-            ElevatedButton(
-              onPressed: cancelAllReminders,
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: Text('إلغاء كل التذكيرات'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-*/

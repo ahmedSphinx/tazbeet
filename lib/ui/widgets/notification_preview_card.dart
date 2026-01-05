@@ -175,6 +175,8 @@ class NotificationPreviewCard extends StatelessWidget {
         return 'Emergency Alert';
       case NotificationType.system:
         return 'System Notification';
+      case NotificationType.userSignup:
+        return 'New User Signup';
     }
   }
 
@@ -198,6 +200,8 @@ class NotificationPreviewCard extends StatelessWidget {
         return Icons.warning;
       case NotificationType.system:
         return Icons.settings;
+      case NotificationType.userSignup:
+        return Icons.person_add;
     }
   }
 
@@ -221,6 +225,8 @@ class NotificationPreviewCard extends StatelessWidget {
         return Colors.red;
       case NotificationType.system:
         return Colors.grey;
+      case NotificationType.userSignup:
+        return Colors.indigo;
     }
   }
 }

@@ -280,6 +280,7 @@ class NotificationPreferences extends Equatable {
         return NotificationPriority.urgent;
       case NotificationType.taskDue:
       case NotificationType.pomodoroWork:
+      case NotificationType.userSignup:
         return NotificationPriority.high;
       case NotificationType.taskReminder:
       case NotificationType.moodCheckIn:

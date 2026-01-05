@@ -65,6 +65,15 @@ class CancelTaskReminder extends TaskListEvent {
   List<Object?> get props => [taskId];
 }
 
+class ReorderTasks extends TaskListEvent {
+  final List<Task> tasks;
+
+  const ReorderTasks(this.tasks);
+
+  @override
+  List<Object?> get props => [tasks];
+}
+
 // NEW: Repeat Task Events
 class AddRepeatRule extends TaskListEvent {
   final String taskId;

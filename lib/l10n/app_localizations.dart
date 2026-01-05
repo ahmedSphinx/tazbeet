@@ -951,6 +951,168 @@ abstract class AppLocalizations {
   /// **'Start logging your moods to see your history'**
   String get startLoggingMoods;
 
+  /// No description provided for @moodHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood History'**
+  String get moodHistoryTitle;
+
+  /// No description provided for @startTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'Start tracking your mood journey'**
+  String get startTracking;
+
+  /// No description provided for @quickMoodCheckIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Mood Check-In'**
+  String get quickMoodCheckIn;
+
+  /// No description provided for @moodsForDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moods for {date}'**
+  String moodsForDate(Object date);
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filter;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @positive.
+  ///
+  /// In en, this message translates to:
+  /// **'Positive'**
+  String get positive;
+
+  /// No description provided for @negative.
+  ///
+  /// In en, this message translates to:
+  /// **'Negative'**
+  String get negative;
+
+  /// No description provided for @recent.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent'**
+  String get recent;
+
+  /// No description provided for @energy.
+  ///
+  /// In en, this message translates to:
+  /// **'Energy'**
+  String get energy;
+
+  /// No description provided for @focus.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus'**
+  String get focus;
+
+  /// No description provided for @stress.
+  ///
+  /// In en, this message translates to:
+  /// **'Stress'**
+  String get stress;
+
+  /// No description provided for @howAreYou.
+  ///
+  /// In en, this message translates to:
+  /// **'How are you?'**
+  String get howAreYou;
+
+  /// No description provided for @yourMood.
+  ///
+  /// In en, this message translates to:
+  /// **'Your mood'**
+  String get yourMood;
+
+  /// No description provided for @howAreYouFeelingRightNow.
+  ///
+  /// In en, this message translates to:
+  /// **'How are you feeling right now?'**
+  String get howAreYouFeelingRightNow;
+
+  /// No description provided for @tapOptionBestDescribesMood.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the option that best describes your mood'**
+  String get tapOptionBestDescribesMood;
+
+  /// No description provided for @addNoteOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a note (optional)'**
+  String get addNoteOptional;
+
+  /// No description provided for @whatsOnYourMind.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s on your mind?'**
+  String get whatsOnYourMind;
+
+  /// No description provided for @moodAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood added'**
+  String get moodAdded;
+
+  /// No description provided for @moodUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood updated'**
+  String get moodUpdated;
+
+  /// No description provided for @somethingWentWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get somethingWentWrong;
+
+  /// No description provided for @reallyStruggling.
+  ///
+  /// In en, this message translates to:
+  /// **'Really struggling'**
+  String get reallyStruggling;
+
+  /// No description provided for @notGreat.
+  ///
+  /// In en, this message translates to:
+  /// **'Not great'**
+  String get notGreat;
+
+  /// No description provided for @okay.
+  ///
+  /// In en, this message translates to:
+  /// **'Okay'**
+  String get okay;
+
+  /// No description provided for @prettyGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Pretty good'**
+  String get prettyGood;
+
+  /// No description provided for @great.
+  ///
+  /// In en, this message translates to:
+  /// **'Great'**
+  String get great;
+
   /// No description provided for @percent.
   ///
   /// In en, this message translates to:
@@ -1524,8 +1686,26 @@ abstract class AppLocalizations {
   /// No description provided for @classicPreset.
   ///
   /// In en, this message translates to:
-  /// **'Classic (25/5/15)'**
+  /// **'Classic'**
   String get classicPreset;
+
+  /// No description provided for @quickstart.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Start'**
+  String get quickstart;
+
+  /// No description provided for @deepWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep Work'**
+  String get deepWork;
+
+  /// No description provided for @students.
+  ///
+  /// In en, this message translates to:
+  /// **'Students'**
+  String get students;
 
   /// No description provided for @shortPreset.
   ///
@@ -1712,24 +1892,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Average Stress'**
   String get averageStress;
-
-  /// No description provided for @energy.
-  ///
-  /// In en, this message translates to:
-  /// **'Energy'**
-  String get energy;
-
-  /// No description provided for @focus.
-  ///
-  /// In en, this message translates to:
-  /// **'Focus'**
-  String get focus;
-
-  /// No description provided for @stress.
-  ///
-  /// In en, this message translates to:
-  /// **'Stress'**
-  String get stress;
 
   /// No description provided for @metricValue.
   ///
@@ -2220,43 +2382,43 @@ abstract class AppLocalizations {
   /// No description provided for @sunday.
   ///
   /// In en, this message translates to:
-  /// **'Sunday'**
+  /// **'Sun'**
   String get sunday;
 
   /// No description provided for @monday.
   ///
   /// In en, this message translates to:
-  /// **'Monday'**
+  /// **'Mon'**
   String get monday;
 
   /// No description provided for @tuesday.
   ///
   /// In en, this message translates to:
-  /// **'Tuesday'**
+  /// **'Tue'**
   String get tuesday;
 
   /// No description provided for @wednesday.
   ///
   /// In en, this message translates to:
-  /// **'Wednesday'**
+  /// **'Wed'**
   String get wednesday;
 
   /// No description provided for @thursday.
   ///
   /// In en, this message translates to:
-  /// **'Thursday'**
+  /// **'Thu'**
   String get thursday;
 
   /// No description provided for @friday.
   ///
   /// In en, this message translates to:
-  /// **'Friday'**
+  /// **'Fri'**
   String get friday;
 
   /// No description provided for @saturday.
   ///
   /// In en, this message translates to:
-  /// **'Saturday'**
+  /// **'Sat'**
   String get saturday;
 
   /// No description provided for @focusMode.
@@ -3081,12 +3243,6 @@ abstract class AppLocalizations {
   /// **'Manual DND'**
   String get manualDND;
 
-  /// No description provided for @close.
-  ///
-  /// In en, this message translates to:
-  /// **'Close'**
-  String get close;
-
   /// No description provided for @resetSettings.
   ///
   /// In en, this message translates to:
@@ -3326,6 +3482,1092 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No tasks for this day'**
   String get noTasksForThisDay;
+
+  /// No description provided for @noInternetConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'No Internet Connection'**
+  String get noInternetConnection;
+
+  /// No description provided for @pullToRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull down to refresh when connected'**
+  String get pullToRefresh;
+
+  /// No description provided for @showCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Show calendar'**
+  String get showCalendar;
+
+  /// No description provided for @minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'min'**
+  String get minutes;
+
+  /// No description provided for @recommendedForAdhd.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended for ADHD'**
+  String get recommendedForAdhd;
+
+  /// No description provided for @mostPopular.
+  ///
+  /// In en, this message translates to:
+  /// **'Most Popular'**
+  String get mostPopular;
+
+  /// No description provided for @stopPomodoroConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to stop the current session? Your progress will be lost.'**
+  String get stopPomodoroConfirmation;
+
+  /// No description provided for @whatsHappeningRightNow.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s happening right now?'**
+  String get whatsHappeningRightNow;
+
+  /// No description provided for @wantToShareMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Want to share more?'**
+  String get wantToShareMore;
+
+  /// No description provided for @dontHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account?'**
+  String get dontHaveAccount;
+
+  /// No description provided for @failedToAccessGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to access gallery'**
+  String get failedToAccessGallery;
+
+  /// No description provided for @nameRequiredForProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Name is required for profile'**
+  String get nameRequiredForProfile;
+
+  /// No description provided for @birthdayRequiredForProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday is required for profile'**
+  String get birthdayRequiredForProfile;
+
+  /// No description provided for @failedToUploadImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to upload image'**
+  String get failedToUploadImage;
+
+  /// No description provided for @userNotAuthenticated.
+  ///
+  /// In en, this message translates to:
+  /// **'User not authenticated'**
+  String get userNotAuthenticated;
+
+  /// No description provided for @notificationPermissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification permission required'**
+  String get notificationPermissionRequired;
+
+  /// No description provided for @notificationPermissionMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enable notifications to set reminders'**
+  String get notificationPermissionMessage;
+
+  /// No description provided for @grantPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant Permission'**
+  String get grantPermission;
+
+  /// No description provided for @cannotSetReminderWithoutPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot set reminder without notification permission'**
+  String get cannotSetReminderWithoutPermission;
+
+  /// No description provided for @customColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Colors'**
+  String get customColors;
+
+  /// No description provided for @personalizeAppTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Personalize App Theme'**
+  String get personalizeAppTheme;
+
+  /// No description provided for @primaryColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary Color'**
+  String get primaryColor;
+
+  /// No description provided for @choosePrimaryColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Primary Color'**
+  String get choosePrimaryColor;
+
+  /// No description provided for @subtasksCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} subtasks'**
+  String subtasksCount(int count);
+
+  /// No description provided for @deliveryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery'**
+  String get deliveryLabel;
+
+  /// No description provided for @openLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get openLabel;
+
+  /// No description provided for @actionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Action'**
+  String get actionLabel;
+
+  /// No description provided for @averageResponseTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Average Response Time'**
+  String get averageResponseTime;
+
+  /// No description provided for @helpUsUnderstandState.
+  ///
+  /// In en, this message translates to:
+  /// **'Help us understand your current state'**
+  String get helpUsUnderstandState;
+
+  /// No description provided for @optionalAddContext.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional: Add context'**
+  String get optionalAddContext;
+
+  /// No description provided for @optionalWriteNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional: Write a note'**
+  String get optionalWriteNote;
+
+  /// No description provided for @imGratefulFor.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m grateful for'**
+  String get imGratefulFor;
+
+  /// No description provided for @todayI.
+  ///
+  /// In en, this message translates to:
+  /// **'Today I'**
+  String get todayI;
+
+  /// No description provided for @imFeeling.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m feeling'**
+  String get imFeeling;
+
+  /// No description provided for @whatsWeighingOnYou.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s weighing on you?'**
+  String get whatsWeighingOnYou;
+
+  /// No description provided for @whatsMakingTodayTough.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s making today tough?'**
+  String get whatsMakingTodayTough;
+
+  /// No description provided for @whatsGoingWell.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s going well?'**
+  String get whatsGoingWell;
+
+  /// No description provided for @whatMadeTodayGreat.
+  ///
+  /// In en, this message translates to:
+  /// **'What made today great?'**
+  String get whatMadeTodayGreat;
+
+  /// No description provided for @howsYourDayGoing.
+  ///
+  /// In en, this message translates to:
+  /// **'How\'s your day going?'**
+  String get howsYourDayGoing;
+
+  /// No description provided for @chooseEmojiFeeling.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an emoji that represents how you\'re feeling'**
+  String get chooseEmojiFeeling;
+
+  /// No description provided for @dayStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'day streak'**
+  String get dayStreak;
+
+  /// No description provided for @moodSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood saved'**
+  String get moodSaved;
+
+  /// No description provided for @testButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Test'**
+  String get testButton;
+
+  /// No description provided for @clearAllNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All Notifications'**
+  String get clearAllNotifications;
+
+  /// No description provided for @clearAllNotificationsConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to clear all notifications?'**
+  String get clearAllNotificationsConfirmation;
+
+  /// No description provided for @generateRecurringConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to generate recurring instances?'**
+  String get generateRecurringConfirmation;
+
+  /// No description provided for @includeSpecificTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Include specific time'**
+  String get includeSpecificTime;
+
+  /// No description provided for @repeatSameTimeEachDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat at same time each day'**
+  String get repeatSameTimeEachDay;
+
+  /// No description provided for @syncStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Status'**
+  String get syncStatus;
+
+  /// No description provided for @pendingOperations.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending operations'**
+  String get pendingOperations;
+
+  /// No description provided for @someSyncOperationsFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Some sync operations failed'**
+  String get someSyncOperationsFailed;
+
+  /// No description provided for @retryButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retryButton;
+
+  /// No description provided for @clearFailedButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Failed'**
+  String get clearFailedButton;
+
+  /// No description provided for @closeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get closeButton;
+
+  /// No description provided for @syncStatusSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get syncStatusSuccess;
+
+  /// No description provided for @syncStatusSyncing.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing'**
+  String get syncStatusSyncing;
+
+  /// No description provided for @syncStatusIdle.
+  ///
+  /// In en, this message translates to:
+  /// **'Idle'**
+  String get syncStatusIdle;
+
+  /// No description provided for @syncStatusFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get syncStatusFailed;
+
+  /// No description provided for @moodInsightsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Track your emotional patterns and gain insights'**
+  String get moodInsightsSubtitle;
+
+  /// No description provided for @yourMoodJourney.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Mood Journey'**
+  String get yourMoodJourney;
+
+  /// No description provided for @aIPoweredAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'AI-Powered Analysis'**
+  String get aIPoweredAnalysis;
+
+  /// No description provided for @thisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week'**
+  String get thisWeek;
+
+  /// No description provided for @goodDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Days'**
+  String get goodDays;
+
+  /// No description provided for @neutralDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Neutral Days'**
+  String get neutralDays;
+
+  /// No description provided for @challengingDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenging Days'**
+  String get challengingDays;
+
+  /// No description provided for @dominantMood.
+  ///
+  /// In en, this message translates to:
+  /// **'Dominant Mood'**
+  String get dominantMood;
+
+  /// No description provided for @hiThere.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi there!'**
+  String get hiThere;
+
+  /// No description provided for @howIsYourDay.
+  ///
+  /// In en, this message translates to:
+  /// **'How is your day?'**
+  String get howIsYourDay;
+
+  /// No description provided for @imHereForYou.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m here for you!'**
+  String get imHereForYou;
+
+  /// No description provided for @itsOkayToHaveToughDays.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s okay to have tough days'**
+  String get itsOkayToHaveToughDays;
+
+  /// No description provided for @sendingYouStrength.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending you strength'**
+  String get sendingYouStrength;
+
+  /// No description provided for @everyDayIsANewOpportunity.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day is a new opportunity'**
+  String get everyDayIsANewOpportunity;
+
+  /// No description provided for @findingBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding balance'**
+  String get findingBalance;
+
+  /// No description provided for @sometimesNeutralIsExactlyWhereWeNeedToBe.
+  ///
+  /// In en, this message translates to:
+  /// **'Sometimes neutral is exactly where we need to be'**
+  String get sometimesNeutralIsExactlyWhereWeNeedToBe;
+
+  /// No description provided for @youreDoingGreat.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re doing great!'**
+  String get youreDoingGreat;
+
+  /// No description provided for @keepShiningBright.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep shining bright!'**
+  String get keepShiningBright;
+
+  /// No description provided for @absolutelyAmazing.
+  ///
+  /// In en, this message translates to:
+  /// **'Absolutely amazing!'**
+  String get absolutelyAmazing;
+
+  /// No description provided for @yourJoyIsContagious.
+  ///
+  /// In en, this message translates to:
+  /// **'Your joy is contagious!'**
+  String get yourJoyIsContagious;
+
+  /// No description provided for @moodIntensity.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood Intensity'**
+  String get moodIntensity;
+
+  /// No description provided for @smartView.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart'**
+  String get smartView;
+
+  /// No description provided for @timelineView.
+  ///
+  /// In en, this message translates to:
+  /// **'Timeline'**
+  String get timelineView;
+
+  /// No description provided for @patternsView.
+  ///
+  /// In en, this message translates to:
+  /// **'Patterns'**
+  String get patternsView;
+
+  /// No description provided for @goodIntensity.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Intensity'**
+  String get goodIntensity;
+
+  /// No description provided for @veryGoodIntensity.
+  ///
+  /// In en, this message translates to:
+  /// **'Very Good Intensity'**
+  String get veryGoodIntensity;
+
+  /// No description provided for @noMoodRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'No mood recorded'**
+  String get noMoodRecorded;
+
+  /// No description provided for @goodMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Morning!'**
+  String get goodMorning;
+
+  /// No description provided for @howAreYouFeelingToday.
+  ///
+  /// In en, this message translates to:
+  /// **'How are you feeling today?'**
+  String get howAreYouFeelingToday;
+
+  /// No description provided for @todayYoureFeeling.
+  ///
+  /// In en, this message translates to:
+  /// **'Today you\'re feeling'**
+  String get todayYoureFeeling;
+
+  /// No description provided for @addAnother.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Another'**
+  String get addAnother;
+
+  /// No description provided for @earlierToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier today'**
+  String get earlierToday;
+
+  /// No description provided for @struggling.
+  ///
+  /// In en, this message translates to:
+  /// **'Struggling'**
+  String get struggling;
+
+  /// No description provided for @down.
+  ///
+  /// In en, this message translates to:
+  /// **'Down'**
+  String get down;
+
+  /// No description provided for @wantToShareMoreDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Want to share more details?'**
+  String get wantToShareMoreDetails;
+
+  /// No description provided for @guidedCheckIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Guided Check-in'**
+  String get guidedCheckIn;
+
+  /// No description provided for @detailedEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed Entry'**
+  String get detailedEntry;
+
+  /// No description provided for @quickInsights.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Insights'**
+  String get quickInsights;
+
+  /// No description provided for @recentMoods.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Moods'**
+  String get recentMoods;
+
+  /// No description provided for @noInsightsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No insights yet'**
+  String get noInsightsYet;
+
+  /// No description provided for @trackYourMoodForAWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Track your mood for a week to see insights'**
+  String get trackYourMoodForAWeek;
+
+  /// No description provided for @daysStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'days streak'**
+  String get daysStreak;
+
+  /// No description provided for @moodBuddyFeelingSad.
+  ///
+  /// In en, this message translates to:
+  /// **'Feeling sad?'**
+  String get moodBuddyFeelingSad;
+
+  /// No description provided for @moodBuddyTipSad.
+  ///
+  /// In en, this message translates to:
+  /// **'Try a gentle walk or listen to calming music'**
+  String get moodBuddyTipSad;
+
+  /// No description provided for @moodBuddyFeelingDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Feeling down?'**
+  String get moodBuddyFeelingDown;
+
+  /// No description provided for @moodBuddyTipDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach out to a friend or practice deep breathing'**
+  String get moodBuddyTipDown;
+
+  /// No description provided for @moodBuddyFeelingOkay.
+  ///
+  /// In en, this message translates to:
+  /// **'Feeling okay?'**
+  String get moodBuddyFeelingOkay;
+
+  /// No description provided for @moodBuddyTipOkay.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain balance with light exercise or hobbies'**
+  String get moodBuddyTipOkay;
+
+  /// No description provided for @moodBuddyFeelingGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Feeling good?'**
+  String get moodBuddyFeelingGood;
+
+  /// No description provided for @moodBuddyTipGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your positivity and help others'**
+  String get moodBuddyTipGood;
+
+  /// No description provided for @moodBuddyFeelingGreat.
+  ///
+  /// In en, this message translates to:
+  /// **'Feeling great?'**
+  String get moodBuddyFeelingGreat;
+
+  /// No description provided for @moodBuddyTipGreat.
+  ///
+  /// In en, this message translates to:
+  /// **'Channel this energy into creative projects'**
+  String get moodBuddyTipGreat;
+
+  /// No description provided for @moodPatternsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Mood Patterns'**
+  String get moodPatternsTitle;
+
+  /// No description provided for @moodPatternsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover trends in your emotional well-being'**
+  String get moodPatternsSubtitle;
+
+  /// No description provided for @moodSuggestionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Personalized Suggestions'**
+  String get moodSuggestionsTitle;
+
+  /// No description provided for @moodSuggestionsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI-powered recommendations based on your mood'**
+  String get moodSuggestionsSubtitle;
+
+  /// No description provided for @veryBadIntensity.
+  ///
+  /// In en, this message translates to:
+  /// **'Very Bad Intensity'**
+  String get veryBadIntensity;
+
+  /// No description provided for @badIntensity.
+  ///
+  /// In en, this message translates to:
+  /// **'Bad Intensity'**
+  String get badIntensity;
+
+  /// No description provided for @neutralIntensity.
+  ///
+  /// In en, this message translates to:
+  /// **'Neutral Intensity'**
+  String get neutralIntensity;
+
+  /// No description provided for @insightGenerallyPositive.
+  ///
+  /// In en, this message translates to:
+  /// **'Generally positive 😊'**
+  String get insightGenerallyPositive;
+
+  /// No description provided for @insightNeedsSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs support 🤗'**
+  String get insightNeedsSupport;
+
+  /// No description provided for @insightGreatConsistency.
+  ///
+  /// In en, this message translates to:
+  /// **'Great consistency! 🔥'**
+  String get insightGreatConsistency;
+
+  /// No description provided for @insightMissingToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Missing today 📝'**
+  String get insightMissingToday;
+
+  /// No description provided for @pleaseTryAgainLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Please try again later'**
+  String get pleaseTryAgainLater;
+
+  /// No description provided for @icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get icon;
+
+  /// No description provided for @categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get categories;
+
+  /// No description provided for @searchCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Search categories...'**
+  String get searchCategories;
+
+  /// No description provided for @keyInsights.
+  ///
+  /// In en, this message translates to:
+  /// **'Key Insights'**
+  String get keyInsights;
+
+  /// No description provided for @patternAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Pattern Analysis'**
+  String get patternAnalysis;
+
+  /// No description provided for @aiPredictions.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Predictions'**
+  String get aiPredictions;
+
+  /// No description provided for @positiveTrend.
+  ///
+  /// In en, this message translates to:
+  /// **'Positive Trend'**
+  String get positiveTrend;
+
+  /// No description provided for @yourOverallMoodIsGenerallyPositive.
+  ///
+  /// In en, this message translates to:
+  /// **'Your overall mood is generally positive'**
+  String get yourOverallMoodIsGenerallyPositive;
+
+  /// No description provided for @supportNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Support Needed'**
+  String get supportNeeded;
+
+  /// No description provided for @youMightBenefitFromAdditionalSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'You might benefit from additional support'**
+  String get youMightBenefitFromAdditionalSupport;
+
+  /// No description provided for @greatConsistency.
+  ///
+  /// In en, this message translates to:
+  /// **'Great Consistency'**
+  String get greatConsistency;
+
+  /// No description provided for @youveBeenTrackingYourMoodForDays.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve been tracking your mood for {days} days'**
+  String youveBeenTrackingYourMoodForDays(Object days);
+
+  /// No description provided for @missingToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Missing Today'**
+  String get missingToday;
+
+  /// No description provided for @youHaventLoggedYourMoodTodayYet.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t logged your mood today yet'**
+  String get youHaventLoggedYourMoodTodayYet;
+
+  /// No description provided for @recentImprovement.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Improvement'**
+  String get recentImprovement;
+
+  /// No description provided for @yourMoodHasBeenImprovingLately.
+  ///
+  /// In en, this message translates to:
+  /// **'Your mood has been improving lately'**
+  String get yourMoodHasBeenImprovingLately;
+
+  /// No description provided for @challengingPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenging Period'**
+  String get challengingPeriod;
+
+  /// No description provided for @recentEntriesSuggestAChallengingTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent entries suggest a challenging time'**
+  String get recentEntriesSuggestAChallengingTime;
+
+  /// No description provided for @moreDataNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'More Data Needed'**
+  String get moreDataNeeded;
+
+  /// No description provided for @trackYourMoodForAWeekToGetAIPredictions.
+  ///
+  /// In en, this message translates to:
+  /// **'Track your mood for a week to get AI predictions'**
+  String get trackYourMoodForAWeekToGetAIPredictions;
+
+  /// No description provided for @positiveOutlook.
+  ///
+  /// In en, this message translates to:
+  /// **'Positive Outlook'**
+  String get positiveOutlook;
+
+  /// No description provided for @basedOnRecentPatternsTomorrowLooksPromising.
+  ///
+  /// In en, this message translates to:
+  /// **'Based on recent patterns, tomorrow looks promising'**
+  String get basedOnRecentPatternsTomorrowLooksPromising;
+
+  /// No description provided for @selfCareRecommended.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-Care Recommended'**
+  String get selfCareRecommended;
+
+  /// No description provided for @considerPrioritizingSelfCareActivitiesTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Consider prioritizing self-care activities tomorrow'**
+  String get considerPrioritizingSelfCareActivitiesTomorrow;
+
+  /// No description provided for @balancedDayAhead.
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced Day Ahead'**
+  String get balancedDayAhead;
+
+  /// No description provided for @tomorrowShouldBeATypicalDayForYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow should be a typical day for you'**
+  String get tomorrowShouldBeATypicalDayForYou;
+
+  /// No description provided for @errorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Oops! Something went wrong'**
+  String get errorTitle;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
+
+  /// No description provided for @deleteTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Task'**
+  String get deleteTask;
+
+  /// No description provided for @deleteTaskConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{task}\"?'**
+  String deleteTaskConfirmation(String task);
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// No description provided for @options.
+  ///
+  /// In en, this message translates to:
+  /// **'Options'**
+  String get options;
+
+  /// No description provided for @filtersAppliedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters applied successfully'**
+  String get filtersAppliedSuccessfully;
+
+  /// No description provided for @closeSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Close search'**
+  String get closeSearch;
+
+  /// No description provided for @adminPanel.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Panel'**
+  String get adminPanel;
+
+  /// No description provided for @premium.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium'**
+  String get premium;
+
+  /// No description provided for @dashboardOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard & Overview'**
+  String get dashboardOverview;
+
+  /// No description provided for @statisticsAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics & Analytics'**
+  String get statisticsAnalytics;
+
+  /// No description provided for @focusTimeManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus & Time Management'**
+  String get focusTimeManagement;
+
+  /// No description provided for @organizeManage.
+  ///
+  /// In en, this message translates to:
+  /// **'Organize & Manage'**
+  String get organizeManage;
+
+  /// No description provided for @wellnessEmotions.
+  ///
+  /// In en, this message translates to:
+  /// **'Wellness & Emotions'**
+  String get wellnessEmotions;
+
+  /// No description provided for @preferencesConfiguration.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences & Configuration'**
+  String get preferencesConfiguration;
+
+  /// No description provided for @about.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get about;
+
+  /// No description provided for @appInformationHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'App Information & Help'**
+  String get appInformationHelp;
+
+  /// No description provided for @biweekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Bi-weekly'**
+  String get biweekly;
+
+  /// No description provided for @monthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get monthly;
+
+  /// No description provided for @repeatForever.
+  ///
+  /// In en, this message translates to:
+  /// **'(forever)'**
+  String get repeatForever;
+
+  /// No description provided for @repeatUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'until {date}'**
+  String repeatUntil(Object date);
+
+  /// No description provided for @repeatCount.
+  ///
+  /// In en, this message translates to:
+  /// **'({count} times)'**
+  String repeatCount(Object count);
+
+  /// No description provided for @onDays.
+  ///
+  /// In en, this message translates to:
+  /// **'on {days}'**
+  String onDays(Object days);
+
+  /// No description provided for @recurringTaskGenerationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to generate recurring task'**
+  String get recurringTaskGenerationFailed;
+
+  /// No description provided for @recurringTaskRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get recurringTaskRetry;
+
+  /// No description provided for @recurringTaskRetryLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry Later'**
+  String get recurringTaskRetryLater;
+
+  /// No description provided for @bulkGenerationComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Generated {count} recurring instances'**
+  String bulkGenerationComplete(String count);
+
+  /// No description provided for @recurringTaskNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'New recurring task created: {title}'**
+  String recurringTaskNotification(String title);
+
+  /// No description provided for @recurringTaskError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error in recurring task: {error}'**
+  String recurringTaskError(String error);
+
+  /// No description provided for @noRecurringTasksFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No recurring tasks found'**
+  String get noRecurringTasksFound;
+
+  /// No description provided for @recurringTasksOptimized.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring tasks optimized for performance'**
+  String get recurringTasksOptimized;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

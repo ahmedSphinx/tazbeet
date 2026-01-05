@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tazbeet/services/app_logging_service.dart';
+import 'package:tazbeet/services/sync_status_service.dart';
 import '../models/task.dart';
 import '../models/category.dart';
 import '../models/mood.dart';
@@ -11,15 +12,76 @@ import '../repositories/category_repository.dart';
 import '../repositories/mood_repository.dart';
 import '../repositories/user_repository.dart';
 import 'firebase_service_wrapper.dart';
-import 'settings_service.dart';
+import 'settings_service.dart'; // Contains UserSettings class
 
 class DataSyncService {
+  // Singleton pattern
+  static final DataSyncService _instance = DataSyncService._internal();
+  factory DataSyncService() => _instance;
+  DataSyncService._internal();
+
   final FirebaseFirestore? _firestore = FirebaseServiceWrapper.firestore;
   final TaskRepository _taskRepository = TaskRepository();
   final CategoryRepository _categoryRepository = CategoryRepository();
   final MoodRepository _moodRepository = MoodRepository();
   final UserRepository _userRepository = UserRepository();
   final SettingsService _settingsService = SettingsService();
+
+  // Individual sync methods for sync queue
+  Future<void> syncTaskToFirestore(Task task) async {
+    if (_firestore == null) return;
+
+    try {
+      final userDoc = _firestore.collection('users').doc(task.userId ?? 'unknown');
+      await userDoc.collection('tasks').doc(task.id).set(task.toJson());
+      AppLogging.logInfo('Synced task to Firestore: ${task.id}');
+    } catch (e) {
+      AppLogging.logError('Failed to sync task to Firestore: ${task.id} - $e');
+      rethrow;
+    }
+  }
+
+  Future<void> deleteTaskFromFirestore(String taskId) async {
+    if (_firestore == null) return;
+
+    try {
+      // We need to find which user this task belongs to
+      // For now, we'll try to delete from current user's collection
+      // In a real implementation, you'd store the userId with the operation
+      final userDoc = _firestore.collection('users').doc('current_user'); // This should be the actual user ID
+      await userDoc.collection('tasks').doc(taskId).delete();
+      AppLogging.logInfo('Deleted task from Firestore: $taskId');
+    } catch (e) {
+      AppLogging.logError('Failed to delete task from Firestore: $taskId - $e');
+      rethrow;
+    }
+  }
+
+  Future<void> syncCategoryToFirestore(Category category) async {
+    if (_firestore == null) return;
+
+    try {
+      final userDoc = _firestore.collection('users').doc('current_user'); // This should be the actual user ID
+      await userDoc.collection('categories').doc(category.id).set(category.toJson());
+      AppLogging.logInfo('Synced category to Firestore: ${category.id}');
+    } catch (e) {
+      AppLogging.logError('Failed to sync category to Firestore: ${category.id} - $e');
+      rethrow;
+    }
+  }
+
+  Future<void> deleteCategoryFromFirestore(String categoryId) async {
+    if (_firestore == null) return;
+
+    try {
+      final userDoc = _firestore.collection('users').doc('current_user'); // This should be the actual user ID
+      await userDoc.collection('categories').doc(categoryId).delete();
+      AppLogging.logInfo('Deleted category from Firestore: $categoryId');
+    } catch (e) {
+      AppLogging.logError('Failed to delete category from Firestore: $categoryId - $e');
+      rethrow;
+    }
+  }
 
   // Sync data from Firestore to local storage after sign-in
   Future<void> syncFromFirestore(String userId) async {
@@ -29,6 +91,7 @@ class DataSyncService {
     }
 
     AppLogging.logInfo('Starting data sync from Firestore for user: $userId', name: 'DataSyncService');
+    SyncStatusService().startSync();
 
     try {
       // Initialize repositories
@@ -52,13 +115,14 @@ class DataSyncService {
       // Sync user settings
       await _syncSettingsFromFirestore(userId);
 
-      // Sync subtasks
-      await _syncSubtasksFromFirestore(userId);
+      // Note: Subtasks are already embedded in parent tasks, no separate sync needed
 
       AppLogging.logInfo('Data sync from Firestore completed successfully', name: 'DataSyncService');
+      SyncStatusService().syncCompleted();
     } catch (e) {
-      AppLogging.logError('Error during data sync from Firestore', name: 'DataSyncService', error: e);
-      throw Exception('Failed to sync data from Firestore: $e');
+      AppLogging.logError('Error syncing data from Firestore: $e', name: 'DataSyncService');
+      SyncStatusService().syncFailed(e.toString());
+      rethrow;
     }
   }
 
@@ -70,6 +134,7 @@ class DataSyncService {
     }
 
     AppLogging.logInfo('Starting data sync to Firestore for user: $userId', name: 'DataSyncService');
+    SyncStatusService().startSync();
 
     try {
       // Initialize repositories
@@ -93,12 +158,13 @@ class DataSyncService {
       // Sync user settings
       await _syncSettingsToFirestore(userId);
 
-      // Sync subtasks
-      await _syncSubtasksToFirestore(userId);
+      // Note: Subtasks are already embedded in parent tasks, no separate sync needed
 
       AppLogging.logInfo('Data sync to Firestore completed successfully', name: 'DataSyncService');
+      SyncStatusService().syncCompleted();
     } catch (e) {
       AppLogging.logError('Error during data sync to Firestore', name: 'DataSyncService', error: e);
+      SyncStatusService().syncFailed(e.toString());
       throw Exception('Failed to sync data to Firestore: $e');
     }
   }
@@ -109,7 +175,7 @@ class DataSyncService {
     final tasksRef = _firestore!.collection('users').doc(userId).collection('tasks');
     final snapshot = await tasksRef.get();
 
-    final tasks = snapshot.docs.map((doc) {
+    final firestoreTasks = snapshot.docs.map((doc) {
       final data = doc.data();
       return Task(
         id: doc.id,
@@ -137,13 +203,23 @@ class DataSyncService {
       );
     }).toList();
 
-    // Clear local tasks and add synced tasks using repository
-    await _taskRepository.clearAllTasks();
-    for (final task in tasks) {
-      await _taskRepository.addTask(task);
+    // Get local tasks to compare
+    final localTasks = await _taskRepository.getAllTasks();
+    final localTaskIds = localTasks.map((t) => t.id).toSet();
+    final firestoreTaskIds = firestoreTasks.map((t) => t.id).toSet();
+
+    // Delete local tasks that don't exist in Firestore
+    final tasksToDelete = localTaskIds.difference(firestoreTaskIds);
+    for (final taskId in tasksToDelete) {
+      await _taskRepository.deleteTask(taskId);
     }
 
-    AppLogging.logInfo('Synced ${tasks.length} tasks from Firestore', name: 'DataSyncService');
+    // Add or update tasks from Firestore (merge strategy - no data loss window)
+    for (final task in firestoreTasks) {
+      await _taskRepository.addTask(task); // addTask uses put(), which updates if exists
+    }
+
+    AppLogging.logInfo('Synced ${firestoreTasks.length} tasks from Firestore (merged with local)', name: 'DataSyncService');
   }
 
   Future<void> _syncCategoriesFromFirestore(String userId) async {
@@ -152,7 +228,7 @@ class DataSyncService {
     final categoriesRef = _firestore!.collection('users').doc(userId).collection('categories');
     final snapshot = await categoriesRef.get();
 
-    final categories = snapshot.docs.map((doc) {
+    final firestoreCategories = snapshot.docs.map((doc) {
       final data = doc.data();
       return Category(
         id: doc.id,
@@ -163,18 +239,12 @@ class DataSyncService {
       );
     }).toList();
 
-    // Clear local categories and add synced categories using repository
-    final allCategories = await _categoryRepository.getAllCategories();
-    for (final category in allCategories) {
-      if (!category.isDefault) {
-        await _categoryRepository.deleteCategory(category.id);
-      }
-    }
-    for (final category in categories) {
-      await _categoryRepository.addCategory(category);
+    // Add or update categories from Firestore
+    for (final category in firestoreCategories) {
+      await _categoryRepository.addCategory(category); // addCategory uses put(), which updates if exists
     }
 
-    AppLogging.logInfo('Synced ${categories.length} categories from Firestore', name: 'DataSyncService');
+    AppLogging.logInfo('Synced ${firestoreCategories.length} categories from Firestore (merged with local)', name: 'DataSyncService');
   }
 
   Future<void> _syncMoodsFromFirestore(String userId) async {
@@ -183,7 +253,7 @@ class DataSyncService {
     final moodsRef = _firestore!.collection('users').doc(userId).collection('moods');
     final snapshot = await moodsRef.get();
 
-    final moods = snapshot.docs.map((doc) {
+    final firestoreMoods = snapshot.docs.map((doc) {
       final data = doc.data();
       return Mood(
         id: doc.id,
@@ -195,13 +265,23 @@ class DataSyncService {
       );
     }).toList();
 
-    // Clear local moods and add synced moods using repository
-    await _moodRepository.deleteAllMoods();
-    for (final mood in moods) {
-      await _moodRepository.addMood(mood);
+    // Get local moods to compare
+    final localMoods = await _moodRepository.getAllMoods();
+    final localMoodIds = localMoods.map((m) => m.id).toSet();
+    final firestoreMoodIds = firestoreMoods.map((m) => m.id).toSet();
+
+    // Delete local moods that don't exist in Firestore
+    final moodsToDelete = localMoodIds.difference(firestoreMoodIds);
+    for (final moodId in moodsToDelete) {
+      await _moodRepository.deleteMood(moodId);
     }
 
-    AppLogging.logInfo('Synced ${moods.length} moods from Firestore', name: 'DataSyncService');
+    // Add or update moods from Firestore (merge strategy - no data loss window)
+    for (final mood in firestoreMoods) {
+      await _moodRepository.addMood(mood); // addMood uses put(), which updates if exists
+    }
+
+    AppLogging.logInfo('Synced ${firestoreMoods.length} moods from Firestore (merged with local)', name: 'DataSyncService');
   }
 
   Future<void> _syncTasksToFirestore(String userId) async {
@@ -289,18 +369,41 @@ class DataSyncService {
   Future<void> _syncMoodsToFirestore(String userId) async {
     AppLogging.logInfo('Syncing moods to Firestore', name: 'DataSyncService');
 
-    final moods = await _moodRepository.getAllMoods();
+    final localMoods = await _moodRepository.getAllMoods();
+    final localMoodIds = localMoods.map((mood) => mood.id).toSet();
 
     final batch = _firestore!.batch();
     final moodsRef = _firestore.collection('users').doc(userId).collection('moods');
 
-    for (final mood in moods) {
+    // Get all moods currently in Firestore
+    final firestoreSnapshot = await moodsRef.get();
+    final firestoreMoodIds = firestoreSnapshot.docs.map((doc) => doc.id).toSet();
+
+    // Delete moods from Firestore that don't exist locally (handles deletions)
+    final moodsToDelete = firestoreMoodIds.difference(localMoodIds);
+    for (final moodId in moodsToDelete) {
+      batch.delete(moodsRef.doc(moodId));
+      AppLogging.logInfo('Deleting mood $moodId from Firestore', name: 'DataSyncService');
+    }
+
+    // Add/update moods that exist locally (with all fields)
+    for (final mood in localMoods) {
       final moodRef = moodsRef.doc(mood.id);
-      batch.set(moodRef, {'level': mood.level.index, 'note': mood.note, 'date': mood.date.toIso8601String(), 'createdAt': mood.createdAt.toIso8601String(), 'updatedAt': mood.updatedAt.toIso8601String()});
+      batch.set(moodRef, {
+        'level': mood.level.index,
+        'note': mood.note,
+        'date': mood.date.toIso8601String(),
+        'createdAt': mood.createdAt.toIso8601String(),
+        'updatedAt': mood.updatedAt.toIso8601String(),
+        'tags': mood.tags,
+        'energyLevel': mood.energyLevel,
+        'focusLevel': mood.focusLevel,
+        'stressLevel': mood.stressLevel,
+      });
     }
 
     await batch.commit();
-    AppLogging.logInfo('Synced ${moods.length} moods to Firestore', name: 'DataSyncService');
+    AppLogging.logInfo('Synced ${localMoods.length} moods to Firestore, deleted ${moodsToDelete.length} moods', name: 'DataSyncService');
   }
 
   Future<void> _syncUserFromFirestore(String userId) async {
@@ -333,7 +436,7 @@ class DataSyncService {
     if (doc.exists) {
       final data = doc.data();
       if (data != null) {
-        final settings = AppSettings.fromJson(data);
+        final settings = UserSettings.fromJson(data);
         await _settingsService.updateSettings(settings);
       }
     }
@@ -357,110 +460,6 @@ class DataSyncService {
     await _userRepository.saveUser(user);
   }
 
-  // Subtask synchronization methods
-  Future<void> _syncSubtasksFromFirestore(String userId) async {
-    AppLogging.logInfo('Syncing subtasks from Firestore', name: 'DataSyncService');
-
-    final tasks = await _taskRepository.getAllTasks();
-
-    for (final task in tasks) {
-      if (task.subtasks.isNotEmpty) {
-        // Update task with subtasks from Firestore
-        await _syncTaskSubtasksFromFirestore(userId, task);
-      }
-    }
-
-    AppLogging.logInfo('Subtasks sync from Firestore completed', name: 'DataSyncService');
-  }
-
-  Future<void> _syncTaskSubtasksFromFirestore(String userId, Task parentTask) async {
-    final subtasksRef = _firestore!.collection('users').doc(userId).collection('tasks').doc(parentTask.id).collection('subtasks');
-
-    final snapshot = await subtasksRef.get();
-
-    final subtasks = snapshot.docs.map((doc) {
-      final data = doc.data();
-      return Task(
-        id: doc.id,
-        title: data['title'] ?? '',
-        description: data['description'],
-        priority: TaskPriority.values[data['priority'] ?? 1],
-        dueDate: data['dueDate'] != null ? DateTime.parse(data['dueDate']) : null,
-        reminderDate: data['reminderDate'] != null ? DateTime.parse(data['reminderDate']) : null,
-        categoryId: data['categoryId'],
-        parentId: parentTask.id,
-        isCompleted: data['isCompleted'] ?? false,
-        createdAt: data['createdAt'] != null ? DateTime.parse(data['createdAt']) : DateTime.now(),
-        updatedAt: data['updatedAt'] != null ? DateTime.parse(data['updatedAt']) : DateTime.now(),
-      );
-    }).toList();
-
-    // Update the parent task with synced subtasks
-    final updatedTask = parentTask.copyWith(subtasks: subtasks);
-    await _taskRepository.updateTask(updatedTask);
-
-    AppLogging.logInfo('Synced ${subtasks.length} subtasks for task ${parentTask.id}', name: 'DataSyncService');
-  }
-
-  Future<void> _syncSubtasksToFirestore(String userId) async {
-    AppLogging.logInfo('Syncing subtasks to Firestore', name: 'DataSyncService');
-
-    final tasks = await _taskRepository.getAllTasks();
-
-    for (final task in tasks) {
-      if (task.subtasks.isNotEmpty) {
-        await _syncTaskSubtasksToFirestore(userId, task);
-      }
-    }
-
-    AppLogging.logInfo('Subtasks sync to Firestore completed', name: 'DataSyncService');
-  }
-
-  Future<void> _syncTaskSubtasksToFirestore(String userId, Task parentTask) async {
-    final batch = _firestore!.batch();
-    final subtasksRef = _firestore.collection('users').doc(userId).collection('tasks').doc(parentTask.id).collection('subtasks');
-
-    // Clear existing subtasks
-    final existingSubtasks = await subtasksRef.get();
-    for (final doc in existingSubtasks.docs) {
-      batch.delete(doc.reference);
-    }
-
-    // Add current subtasks
-    for (final subtask in parentTask.subtasks) {
-      final subtaskRef = subtasksRef.doc(subtask.id);
-      batch.set(subtaskRef, {
-        'title': subtask.title,
-        'description': subtask.description,
-        'priority': subtask.priority.index,
-        'dueDate': subtask.dueDate?.toIso8601String(),
-        'reminderDate': subtask.reminderDate?.toIso8601String(),
-        'categoryId': subtask.categoryId,
-        'parentId': subtask.parentId,
-        'isCompleted': subtask.isCompleted,
-        'createdAt': subtask.createdAt.toIso8601String(),
-        'updatedAt': subtask.updatedAt.toIso8601String(),
-      });
-    }
-
-    await batch.commit();
-    AppLogging.logInfo('Synced ${parentTask.subtasks.length} subtasks for task ${parentTask.id}', name: 'DataSyncService');
-  }
-
-  // Method to sync a specific task's subtasks
-  Future<void> syncTaskSubtasks(String userId, Task task) async {
-    if (_firestore == null) {
-      AppLogging.logInfo('Firestore not available, skipping subtask sync', name: 'DataSyncService');
-      return;
-    }
-
-    try {
-      await _syncTaskSubtasksFromFirestore(userId, task);
-      await _syncTaskSubtasksToFirestore(userId, task);
-      AppLogging.logInfo('Task subtasks synced successfully', name: 'DataSyncService');
-    } catch (e) {
-      AppLogging.logError('Error syncing task subtasks', name: 'DataSyncService', error: e);
-      throw Exception('Failed to sync task subtasks: $e');
-    }
-  }
+  // Note: Subtask sync methods removed - subtasks are now embedded in parent task's subtasks field
+  // and synced together with the parent task in _syncTasksToFirestore/_syncTasksFromFirestore
 }

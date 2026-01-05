@@ -14,6 +14,11 @@
 
         @media print {
 
+            /* Hide print button when printing */
+            #printButton {
+                display: none !important;
+            }
+
             html,
             body {
                 width: auto;
@@ -40,14 +45,18 @@
                 width: 28.7cm;
                 height: 19.9cm;
                 box-sizing: border-box;
-                page-break-after: always;
+                page-break-inside: avoid;
+                page-break-after: auto;
                 margin: 0 auto;
                 background: white;
                 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
                 border-radius: 18px;
                 position: relative;
-                /* Ensure 4 receipts per A4 page */
                 overflow: hidden;
+            }
+
+            .receipt-page:not(:last-child) {
+                page-break-after: always;
             }
 
             .receipt {
@@ -140,7 +149,7 @@
                 top: 227px;
                 right: 60px;
                 font-size: 13px;
-             }
+            }
 
 
 
@@ -148,31 +157,31 @@
                 top: 227px;
                 right: 180px;
                 font-size: 13px;
- 
+
             }
 
             .receipt .duration {
                 top: 225px;
                 right: -55px;
- 
+
             }
 
             .receipt .apartment {
                 top: 190px;
                 right: -57px;
-             }
+            }
 
             .receipt .number {
                 font-size: 16px;
                 position: absolute;
                 right: 20px;
                 top: 190px;
-             }
+            }
 
             .receipt .address {
                 top: 190px;
                 right: 130px;
- 
+
             }
 
 
@@ -180,7 +189,7 @@
             .receipt .release-date {
                 top: 320px;
                 right: -40px;
-             }
+            }
 
 
 
@@ -336,6 +345,38 @@
 </head>
 
 <body>
+    <!-- Action Buttons (hidden in print mode) -->
+    <div id="printButton" style="position: fixed; top: 20px; left: 20px; z-index: 9999; display: flex; gap: 10px;">
+        <button onclick="window.print()" style="
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-family: 'Amiri', serif;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        " onmouseover="this.style.backgroundColor='#218838'" onmouseout="this.style.backgroundColor='#28a745'">
+            🖨️ طباعة / حفظ PDF
+        </button>
+        <button onclick="window.location.href='index.html'" style="
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-family: 'Amiri', serif;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        " onmouseover="this.style.backgroundColor='#0056b3'" onmouseout="this.style.backgroundColor='#007bff'">
+            ← رجوع
+        </button>
+    </div>
+
     <div id="receiptsContainer"></div>
     <script src="script.js"></script>
 </body>

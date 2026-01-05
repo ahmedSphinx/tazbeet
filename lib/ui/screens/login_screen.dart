@@ -9,8 +9,10 @@ import 'package:tazbeet/blocs/auth/auth_bloc.dart';
 import 'package:tazbeet/blocs/auth/auth_event.dart';
 import 'package:tazbeet/blocs/auth/auth_state.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
+import 'package:tazbeet/services/app_logging_service.dart';
+import 'package:tazbeet/services/firebase_service_wrapper.dart';
 import 'package:tazbeet/ui/themes/app_themes.dart';
-import 'package:tazbeet/ui/screens/main_screen.dart';
+import 'package:tazbeet/ui/screens/home/main_screen.dart';
 import 'package:tazbeet/ui/screens/registration_screen.dart';
 import 'package:tazbeet/ui/widgets/floating_shapes.dart'; // We'll create this later
 import 'package:tazbeet/ui/widgets/password_strength_indicator.dart'; // We'll create this later
@@ -262,7 +264,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   duration: const Duration(milliseconds: 800),
                   child: SlideAnimation(
                     verticalOffset: 30.0,
-                    child: FadeInAnimation(child: Column(children: [_buildDivider(context), const SizedBox(height: 16), _buildGoogleSignInButton(context), const SizedBox(height: 16), _buildAppleSignInButton(context)])),
+                    child: FadeInAnimation(child: Column(children: [_buildDivider(context), const SizedBox(height: 16), _buildAppleSignInButton(context), const SizedBox(height: 16), _buildGoogleSignInButton(context)])),
                   ),
                 ),
                 SizedBox(height: height * 0.05),
@@ -295,9 +297,23 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-          HapticFeedback.mediumImpact();
-          context.read<AuthBloc>().add(AuthSignInRequested());
+        onTap: () async {
+          try {
+            HapticFeedback.mediumImpact();
+            AppLogging.logInfo('Google Sign-In button tapped', name: 'LoginScreen');
+
+            // Check if Firebase is initialized
+            if (FirebaseServiceWrapper.firebaseAuth == null) {
+              AppLogging.logError('Firebase Auth not initialized', name: 'LoginScreen');
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Authentication service not available. Please try again.'), backgroundColor: Colors.red));
+              return;
+            }
+
+            context.read<AuthBloc>().add(AuthSignInRequested());
+          } catch (e) {
+            AppLogging.logError('Error in Google Sign-In button', name: 'LoginScreen', error: e);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred. Please try again.'), backgroundColor: Colors.red));
+          }
         },
         borderRadius: BorderRadius.circular(16),
         child: Container(
@@ -327,9 +343,23 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-          HapticFeedback.mediumImpact();
-          context.read<AuthBloc>().add(AuthAppleSignInRequested());
+        onTap: () async {
+          try {
+            HapticFeedback.mediumImpact();
+            AppLogging.logInfo('Apple Sign-In button tapped', name: 'LoginScreen');
+
+            // Check if Firebase is initialized
+            if (FirebaseServiceWrapper.firebaseAuth == null) {
+              AppLogging.logError('Firebase Auth not initialized', name: 'LoginScreen');
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Authentication service not available. Please try again.'), backgroundColor: Colors.red));
+              return;
+            }
+
+            context.read<AuthBloc>().add(AuthAppleSignInRequested());
+          } catch (e) {
+            AppLogging.logError('Error in Apple Sign-In button', name: 'LoginScreen', error: e);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred. Please try again.'), backgroundColor: Colors.red));
+          }
         },
         borderRadius: BorderRadius.circular(16),
         child: Container(
@@ -644,7 +674,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text("Don't have an account? ", style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
+        Text(AppLocalizations.of(context)!.dontHaveAccount, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
         TextButton(
           onPressed: _isLoading
               ? null

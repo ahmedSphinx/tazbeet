@@ -165,6 +165,8 @@ class DSTaskCard extends StatelessWidget {
                         ],
                       ),
                     ],
+                    // Subtask progress indicator
+                    if (task.subtasks.isNotEmpty) ...[const SizedBox(height: DSSpacing.xs), _buildSubtaskProgress(context)],
                   ],
                 ),
               ),
@@ -208,6 +210,46 @@ class DSTaskCard extends StatelessWidget {
     if (taskDate.isBefore(today)) return 'Overdue';
 
     return '${date.month}/${date.day}';
+  }
+
+  Widget _buildSubtaskProgress(BuildContext context) {
+    final completedSubtasks = _countCompletedSubtasks(task.subtasks);
+    final totalSubtasks = _countTotalSubtasks(task.subtasks);
+    final progress = totalSubtasks > 0 ? completedSubtasks / totalSubtasks : 0.0;
+
+    return Row(
+      children: [
+        Icon(Icons.checklist, size: 14, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
+        const SizedBox(width: DSSpacing.xs),
+        Expanded(
+          child: LinearProgressIndicator(
+            value: progress,
+            backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+            valueColor: AlwaysStoppedAnimation<Color>(progress == 1.0 ? Colors.green : Theme.of(context).colorScheme.primary),
+            minHeight: 3,
+          ),
+        ),
+        const SizedBox(width: DSSpacing.xs),
+        Text('$completedSubtasks/$totalSubtasks', style: DSTypography.caption(context).copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 11)),
+      ],
+    );
+  }
+
+  int _countCompletedSubtasks(List<Task> subtasks) {
+    int count = 0;
+    for (final subtask in subtasks) {
+      if (subtask.isCompleted) count++;
+      count += _countCompletedSubtasks(subtask.subtasks);
+    }
+    return count;
+  }
+
+  int _countTotalSubtasks(List<Task> subtasks) {
+    int count = subtasks.length;
+    for (final subtask in subtasks) {
+      count += _countTotalSubtasks(subtask.subtasks);
+    }
+    return count;
   }
 }
 
@@ -292,8 +334,9 @@ class DSEnhancedFAB extends StatelessWidget {
   final IconData icon;
   final String? label;
   final String tooltip;
+  final Object? heroTag;
 
-  const DSEnhancedFAB({super.key, required this.onPressed, this.icon = Icons.add, this.label, this.tooltip = 'Add'});
+  const DSEnhancedFAB({super.key, required this.onPressed, this.icon = Icons.add, this.label, this.tooltip = 'Add', this.heroTag});
 
   @override
   Widget build(BuildContext context) {
@@ -310,6 +353,7 @@ class DSEnhancedFAB extends StatelessWidget {
         child: label != null
             ? FloatingActionButton.extended(
                 onPressed: onPressed,
+                heroTag: heroTag,
                 icon: Icon(icon, size: 24),
                 label: Text(
                   label!,
@@ -318,7 +362,7 @@ class DSEnhancedFAB extends StatelessWidget {
                 elevation: DSElevation.level4,
                 tooltip: tooltip,
               )
-            : FloatingActionButton(onPressed: onPressed, elevation: DSElevation.level4, tooltip: tooltip, child: Icon(icon, size: 28)),
+            : FloatingActionButton(onPressed: onPressed, heroTag: heroTag, elevation: DSElevation.level4, tooltip: tooltip, child: Icon(icon, size: 28)),
       ),
     );
   }

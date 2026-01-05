@@ -434,13 +434,96 @@ class AppLocalizationsFr extends AppLocalizations {
   String get resumeNow => 'Resume Now';
 
   @override
-  String get moodHistory => 'Mood History';
+  String get moodHistory => 'Historique de l\'Humeur';
 
   @override
-  String get noMoodEntriesYet => 'No mood entries yet';
+  String get noMoodEntriesYet => 'Aucune entrée d\'humeur encore';
 
   @override
-  String get startLoggingMoods => 'Start logging your moods to see your history';
+  String get startLoggingMoods => 'Commencez à enregistrer vos humeurs pour voir votre historique';
+
+  @override
+  String get moodHistoryTitle => 'Historique de l\'Humeur';
+
+  @override
+  String get startTracking => 'Commencez votre voyage de suivi d\'humeur';
+
+  @override
+  String get quickMoodCheckIn => 'Check-in d\'Humeur Rapide';
+
+  @override
+  String moodsForDate(Object date) {
+    return 'Humeurs pour $date';
+  }
+
+  @override
+  String get close => 'Fermer';
+
+  @override
+  String get filter => 'Filtrer';
+
+  @override
+  String get all => 'Tous';
+
+  @override
+  String get positive => 'Positif';
+
+  @override
+  String get negative => 'Negative';
+
+  @override
+  String get recent => 'Recent';
+
+  @override
+  String get energy => 'Energy';
+
+  @override
+  String get focus => 'Focus';
+
+  @override
+  String get stress => 'Stress';
+
+  @override
+  String get howAreYou => 'Comment allez-vous ?';
+
+  @override
+  String get yourMood => 'Votre humeur';
+
+  @override
+  String get howAreYouFeelingRightNow => 'Comment vous sentez-vous maintenant ?';
+
+  @override
+  String get tapOptionBestDescribesMood => 'Appuyez sur l\'option qui décrit le mieux votre humeur';
+
+  @override
+  String get addNoteOptional => 'Ajouter une note (facultatif)';
+
+  @override
+  String get whatsOnYourMind => 'Qu\'est-ce qui vous préoccupe ?';
+
+  @override
+  String get moodAdded => 'Humeur ajoutée';
+
+  @override
+  String get moodUpdated => 'Humeur mise à jour';
+
+  @override
+  String get somethingWentWrong => 'Quelque chose s\'est mal passé';
+
+  @override
+  String get reallyStruggling => 'Vraiment difficile';
+
+  @override
+  String get notGreat => 'Pas terrible';
+
+  @override
+  String get okay => 'Correct';
+
+  @override
+  String get prettyGood => 'Assez bien';
+
+  @override
+  String get great => 'Excellent';
 
   @override
   String percent(int value) {
@@ -732,7 +815,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get pomodoroPreset => 'Pomodoro Preset';
 
   @override
-  String get classicPreset => 'Classic (25/5/15)';
+  String get classicPreset => 'Classic';
+
+  @override
+  String get quickstart => 'Quick Start';
+
+  @override
+  String get deepWork => 'Deep Work';
+
+  @override
+  String get students => 'Students';
 
   @override
   String get shortPreset => 'Short (15/3/10)';
@@ -815,7 +907,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get averageMood => 'Average Mood';
 
   @override
-  String get mostCommonMood => 'Most Common Mood';
+  String get mostCommonMood => 'Humeur la Plus Courante';
 
   @override
   String get currentStreak => 'Current Streak';
@@ -828,15 +920,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get averageStress => 'Average Stress';
-
-  @override
-  String get energy => 'Energy';
-
-  @override
-  String get focus => 'Focus';
-
-  @override
-  String get stress => 'Stress';
 
   @override
   String metricValue(String label, int value) {
@@ -1524,9 +1607,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get manualDND => 'Manual DND';
 
   @override
-  String get close => 'Close';
-
-  @override
   String get resetSettings => 'Reset Settings';
 
   @override
@@ -1649,4 +1729,565 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get noTasksForThisDay => 'No tasks for this day';
+
+  @override
+  String get noInternetConnection => 'No Internet Connection';
+
+  @override
+  String get pullToRefresh => 'Pull down to refresh when connected';
+
+  @override
+  String get showCalendar => 'Show calendar';
+
+  @override
+  String get minutes => 'min';
+
+  @override
+  String get recommendedForAdhd => 'Recommended for ADHD';
+
+  @override
+  String get mostPopular => 'Most Popular';
+
+  @override
+  String get stopPomodoroConfirmation => 'Are you sure you want to stop the current session? Your progress will be lost.';
+
+  @override
+  String get whatsHappeningRightNow => 'What\'s happening right now?';
+
+  @override
+  String get wantToShareMore => 'Want to share more?';
+
+  @override
+  String get dontHaveAccount => 'Don\'t have an account?';
+
+  @override
+  String get failedToAccessGallery => 'Failed to access gallery';
+
+  @override
+  String get nameRequiredForProfile => 'Name is required for profile';
+
+  @override
+  String get birthdayRequiredForProfile => 'Birthday is required for profile';
+
+  @override
+  String get failedToUploadImage => 'Failed to upload image';
+
+  @override
+  String get userNotAuthenticated => 'User not authenticated';
+
+  @override
+  String get notificationPermissionRequired => 'Notification permission required';
+
+  @override
+  String get notificationPermissionMessage => 'Please enable notifications to set reminders';
+
+  @override
+  String get grantPermission => 'Grant Permission';
+
+  @override
+  String get cannotSetReminderWithoutPermission => 'Cannot set reminder without notification permission';
+
+  @override
+  String get customColors => 'Custom Colors';
+
+  @override
+  String get personalizeAppTheme => 'Personalize App Theme';
+
+  @override
+  String get primaryColor => 'Primary Color';
+
+  @override
+  String get choosePrimaryColor => 'Choose Primary Color';
+
+  @override
+  String subtasksCount(int count) {
+    return '$count subtasks';
+  }
+
+  @override
+  String get deliveryLabel => 'Delivery';
+
+  @override
+  String get openLabel => 'Open';
+
+  @override
+  String get actionLabel => 'Action';
+
+  @override
+  String get averageResponseTime => 'Average Response Time';
+
+  @override
+  String get helpUsUnderstandState => 'Help us understand your current state';
+
+  @override
+  String get optionalAddContext => 'Optional: Add context';
+
+  @override
+  String get optionalWriteNote => 'Optional: Write a note';
+
+  @override
+  String get imGratefulFor => 'I\'m grateful for';
+
+  @override
+  String get todayI => 'Today I';
+
+  @override
+  String get imFeeling => 'I\'m feeling';
+
+  @override
+  String get whatsWeighingOnYou => 'What\'s weighing on you?';
+
+  @override
+  String get whatsMakingTodayTough => 'What\'s making today tough?';
+
+  @override
+  String get whatsGoingWell => 'What\'s going well?';
+
+  @override
+  String get whatMadeTodayGreat => 'What made today great?';
+
+  @override
+  String get howsYourDayGoing => 'How\'s your day going?';
+
+  @override
+  String get chooseEmojiFeeling => 'Choose an emoji that represents how you\'re feeling';
+
+  @override
+  String get dayStreak => 'day streak';
+
+  @override
+  String get moodSaved => 'Mood saved';
+
+  @override
+  String get testButton => 'Test';
+
+  @override
+  String get clearAllNotifications => 'Clear All Notifications';
+
+  @override
+  String get clearAllNotificationsConfirmation => 'Are you sure you want to clear all notifications?';
+
+  @override
+  String get generateRecurringConfirmation => 'Are you sure you want to generate recurring instances?';
+
+  @override
+  String get includeSpecificTime => 'Include specific time';
+
+  @override
+  String get repeatSameTimeEachDay => 'Repeat at same time each day';
+
+  @override
+  String get syncStatus => 'Sync Status';
+
+  @override
+  String get pendingOperations => 'Pending operations';
+
+  @override
+  String get someSyncOperationsFailed => 'Some sync operations failed';
+
+  @override
+  String get retryButton => 'Retry';
+
+  @override
+  String get clearFailedButton => 'Clear Failed';
+
+  @override
+  String get closeButton => 'Close';
+
+  @override
+  String get syncStatusSuccess => 'Success';
+
+  @override
+  String get syncStatusSyncing => 'Syncing';
+
+  @override
+  String get syncStatusIdle => 'Idle';
+
+  @override
+  String get syncStatusFailed => 'Failed';
+
+  @override
+  String get moodInsightsSubtitle => 'Suivez vos schémas émotionnels et obtenez des informations';
+
+  @override
+  String get yourMoodJourney => 'Votre Voyage Émotionnel';
+
+  @override
+  String get aIPoweredAnalysis => 'Analyse Alimentée par l\'IA';
+
+  @override
+  String get thisWeek => 'Cette Semaine';
+
+  @override
+  String get goodDays => 'Bons Jours';
+
+  @override
+  String get neutralDays => 'Jours Neutres';
+
+  @override
+  String get challengingDays => 'Jours Défiant';
+
+  @override
+  String get dominantMood => 'Humeur Dominante';
+
+  @override
+  String get hiThere => 'Salut !';
+
+  @override
+  String get howIsYourDay => 'Comment va ta journée ?';
+
+  @override
+  String get imHereForYou => 'Je suis là pour toi !';
+
+  @override
+  String get itsOkayToHaveToughDays => 'C\'est normal d\'avoir des jours difficiles';
+
+  @override
+  String get sendingYouStrength => 'Je t\'envoie de la force';
+
+  @override
+  String get everyDayIsANewOpportunity => 'Chaque jour est une nouvelle opportunité';
+
+  @override
+  String get findingBalance => 'Trouver l\'équilibre';
+
+  @override
+  String get sometimesNeutralIsExactlyWhereWeNeedToBe => 'Parfois neutre est exactement là où nous devons être';
+
+  @override
+  String get youreDoingGreat => 'Tu le fais très bien !';
+
+  @override
+  String get keepShiningBright => 'Continue de briller fort !';
+
+  @override
+  String get absolutelyAmazing => 'Absolument incroyable !';
+
+  @override
+  String get yourJoyIsContagious => 'Ta joie est contagieuse !';
+
+  @override
+  String get moodIntensity => 'Intensité de l\'Humeur';
+
+  @override
+  String get smartView => 'Intelligent';
+
+  @override
+  String get timelineView => 'Chronologie';
+
+  @override
+  String get patternsView => 'Motifs';
+
+  @override
+  String get goodIntensity => 'Intensité Bonne';
+
+  @override
+  String get veryGoodIntensity => 'Intensité Très Bonne';
+
+  @override
+  String get noMoodRecorded => 'Aucune humeur enregistrée';
+
+  @override
+  String get goodMorning => 'Bonjour !';
+
+  @override
+  String get howAreYouFeelingToday => 'Comment te sens-tu aujourd\'hui ?';
+
+  @override
+  String get todayYoureFeeling => 'Aujourd\'hui tu te sens';
+
+  @override
+  String get addAnother => 'Ajouter un Autre';
+
+  @override
+  String get earlierToday => 'Plus tôt aujourd\'hui';
+
+  @override
+  String get struggling => 'Luttant';
+
+  @override
+  String get down => 'Abattu';
+
+  @override
+  String get wantToShareMoreDetails => 'Veux-tu partager plus de détails ?';
+
+  @override
+  String get guidedCheckIn => 'Check-in Guidé';
+
+  @override
+  String get detailedEntry => 'Entrée Détaillée';
+
+  @override
+  String get quickInsights => 'Aperçus Rapides';
+
+  @override
+  String get recentMoods => 'Humeurs Récentes';
+
+  @override
+  String get noInsightsYet => 'Pas encore d\'aperçus';
+
+  @override
+  String get trackYourMoodForAWeek => 'Suivez votre humeur pendant une semaine pour voir des aperçus';
+
+  @override
+  String get daysStreak => 'jours d\'affilée';
+
+  @override
+  String get moodBuddyFeelingSad => 'Tu te sens triste ?';
+
+  @override
+  String get moodBuddyTipSad => 'Essaye une marche douce ou écoute de la musique relaxante';
+
+  @override
+  String get moodBuddyFeelingDown => 'Tu te sens abattu ?';
+
+  @override
+  String get moodBuddyTipDown => 'Contacte un ami ou pratique la respiration profonde';
+
+  @override
+  String get moodBuddyFeelingOkay => 'Tu te sens bien ?';
+
+  @override
+  String get moodBuddyTipOkay => 'Maintiens l\'équilibre avec de l\'exercice léger ou des passe-temps';
+
+  @override
+  String get moodBuddyFeelingGood => 'Tu te sens bien ?';
+
+  @override
+  String get moodBuddyTipGood => 'Partage ta positivité et aide les autres';
+
+  @override
+  String get moodBuddyFeelingGreat => 'Tu te sens génial ?';
+
+  @override
+  String get moodBuddyTipGreat => 'Canalise cette énergie dans des projets créatifs';
+
+  @override
+  String get moodPatternsTitle => 'Vos Schémas Émotionnels';
+
+  @override
+  String get moodPatternsSubtitle => 'Découvrez les tendances de votre bien-être émotionnel';
+
+  @override
+  String get moodSuggestionsTitle => 'Suggestions Personnalisées';
+
+  @override
+  String get moodSuggestionsSubtitle => 'Recommandations alimentées par l\'IA basées sur votre humeur';
+
+  @override
+  String get veryBadIntensity => 'Intensité Très Mauvaise';
+
+  @override
+  String get badIntensity => 'Intensité Mauvaise';
+
+  @override
+  String get neutralIntensity => 'Intensité Neutre';
+
+  @override
+  String get insightGenerallyPositive => 'Généralement positif 😊';
+
+  @override
+  String get insightNeedsSupport => 'A besoin de soutien 🤗';
+
+  @override
+  String get insightGreatConsistency => 'Grande cohérence ! 🔥';
+
+  @override
+  String get insightMissingToday => 'Manque aujourd\'hui 📝';
+
+  @override
+  String get pleaseTryAgainLater => 'Veuillez réessayer plus tard';
+
+  @override
+  String get icon => 'Icône';
+
+  @override
+  String get categories => 'Catégories';
+
+  @override
+  String get searchCategories => 'Rechercher des catégories...';
+
+  @override
+  String get keyInsights => 'Perspectives Clés';
+
+  @override
+  String get patternAnalysis => 'Analyse des Motifs';
+
+  @override
+  String get aiPredictions => 'Prédictions IA';
+
+  @override
+  String get positiveTrend => 'Tendance Positive';
+
+  @override
+  String get yourOverallMoodIsGenerallyPositive => 'Votre humeur générale est généralement positive';
+
+  @override
+  String get supportNeeded => 'Soutien Nécessaire';
+
+  @override
+  String get youMightBenefitFromAdditionalSupport => 'Pourriez bénéficier d\'un soutien supplémentaire';
+
+  @override
+  String get greatConsistency => 'Grande Cohérence';
+
+  @override
+  String youveBeenTrackingYourMoodForDays(Object days) {
+    return 'Vous suivez votre humeur depuis $days jours';
+  }
+
+  @override
+  String get missingToday => 'Manquant Aujourd\'hui';
+
+  @override
+  String get youHaventLoggedYourMoodTodayYet => 'Vous n\'avez pas encore enregistré votre humeur aujourd\'hui';
+
+  @override
+  String get recentImprovement => 'Amélioration Récente';
+
+  @override
+  String get yourMoodHasBeenImprovingLately => 'Votre humeur s\'est améliorée récemment';
+
+  @override
+  String get challengingPeriod => 'Période Difficile';
+
+  @override
+  String get recentEntriesSuggestAChallengingTime => 'Les entrées récentes suggèrent une période difficile';
+
+  @override
+  String get moreDataNeeded => 'Plus de Données Nécessaires';
+
+  @override
+  String get trackYourMoodForAWeekToGetAIPredictions => 'Suivez votre humeur pendant une semaine pour obtenir des prédictions IA';
+
+  @override
+  String get positiveOutlook => 'Perspective Positive';
+
+  @override
+  String get basedOnRecentPatternsTomorrowLooksPromising => 'Basé sur les motifs récents, demain looks prometteur';
+
+  @override
+  String get selfCareRecommended => 'Soin de Soi Recommandé';
+
+  @override
+  String get considerPrioritizingSelfCareActivitiesTomorrow => 'Envisagez de prioriser les activités de soin de soi demain';
+
+  @override
+  String get balancedDayAhead => 'Journée Équilibrée à Venir';
+
+  @override
+  String get tomorrowShouldBeATypicalDayForYou => 'Demain devrait être une journée typique pour vous';
+
+  @override
+  String get errorTitle => 'Oops! Something went wrong';
+
+  @override
+  String get tryAgain => 'Try Again';
+
+  @override
+  String get deleteTask => 'Delete Task';
+
+  @override
+  String deleteTaskConfirmation(String task) {
+    return 'Are you sure you want to delete \"$task\"?';
+  }
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get options => 'Options';
+
+  @override
+  String get filtersAppliedSuccessfully => 'Filters applied successfully';
+
+  @override
+  String get closeSearch => 'Close search';
+
+  @override
+  String get adminPanel => 'Admin Panel';
+
+  @override
+  String get premium => 'Premium';
+
+  @override
+  String get dashboardOverview => 'Dashboard & Overview';
+
+  @override
+  String get statisticsAnalytics => 'Statistics & Analytics';
+
+  @override
+  String get focusTimeManagement => 'Focus & Time Management';
+
+  @override
+  String get organizeManage => 'Organize & Manage';
+
+  @override
+  String get wellnessEmotions => 'Wellness & Emotions';
+
+  @override
+  String get preferencesConfiguration => 'Preferences & Configuration';
+
+  @override
+  String get about => 'About';
+
+  @override
+  String get appInformationHelp => 'App Information & Help';
+
+  @override
+  String get biweekly => 'Bi-weekly';
+
+  @override
+  String get monthly => 'Monthly';
+
+  @override
+  String get repeatForever => '(forever)';
+
+  @override
+  String repeatUntil(Object date) {
+    return 'until $date';
+  }
+
+  @override
+  String repeatCount(Object count) {
+    return '($count times)';
+  }
+
+  @override
+  String onDays(Object days) {
+    return 'on $days';
+  }
+
+  @override
+  String get recurringTaskGenerationFailed => 'Failed to generate recurring task';
+
+  @override
+  String get recurringTaskRetry => 'Retry';
+
+  @override
+  String get recurringTaskRetryLater => 'Retry Later';
+
+  @override
+  String bulkGenerationComplete(String count) {
+    return 'Generated $count recurring instances';
+  }
+
+  @override
+  String recurringTaskNotification(String title) {
+    return 'New recurring task created: $title';
+  }
+
+  @override
+  String recurringTaskError(String error) {
+    return 'Error in recurring task: $error';
+  }
+
+  @override
+  String get noRecurringTasksFound => 'No recurring tasks found';
+
+  @override
+  String get recurringTasksOptimized => 'Recurring tasks optimized for performance';
 }

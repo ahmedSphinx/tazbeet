@@ -1,6 +1,7 @@
 import 'package:tazbeet/services/app_logging_service.dart';
 import 'package:tazbeet/services/navigation_service.dart';
 import 'package:tazbeet/services/settings_service.dart';
+import 'package:tazbeet/services/error_notification_service.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -19,6 +20,9 @@ class NotificationService {
 
   static const String moodNotificationChannelId = 'mood_check_ins';
   static const String moodNotificationChannelName = 'Mood Check-Ins';
+
+  /// Flag to suppress error messages during bulk operations
+  bool _suppressErrors = false;
 
   Future<void> initialize() async {
     // Initialize timezone
@@ -75,6 +79,7 @@ class NotificationService {
       AppLogging.logInfo('Notification permission granted', name: 'NotificationService');
     } else {
       AppLogging.logWarning('Notification permission not granted', name: 'NotificationService');
+      ErrorNotificationService().showError('Notification permission denied. Reminders will not work.', isWarning: true);
     }
 
     // Request to ignore battery optimizations for reliable notifications
@@ -86,6 +91,17 @@ class NotificationService {
         AppLogging.logInfo('Battery optimization permission requested: $requested', name: 'NotificationService');
       }
     }
+  }
+
+  /// Check if notification permission is granted
+  Future<bool> hasNotificationPermission() async {
+    return await Permission.notification.isGranted;
+  }
+
+  /// Request notification permission
+  Future<bool> requestNotificationPermission() async {
+    final status = await Permission.notification.request();
+    return status.isGranted;
   }
 
   Future<void> scheduleTaskReminder(Task task) async {
@@ -100,6 +116,10 @@ class NotificationService {
 
     if (scheduledTime.isBefore(now)) {
       AppLogging.logWarning('Cannot schedule reminder for past date: ${task.reminderDate}', name: 'NotificationService-${task.title}');
+      // Only show error if not in bulk operation mode
+      if (!_suppressErrors) {
+        ErrorNotificationService().showError('Cannot set reminder for past date: ${task.title}', isWarning: true);
+      }
       return;
     }
 
@@ -282,11 +302,16 @@ class NotificationService {
 
         const NotificationDetails platformDetails = NotificationDetails(android: androidDetails, iOS: iosDetails);
 
+        // Get time-based message
+        final messages = _getTimeBasedMoodMessages(hour);
+        final messageIndex = i % messages.length; // Rotate messages
+        final message = messages[messageIndex];
+
         try {
           await _flutterLocalNotificationsPlugin.zonedSchedule(
             notificationId,
-            l10n?.moodCheckInNotificationTitle ?? 'Mood Check-In',
-            l10n?.moodCheckInNotificationBody ?? 'How are you feeling right now? Tap to record your mood.',
+            message['title']!,
+            message['body']!,
             scheduledTime,
             platformDetails,
             androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
@@ -376,7 +401,7 @@ class NotificationService {
 
       // Calculate test time in local timezone
       final offset = DateTime.now().timeZoneOffset;
-     // final now = tz.TZDateTime.now(tz.local);
+      // final now = tz.TZDateTime.now(tz.local);
       var localTestTime = DateTime.now().add(const Duration(seconds: 10));
       var testTime = tz.TZDateTime.from(localTestTime.subtract(offset), tz.local);
 
@@ -452,6 +477,36 @@ class NotificationService {
     }
   }
 
+  Future<void> showImmediateNotification(String title, String body, {String? payload}) async {
+    try {
+      const notificationId = 9999; // Fixed ID for admin notifications
+
+      const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'admin_notifications',
+        'Admin Notifications',
+        channelDescription: 'Important notifications for administrators',
+        importance: Importance.high,
+        priority: Priority.high,
+        playSound: true,
+        enableVibration: true,
+        icon: '@mipmap/ic_launcher',
+        largeIcon: const DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
+        styleInformation: const BigTextStyleInformation('', htmlFormatBigText: true, contentTitle: '', htmlFormatContentTitle: true, summaryText: '', htmlFormatSummaryText: true),
+      );
+
+      const DarwinNotificationDetails iOSPlatformChannelSpecifics = DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true, sound: 'default');
+
+      const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
+
+      await _flutterLocalNotificationsPlugin.show(notificationId, title, body, platformChannelSpecifics, payload: payload);
+
+      AppLogging.logInfo('Showed immediate notification: $title', name: 'NotificationService');
+    } catch (e) {
+      AppLogging.logError('Failed to show immediate notification: $e', name: 'NotificationService');
+      rethrow;
+    }
+  }
+
   Future<void> showTestMoodNotificationNow({AppLocalizations? l10n}) async {
     try {
       const notificationId = 2000; // Fixed ID for mood test
@@ -517,12 +572,18 @@ class NotificationService {
   }
 
   Future<void> rescheduleAllReminders(List<Task> tasks) async {
-    for (var task in tasks) {
-      if (task.reminderDate != null && !task.isCompleted) {
-        await scheduleTaskReminder(task);
+    // Suppress error messages during bulk operation
+    _suppressErrors = true;
+    try {
+      for (var task in tasks) {
+        if (task.reminderDate != null && !task.isCompleted) {
+          await scheduleTaskReminder(task);
+        }
       }
+      AppLogging.logInfo('Rescheduled all reminders for ${tasks.where((t) => t.reminderDate != null && !t.isCompleted).length} tasks', name: 'NotificationService');
+    } finally {
+      _suppressErrors = false;
     }
-    AppLogging.logInfo('Rescheduled all reminders for ${tasks.where((t) => t.reminderDate != null && !t.isCompleted).length} tasks', name: 'NotificationService');
   }
 
   Future<void> openNotificationSettings() async {
@@ -610,6 +671,43 @@ class NotificationService {
       AppLogging.logInfo('Cancelled all notifications', name: 'NotificationService');
     } catch (e) {
       AppLogging.logError('Failed to cancel all notifications: $e', name: 'NotificationService');
+    }
+  }
+
+  /// Get time-based mood check-in messages
+  List<Map<String, String>> _getTimeBasedMoodMessages(int hour) {
+    if (hour >= 5 && hour < 12) {
+      // Morning (5am - 12pm)
+      return [
+        {'title': 'Good morning! ☀️', 'body': 'How are you starting your day?'},
+        {'title': 'Rise and shine! 🌅', 'body': 'What\'s your energy like this morning?'},
+        {'title': 'New day, new vibes! 🌤️', 'body': 'How are you feeling today?'},
+        {'title': 'Morning check-in 💫', 'body': 'Take a moment to check in with yourself'},
+      ];
+    } else if (hour >= 12 && hour < 17) {
+      // Afternoon (12pm - 5pm)
+      return [
+        {'title': 'Checking in! 👋', 'body': 'How\'s your afternoon going?'},
+        {'title': 'Midday pause 🌤️', 'body': 'How\'s your focus right now?'},
+        {'title': 'Quick check! ⏰', 'body': 'How are you holding up?'},
+        {'title': 'Afternoon vibes 🌻', 'body': 'What\'s your mood like right now?'},
+      ];
+    } else if (hour >= 17 && hour < 21) {
+      // Evening (5pm - 9pm)
+      return [
+        {'title': 'Winding down? 🌆', 'body': 'How was your day?'},
+        {'title': 'Evening check-in! 🌙', 'body': 'How are you feeling tonight?'},
+        {'title': 'End of day vibes 🌇', 'body': 'How did today go for you?'},
+        {'title': 'Evening reflection 💭', 'body': 'Take a moment to check in'},
+      ];
+    } else {
+      // Night (9pm - 5am)
+      return [
+        {'title': 'Before bed 🌙', 'body': 'How are you feeling tonight?'},
+        {'title': 'Day\'s done! ✨', 'body': 'How did it go?'},
+        {'title': 'Goodnight check-in 💫', 'body': 'How are you ending your day?'},
+        {'title': 'Night reflection 🌟', 'body': 'Take a moment for yourself'},
+      ];
     }
   }
 }

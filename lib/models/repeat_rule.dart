@@ -1,10 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
+import 'package:tazbeet/l10n/app_localizations.dart';
 
-enum RepeatFrequency {
-  weekly,
-  biweekly,
-  monthly,
-}
+enum RepeatFrequency { weekly, biweekly, monthly }
 
 enum RepeatType {
   forever, // Repeat indefinitely
@@ -21,25 +19,9 @@ class RepeatRule extends Equatable {
   final DateTime startDate;
   final bool includeTime; // Whether to repeat at specific time
 
-  const RepeatRule({
-    required this.frequency,
-    this.repeatType = RepeatType.forever,
-    this.daysOfWeek = const [],
-    this.endDate,
-    this.repeatCount,
-    required this.startDate,
-    this.includeTime = false,
-  });
+  const RepeatRule({required this.frequency, this.repeatType = RepeatType.forever, this.daysOfWeek = const [], this.endDate, this.repeatCount, required this.startDate, this.includeTime = false});
 
-  RepeatRule copyWith({
-    RepeatFrequency? frequency,
-    RepeatType? repeatType,
-    List<int>? daysOfWeek,
-    DateTime? endDate,
-    int? repeatCount,
-    DateTime? startDate,
-    bool? includeTime,
-  }) {
+  RepeatRule copyWith({RepeatFrequency? frequency, RepeatType? repeatType, List<int>? daysOfWeek, DateTime? endDate, int? repeatCount, DateTime? startDate, bool? includeTime}) {
     return RepeatRule(
       frequency: frequency ?? this.frequency,
       repeatType: repeatType ?? this.repeatType,
@@ -121,11 +103,20 @@ class RepeatRule extends Equatable {
         break;
 
       case RepeatFrequency.monthly:
-        nextDate = DateTime(
-          nextDate.year,
-          nextDate.month + 1,
-          nextDate.day,
-        );
+        // Handle month overflow safely (e.g., Jan 31 -> Feb 28)
+        int nextMonth = nextDate.month + 1;
+        int nextYear = nextDate.year;
+        if (nextMonth > 12) {
+          nextMonth = 1;
+          nextYear++;
+        }
+        // Find the last valid day of the target month
+        int targetDay = nextDate.day;
+        int lastDayOfMonth = DateTime(nextYear, nextMonth + 1, 0).day;
+        if (targetDay > lastDayOfMonth) {
+          targetDay = lastDayOfMonth;
+        }
+        nextDate = DateTime(nextYear, nextMonth, targetDay);
         break;
     }
 
@@ -137,35 +128,36 @@ class RepeatRule extends Equatable {
     return nextDate.isAfter(now) ? nextDate : null;
   }
 
-  String getDisplayText() {
+  String getDisplayText([BuildContext? context]) {
+    final l10n = context != null ? AppLocalizations.of(context)! : null;
     String text = '';
 
     switch (frequency) {
       case RepeatFrequency.weekly:
-        text = 'Weekly';
+        text = l10n?.weekly ?? 'Weekly';
         if (daysOfWeek.isNotEmpty) {
-          final dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+          final dayNames = [l10n?.sunday ?? 'Sun', l10n?.monday ?? 'Mon', l10n?.tuesday ?? 'Tue', l10n?.wednesday ?? 'Wed', l10n?.thursday ?? 'Thu', l10n?.friday ?? 'Fri', l10n?.saturday ?? 'Sat'];
           final selectedDays = daysOfWeek.map((i) => dayNames[i]).join(', ');
-          text += ' on $selectedDays';
+          text += ' ${l10n?.onDays ?? 'on'} $selectedDays';
         }
         break;
       case RepeatFrequency.biweekly:
-        text = 'Bi-weekly';
+        text = l10n?.biweekly ?? 'Bi-weekly';
         break;
       case RepeatFrequency.monthly:
-        text = 'Monthly';
+        text = l10n?.monthly ?? 'Monthly';
         break;
     }
 
     switch (repeatType) {
       case RepeatType.forever:
-        text += ' (forever)';
+        text += ' ${l10n?.repeatForever ?? '(forever)'}';
         break;
       case RepeatType.untilDate:
-        text += ' until ${endDate!.toString().split(' ')[0]}';
+        text += ' ${l10n?.repeatUntil ?? 'until'} ${endDate!.toString().split(' ')[0]}';
         break;
       case RepeatType.count:
-        text += ' ($repeatCount times)';
+        text += ' ${l10n?.repeatCount ?? '($repeatCount times)'}';
         break;
     }
 
@@ -173,13 +165,5 @@ class RepeatRule extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
-        frequency,
-        repeatType,
-        daysOfWeek,
-        endDate,
-        repeatCount,
-        startDate,
-        includeTime,
-      ];
+  List<Object?> get props => [frequency, repeatType, daysOfWeek, endDate, repeatCount, startDate, includeTime];
 }

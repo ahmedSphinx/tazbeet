@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/notification/notification_bloc.dart';
 import '../../blocs/notification/notification_event.dart';
 import '../../blocs/notification/notification_state.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/notification_item.dart';
 
 /// Quick action buttons for notification management
@@ -70,10 +71,10 @@ class NotificationQuickActions extends StatelessWidget {
   Widget _buildTestButton(BuildContext context) {
     return ActionChip(
       avatar: const Icon(Icons.send, size: 20),
-      label: const Text('Test'),
+      label: Text(AppLocalizations.of(context)!.testButton),
       onPressed: () {
         context.read<NotificationBloc>().add(const SendTestNotification(NotificationType.system, immediate: true));
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Test notification sent')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.testNotificationSent)));
       },
     );
   }
@@ -81,7 +82,7 @@ class NotificationQuickActions extends StatelessWidget {
   Widget _buildClearButton(BuildContext context, NotificationLoaded state) {
     final hasNotifications = state.allNotifications.isNotEmpty;
 
-    return ActionChip(avatar: const Icon(Icons.clear_all, size: 20), label: const Text('Clear All'), onPressed: hasNotifications ? () => _showClearDialog(context) : null);
+    return ActionChip(avatar: const Icon(Icons.clear_all, size: 20), label: Text(AppLocalizations.of(context)!.clearAllButton), onPressed: hasNotifications ? () => _showClearDialog(context) : null);
   }
 
   Widget _buildSettingsButton(BuildContext context) {
@@ -128,10 +129,10 @@ class NotificationQuickActions extends StatelessWidget {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Clear All Notifications'),
-        content: const Text('This will cancel all pending notifications and clear history. Are you sure?'),
+        title: Text(AppLocalizations.of(context)!.clearAllNotifications),
+        content: Text(AppLocalizations.of(context)!.clearAllNotificationsConfirmation),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(dialogContext), child: Text(AppLocalizations.of(context)!.cancelButton)),
           TextButton(
             onPressed: () {
               Navigator.pop(dialogContext);

@@ -52,6 +52,16 @@ class DSColors {
     return getWarningColor(isDark);
   }
 
+  static Color getMediumPriorityColor(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return getWarningColor(isDark);
+  }
+
+  static Color getLowPriorityColor(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return getWarningColor(isDark);
+  }
+
   static Color getUndatedColor(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return getInfoColor(isDark);

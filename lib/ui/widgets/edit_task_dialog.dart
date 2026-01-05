@@ -126,7 +126,7 @@ class _EditTaskDialogState extends State<EditTaskDialog> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Subtasks (${widget.task.subtasks.length})', style: Theme.of(context).textTheme.titleMedium),
+                    Text(AppLocalizations.of(context)!.subtasksCount(widget.task.subtasks.length), style: Theme.of(context).textTheme.titleMedium),
                     TextButton.icon(onPressed: () => _showAddSubtaskDialog(), icon: const Icon(Icons.add), label: Text(AppLocalizations.of(context)!.addSubtask)),
                   ],
                 ),

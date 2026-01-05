@@ -20,7 +20,7 @@ class User extends Equatable {
   @HiveField(6)
   final String? email;
   @HiveField(7)
-  final bool isAdmin;
+  final bool? isAdmin;
 
   const User({required this.id, required this.name, this.profileImageUrl, this.birthday, required this.createdAt, required this.updatedAt, required this.email, required this.isAdmin});
 

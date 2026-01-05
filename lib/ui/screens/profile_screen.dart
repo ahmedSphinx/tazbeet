@@ -1,20 +1,22 @@
 import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
 
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:tazbeet/l10n/app_localizations.dart';
 import 'package:tazbeet/services/app_logging_service.dart';
-import 'package:tazbeet/ui/screens/main_screen.dart';
+import 'package:tazbeet/ui/screens/home/main_screen.dart';
+
+import '../../blocs/auth/auth_bloc.dart';
+import '../../blocs/auth/auth_event.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../../blocs/user/user_event.dart';
 import '../../blocs/user/user_state.dart';
-import '../../blocs/auth/auth_bloc.dart';
-import '../../blocs/auth/auth_event.dart';
 import '../../models/user.dart';
 import 'splash_screen.dart';
 
@@ -110,7 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     } catch (e) {
       AppLogging.logError('Error picking image: $e', name: '_pickImage', error: e);
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to access gallery. Please try again.')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.failedToAccessGallery)));
     }
   }
 
@@ -186,11 +188,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Additional validation for profile completion
     if (widget.isProfileCompletion) {
       if (_nameController.text.trim().isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Name is required to complete your profile')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.nameRequiredForProfile)));
         return;
       }
       if (_birthday == null) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Birthday is required to complete your profile')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.birthdayRequiredForProfile)));
         return;
       }
     }
@@ -219,7 +221,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // Upload failed - show error and don't proceed with save
               AppLogging.logInfo('Image upload failed, aborting profile save', name: '_saveProfile');
               setState(() => _isUploading = false);
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to upload image. Please try again.')));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.failedToUploadImage)));
               return; // Don't save profile if image upload failed
             } else {
               AppLogging.logInfo('Image upload successful, new URL: $newImageUrl', name: '_saveProfile');
@@ -228,7 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // No authenticated user - show error
             AppLogging.logInfo('No authenticated Firebase user found', name: '_saveProfile');
             setState(() => _isUploading = false);
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('User not authenticated')));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.userNotAuthenticated)));
             return;
           }
         } else {

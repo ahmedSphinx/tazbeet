@@ -1,4 +1,5 @@
 import 'package:tazbeet/services/app_logging_service.dart';
+import 'package:tazbeet/services/error_notification_service.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +13,7 @@ import 'package:tazbeet/firebase_options.dart';
 class FirebaseServiceWrapper {
   static bool _isInitialized = false;
   static bool _hasError = false;
+  static bool _offlineMessageShown = false;
 
   /// Initialize Firebase with error handling
   static Future<bool> initializeFirebase() async {
@@ -33,7 +35,7 @@ class FirebaseServiceWrapper {
         return false;
       }
     }
-/* 
+    /* 
 
 
 
@@ -52,6 +54,11 @@ class FirebaseServiceWrapper {
     } catch (e) {
       _hasError = true;
       AppLogging.logInfo('Firebase initialization failed: $e');
+      // Only show offline message once per app session
+      if (!_offlineMessageShown) {
+        _offlineMessageShown = true;
+        ErrorNotificationService().showInfo('Running in offline mode. Data will sync when online.');
+      }
       return false;
     }
   }

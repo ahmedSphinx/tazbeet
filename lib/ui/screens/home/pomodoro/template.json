@@ -1,0 +1,36 @@
+{
+  "pomodoro_templates": [
+    {
+      "name": "Classic 25-5",
+      "work": 25,
+      "rest": 5,
+      "long_rest": 15,
+      "cycles": 4,
+      "recommended_for": "normal"
+    },
+    {
+      "name": "50-10 Deep Work",
+      "work": 50,
+      "rest": 10,
+      "long_rest": 20,
+      "cycles": 3,
+      "recommended_for": "normal"
+    },
+    {
+      "name": "30-5 Students",
+      "work": 30,
+      "rest": 5,
+      "long_rest": 10,
+      "cycles": 4,
+      "recommended_for": "normal"
+    },
+    {
+      "name": "15-3 Quick Start",
+      "work": 15,
+      "rest": 3,
+      "long_rest": 8,
+      "cycles": 4,
+      "recommended_for": "adhd"
+    }
+  ]
+}

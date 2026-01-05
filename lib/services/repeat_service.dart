@@ -1,4 +1,5 @@
 import 'package:uuid/uuid.dart';
+import 'dart:async';
 import '../models/task.dart';
 import '../models/repeat_rule.dart';
 import '../repositories/task_repository.dart';
@@ -10,6 +11,24 @@ class RepeatService {
 
   final TaskRepository _taskRepository = TaskRepository();
   final Uuid _uuid = const Uuid();
+
+  /// Generate next recurring instance of a task with retry logic
+  Future<Task?> generateNextRecurringTaskWithRetry(Task originalTask, {int maxRetries = 3}) async {
+    for (int i = 0; i < maxRetries; i++) {
+      try {
+        final result = await generateNextRecurringTask(originalTask);
+        return result;
+      } catch (e) {
+        if (i == maxRetries - 1) {
+          // Log error for debugging - could use logging service here
+          rethrow;
+        }
+        // Exponential backoff for retries
+        await Future.delayed(Duration(milliseconds: 100 * (i + 1)));
+      }
+    }
+    return null;
+  }
 
   /// Generate next recurring instance of a task
   Future<Task?> generateNextRecurringTask(Task originalTask) async {
@@ -60,25 +79,61 @@ class RepeatService {
     }
   }
 
+  /// Generate multiple recurring instances for bulk operations
+  Future<List<Task>> generateMultipleRecurringInstances(List<Task> tasks) async {
+    final instances = <Task>[];
+    final errors = <String>[];
+
+    for (final task in tasks) {
+      try {
+        final instance = await generateNextRecurringTask(task);
+        if (instance != null) {
+          instances.add(instance);
+        }
+      } catch (e) {
+        errors.add('Failed to generate instance for "${task.title}": $e');
+      }
+    }
+
+    if (errors.isNotEmpty) {
+      // Could use logging service here instead of print
+      // print('Recurring task generation errors: ${errors.join(', ')}');
+    }
+
+    return instances;
+  }
+
   /// Get all recurring tasks that need to generate new instances
   Future<List<Task>> getTasksNeedingRecurringInstances() async {
     final allTasks = await _taskRepository.getAllTasks();
     final recurringTasks = <Task>[];
 
+    // Pre-build a map of originalTaskId -> has future instance (O(n) instead of O(n²))
+    final futureInstanceMap = <String, bool>{};
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
     for (final task in allTasks) {
-      if (task.repeatRule != null && task.repeatRule!.isActive) {
-        final nextOccurrence = task.repeatRule!.getNextOccurrence(
-          task.dueDate ?? DateTime.now(),
-        );
+      if (task.originalTaskId != null && task.dueDate != null && task.dueDate!.isAfter(now)) {
+        futureInstanceMap[task.originalTaskId!] = true;
+      }
+    }
+
+    for (final task in allTasks) {
+      if (task.repeatRule != null && task.repeatRule!.isActive && !task.isRecurringInstance) {
+        // Check if already generated today to prevent duplicates
+        if (task.lastGeneratedAt != null) {
+          final lastGenDate = DateTime(task.lastGeneratedAt!.year, task.lastGeneratedAt!.month, task.lastGeneratedAt!.day);
+          if (lastGenDate.isAtSameMomentAs(today)) {
+            continue; // Already generated today, skip
+          }
+        }
+
+        final nextOccurrence = task.repeatRule!.getNextOccurrence(task.dueDate ?? DateTime.now());
 
         if (nextOccurrence != null) {
-          // Check if we already have a future instance
-          final existingInstances = await _taskRepository.getAllTasks();
-          final hasFutureInstance = existingInstances.any((t) =>
-            t.originalTaskId == task.id &&
-            t.dueDate != null &&
-            t.dueDate!.isAfter(DateTime.now())
-          );
+          // Check if we already have a future instance using pre-built map
+          final hasFutureInstance = futureInstanceMap[task.id] ?? false;
 
           if (!hasFutureInstance) {
             recurringTasks.add(task);
@@ -91,11 +146,7 @@ class RepeatService {
   }
 
   /// Generate recurring instances for a given time period
-  Future<List<Task>> generateRecurringInstancesForPeriod(
-    Task originalTask,
-    DateTime startDate,
-    DateTime endDate,
-  ) async {
+  Future<List<Task>> generateRecurringInstancesForPeriod(Task originalTask, DateTime startDate, DateTime endDate) async {
     if (originalTask.repeatRule == null) {
       return [];
     }
@@ -115,9 +166,7 @@ class RepeatService {
         description: originalTask.description,
         priority: originalTask.priority,
         dueDate: nextDate,
-        reminderDate: originalTask.reminderDate != null
-            ? nextDate.subtract(const Duration(hours: 1))
-            : null,
+        reminderDate: originalTask.reminderDate != null ? nextDate.subtract(const Duration(hours: 1)) : null,
         isCompleted: false,
         categoryId: originalTask.categoryId,
         repeatRule: originalTask.repeatRule,
@@ -141,18 +190,13 @@ class RepeatService {
   /// Update repeat rule for a task and regenerate instances
   Future<void> updateRepeatRule(Task task, RepeatRule newRepeatRule) async {
     // Update the original task
-    final updatedTask = task.copyWith(
-      repeatRule: newRepeatRule,
-      updatedAt: DateTime.now(),
-    );
+    final updatedTask = task.copyWith(repeatRule: newRepeatRule, updatedAt: DateTime.now());
 
     await _taskRepository.updateTask(updatedTask);
 
     // Delete existing recurring instances
     final existingTasks = await _taskRepository.getAllTasks();
-    final instancesToDelete = existingTasks.where(
-      (t) => t.originalTaskId == task.id && t.isRecurringInstance,
-    ).toList();
+    final instancesToDelete = existingTasks.where((t) => t.originalTaskId == task.id && t.isRecurringInstance).toList();
 
     for (final instance in instancesToDelete) {
       await _taskRepository.deleteTask(instance.id);
@@ -177,9 +221,7 @@ class RepeatService {
     return {
       'totalRecurringTasks': recurringTasks.length,
       'totalRecurringInstances': recurringInstances.length,
-      'activeRecurringTasks': recurringTasks.where((task) =>
-        task.repeatRule != null && task.repeatRule!.isActive
-      ).length,
+      'activeRecurringTasks': recurringTasks.where((task) => task.repeatRule != null && task.repeatRule!.isActive).length,
     };
   }
 }

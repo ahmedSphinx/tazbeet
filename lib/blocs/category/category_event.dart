@@ -36,3 +36,12 @@ class DeleteCategory extends CategoryEvent {
   @override
   List<Object?> get props => [categoryId];
 }
+
+class CheckCategoryDeletion extends CategoryEvent {
+  final String categoryId;
+
+  const CheckCategoryDeletion(this.categoryId);
+
+  @override
+  List<Object?> get props => [categoryId];
+}

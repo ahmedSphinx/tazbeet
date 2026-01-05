@@ -6,6 +6,7 @@ import '../../blocs/category/category_bloc.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/task.dart';
 import '../../models/repeat_rule.dart';
+import '../design_system/ds_typography.dart';
 import '../widgets/repeat_config_widget.dart';
 
 class AddTaskScreen extends StatefulWidget {
@@ -37,9 +38,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.addTaskTitle),
+        title: Text(AppLocalizations.of(context)!.addTaskTitle, style: DSTypography.title(context).copyWith(color: Theme.of(context).colorScheme.primary)),
         leading: IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.of(context).pop()),
-        actions: [TextButton(onPressed: _handleAddTask, child: Text(AppLocalizations.of(context)!.addTaskButton))],
+        actions: [
+          TextButton.icon(
+            onPressed: _handleAddTask,
+            icon: Icon(Icons.add_circle, color: Colors.green),
+            label: Text(AppLocalizations.of(context)!.addTaskButton, style: DSTypography.subtitle(context).copyWith(color: Colors.green, fontSize: 13)),
+          ),
+        ],
       ),
       body: BlocBuilder<CategoryBloc, CategoryState>(
         builder: (context, state) {
@@ -97,8 +104,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   InkWell(
                     onTap: () async {
                       final pickedDate = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 365)));
+
                       if (pickedDate != null) {
-                        setState(() => selectedDueDate = pickedDate);
+                        final pickedTime = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(pickedDate));
+
+                        if (pickedTime != null) {
+                          setState(() => selectedDueDate = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, pickedTime.hour, pickedTime.minute));
+                        } else {
+                          setState(() => selectedDueDate = DateTime(pickedDate.year, pickedDate.month, pickedDate.day));
+                        }
                       }
                     },
                     child: InputDecorator(
@@ -108,7 +122,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                       child: Text(
-                        selectedDueDate != null ? '${selectedDueDate!.day}/${selectedDueDate!.month}/${selectedDueDate!.year}' : AppLocalizations.of(context)!.selectDueDate,
+                        selectedDueDate != null
+                            ? '${selectedDueDate!.day}/${selectedDueDate!.month}/${selectedDueDate!.year} - ${((selectedDueDate!.hour % 12) == 0 ? 12 : (selectedDueDate!.hour % 12))}:${selectedDueDate!.minute.toString().padLeft(2, '0')} ${selectedDueDate!.hour >= 12 ? 'PM' : 'AM'}'
+                            : AppLocalizations.of(context)!.selectDueDate,
                         style: TextStyle(color: selectedDueDate != null ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
                       ),
                     ),
@@ -172,8 +188,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       return;
     }
 
+    final now = DateTime.now();
+    // Use timestamp + microseconds + random to avoid ID collisions
+    final newId = '${now.millisecondsSinceEpoch}_${now.microsecond}_${now.hashCode.abs() % 10000}';
     final task = Task(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: newId,
       title: _titleController.text.trim(),
       description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
       priority: selectedPriority,

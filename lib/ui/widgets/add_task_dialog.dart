@@ -198,8 +198,11 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
       return;
     }
 
+    final now = DateTime.now();
+    // Use timestamp + microseconds + random to avoid ID collisions
+    final newId = '${now.millisecondsSinceEpoch}_${now.microsecond}_${now.hashCode.abs() % 10000}';
     final task = Task(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: newId,
       title: _titleController.text.trim(),
       description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
       priority: selectedPriority,
@@ -207,8 +210,8 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
       categoryId: selectedCategoryId,
       repeatRule: selectedRepeatRule,
       isCompleted: false,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
+      createdAt: now,
+      updatedAt: now,
     );
     widget.onTaskAdded(task);
     if (!widget.isSubtask) {

@@ -1,0 +1,48 @@
+{
+  "tenants": [
+    {
+      "name": "عاطف راغب قطب",
+      "amount": 150,
+      "apartment_number": "شقة٢",
+      "number": "70"
+    },
+    {
+      "name": "احمد عاطف راغب قطب",
+      "amount": 200,
+      "apartment_number": "شقة٦",
+      "number": "70"
+    },
+    {
+      "name": "سيد علي بركات",
+      "amount": 120,
+      "apartment_number": "شقة٥",
+      "number": "70"
+    },
+    {
+      "name": "منى علي بركات",
+      "amount": 60,
+      "apartment_number": "شقة ١",
+      "number": "70"
+    },
+    {
+      "name": "محمد عبد الغفار",
+      "amount": 130,
+      "apartment_number": "شقة ٤",
+      "number": "70"
+    },
+    {
+      "name": "ناصر محمد مصطفى",
+      "amount": 120,
+      "apartment_number": "شقة ٣",
+      "number": "70"
+    },
+    {
+      "name": "هشام محمد حسن احمد",
+      "amount": 500,
+      "apartment_number": "محل",
+      "number": "70"
+    }
+  ],
+  "exportDate": "2025-12-29T08:57:46.053Z",
+  "version": "1.0"
+}

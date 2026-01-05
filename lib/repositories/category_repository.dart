@@ -9,9 +9,7 @@ class CategoryAdapter extends TypeAdapter<Category> {
   @override
   Category read(BinaryReader reader) {
     final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
+    final fields = <int, dynamic>{for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read()};
 
     return Category(
       id: fields[0] as String,
@@ -128,12 +126,23 @@ class CategoryRepository {
     final allCategories = await getAllCategories();
     final categoryCounts = <String, int>{};
 
-    // Count tasks per category
-    for (final task in tasks) {
+    // Recursive helper to count task and all its subtasks
+    void countTaskAndSubtasks(dynamic task) {
       final categoryId = task.categoryId;
       if (categoryId != null) {
         categoryCounts[categoryId] = (categoryCounts[categoryId] ?? 0) + 1;
       }
+      // Recursively count subtasks
+      if (task.subtasks != null) {
+        for (final subtask in task.subtasks) {
+          countTaskAndSubtasks(subtask);
+        }
+      }
+    }
+
+    // Count all tasks and their subtasks per category
+    for (final task in tasks) {
+      countTaskAndSubtasks(task);
     }
 
     // Update each category with the correct count

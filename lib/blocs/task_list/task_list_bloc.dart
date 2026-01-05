@@ -1,4 +1,5 @@
 import 'package:tazbeet/services/app_logging_service.dart';
+import 'package:tazbeet/services/error_notification_service.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +10,7 @@ import '../../services/notification_service.dart';
 import '../../services/data_sync_service.dart';
 import '../../services/task_sound_service.dart';
 import '../../services/repeat_service.dart';
+import '../../services/sync_queue.dart';
 import 'task_list_event.dart';
 import 'task_list_state.dart';
 
@@ -26,6 +28,7 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     on<UpdateTask>(_onUpdateTask);
     on<DeleteTask>(_onDeleteTask);
     on<ToggleTaskCompletion>(_onToggleTaskCompletion);
+    on<ReorderTasks>(_onReorderTasks);
     on<ScheduleTaskReminder>(_onScheduleTaskReminder);
     on<CancelTaskReminder>(_onCancelTaskReminder);
 
@@ -56,69 +59,51 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
 
   Future<void> _onAddTask(AddTask event, Emitter<TaskListState> emit) async {
     if (state is TaskListLoaded) {
+      // Persist FIRST to prevent data loss on crash
+      await taskRepository.addTask(event.task);
+
       final List<Task> updatedTasks = List.from((state as TaskListLoaded).tasks)..add(event.task);
       emit(TaskListLoaded(updatedTasks));
-      await taskRepository.addTask(event.task);
 
       // Update category task counts
       await categoryRepository.updateCategoryTaskCounts(updatedTasks);
 
-      // Sync to Firestore if user is signed in
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        try {
-          await _dataSyncService.syncToFirestore(user.uid);
-        } catch (e) {
-          // Log error but don't fail the operation
-          AppLogging.logInfo('Failed to sync task addition to Firestore: $e');
-        }
-      }
+      // Queue for sync instead of immediate sync
+      syncQueue.enqueueTaskCreate(event.task);
     }
   }
 
   Future<void> _onUpdateTask(UpdateTask event, Emitter<TaskListState> emit) async {
     if (state is TaskListLoaded) {
+      // Persist FIRST to prevent data loss on crash
+      await taskRepository.updateTask(event.task);
+
       final List<Task> updatedTasks = (state as TaskListLoaded).tasks.map((task) {
         return task.id == event.task.id ? event.task : task;
       }).toList();
       emit(TaskListLoaded(updatedTasks));
-      await taskRepository.updateTask(event.task);
 
       // Update category task counts
       await categoryRepository.updateCategoryTaskCounts(updatedTasks);
 
-      // Sync to Firestore if user is signed in
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        try {
-          await _dataSyncService.syncToFirestore(user.uid);
-        } catch (e) {
-          // Log error but don't fail the operation
-          AppLogging.logInfo('Failed to sync task update to Firestore: $e');
-        }
-      }
+      // Queue for sync instead of immediate sync
+      syncQueue.enqueueTaskUpdate(event.task);
     }
   }
 
   Future<void> _onDeleteTask(DeleteTask event, Emitter<TaskListState> emit) async {
     if (state is TaskListLoaded) {
+      // Persist FIRST to prevent data loss on crash
+      await taskRepository.deleteTask(event.taskId);
+
       final List<Task> updatedTasks = (state as TaskListLoaded).tasks.where((task) => task.id != event.taskId).toList();
       emit(TaskListLoaded(updatedTasks));
-      await taskRepository.deleteTask(event.taskId);
 
       // Update category task counts
       await categoryRepository.updateCategoryTaskCounts(updatedTasks);
 
-      // Sync to Firestore if user is signed in
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        try {
-          await _dataSyncService.syncToFirestore(user.uid);
-        } catch (e) {
-          // Log error but don't fail the operation
-          AppLogging.logInfo('Failed to sync task deletion to Firestore: $e');
-        }
-      }
+      // Queue for sync instead of immediate sync
+      syncQueue.enqueueTaskDelete(event.taskId);
     }
   }
 
@@ -130,9 +115,11 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
         }
         return task;
       }).toList();
-      emit(TaskListLoaded(updatedTasks));
       final toggledTask = updatedTasks.firstWhere((task) => task.id == event.taskId);
+
+      // Persist FIRST to prevent data loss on crash
       await taskRepository.updateTask(toggledTask);
+      emit(TaskListLoaded(updatedTasks));
 
       // Play completion sound if task was just completed (not uncompleted)
       if (toggledTask.isCompleted) {
@@ -147,6 +134,37 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
         } catch (e) {
           // Log error but don't fail the operation
           AppLogging.logError('Failed to sync task completion toggle to Firestore: $e');
+          ErrorNotificationService().showSyncError('task completion', null);
+        }
+      }
+    }
+  }
+
+  Future<void> _onReorderTasks(ReorderTasks event, Emitter<TaskListState> emit) async {
+    if (state is TaskListLoaded) {
+      final currentTasks = (state as TaskListLoaded).tasks;
+      // Create a map for quick lookup of updated tasks
+      final updatedTaskMap = {for (var t in event.tasks) t.id: t};
+
+      // Update the full task list with the new versions
+      final List<Task> updatedTasks = currentTasks.map((task) {
+        return updatedTaskMap[task.id] ?? task;
+      }).toList();
+
+      emit(TaskListLoaded(updatedTasks));
+
+      // Persist changes
+      for (var task in event.tasks) {
+        await taskRepository.updateTask(task);
+      }
+
+      // Sync to Firestore if user is signed in
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        try {
+          await _dataSyncService.syncToFirestore(user.uid);
+        } catch (e) {
+          AppLogging.logInfo('Failed to sync reordered tasks to Firestore: $e');
         }
       }
     }
@@ -243,19 +261,21 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
       if (originalTask.repeatRule != null) {
         final nextInstance = await _repeatService.generateNextRecurringTask(originalTask);
         if (nextInstance != null) {
-          final List<Task> updatedTasks = List.from((state as TaskListLoaded).tasks)..add(nextInstance);
+          // Update original task with lastGeneratedAt timestamp
+          final updatedOriginalTask = originalTask.copyWith(lastGeneratedAt: DateTime.now(), updatedAt: DateTime.now());
+          await taskRepository.updateTask(updatedOriginalTask);
+
+          // Add new instance and update original in the list
+          final List<Task> updatedTasks = (state as TaskListLoaded).tasks.map((task) {
+            return task.id == originalTask.id ? updatedOriginalTask : task;
+          }).toList()..add(nextInstance);
+
           emit(TaskListLoaded(updatedTasks));
           await taskRepository.addTask(nextInstance);
 
-          // Sync to Firestore if user is signed in
-          final user = FirebaseAuth.instance.currentUser;
-          if (user != null) {
-            try {
-              await _dataSyncService.syncToFirestore(user.uid);
-            } catch (e) {
-              AppLogging.logInfo('Failed to sync recurring instance to Firestore: $e');
-            }
-          }
+          // Queue both updates for sync
+          syncQueue.enqueueTaskUpdate(updatedOriginalTask);
+          syncQueue.enqueueTaskCreate(nextInstance);
         }
       }
     }

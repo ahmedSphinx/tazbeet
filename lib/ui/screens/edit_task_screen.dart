@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
- import '../../l10n/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/task.dart';
 import '../../models/repeat_rule.dart';
 import '../widgets/repeat_config_widget.dart';
@@ -22,6 +22,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   DateTime? selectedDueDate;
   RepeatRule? selectedRepeatRule;
   bool _showRepeatSettings = false;
+  late List<Task> _subtasks; // Local copy of subtasks to avoid mutating original
 
   @override
   void initState() {
@@ -31,6 +32,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     selectedPriority = widget.task.priority;
     selectedDueDate = widget.task.dueDate;
     selectedRepeatRule = widget.task.repeatRule;
+    _subtasks = List.from(widget.task.subtasks); // Create a local copy
   }
 
   @override
@@ -103,7 +105,13 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                 onTap: () async {
                   final pickedDate = await showDatePicker(context: context, initialDate: selectedDueDate ?? DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 365)));
                   if (pickedDate != null) {
-                    setState(() => selectedDueDate = pickedDate);
+                    final pickedTime = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(pickedDate));
+
+                    if (pickedTime != null) {
+                      setState(() => selectedDueDate = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, pickedTime.hour, pickedTime.minute));
+                    } else {
+                      setState(() => selectedDueDate = DateTime(pickedDate.year, pickedDate.month, pickedDate.day));
+                    }
                   }
                 },
                 child: InputDecorator(
@@ -126,19 +134,19 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Subtasks (${widget.task.subtasks.length})', style: Theme.of(context).textTheme.titleMedium),
+                  Text('${AppLocalizations.of(context)!.subtasks} (${_subtasks.length})', style: Theme.of(context).textTheme.titleMedium),
                   TextButton.icon(onPressed: () => _showAddSubtaskDialog(), icon: const Icon(Icons.add), label: Text(AppLocalizations.of(context)!.addSubtask)),
                 ],
               ),
-              if (widget.task.subtasks.isNotEmpty) ...[
+              if (_subtasks.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 Container(
                   constraints: const BoxConstraints(maxHeight: 200),
                   child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: widget.task.subtasks.length,
+                    itemCount: _subtasks.length,
                     itemBuilder: (context, index) {
-                      final subtask = widget.task.subtasks[index];
+                      final subtask = _subtasks[index];
                       return ListTile(
                         leading: Checkbox(
                           value: subtask.isCompleted,
@@ -202,7 +210,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
         parentTask: widget.task,
         onSubtaskAdded: (subtask) {
           setState(() {
-            widget.task.subtasks.add(subtask);
+            _subtasks.add(subtask);
           });
         },
       ),
@@ -211,13 +219,13 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
 
   void _toggleSubtaskCompletion(int index, bool isCompleted) {
     setState(() {
-      widget.task.subtasks[index] = widget.task.subtasks[index].copyWith(isCompleted: isCompleted, updatedAt: DateTime.now());
+      _subtasks[index] = _subtasks[index].copyWith(isCompleted: isCompleted, updatedAt: DateTime.now());
     });
   }
 
   void _deleteSubtask(int index) {
     setState(() {
-      widget.task.subtasks.removeAt(index);
+      _subtasks.removeAt(index);
     });
   }
 
@@ -233,6 +241,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
       priority: selectedPriority,
       dueDate: selectedDueDate,
       repeatRule: selectedRepeatRule,
+      subtasks: _subtasks,
       updatedAt: DateTime.now(),
     );
 
@@ -286,6 +295,7 @@ class _AddSubtaskDialogState extends State<_AddSubtaskDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Padding(
@@ -293,12 +303,12 @@ class _AddSubtaskDialogState extends State<_AddSubtaskDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Add Subtask', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(l10n.addSubtask, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             TextField(
               controller: _titleController,
               decoration: InputDecoration(
-                labelText: 'Subtask Title',
+                labelText: l10n.taskTitleLabel,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
               ),
               autofocus: true,
@@ -307,7 +317,7 @@ class _AddSubtaskDialogState extends State<_AddSubtaskDialog> {
             TextField(
               controller: _descriptionController,
               decoration: InputDecoration(
-                labelText: 'Description (optional)',
+                labelText: l10n.taskDescriptionLabel,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
               ),
               maxLines: 3,
@@ -316,9 +326,9 @@ class _AddSubtaskDialogState extends State<_AddSubtaskDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(l10n.cancelButton)),
                 const SizedBox(width: 8),
-                ElevatedButton(onPressed: _saveSubtask, child: const Text('Add')),
+                ElevatedButton(onPressed: _saveSubtask, child: Text(l10n.addTaskButton)),
               ],
             ),
           ],
@@ -329,13 +339,15 @@ class _AddSubtaskDialogState extends State<_AddSubtaskDialog> {
 
   void _saveSubtask() {
     if (_titleController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please enter a subtask title')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.nameRequired)));
       return;
     }
 
     final now = DateTime.now();
+    // Use timestamp + microseconds + hash to avoid ID collisions
+    final newId = '${now.millisecondsSinceEpoch}_${now.microsecond}_${widget.parentTask.id.hashCode.abs() % 10000}';
     final subtask = Task(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: newId,
       title: _titleController.text.trim(),
       description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
       isCompleted: false,

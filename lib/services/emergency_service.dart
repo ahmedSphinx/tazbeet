@@ -11,7 +11,13 @@ class EmergencyService extends ChangeNotifier {
   EmergencyService._internal();
 
   final NotificationService _notificationService = NotificationService();
-  final PomodoroTimer _pomodoroTimer = PomodoroTimer();
+
+  // Reference to the global pomodoro timer (set by PomodoroScreen)
+  PomodoroTimer? _pomodoroTimer;
+
+  void setPomodoroTimer(PomodoroTimer? timer) {
+    _pomodoroTimer = timer;
+  }
 
   bool _isEmergencyMode = false;
   bool _remindersSuspended = false;
@@ -92,8 +98,8 @@ class EmergencyService extends ChangeNotifier {
   }
 
   Future<void> _pausePomodoroIfRunning() async {
-    if (_pomodoroTimer.isRunning) {
-      _pomodoroTimer.pause();
+    if (_pomodoroTimer != null && _pomodoroTimer!.isRunning) {
+      _pomodoroTimer!.pause();
     }
   }
 

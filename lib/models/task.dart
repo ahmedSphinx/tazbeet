@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'repeat_rule.dart';
+import 'pomodoro_strategy.dart';
 
 enum TaskPriority { low, medium, high }
 
@@ -20,9 +21,11 @@ class Task extends Equatable {
   final RepeatRule? repeatRule;
   final bool isRecurringInstance;
   final String? originalTaskId;
+  final DateTime? lastGeneratedAt; // NEW: Track when last recurring instance was generated
   final DateTime createdAt;
   final DateTime updatedAt;
   final int progress;
+  final int index;
   final List<String> tags;
   final List<String> attachments;
   final List<String> voiceNotes;
@@ -30,6 +33,14 @@ class Task extends Equatable {
   final Duration timeSpent;
   final List<Map<String, dynamic>> pomodoroSessions;
   final String? userId; // For admin panel - which user this task belongs to
+
+  // Enhanced Pomodoro Integration
+  final int estimatedSessions; // How many pomodoros needed
+  final int targetSessionsPerDay; // Daily work goal
+  final DateTime? lastPomodoroDate; // Track work frequency
+  final List<String> sessionNotes; // Notes from each session
+  final PomodoroStrategy strategy; // How to break down work
+  final bool autoStartNextSubtask; // Chain subtasks in sessions
 
   const Task({
     required this.id,
@@ -48,9 +59,11 @@ class Task extends Equatable {
     this.repeatRule, // NEW
     this.isRecurringInstance = false, // NEW
     this.originalTaskId, // NEW
+    this.lastGeneratedAt, // NEW
     required this.createdAt,
     required this.updatedAt,
     this.progress = 0,
+    this.index = 0,
     this.tags = const [],
     this.attachments = const [],
     this.voiceNotes = const [],
@@ -58,6 +71,13 @@ class Task extends Equatable {
     this.timeSpent = Duration.zero,
     this.pomodoroSessions = const [],
     this.userId, // For admin panel
+    // Enhanced Pomodoro Integration
+    this.estimatedSessions = 1,
+    this.targetSessionsPerDay = 3,
+    this.lastPomodoroDate,
+    this.sessionNotes = const [],
+    this.strategy = PomodoroStrategy.sequential,
+    this.autoStartNextSubtask = false,
   });
 
   Task copyWith({
@@ -77,9 +97,11 @@ class Task extends Equatable {
     RepeatRule? repeatRule,
     bool? isRecurringInstance,
     String? originalTaskId,
+    DateTime? lastGeneratedAt,
     DateTime? createdAt,
     DateTime? updatedAt,
     int? progress,
+    int? index,
     List<String>? tags,
     List<String>? attachments,
     List<String>? voiceNotes,
@@ -87,6 +109,14 @@ class Task extends Equatable {
     Duration? timeSpent,
     List<Map<String, dynamic>>? pomodoroSessions,
     String? userId,
+
+    // Enhanced Pomodoro Integration
+    int? estimatedSessions,
+    int? targetSessionsPerDay,
+    DateTime? lastPomodoroDate,
+    List<String>? sessionNotes,
+    PomodoroStrategy? strategy,
+    bool? autoStartNextSubtask,
   }) {
     return Task(
       id: id ?? this.id,
@@ -105,9 +135,11 @@ class Task extends Equatable {
       repeatRule: repeatRule ?? this.repeatRule,
       isRecurringInstance: isRecurringInstance ?? this.isRecurringInstance,
       originalTaskId: originalTaskId ?? this.originalTaskId,
+      lastGeneratedAt: lastGeneratedAt ?? this.lastGeneratedAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       progress: progress ?? this.progress,
+      index: index ?? this.index,
       tags: tags ?? this.tags,
       attachments: attachments ?? this.attachments,
       voiceNotes: voiceNotes ?? this.voiceNotes,
@@ -115,6 +147,14 @@ class Task extends Equatable {
       timeSpent: timeSpent ?? this.timeSpent,
       pomodoroSessions: pomodoroSessions ?? this.pomodoroSessions,
       userId: userId ?? this.userId,
+
+      // Enhanced Pomodoro Integration
+      estimatedSessions: estimatedSessions ?? this.estimatedSessions,
+      targetSessionsPerDay: targetSessionsPerDay ?? this.targetSessionsPerDay,
+      lastPomodoroDate: lastPomodoroDate ?? this.lastPomodoroDate,
+      sessionNotes: sessionNotes ?? this.sessionNotes,
+      strategy: strategy ?? this.strategy,
+      autoStartNextSubtask: autoStartNextSubtask ?? this.autoStartNextSubtask,
     );
   }
 
@@ -136,9 +176,11 @@ class Task extends Equatable {
       'repeatRule': repeatRule?.toJson(), // NEW
       'isRecurringInstance': isRecurringInstance, // NEW
       'originalTaskId': originalTaskId, // NEW
+      'lastGeneratedAt': lastGeneratedAt?.toIso8601String(), // NEW
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'progress': progress,
+      'index': index,
       'tags': tags,
       'attachments': attachments,
       'voiceNotes': voiceNotes,
@@ -146,6 +188,13 @@ class Task extends Equatable {
       'timeSpent': timeSpent.inMilliseconds,
       'pomodoroSessions': pomodoroSessions,
       'userId': userId, // For admin panel
+      // Enhanced Pomodoro Integration
+      'estimatedSessions': estimatedSessions,
+      'targetSessionsPerDay': targetSessionsPerDay,
+      'lastPomodoroDate': lastPomodoroDate?.toIso8601String(),
+      'sessionNotes': sessionNotes,
+      'strategy': strategy.index,
+      'autoStartNextSubtask': autoStartNextSubtask,
     };
   }
 
@@ -176,9 +225,11 @@ class Task extends Equatable {
         repeatRule: _parseRepeatRule(json['repeatRule']), // NEW
         isRecurringInstance: _safeConvert(json['isRecurringInstance'], false), // NEW
         originalTaskId: json['originalTaskId'],
+        lastGeneratedAt: json['lastGeneratedAt'] != null && json['lastGeneratedAt'] is String ? DateTime.tryParse(json['lastGeneratedAt']) : null, // NEW
         createdAt: json['createdAt'] is String ? DateTime.parse(json['createdAt']) : DateTime.now(),
         updatedAt: json['updatedAt'] is String ? DateTime.parse(json['updatedAt']) : DateTime.now(),
         progress: _safeConvert(json['progress'], 0),
+        index: _safeConvert(json['index'], 0),
         tags: json['tags'] is List ? List<String>.from(json['tags']) : [],
         attachments: json['attachments'] is List ? List<String>.from(json['attachments']) : [],
         voiceNotes: json['voiceNotes'] is List ? List<String>.from(json['voiceNotes']) : [],
@@ -186,6 +237,13 @@ class Task extends Equatable {
         timeSpent: json['timeSpent'] is int ? Duration(milliseconds: json['timeSpent']) : Duration.zero,
         pomodoroSessions: json['pomodoroSessions'] is List ? List<Map<String, dynamic>>.from(json['pomodoroSessions']) : [],
         userId: json['userId'], // For admin panel
+        // Enhanced Pomodoro Integration
+        estimatedSessions: _safeConvert(json['estimatedSessions'], 1),
+        targetSessionsPerDay: _safeConvert(json['targetSessionsPerDay'], 3),
+        lastPomodoroDate: json['lastPomodoroDate'] != null && json['lastPomodoroDate'] is String ? DateTime.tryParse(json['lastPomodoroDate']) : null,
+        sessionNotes: json['sessionNotes'] is List ? List<String>.from(json['sessionNotes']) : [],
+        strategy: json['strategy'] != null && json['strategy'] is int ? PomodoroStrategy.values[_safeConvert(json['strategy'], 0)] : PomodoroStrategy.sequential,
+        autoStartNextSubtask: _safeConvert(json['autoStartNextSubtask'], false),
       );
     } catch (e) {
       // If parsing fails, return a basic task with required fields
@@ -241,6 +299,7 @@ class Task extends Equatable {
   }
 
   // NEW: Helper method to get completion progress (recursive)
+  // Only counts subtasks, not the parent task itself (consistent with TaskDetailsBloc)
   double getCompletionProgress() {
     if (subtasks.isEmpty) return isCompleted ? 1.0 : 0.0;
     int total = 0;
@@ -253,8 +312,10 @@ class Task extends Equatable {
       }
     }
 
-    count(this);
-    return completed / total;
+    for (var s in subtasks) {
+      count(s);
+    }
+    return total == 0 ? 0.0 : completed / total;
   }
 
   @override
@@ -278,6 +339,7 @@ class Task extends Equatable {
     createdAt,
     updatedAt,
     progress,
+    index,
     tags,
     attachments,
     voiceNotes,
@@ -285,5 +347,13 @@ class Task extends Equatable {
     timeSpent,
     pomodoroSessions,
     userId,
+
+    // Enhanced Pomodoro Integration
+    estimatedSessions,
+    targetSessionsPerDay,
+    lastPomodoroDate,
+    sessionNotes,
+    strategy,
+    autoStartNextSubtask,
   ];
 }

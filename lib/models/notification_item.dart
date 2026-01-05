@@ -24,6 +24,8 @@ enum NotificationType {
   emergency,
   @HiveField(8)
   system,
+  @HiveField(9)
+  userSignup,
 }
 
 /// Notification priority levels affecting how prominently notifications are displayed

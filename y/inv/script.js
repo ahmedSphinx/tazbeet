@@ -1,64 +1,21 @@
-// Load saved tenants from localStorage if available
-let receiptsData = [
-  {
-    name: "عاطف راغب قطب",
-    amount: 150.0,
-    apartment_number: "شقة٢",
-    number: "70",
-    dateStartForm: "",
-    dateEndAt: "",
-  },
-  {
-    name: "احمد عاطف راغب قطب",
-    amount: 200.0,
-    apartment_number: "شقة٦",
-    number: "70",
-    dateStartForm: "",
-    dateEndAt: "",
-  },
-  {
-    name: "سيد علي بركات",
-    amount: 120.0,
-    apartment_number: "شقة٥",
-    number: "70",
-    dateStartForm: "",
-    dateEndAt: "",
-  },
-  {
-    name: "منى علي بركات",
-    amount: 60.0,
-    apartment_number: "شقة ١",
-    number: "70",
-    dateStartForm: "",
-    dateEndAt: "",
-  },
-  {
-    name: "محمد عبد الغفار",
-    amount: 130.0,
-    apartment_number: "شقة ٤",
-    number: "70",
-    dateStartForm: "",
-    dateEndAt: "",
-  },
-  {
-    name: "ناصر محمد مصطفى",
-    amount: 120.0,
-    apartment_number: "شقة ٣",
-    number: "70",
-    dateStartForm: "",
-    dateEndAt: "",
-  },
-  {
-    name: "هشام محمد حسن احمد",
-    amount: 500.0,
-    apartment_number: "محل",
-    number: "70",
-    dateStartForm: "",
-    dateEndAt: "",
-  },
-];
+// Tenants data - will be loaded from localStorage or tenants.json
+let receiptsData = [];
 
-// Arabic number words
+// Load default tenants from JSON file
+async function loadDefaultTenants() {
+  try {
+    const response = await fetch('tenants.json');
+    if (response.ok) {
+      const data = await response.json();
+      return data.tenants || [];
+    }
+  } catch (error) {
+    console.error('Error loading tenants.json:', error);
+  }
+  // Fallback to empty array if file not found
+  return [];
+}
+
 const arabicOnes = [
   "",
   "واحد",
@@ -101,7 +58,6 @@ function numberToArabicWords(num) {
 
   let parts = [];
 
-  // Thousands
   let thousands = Math.floor(num / 1000);
   if (thousands > 0) {
     if (thousands === 1) parts.push("ألف");
@@ -112,13 +68,11 @@ function numberToArabicWords(num) {
 
   num = num % 1000;
 
-  // Hundreds
   let hundreds = Math.floor(num / 100);
   if (hundreds > 0) parts.push(arabicHundreds[hundreds]);
 
   num = num % 100;
 
-  // Tens and ones
   if (num > 0) {
     if (num < 10) {
       parts.push(arabicOnes[num]);
@@ -187,8 +141,6 @@ function openModal(index = -1) {
     title.textContent = "تعديل المستأجر";
     document.getElementById("tenantName").value = tenant.name;
     document.getElementById("tenantAmount").value = tenant.amount;
-    document.getElementById("tenantDateStart").value = tenant.dateStartForm;
-    document.getElementById("tenantDateEnd").value = tenant.dateEndAt;
     document.getElementById("tenantApartment").value = tenant.apartment_number;
   } else {
     title.textContent = "إضافة مستأجر جديد";
@@ -198,7 +150,6 @@ function openModal(index = -1) {
   modal.style.display = "block";
 }
 
-// Add event listener for tenant form submit
 document.addEventListener("DOMContentLoaded", () => {
   const tenantForm = document.getElementById("tenantForm");
   if (tenantForm) {
@@ -211,53 +162,113 @@ function handleFormSubmit(e) {
 
   const name = document.getElementById("tenantName").value.trim();
   const amount = parseFloat(document.getElementById("tenantAmount").value);
-  const dateStartForm = document.getElementById("tenantDateStart").value;
-  const dateEndAt = document.getElementById("tenantDateEnd").value;
   const apartment_number = document.getElementById("tenantApartment").value.trim();
 
-  if (!name || isNaN(amount) || amount <= 0 || !dateStartForm || !dateEndAt || !apartment_number) {
-    alert("يرجى ملء جميع الحقول بشكل صحيح");
+  // التحققات
+  if (!name) {
+    alert("⚠️ يرجى إدخال اسم المستأجر");
+    return;
+  }
+  
+  if (name.length < 2) {
+    alert("⚠️ اسم المستأجر يجب أن يكون حرفين على الأقل");
+    return;
+  }
+  
+  if (!apartment_number) {
+    alert("⚠️ يرجى إدخال رقم الشقة");
+    return;
+  }
+  
+  if (isNaN(amount) || amount <= 0) {
+    alert("⚠️ يرجى إدخال مبلغ صحيح أكبر من صفر");
+    return;
+  }
+  
+  if (amount > 100000) {
+    alert("⚠️ المبلغ كبير جداً. يرجى التحقق من المبلغ المدخل");
+    return;
+  }
+  
+  // التحقق من التكرار
+  const isDuplicate = receiptsData.some((tenant, idx) => {
+    if (editingIndex >= 0 && idx === editingIndex) return false;
+    return tenant.name.toLowerCase() === name.toLowerCase() && 
+           tenant.apartment_number.toLowerCase() === apartment_number.toLowerCase();
+  });
+  
+  if (isDuplicate) {
+    alert("⚠️ يوجد مستأجر بنفس الاسم ورقم الشقة بالفعل!");
     return;
   }
 
   const tenantData = {
     name,
     amount,
-    amountAsText: numberToArabicWords(amount),
-    dateStartForm,
-    dateEndAt,
     apartment_number,
+    number: "70",
   };
-
-  console.log("Editing index:", editingIndex);
-  console.log("Tenant data to save:", tenantData);
 
   if (editingIndex >= 0) {
     receiptsData[editingIndex] = tenantData;
+    alert("✓ تم تحديث بيانات المستأجر بنجاح!");
   } else {
     receiptsData.push(tenantData);
+    alert("✓ تم إضافة المستأجر بنجاح!");
   }
 
   saveTenants();
   renderTenantsList();
   document.getElementById("tenantModal").style.display = "none";
-  console.log("Tenants after save:", receiptsData);
 }
 
 function deleteTenant(index) {
-  if (confirm("هل أنت متأكد من حذف المستأجر؟")) {
+  const tenant = receiptsData[index];
+  const confirmMessage = `هل أنت متأكد من حذف المستأجر؟\n\nالاسم: ${tenant.name}\nالمبلغ: ${tenant.amount} جنيه\nالشقة: ${tenant.apartment_number}`;
+  
+  if (confirm(confirmMessage)) {
     receiptsData.splice(index, 1);
     saveTenants();
     renderTenantsList();
+    alert("تم حذف المستأجر بنجاح ✓");
   }
 }
 
-function initIndexPage() {
-  // Load tenants from localStorage if available
+function exportBackup() {
+  const data = {
+    tenants: receiptsData,
+    exportDate: new Date().toISOString(),
+    version: "1.0"
+  };
+  
+  const dataStr = JSON.stringify(data, null, 2);
+  const dataBlob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(dataBlob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `backup-tenants-${new Date().toISOString().split('T')[0]}.json`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  
+  alert("✓ تم حفظ النسخة الاحتياطية بنجاح!");
+}
+
+async function initIndexPage() {
+  // Load from localStorage first
   const savedTenants = localStorage.getItem("tenants");
   if (savedTenants) {
     receiptsData = JSON.parse(savedTenants);
+  } else {
+    // If no localStorage data, load from tenants.json
+    receiptsData = await loadDefaultTenants();
+    // Save to localStorage for future use
+    if (receiptsData.length > 0) {
+      saveTenants();
+    }
   }
+  
   renderTenantsList();
   const addBtn = document.getElementById("addTenantBtn");
   if (addBtn) addBtn.onclick = () => openModal();
@@ -267,6 +278,24 @@ function initIndexPage() {
     proceedBtn.onclick = () => {
       window.location.href = "form.html";
     };
+
+  const backupBtn = document.getElementById("backupBtn");
+  if (backupBtn) backupBtn.onclick = () => exportBackup();
+
+  const closeBtn = document.querySelector(".close");
+  const modal = document.getElementById("tenantModal");
+
+  if (closeBtn) {
+    closeBtn.onclick = () => {
+      modal.style.display = "none";
+    };
+  }
+
+  window.onclick = (event) => {
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  };
 }
 
 function initFormPage() {
@@ -298,9 +327,18 @@ function initFormPage() {
   };
 }
 
-function initReceiptsPage() {
+async function initReceiptsPage() {
   const container = document.getElementById("receiptsContainer");
   if (!container) return;
+
+  // Load from localStorage first
+  const savedTenants = localStorage.getItem("tenants");
+  if (savedTenants) {
+    receiptsData = JSON.parse(savedTenants);
+  } else {
+    // If no localStorage data, load from tenants.json
+    receiptsData = await loadDefaultTenants();
+  }
 
   const dateStartForm = localStorage.getItem("dateStartForm") || "";
   const dateEndAt = localStorage.getItem("dateEndAt") || "";
@@ -320,25 +358,23 @@ function initReceiptsPage() {
       pageDiv = document.createElement("div");
       pageDiv.className = "receipt-page";
     }
-    // Instead of innerHTML +=, create receipt element and append
     const receiptDiv = document.createElement("div");
     receiptDiv.className = "receipt";
     receiptDiv.innerHTML = `
       <div class="name">${updatedTenant.name}</div>
       <div class="amount">${updatedTenant.amount}.00</div>
       <div class="receipt-content">
-        <div class="number">${
-          updatedTenant.number !== undefined
-            ? updatedTenant.number
-            : "ssssssssssssss"
-        }</div>
+        <div class="number">${updatedTenant.number !== undefined
+        ? updatedTenant.number
+        : "ssssssssssssss"
+      }</div>
         <div class="amount-text">${updatedTenant.amountAsText}</div>
         <div class="date-start">${updatedTenant.dateStartForm}</div>
         <div class="date-end">${updatedTenant.dateEndAt}</div>
         <div class="duration">${calculateDurationMonths(
-          updatedTenant.dateStartForm,
-          updatedTenant.dateEndAt
-        )} شهر</div>
+        updatedTenant.dateStartForm,
+        updatedTenant.dateEndAt
+      )} شهر</div>
         <div class="apartment">${updatedTenant.apartment_number}</div>
         <div class="address">عزبة بدران، شبرا الخيمة</div>
         <div class="release-date">${releaseDate}</div>
@@ -350,12 +386,12 @@ function initReceiptsPage() {
   if (pageDiv) container.appendChild(pageDiv);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   if (document.getElementById("tenantsList")) {
-    initIndexPage();
+    await initIndexPage();
   } else if (document.getElementById("datesForm")) {
     initFormPage();
   } else if (document.getElementById("receiptsContainer")) {
-    initReceiptsPage();
+    await initReceiptsPage();
   }
 });

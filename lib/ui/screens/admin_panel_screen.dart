@@ -42,13 +42,17 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with TickerProvider
   Future<void> _loadAppVersion() async {
     try {
       final packageInfo = await PackageInfo.fromPlatform();
-      setState(() {
-        _appVersion = packageInfo.version;
-      });
+      if (mounted) {
+        setState(() {
+          _appVersion = packageInfo.version;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _appVersion = '1.0.0'; // Fallback
-      });
+      if (mounted) {
+        setState(() {
+          _appVersion = '1.0.0'; // Fallback
+        });
+      }
     }
   }
 
@@ -59,29 +63,34 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with TickerProvider
   }
 
   Future<void> _loadDashboardMetrics() async {
+    if (!mounted) return;
     setState(() => _isDashboardLoading = true);
 
     try {
       // Load all data in parallel for better performance
       final results = await Future.wait([_adminService.getAllUsers(), _adminService.getAllTasks(), _adminService.getAllCategories()]);
 
+      if (!mounted) return;
+
       final users = results[0] as List<User>;
       final tasks = results[1] as List<Task>;
       final categories = results[2] as List<Category>;
 
-      setState(() {
-        _totalUsers = users.length;
-        _totalTasks = tasks.length;
-        _completedTasks = tasks.where((task) => task.isCompleted).length;
-        // For active users, we'll consider users who have logged in within the last 30 days
-        // For now, using a simple heuristic - users with tasks
-        _activeUsers = users.length; // For now, consider all users as active
-        _totalCategories = categories.length;
-        _isDashboardLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _totalUsers = users.length;
+          _totalTasks = tasks.length;
+          _completedTasks = tasks.where((task) => task.isCompleted).length;
+          _activeUsers = users.length; // For now, consider all users as active
+          _totalCategories = categories.length;
+          _isDashboardLoading = false;
+        });
+      }
     } catch (e) {
       // AppLogging.logError('Error loading dashboard metrics: $e');
-      setState(() => _isDashboardLoading = false);
+      if (mounted) {
+        setState(() => _isDashboardLoading = false);
+      }
     }
   }
 
@@ -89,7 +98,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with TickerProvider
   Widget build(BuildContext context) {
     return BlocBuilder<UserBloc, UserState>(
       builder: (context, userState) {
-        if (userState is! UserLoaded || !userState.user.isAdmin) {
+        if (userState is! UserLoaded || !userState.user.isAdmin!) {
           return Scaffold(
             appBar: AppBar(title: const Text('Access Denied')),
             body: const Center(child: Text('You do not have admin privileges.')),
@@ -246,10 +255,20 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
   }
 
   Future<void> _loadUsers() async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
-    _users = await _adminService.getAllUsers();
-    _filterUsers();
-    setState(() => _isLoading = false);
+
+    try {
+      _users = await _adminService.getAllUsers();
+      if (mounted) {
+        _filterUsers();
+        setState(() => _isLoading = false);
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   void _filterUsers() {
@@ -296,7 +315,7 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          IconButton(icon: Icon(user.isAdmin ? Icons.admin_panel_settings : Icons.person), onPressed: () => _toggleAdmin(user)),
+                          IconButton(icon: Icon(user.isAdmin! ? Icons.admin_panel_settings : Icons.person), onPressed: () => _toggleAdmin(user)),
                           IconButton(
                             icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () => _deleteUser(user),
@@ -318,7 +337,7 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Toggle Admin Status'),
-        content: Text('Are you sure you want to ${user.isAdmin ? 'remove admin rights from' : 'grant admin rights to'} ${user.name}?'),
+        content: Text('Are you sure you want to ${user.isAdmin! ? 'remove admin rights from' : 'grant admin rights to'} ${user.name}?'),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
           TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Confirm')),
@@ -336,19 +355,19 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
     );
 
     try {
-      final updatedUser = user.copyWith(isAdmin: !user.isAdmin);
+      final updatedUser = user.copyWith(isAdmin: !user.isAdmin!);
       await _adminService.updateUser(updatedUser);
 
       // Track analytics
       if (_currentAdmin != null) {
-        await _analyticsService.logAdminUserPromoted(userId: user.id, adminId: _currentAdmin!.id, promoted: updatedUser.isAdmin);
+        await _analyticsService.logAdminUserPromoted(userId: user.id, adminId: _currentAdmin!.id, promoted: updatedUser.isAdmin!);
       }
 
       await _loadUsers(); // Refresh list
 
       if (mounted) {
         Navigator.pop(context); // Close loading dialog
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${user.name} is now ${updatedUser.isAdmin ? 'an admin' : 'not an admin'}')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${user.name} is now ${updatedUser.isAdmin! ? 'an admin' : 'not an admin'}')));
       }
     } catch (e) {
       if (mounted) {
@@ -428,7 +447,7 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Email: ${user.email ?? 'N/A'}'),
-            Text('Admin: ${user.isAdmin ? 'Yes' : 'No'}'),
+            Text('Admin: ${user.isAdmin! ? 'Yes' : 'No'}'),
             Text('Created: ${user.createdAt}'),
             Text('Updated: ${user.updatedAt}'),
             if (user.birthday != null) Text('Birthday: ${user.birthday}'),
@@ -475,29 +494,40 @@ class _TasksManagementWidgetState extends State<TasksManagementWidget> {
   }
 
   Future<void> _loadData() async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
 
-    // Load tasks and users in parallel
-    final results = await Future.wait([_adminService.getAllTasks(), _adminService.getAllUsers()]);
+    try {
+      // Load tasks and users in parallel
+      final results = await Future.wait([_adminService.getAllTasks(), _adminService.getAllUsers()]);
 
-    _tasks = results[0] as List<Task>;
-    final users = results[1] as List<User>;
+      if (!mounted) return;
 
-    // Create user name map
-    _userNames = {for (var user in users) user.id: user.name};
+      _tasks = results[0] as List<Task>;
+      final users = results[1] as List<User>;
 
-    // Group tasks by user
-    _tasksByUser = {};
-    for (var task in _tasks) {
-      final userId = task.userId ?? 'unknown';
-      if (!_tasksByUser.containsKey(userId)) {
-        _tasksByUser[userId] = [];
+      // Create user name map
+      _userNames = {for (var user in users) user.id: user.name};
+
+      // Group tasks by user
+      _tasksByUser = {};
+      for (var task in _tasks) {
+        final userId = task.userId ?? 'unknown';
+        if (!_tasksByUser.containsKey(userId)) {
+          _tasksByUser[userId] = [];
+        }
+        _tasksByUser[userId]!.add(task);
       }
-      _tasksByUser[userId]!.add(task);
-    }
 
-    _filterTasks();
-    setState(() => _isLoading = false);
+      _filterTasks();
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   void _filterTasks() {
@@ -704,10 +734,20 @@ class _CategoriesManagementWidgetState extends State<CategoriesManagementWidget>
   }
 
   Future<void> _loadCategories() async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
-    _categories = await _adminService.getAllCategories();
-    _filterCategories();
-    setState(() => _isLoading = false);
+
+    try {
+      _categories = await _adminService.getAllCategories();
+      if (mounted) {
+        _filterCategories();
+        setState(() => _isLoading = false);
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   void _filterCategories() {
@@ -983,25 +1023,32 @@ class _SettingsManagementWidgetState extends State<SettingsManagementWidget> {
   }
 
   Future<void> _loadSettings() async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
 
     try {
       // Load real app version
       final packageInfo = await PackageInfo.fromPlatform();
-      _appVersion = packageInfo.version;
+      if (mounted) {
+        _appVersion = packageInfo.version;
+      }
 
       // Load settings from Firestore
       final settings = await _maintenanceService.getSettings();
-      setState(() {
-        _settings = settings;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _settings = settings;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _appVersion = '1.0.0';
-        _settings = AppSettings.defaults();
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _appVersion = '1.0.0';
+          _settings = AppSettings.defaults();
+          _isLoading = false;
+        });
+      }
     }
   }
 

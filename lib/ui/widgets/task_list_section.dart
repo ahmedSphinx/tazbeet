@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tazbeet/blocs/task_list/task_list_bloc.dart';
+import 'package:tazbeet/blocs/task_list/task_list_event.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
 import 'package:tazbeet/models/task.dart';
 import 'package:tazbeet/ui/widgets/task_item.dart';
@@ -55,21 +57,22 @@ class TaskListSection extends StatelessWidget {
       'Completed': l10n.completedTasks,
     };
 
-    // Sort within groups by priority and due date
+    // Sort within groups by index, then priority and due date
     for (var entry in groups.entries) {
       entry.value.sort((a, b) {
+        // Primary: Index
+        if (a.index != b.index) {
+          return a.index.compareTo(b.index);
+        }
+        // Secondary: Priority
         int comp = b.priority.index.compareTo(a.priority.index);
         if (comp != 0) return comp;
+        // Tertiary: Due Date
         return (b.dueDate ?? b.createdAt).compareTo(a.dueDate ?? a.createdAt);
       });
     }
 
-    return ReorderableListView(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      onReorder: (oldIndex, newIndex) {
-        // TODO: Implement reorder logic and update the backend/state
-      },
+    return Column(
       children: [
         for (final groupKey in groupOrder.where((k) => groups.containsKey(k) && groups[k]!.isNotEmpty))
           Column(
@@ -94,26 +97,42 @@ class TaskListSection extends StatelessWidget {
                   ],
                 ),
               ),
-              AnimationLimiter(
-                child: Column(
-                  children: AnimationConfiguration.toStaggeredList(
-                    duration: const Duration(milliseconds: 375),
-                    childAnimationBuilder: (widget) => SlideAnimation(horizontalOffset: 50.0, child: FadeInAnimation(child: widget)),
-                    children: [
-                      for (final task in groups[groupKey]!)
-                        TaskItem(
-                          key: ValueKey(task.id),
-                          task: task,
-                          onToggle: () => onTaskToggle(task.id),
-                          onEdit: () => onTaskEdit(task),
-                          onDelete: () => onTaskDelete(task.id),
-                          batchSelectionMode: batchSelectionMode,
-                          onTaskSelected: onTaskSelected,
-                          selected: selectedTaskIds?.contains(task.id) ?? false,
-                        ),
-                    ],
-                  ),
-                ),
+              ReorderableListView(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                onReorder: (oldIndex, newIndex) {
+                  if (oldIndex < newIndex) {
+                    newIndex -= 1;
+                  }
+                  final groupTasks = groups[groupKey]!;
+                  final item = groupTasks.removeAt(oldIndex);
+                  groupTasks.insert(newIndex, item);
+
+                  // Update indices for all tasks in this group
+                  final updatedTasks = <Task>[];
+                  for (int i = 0; i < groupTasks.length; i++) {
+                    if (groupTasks[i].index != i) {
+                      updatedTasks.add(groupTasks[i].copyWith(index: i));
+                    }
+                  }
+
+                  if (updatedTasks.isNotEmpty) {
+                    context.read<TaskListBloc>().add(ReorderTasks(updatedTasks));
+                  }
+                },
+                children: [
+                  for (final task in groups[groupKey]!)
+                    TaskItem(
+                      key: ValueKey(task.id),
+                      task: task,
+                      onToggle: () => onTaskToggle(task.id),
+                      onEdit: () => onTaskEdit(task),
+                      onDelete: () => onTaskDelete(task.id),
+                      batchSelectionMode: batchSelectionMode,
+                      onTaskSelected: onTaskSelected,
+                      selected: selectedTaskIds?.contains(task.id) ?? false,
+                    ),
+                ],
               ),
             ],
           ),

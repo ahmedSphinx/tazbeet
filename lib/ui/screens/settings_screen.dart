@@ -2,18 +2,24 @@
 
 import 'package:flutter/material.dart' hide ThemeMode;
 import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:tazbeet/l10n/app_localizations.dart';
 import '../../services/settings_service.dart' as settings;
 import '../../services/color_customization_service.dart';
 import '../../services/task_sound_service.dart';
 import '../../services/update_service.dart';
+import '../../services/data_sync_service.dart';
+import '../../services/auth_service.dart';
+import '../../repositories/task_repository.dart';
+import '../../repositories/category_repository.dart';
+import '../../repositories/mood_repository.dart';
 import '../../ui/widgets/color_customization_widget.dart';
 import '../../ui/widgets/animated_expansion_card.dart';
-import '../../ui/themes/app_themes.dart';
 import '../../ui/themes/design_system.dart';
 
 import 'profile_screen.dart';
 import 'mood_settings_screen.dart';
+import 'developer_tools_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -35,7 +41,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
@@ -43,10 +48,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           AppLocalizations.of(context)!.settingsScreenTitle,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onPrimary),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         elevation: 0,
-        flexibleSpace: Container(decoration: BoxDecoration(gradient: AppThemes.getPrimaryGradient(isDark))),
+        //  flexibleSpace: Container(decoration: BoxDecoration(gradient: AppThemes.getPrimaryGradient(isDark))),
         actions: [
           TextButton(
             onPressed: () async {
@@ -108,7 +113,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildProfileSection() {
-    final l10n = AppLocalizations.of(context)!;
     return Card(
       margin: EdgeInsets.zero,
       child: ListTile(
@@ -124,7 +128,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildMoodSection() {
-    final l10n = AppLocalizations.of(context)!;
     return Card(
       margin: EdgeInsets.zero,
       child: ListTile(
@@ -252,7 +255,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Column(
         children: [
           // NEW: Navigation to advanced notification features
-       ListTile(
+          ListTile(
             leading: const Icon(Icons.history, color: Colors.green),
             title: Text(l10n.notificationHistory),
             subtitle: Text(l10n.viewPastNotifications),
@@ -260,14 +263,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: () => Navigator.pushNamed(context, '/notification_history'),
           ),
           const Divider(height: 1),
-             ListTile(
+          ListTile(
             leading: const Icon(Icons.settings_outlined, color: Colors.blue),
             title: Text(l10n.notificationPreferences),
             subtitle: Text(l10n.customizeNotificationBehavior),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => Navigator.pushNamed(context, '/notification_preferences'),
           ),
-         /*  const Divider(height: 1),
+          /*  const Divider(height: 1),
           ListTile(
             leading: const Icon(Icons.science, color: Colors.deepPurple),
             title: Text(l10n.testNotifications),
@@ -726,7 +729,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       {'title': l10n.regional, 'widget': _buildRegionalSection(settingsService)},
       {'title': l10n.updates, 'widget': _buildUpdatesSection()},
     ];
-
+    if (kDebugMode) {
+      allSections.add({'title': 'Data Reset', 'widget': _buildDataResetSection()});
+      allSections.add({'title': 'Developer Tools', 'widget': _buildDeveloperToolsSection()});
+    }
     final filtered = _searchQuery.isEmpty ? allSections : allSections.where((section) => (section['title'] as String).contains(_searchQuery)).toList();
 
     final widgets = <Widget>[];
@@ -738,5 +744,295 @@ class _SettingsScreenState extends State<SettingsScreen> {
       widgets.removeLast(); // Remove last spacing
     }
     return widgets;
+  }
+
+  Widget _buildDataResetSection() {
+    return AnimatedExpansionCard(
+      leading: Icon(Icons.refresh, color: Colors.red[700]),
+      title: Text('Data Reset', style: TextStyle(color: Colors.red[700])),
+      children: [
+        Container(
+          decoration: AppCardStyles.standard(context),
+          margin: EdgeInsets.zero,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.warning_amber_rounded, color: Colors.orange[700], size: 20),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Danger Zone',
+                          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red[700], fontSize: 16),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text('These actions cannot be undone. Please be careful before proceeding.', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14)),
+                  ],
+                ),
+              ),
+              const Divider(height: 1),
+              ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(color: Colors.red[100], borderRadius: BorderRadius.circular(8)),
+                  child: Icon(Icons.delete_sweep, color: Colors.red[700], size: 20),
+                ),
+                title: Text(
+                  'Clear All Local Data',
+                  style: TextStyle(fontWeight: FontWeight.w600, color: Colors.red[700]),
+                ),
+                subtitle: Text('Delete all local data (tasks, categories, moods) and resync from Firebase', style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => _showDataResetDialog(),
+              ),
+              const Divider(height: 1),
+              ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(color: Colors.orange[100], borderRadius: BorderRadius.circular(8)),
+                  child: Icon(Icons.cloud_download, color: Colors.orange[700], size: 20),
+                ),
+                title: Text(
+                  'Force Sync from Firebase',
+                  style: TextStyle(fontWeight: FontWeight.w600, color: Colors.orange[700]),
+                ),
+                subtitle: Text('Download fresh data from Firebase and overwrite local changes', style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => _showForceSyncDialog(),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _showDataResetDialog() async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.warning_amber_rounded, color: Colors.red[700]),
+            const SizedBox(width: 12),
+            const Text('Clear All Local Data'),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('This will permanently delete:'),
+            const SizedBox(height: 8),
+            const Text('• All tasks\n• All categories\n• All moods\n• All local settings'),
+            const SizedBox(height: 12),
+            const Text('After deletion, the app will resync all data from Firebase.'),
+            const SizedBox(height: 8),
+            Text(
+              'This action cannot be undone!',
+              style: TextStyle(color: Colors.red[700], fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(l10n.cancelButton)),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red[700], foregroundColor: Colors.white),
+            child: const Text('Delete All Data'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      await _performDataReset();
+    }
+  }
+
+  Future<void> _showForceSyncDialog() async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.cloud_download, color: Colors.orange[700]),
+            const SizedBox(width: 12),
+            const Text('Force Sync from Firebase'),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('This will:'),
+            const SizedBox(height: 8),
+            const Text('• Download fresh data from Firebase\n• Overwrite any local changes\n• Update all repositories'),
+            const SizedBox(height: 12),
+            Text(
+              'Any unsynced local changes will be lost!',
+              style: TextStyle(color: Colors.orange[700], fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(l10n.cancelButton)),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[700], foregroundColor: Colors.white),
+            child: const Text('Force Sync'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      await _performForceSync();
+    }
+  }
+
+  Future<void> _performDataReset() async {
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const AlertDialog(content: Row(children: [CircularProgressIndicator(), SizedBox(width: 16), Text('Clearing data...')])),
+    );
+
+    try {
+      // Clear all local repositories
+      final taskRepo = TaskRepository();
+      final categoryRepo = CategoryRepository();
+      final moodRepo = MoodRepository();
+
+      await taskRepo.init();
+      await categoryRepo.init();
+      await moodRepo.init();
+
+      await taskRepo.clearAllTasks();
+      // CategoryRepository doesn't have clearAllCategories, so we'll clear all categories individually
+      final categories = await categoryRepo.getAllCategories();
+      for (final category in categories) {
+        await categoryRepo.deleteCategory(category.id);
+      }
+      await moodRepo.deleteAllMoods();
+
+      // Get current user and resync
+      final authService = AuthService();
+      final user = authService.currentUser;
+
+      if (user != null) {
+        final dataSyncService = DataSyncService();
+        await dataSyncService.syncFromFirestore(user.uid);
+      }
+
+      // Close loading dialog
+      if (context.mounted) {
+        Navigator.of(context).pop();
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('All data cleared and resynced successfully!'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            margin: const EdgeInsets.all(16),
+          ),
+        );
+      }
+    } catch (e) {
+      // Close loading dialog
+      if (context.mounted) {
+        Navigator.of(context).pop();
+
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            margin: const EdgeInsets.all(16),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _performForceSync() async {
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const AlertDialog(content: Row(children: [CircularProgressIndicator(), SizedBox(width: 16), Text('Syncing from Firebase...')])),
+    );
+
+    try {
+      // Get current user and force sync
+      final authService = AuthService();
+      final user = authService.currentUser;
+
+      if (user != null) {
+        final dataSyncService = DataSyncService();
+        await dataSyncService.syncFromFirestore(user.uid);
+      }
+
+      // Close loading dialog
+      if (context.mounted) {
+        Navigator.of(context).pop();
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Data synced successfully from Firebase!'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            margin: const EdgeInsets.all(16),
+          ),
+        );
+      }
+    } catch (e) {
+      // Close loading dialog
+      if (context.mounted) {
+        Navigator.of(context).pop();
+
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Sync error: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            margin: const EdgeInsets.all(16),
+          ),
+        );
+      }
+    }
+  }
+
+  Widget _buildDeveloperToolsSection() {
+    return Card(
+      margin: EdgeInsets.zero,
+      child: ListTile(
+        leading: const Icon(Icons.developer_mode, color: Colors.deepPurple),
+        title: const Text('Developer Tools'),
+        subtitle: const Text('Performance, memory, and quality monitoring'),
+        trailing: const Icon(Icons.arrow_forward_ios),
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => const DeveloperToolsScreen()));
+        },
+      ),
+    );
   }
 }

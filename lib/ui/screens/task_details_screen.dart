@@ -22,7 +22,7 @@ import '../widgets/edit_task_dialog.dart';
 
 import '../widgets/error_display.dart';
 import '../../services/notification_service.dart';
-import 'pomodoro_screen.dart';
+import 'home/pomodoro/pomodoro_screen.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
   final String taskId;
@@ -191,6 +191,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
     );
   }
 
+  // ignore: prefer_typing_uninitialized_variables
   var isCompleted;
   Widget _buildMotivationalQuote(BuildContext context, Task task, AppLocalizations l10n) {
     final quotes = [l10n.motivationalQuoteHigh, l10n.motivationalQuoteMedium, l10n.motivationalQuoteLow];
@@ -699,6 +700,34 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
   }
 
   void _setReminder(BuildContext context, Task task, AppLocalizations l10n) async {
+    // Check notification permissions first
+    final notificationService = NotificationService();
+    final hasPermission = await notificationService.hasNotificationPermission();
+
+    if (!hasPermission) {
+      final shouldRequest = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(l10n.notificationPermissionRequired),
+          content: Text(l10n.notificationPermissionMessage),
+          actions: [
+            TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(l10n.cancelButton)),
+            TextButton(onPressed: () => Navigator.of(context).pop(true), child: Text(l10n.grantPermission)),
+          ],
+        ),
+      );
+
+      if (shouldRequest == true) {
+        final granted = await notificationService.requestNotificationPermission();
+        if (!granted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.cannotSetReminderWithoutPermission)));
+          return;
+        }
+      } else {
+        return;
+      }
+    }
+
     final DateTime? pickedDate = await showDatePicker(context: context, initialDate: task.reminderDate ?? DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 365)));
 
     if (pickedDate != null) {
@@ -711,7 +740,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
         context.read<TaskDetailsBloc>().add(UpdateTaskDetails(updatedTask));
 
         // Schedule the notification
-        await NotificationService().scheduleTaskReminder(updatedTask);
+        await notificationService.scheduleTaskReminder(updatedTask);
 
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Reminder set for ${DateFormat.yMMMd().add_jm().format(reminderDate)}')));
       }

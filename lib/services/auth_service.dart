@@ -10,6 +10,10 @@ class AuthService {
   final FirebaseAuth? _auth = FirebaseServiceWrapper.firebaseAuth;
   final GoogleSignIn? _googleSignIn = FirebaseServiceWrapper.googleSignIn;
 
+  // Public getters for checking availability
+  bool get isFirebaseAuthAvailable => _auth != null;
+  bool get isGoogleSignInAvailable => _googleSignIn != null;
+
   // Stream of authentication state changes
   Stream<User?>? get authStateChanges {
     return _auth?.authStateChanges();
@@ -88,20 +92,12 @@ class AuthService {
     AppLogging.logInfo('Starting Apple Sign-In process', name: 'AuthService');
     try {
       // Request credential for the currently signed in Apple account
-      final appleCredential = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-      );
+      final appleCredential = await SignInWithApple.getAppleIDCredential(scopes: [AppleIDAuthorizationScopes.email, AppleIDAuthorizationScopes.fullName]);
 
       AppLogging.logInfo('Apple user authenticated: ${appleCredential.email}', name: 'AuthService');
 
       // Create a new Firebase credential
-      final oauthCredential = OAuthProvider("apple.com").credential(
-        idToken: appleCredential.identityToken,
-        accessToken: appleCredential.authorizationCode,
-      );
+      final oauthCredential = OAuthProvider("apple.com").credential(idToken: appleCredential.identityToken, accessToken: appleCredential.authorizationCode);
 
       AppLogging.logInfo('Signing in with Firebase using Apple credential', name: 'AuthService');
       // Sign in the user with Firebase
@@ -161,16 +157,16 @@ class AuthService {
 
     AppLogging.logInfo('Starting sign out process', name: 'AuthService');
     try {
+      // Clear all caches and memories BEFORE sign out to prevent data loss window
+      AppLogging.logInfo('Clearing all caches and memories', name: 'AuthService');
+      await _clearAllCachesAndMemories();
+
       AppLogging.logInfo('Signing out from Google', name: 'AuthService');
       await _googleSignIn.signOut();
       AppLogging.logInfo('Signing out from Firebase', name: 'AuthService');
       await _auth.signOut();
 
-      // Clear all caches and memories after successful sign out
-      AppLogging.logInfo('Clearing all caches and memories', name: 'AuthService');
-      await _clearAllCachesAndMemories();
-
-      AppLogging.logInfo('Successfully signed out and cleared all data', name: 'AuthService');
+      AppLogging.logInfo('Successfully cleared data and signed out', name: 'AuthService');
     } catch (e) {
       AppLogging.logError('Error during sign out', name: 'AuthService', error: e);
       throw Exception('Failed to sign out: $e');

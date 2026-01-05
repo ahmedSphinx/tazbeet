@@ -63,55 +63,110 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
+  /// Common post-sign-in handling: save user, sync data, setup first-time user
+  ///
+  /// IMPORTANT:
+  /// - We must NOT overwrite existing profile fields like `birthday` or
+  ///   `isAdmin` on every social login.
+  /// - For existing users, we only merge in fresh name/photo/email data from
+  ///   Firebase and keep `birthday` and `isAdmin` as they are.
+  /// - For brand-new users, we create the user with `birthday: null` and
+  ///   compute `isAdmin` based on whether this is the first user.
+  Future<void> _handlePostSignIn({required firebase_auth.User firebaseUser, required bool useDisplayName}) async {
+    // Save user data to Firestore after successful sign-in
+    try {
+      final userRepository = UserRepository();
+      await userRepository.init();
+
+      // Always force refresh so we see the latest Firestore state
+      final existingUser = await userRepository.getUser(firebaseUser.uid, forceRefresh: true);
+
+      model.User userModel;
+
+      if (existingUser != null) {
+        // Existing user:
+        // - keep birthday and isAdmin
+        // - merge in name/photo/email from Firebase if present
+        final displayName = firebaseUser.displayName ?? '';
+        final photoUrl = firebaseUser.photoURL ?? '';
+        final email = firebaseUser.email ?? existingUser.email;
+
+        userModel = existingUser.copyWith(
+          name: useDisplayName && displayName.isNotEmpty ? displayName : existingUser.name,
+          profileImageUrl: useDisplayName && photoUrl.isNotEmpty ? photoUrl : existingUser.profileImageUrl,
+          email: email,
+          updatedAt: DateTime.now(),
+          // birthday and isAdmin remain unchanged
+        );
+
+        AppLogging.logInfo('Merging Google profile into existing user (isAdmin: ${existingUser.isAdmin}, birthday: ${existingUser.birthday})', name: 'AuthBloc');
+      } else {
+        // New user: compute admin status and start with null birthday
+        final isAdmin = await _determineAdminStatus();
+        userModel = model.User(
+          id: firebaseUser.uid,
+          name: useDisplayName ? (firebaseUser.displayName ?? '') : '',
+          profileImageUrl: useDisplayName ? (firebaseUser.photoURL ?? '') : '',
+          birthday: null,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          email: firebaseUser.email,
+          isAdmin: isAdmin,
+        );
+        AppLogging.logInfo('Creating new user from Google sign-in (isAdmin: $isAdmin)', name: 'AuthBloc');
+
+        // Send notification to admins about new user signup
+        if (!isAdmin) {
+          await _adminService.notifyAdminsOfNewUser(userModel);
+        }
+      }
+
+      await _dataSyncService.saveUserData(userModel);
+      AppLogging.logInfo('User data saved to Firestore successfully (isAdmin: ${userModel.isAdmin}, birthday: ${userModel.birthday})', name: 'AuthBloc');
+    } catch (saveError) {
+      AppLogging.logError('Failed to save user data to Firestore', name: 'AuthBloc', error: saveError);
+    }
+
+    // Sync data from Firestore
+    try {
+      await _dataSyncService.syncFromFirestore(firebaseUser.uid);
+      AppLogging.logInfo('Data sync completed successfully', name: 'AuthBloc');
+    } catch (syncError) {
+      AppLogging.logError('Data sync failed, but continuing with authentication', name: 'AuthBloc', error: syncError);
+    }
+
+    // Create default categories for first-time users
+    try {
+      await _handleFirstTimeUserSetup(firebaseUser.uid);
+    } catch (setupError) {
+      AppLogging.logError('First-time user setup failed, but continuing with authentication', name: 'AuthBloc', error: setupError);
+    }
+  }
+
   void _onSignInRequested(AuthSignInRequested event, Emitter<AuthState> emit) async {
     AppLogging.logInfo('Sign-in requested', name: 'AuthBloc');
     emit(AuthLoading());
+
     try {
+      // Add Firebase initialization check
+      if (!_authService.isFirebaseAuthAvailable) {
+        AppLogging.logError('Firebase Auth not initialized', name: 'AuthBloc');
+        emit(AuthError('Authentication service not available. Please restart the app.'));
+        return;
+      }
+
+      if (!_authService.isGoogleSignInAvailable) {
+        AppLogging.logError('Google Sign-In not available', name: 'AuthBloc');
+        emit(AuthError('Google Sign-In not available on this device.'));
+        return;
+      }
+
       AppLogging.logInfo('Calling AuthService.signInWithGoogle()', name: 'AuthBloc');
       final userCredential = await _authService.signInWithGoogle();
+
       if (userCredential != null) {
         AppLogging.logInfo('Sign-in successful for user: ${userCredential.user!.uid}', name: 'AuthBloc');
-
-        // Save user data to Firestore after successful sign-in
-        try {
-          final user = userCredential.user!;
-          // Determine if this user should be admin (first user)
-          final isAdmin = await _determineAdminStatus();
-
-          // Create user model
-          final userModel = model.User(
-            id: user.uid,
-            name: user.displayName ?? '',
-            profileImageUrl: user.photoURL ?? '',
-            birthday: null,
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-            email: user.email,
-            isAdmin: isAdmin,
-          );
-          await _dataSyncService.saveUserData(userModel);
-          AppLogging.logInfo('User data saved to Firestore successfully (isAdmin: $isAdmin)', name: 'AuthBloc');
-        } catch (saveError) {
-          AppLogging.logError('Failed to save user data to Firestore', name: 'AuthBloc', error: saveError);
-          // Continue authentication even if saving fails
-        }
-
-        // Sync data from Firestore after successful sign-in
-        try {
-          await _dataSyncService.syncFromFirestore(userCredential.user!.uid);
-          AppLogging.logInfo('Data sync completed successfully', name: 'AuthBloc');
-        } catch (syncError) {
-          AppLogging.logError('Data sync failed, but continuing with authentication', name: 'AuthBloc', error: syncError);
-          // Don't fail authentication if sync fails, just log it
-        }
-
-        // Create default categories only for first-time users
-        try {
-          await _handleFirstTimeUserSetup(userCredential.user!.uid);
-        } catch (setupError) {
-          AppLogging.logError('First-time user setup failed, but continuing with authentication', name: 'AuthBloc', error: setupError);
-        }
-
+        await _handlePostSignIn(firebaseUser: userCredential.user!, useDisplayName: true);
         emit(AuthAuthenticated(userCredential.user!));
       } else {
         AppLogging.logInfo('Sign-in cancelled by user', name: 'AuthBloc');
@@ -119,59 +174,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } catch (e) {
       AppLogging.logError('Sign-in failed', name: 'AuthBloc', error: e);
-      emit(AuthError('Failed to sign in: $e'));
+      final errorMessage = _cleanErrorMessage(e.toString());
+      emit(AuthError(errorMessage));
     }
   }
 
   void _onAppleSignInRequested(AuthAppleSignInRequested event, Emitter<AuthState> emit) async {
     AppLogging.logInfo('Apple sign-in requested', name: 'AuthBloc');
     emit(AuthLoading());
+
     try {
+      // Add Firebase initialization check
+      if (!_authService.isFirebaseAuthAvailable) {
+        AppLogging.logError('Firebase Auth not initialized', name: 'AuthBloc');
+        emit(AuthError('Authentication service not available. Please restart the app.'));
+        return;
+      }
+
       AppLogging.logInfo('Calling AuthService.signInWithApple()', name: 'AuthBloc');
       final userCredential = await _authService.signInWithApple();
+
       if (userCredential != null) {
         AppLogging.logInfo('Apple sign-in successful for user: ${userCredential.user!.uid}', name: 'AuthBloc');
-
-        // Save user data to Firestore after successful sign-in
-        try {
-          final user = userCredential.user!;
-          // Determine if this user should be admin (first user)
-          final isAdmin = await _determineAdminStatus();
-
-          // Create user model
-          final userModel = model.User(
-            id: user.uid,
-            name: user.displayName ?? '',
-            profileImageUrl: user.photoURL ?? '',
-            birthday: null,
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-            email: user.email,
-            isAdmin: isAdmin,
-          );
-          await _dataSyncService.saveUserData(userModel);
-          AppLogging.logInfo('User data saved to Firestore successfully (isAdmin: $isAdmin)', name: 'AuthBloc');
-        } catch (saveError) {
-          AppLogging.logError('Failed to save user data to Firestore', name: 'AuthBloc', error: saveError);
-          // Continue authentication even if saving fails
-        }
-
-        // Sync data from Firestore after successful sign-in
-        try {
-          await _dataSyncService.syncFromFirestore(userCredential.user!.uid);
-          AppLogging.logInfo('Data sync completed successfully', name: 'AuthBloc');
-        } catch (syncError) {
-          AppLogging.logError('Data sync failed, but continuing with authentication', name: 'AuthBloc', error: syncError);
-          // Don't fail authentication if sync fails, just log it
-        }
-
-        // Create default categories only for first-time users
-        try {
-          await _handleFirstTimeUserSetup(userCredential.user!.uid);
-        } catch (setupError) {
-          AppLogging.logError('First-time user setup failed, but continuing with authentication', name: 'AuthBloc', error: setupError);
-        }
-
+        await _handlePostSignIn(firebaseUser: userCredential.user!, useDisplayName: true);
         emit(AuthAuthenticated(userCredential.user!));
       } else {
         AppLogging.logInfo('Apple sign-in cancelled by user', name: 'AuthBloc');
@@ -179,7 +204,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } catch (e) {
       AppLogging.logError('Apple sign-in failed', name: 'AuthBloc', error: e);
-      emit(AuthError('Failed to sign in with Apple: $e'));
+      final errorMessage = _cleanErrorMessage(e.toString());
+      emit(AuthError(errorMessage));
     }
   }
 
@@ -193,37 +219,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final userCredential = await _authService.signInWithEmailAndPassword(event.email, event.password);
       if (userCredential != null) {
         AppLogging.logInfo('Email sign-in successful for user: ${userCredential.user!.uid}', name: 'AuthBloc');
-
-        // Save minimal user data to Firestore after successful sign-in (without auto-populating name/birthday)
-        try {
-          final user = userCredential.user!;
-          // Determine if this user should be admin (first user)
-          final isAdmin = await _determineAdminStatus();
-
-          // Create user model with minimal data - name and birthday will be set during profile completion
-          final userModel = model.User(id: user.uid, name: '', profileImageUrl: '', birthday: null, createdAt: DateTime.now(), updatedAt: DateTime.now(), email: user.email, isAdmin: isAdmin);
-          await _dataSyncService.saveUserData(userModel);
-          AppLogging.logInfo('Minimal user data saved to Firestore successfully (isAdmin: $isAdmin)', name: 'AuthBloc');
-        } catch (saveError) {
-          AppLogging.logError('Failed to save user data to Firestore', name: 'AuthBloc', error: saveError);
-          // Continue authentication even if saving fails
-        }
-
-        // Sync data from Firestore after successful sign-in
-        try {
-          await _dataSyncService.syncFromFirestore(userCredential.user!.uid);
-          AppLogging.logInfo('Data sync completed successfully', name: 'AuthBloc');
-        } catch (syncError) {
-          AppLogging.logError('Data sync failed, but continuing with authentication', name: 'AuthBloc', error: syncError);
-          // Don't fail authentication if sync fails, just log it
-        }
-
-        // Create default categories only for first-time users
-        try {
-          await _handleFirstTimeUserSetup(userCredential.user!.uid);
-        } catch (setupError) {
-          AppLogging.logError('First-time user setup failed, but continuing with authentication', name: 'AuthBloc', error: setupError);
-        }
+        await _handlePostSignIn(firebaseUser: userCredential.user!, useDisplayName: false);
 
         // Check if profile is complete for email login
         final isProfileComplete = await _isProfileComplete(userCredential.user!.uid);
@@ -238,7 +234,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } catch (e) {
       AppLogging.logError('Email sign-in failed', name: 'AuthBloc', error: e);
-      emit(AuthError(e.toString()));
+      final errorMessage = _cleanErrorMessage(e.toString());
+      emit(AuthError(errorMessage));
     }
   }
 
@@ -250,28 +247,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final userCredential = await _authService.signUpWithEmailAndPassword(event.email, event.password);
       if (userCredential != null) {
         AppLogging.logInfo('Email sign-up successful for user: ${userCredential.user!.uid}', name: 'AuthBloc');
-
-        // Save minimal user data to Firestore after successful sign-up (without auto-populating name/birthday)
-        try {
-          final user = userCredential.user!;
-          // Determine if this user should be admin (first user)
-          final isAdmin = await _determineAdminStatus();
-
-          // Create user model with minimal data - name and birthday will be set during profile completion
-          final userModel = model.User(id: user.uid, name: '', profileImageUrl: '', birthday: null, createdAt: DateTime.now(), updatedAt: DateTime.now(), email: user.email, isAdmin: isAdmin);
-          await _dataSyncService.saveUserData(userModel);
-          AppLogging.logInfo('Minimal user data saved to Firestore successfully (isAdmin: $isAdmin)', name: 'AuthBloc');
-        } catch (saveError) {
-          AppLogging.logError('Failed to save user data to Firestore', name: 'AuthBloc', error: saveError);
-          // Continue authentication even if saving fails
-        }
-
-        // Create default categories for new users
-        try {
-          await _handleFirstTimeUserSetup(userCredential.user!.uid);
-        } catch (setupError) {
-          AppLogging.logError('First-time user setup failed, but continuing with authentication', name: 'AuthBloc', error: setupError);
-        }
+        await _handlePostSignIn(firebaseUser: userCredential.user!, useDisplayName: false);
 
         // For email sign-up, always require profile completion since we don't auto-populate name/birthday
         emit(AuthProfileIncomplete(userCredential.user!));
@@ -281,7 +257,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } catch (e) {
       AppLogging.logError('Email sign-up failed', name: 'AuthBloc', error: e);
-      emit(AuthError(e.toString()));
+      final errorMessage = _cleanErrorMessage(e.toString());
+      emit(AuthError(errorMessage));
     }
   }
 
@@ -335,9 +312,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         return false;
       }
 
-      // Profile is complete if name is not empty/null and birthday is set
-      final isComplete = user.name.isNotEmpty && user.birthday != null;
-      AppLogging.logInfo('Profile completeness check: name="${user.name}", birthday=${user.birthday}, complete=$isComplete', name: 'AuthBloc');
+      // Profile is complete if name is not empty/null (birthday is optional)
+      final isComplete = user.name.isNotEmpty;
+      AppLogging.logInfo('Profile completeness check: name="${user.name}", complete=$isComplete', name: 'AuthBloc');
 
       return isComplete;
     } catch (e) {
@@ -352,7 +329,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _authService.signOut();
       emit(AuthUnauthenticated());
     } catch (e) {
-      emit(AuthError('Failed to sign out: $e'));
+      final errorMessage = _cleanErrorMessage(e.toString());
+      emit(AuthError(errorMessage));
     }
   }
 
@@ -380,6 +358,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void _onLoggedOut(AuthLoggedOut event, Emitter<AuthState> emit) {
     emit(AuthUnauthenticated());
+  }
+
+  /// Clean error message by removing "Exception: " prefix and other technical details
+  String _cleanErrorMessage(String error) {
+    // Remove "Exception: " prefix
+    String cleaned = error.replaceFirst('Exception: ', '');
+    // Remove "Failed to sign in: Exception: " redundancy
+    cleaned = cleaned.replaceFirst('Failed to sign in: Exception: ', '');
+    cleaned = cleaned.replaceFirst('Failed to sign in with Apple: Exception: ', '');
+    return cleaned;
   }
 
   @override

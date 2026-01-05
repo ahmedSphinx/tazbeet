@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import '../../l10n/app_localizations.dart';
 import '../../services/color_customization_service.dart';
 
 class ColorCustomizationWidget extends StatelessWidget {
   final ColorCustomizationService colorService;
 
-  const ColorCustomizationWidget({
-    super.key,
-    required this.colorService,
-  });
+  const ColorCustomizationWidget({super.key, required this.colorService});
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +14,8 @@ class ColorCustomizationWidget extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            title: const Text('Custom Colors'),
-            subtitle: const Text('Personalize your app theme'),
+            title: Text(AppLocalizations.of(context)!.customColors),
+            subtitle: Text(AppLocalizations.of(context)!.personalizeAppTheme),
             trailing: Switch(
               value: colorService.useCustomColors,
               onChanged: (value) {
@@ -27,8 +25,8 @@ class ColorCustomizationWidget extends StatelessWidget {
           ),
           if (colorService.useCustomColors) ...[
             ListTile(
-              title: const Text('Primary Color'),
-              subtitle: const Text('Choose your primary color'),
+              title: Text(AppLocalizations.of(context)!.primaryColor),
+              subtitle: Text(AppLocalizations.of(context)!.choosePrimaryColor),
               trailing: Container(
                 width: 40,
                 height: 40,
@@ -70,10 +68,7 @@ class ColorCustomizationWidget extends StatelessWidget {
             decoration: BoxDecoration(
               color: color,
               shape: BoxShape.circle,
-              border: Border.all(
-                color: colorService.customPrimaryColor == color ? Colors.black : Colors.grey.shade300,
-                width: colorService.customPrimaryColor == color ? 3 : 1,
-              ),
+              border: Border.all(color: colorService.customPrimaryColor == color ? Colors.black : Colors.grey.shade300, width: colorService.customPrimaryColor == color ? 3 : 1),
             ),
           ),
           const SizedBox(height: 4),
@@ -89,7 +84,7 @@ class ColorCustomizationWidget extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Pick a Color'),
+        title: Text(AppLocalizations.of(context)!.pickAColor),
         content: SingleChildScrollView(
           child: ColorPicker(
             pickerColor: selectedColor,
@@ -101,17 +96,11 @@ class ColorCustomizationWidget extends StatelessWidget {
             displayThumbColor: true,
             paletteType: PaletteType.hsvWithHue,
             labelTypes: const [],
-            pickerAreaBorderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(2),
-              topRight: Radius.circular(2),
-            ),
+            pickerAreaBorderRadius: const BorderRadius.only(topLeft: Radius.circular(2), topRight: Radius.circular(2)),
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
           TextButton(
             onPressed: () {
               colorService.setCustomPrimaryColor(selectedColor);

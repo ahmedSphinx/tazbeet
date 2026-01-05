@@ -1,12 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'dart:io';
 import '../models/task.dart';
 import 'notification_service.dart';
 import 'localization_service.dart';
 import '../repositories/task_repository.dart';
+import 'settings_service.dart';
+import 'adaptive_pomodoro.dart';
+import 'session_chain.dart';
+import 'enhanced_progress.dart';
+import 'focus_mode.dart';
 
 enum PomodoroState { idle, work, shortBreak, longBreak, paused }
 
@@ -16,14 +23,33 @@ class PomodoroSession {
   final int longBreakDuration; // in minutes
   final int sessionsUntilLongBreak;
 
-  const PomodoroSession({this.workDuration = 30, this.shortBreakDuration = 5, this.longBreakDuration = 15, this.sessionsUntilLongBreak = 4});
+  const PomodoroSession({this.workDuration = 25, this.shortBreakDuration = 5, this.longBreakDuration = 15, this.sessionsUntilLongBreak = 4});
 }
 
 class PomodoroTimer extends ChangeNotifier {
   PomodoroSession session;
   final TaskRepository? taskRepository;
+  final AdaptivePomodoro adaptivePomodoro;
+  final ProgressTracker progressTracker;
 
-  PomodoroTimer({PomodoroSession? session, this.taskRepository}) : session = session ?? const PomodoroSession();
+  // Callback for state changes (for UI to play sounds, show animations)
+  void Function(PomodoroState oldState, PomodoroState newState)? onStateChange;
+
+  // Audio player for session completion sounds
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  bool _enableSound = true;
+  bool _enableVibration = true;
+
+  // Enhanced features
+  SessionChain? _currentChain;
+  bool _adaptiveTimingEnabled = true;
+  bool _focusModeEnabled = false;
+  final List<Map<String, dynamic>> _sessionHistory = [];
+
+  PomodoroTimer({PomodoroSession? session, this.taskRepository, AdaptivePomodoro? adaptivePomodoro, ProgressTracker? progressTracker})
+    : session = session ?? const PomodoroSession(),
+      adaptivePomodoro = adaptivePomodoro ?? AdaptivePomodoro(),
+      progressTracker = progressTracker ?? ProgressTracker();
 
   void updateSession(PomodoroSession newSession) {
     session = newSession;
@@ -45,6 +71,20 @@ class PomodoroTimer extends ChangeNotifier {
 
   void setSelectedTask(Task? task) {
     _selectedTask = task;
+
+    // Initialize session chain if task has subtasks and auto-start is enabled
+    if (task != null && task.autoStartNextSubtask) {
+      _currentChain = SessionChain.createForTask(task);
+    } else {
+      _currentChain = null;
+    }
+
+    // Update session duration based on task if adaptive timing is enabled
+    if (_adaptiveTimingEnabled && task != null) {
+      final optimalDuration = adaptivePomodoro.calculateOptimalDuration(task);
+      session = PomodoroSession(workDuration: optimalDuration, shortBreakDuration: session.shortBreakDuration, longBreakDuration: session.longBreakDuration, sessionsUntilLongBreak: session.sessionsUntilLongBreak);
+    }
+
     notifyListeners();
   }
 
@@ -100,6 +140,15 @@ class PomodoroTimer extends ChangeNotifier {
 
   Future<void> initialize() async {
     await _loadState();
+    // Load sound/vibration settings
+    final settings = SettingsService().settings;
+    _enableSound = settings.enableSound;
+    _enableVibration = settings.enableVibration;
+  }
+
+  void updateSoundSettings({bool? enableSound, bool? enableVibration}) {
+    if (enableSound != null) _enableSound = enableSound;
+    if (enableVibration != null) _enableVibration = enableVibration;
   }
 
   void start() {
@@ -129,6 +178,12 @@ class PomodoroTimer extends ChangeNotifier {
     _remainingSeconds = 0;
     _startTime = null;
     _pauseTime = null;
+
+    // Disable focus mode
+    if (_focusModeEnabled) {
+      FocusMode.disableFocusMode(reason: 'Timer stopped');
+    }
+
     _clearState();
     notifyListeners();
   }
@@ -140,27 +195,92 @@ class PomodoroTimer extends ChangeNotifier {
     notifyListeners();
   }
 
+  void addTime(int minutes) {
+    if (_state != PomodoroState.idle) {
+      _remainingSeconds += minutes * 60;
+      // Ensure we don't go negative
+      if (_remainingSeconds < 0) {
+        _remainingSeconds = 0;
+      }
+      _saveState();
+      notifyListeners();
+    }
+  }
+
+  void subtractTime(int minutes) {
+    if (_state != PomodoroState.idle) {
+      _remainingSeconds -= minutes * 60;
+      // Ensure we don't go negative
+      if (_remainingSeconds < 0) {
+        _remainingSeconds = 0;
+      }
+      _saveState();
+      notifyListeners();
+    }
+  }
+
   void _startWorkSession() {
+    final oldState = _state;
     _state = PomodoroState.work;
     _currentSession++;
-    _remainingSeconds = session.workDuration * 60;
+
+    // Use adaptive duration if enabled and task is selected
+    if (_adaptiveTimingEnabled && _selectedTask != null) {
+      _remainingSeconds = adaptivePomodoro.calculateOptimalDuration(_selectedTask!) * 60;
+    } else {
+      _remainingSeconds = session.workDuration * 60;
+    }
+
     _startTime = DateTime.now();
     _workStartTime = DateTime.now();
+
+    // Enable focus mode if configured
+    if (_focusModeEnabled && _selectedTask != null) {
+      FocusMode.enableFocusMode(task: _selectedTask);
+    }
+
+    _notifyStateChange(oldState, _state);
     _startTimer();
   }
 
   void _startShortBreak() {
+    final oldState = _state;
     _state = PomodoroState.shortBreak;
     _remainingSeconds = session.shortBreakDuration * 60;
     _startTime = DateTime.now();
+    _notifyStateChange(oldState, _state);
     _startTimer();
   }
 
   void _startLongBreak() {
+    final oldState = _state;
     _state = PomodoroState.longBreak;
     _remainingSeconds = session.longBreakDuration * 60;
     _startTime = DateTime.now();
+    _notifyStateChange(oldState, _state);
     _startTimer();
+  }
+
+  void _notifyStateChange(PomodoroState oldState, PomodoroState newState) {
+    // Play sound and vibrate on state change
+    if (oldState != PomodoroState.idle && oldState != PomodoroState.paused) {
+      _playCompletionFeedback();
+    }
+    onStateChange?.call(oldState, newState);
+  }
+
+  Future<void> _playCompletionFeedback() async {
+    if (_enableVibration) {
+      HapticFeedback.heavyImpact();
+    }
+    if (_enableSound) {
+      try {
+        await _audioPlayer.play(AssetSource('sounds/session_complete.mp3'));
+      } catch (e) {
+        // Sound file may not exist, ignore
+        debugPrint('Could not play completion sound: $e');
+      }
+    }
   }
 
   void _resume() {
@@ -202,13 +322,49 @@ class PomodoroTimer extends ChangeNotifier {
       case PomodoroState.work:
         if (completed) {
           _completedSessions++;
-          // Update task if one is selected
-          if (_selectedTask != null && taskRepository != null && _workStartTime != null) {
-            final workDuration = DateTime.now().difference(_workStartTime!);
-            final updatedTask = _selectedTask!.copyWith(pomodoroCount: _selectedTask!.pomodoroCount + 1, timeSpent: _selectedTask!.timeSpent + workDuration, updatedAt: DateTime.now());
+
+          // Record session data for adaptive learning
+          if (_selectedTask != null && _workStartTime != null) {
+            final workDuration = DateTime.now().difference(_workStartTime!).inMinutes;
+            final sessionData = {'startTime': _workStartTime!.toIso8601String(), 'duration': workDuration, 'completed': true, 'taskId': _selectedTask!.id, 'taskTitle': _selectedTask!.title};
+            _sessionHistory.add(sessionData);
+
+            // Learn from this session
+            adaptivePomodoro.learnFromSession(
+              _selectedTask!,
+              workDuration,
+              true, // Assume productive for completed sessions
+              null,
+            );
+
+            // Update task with enhanced data
+            final updatedTask = _selectedTask!.copyWith(
+              pomodoroCount: _selectedTask!.pomodoroCount + 1,
+              timeSpent: _selectedTask!.timeSpent + Duration(minutes: workDuration),
+              lastPomodoroDate: DateTime.now(),
+              pomodoroSessions: [..._selectedTask!.pomodoroSessions, sessionData],
+              updatedAt: DateTime.now(),
+            );
             await taskRepository!.updateTask(updatedTask);
+
+            // Update progress tracking
+            progressTracker.calculateProgress(updatedTask);
+
+            // Handle session chaining
+            if (_currentChain != null) {
+              final nextSubtask = _currentChain!.completeSubtaskSession(_selectedTask!, 'Work session completed');
+              if (nextSubtask != null && _currentChain!.shouldContinueChaining()) {
+                setSelectedTask(nextSubtask);
+              }
+            }
           }
         }
+
+        // Disable focus mode during breaks
+        if (_focusModeEnabled) {
+          await FocusMode.disableFocusMode(reason: 'Break time');
+        }
+
         if (_shouldTakeLongBreak()) {
           _startLongBreak();
         } else {
@@ -261,14 +417,21 @@ class PomodoroTimer extends ChangeNotifier {
   }
 
   Duration getTotalBreakTime() {
-    final shortBreaks = _completedSessions - (_completedSessions ~/ session.sessionsUntilLongBreak);
-    final longBreaks = _completedSessions ~/ session.sessionsUntilLongBreak;
-    return Duration(minutes: shortBreaks * session.shortBreakDuration + longBreaks * session.longBreakDuration);
+    // Breaks taken = completedSessions - 1 (no break before first session)
+    // But we need to count breaks that have actually been taken
+    if (_completedSessions <= 0) return Duration.zero;
+
+    final breaksTaken = _completedSessions; // Each completed work session is followed by a break
+    final longBreaksTaken = _completedSessions ~/ session.sessionsUntilLongBreak;
+    final shortBreaksTaken = breaksTaken - longBreaksTaken;
+
+    return Duration(minutes: shortBreaksTaken * session.shortBreakDuration + longBreaksTaken * session.longBreakDuration);
   }
 
   double getAverageSessionTime() {
     if (_completedSessions == 0) return 0.0;
-    return session.workDuration.toDouble();
+    // Calculate actual average based on completed sessions
+    return getTotalWorkTime().inMinutes / _completedSessions.toDouble();
   }
 
   int getSessionsCompletedToday() {
@@ -325,6 +488,119 @@ class PomodoroTimer extends ChangeNotifier {
   @override
   void dispose() {
     _timer?.cancel();
+    _audioPlayer.dispose();
+    FocusMode.dispose();
     super.dispose();
+  }
+
+  // Enhanced feature methods
+
+  /// Enable or disable adaptive timing
+  void setAdaptiveTiming(bool enabled) {
+    _adaptiveTimingEnabled = enabled;
+    if (enabled && _selectedTask != null) {
+      // Recalculate current session duration
+      final optimalDuration = adaptivePomodoro.calculateOptimalDuration(_selectedTask!);
+      if (_state == PomodoroState.work) {
+        _remainingSeconds = optimalDuration * 60;
+        notifyListeners();
+      }
+    }
+  }
+
+  /// Enable or disable focus mode
+  void setFocusMode(bool enabled) {
+    _focusModeEnabled = enabled;
+    if (!enabled && FocusMode.isActive) {
+      FocusMode.disableFocusMode(reason: 'Focus mode disabled');
+    }
+  }
+
+  /// Get current session chain info
+  Map<String, dynamic>? getCurrentChainInfo() {
+    if (_currentChain == null) return null;
+    return _currentChain!.getSessionSummary();
+  }
+
+  /// Get enhanced progress for selected task
+  EnhancedProgress? getTaskProgress() {
+    if (_selectedTask == null) return null;
+    return progressTracker.calculateProgress(_selectedTask!);
+  }
+
+  /// Get productivity insights
+  Map<String, dynamic> getProductivityInsights() {
+    return adaptivePomodoro.getWorkPatternInsights();
+  }
+
+  /// Get personalized recommendations
+  List<String> getRecommendations() {
+    final recommendations = <String>[];
+
+    // Get adaptive pomodoro recommendations
+    recommendations.addAll(adaptivePomodoro.getPersonalizedRecommendations());
+
+    // Get progress recommendations
+    if (_selectedTask != null) {
+      recommendations.addAll(progressTracker.getProgressInsights(_selectedTask!.id));
+    }
+
+    // Get focus mode recommendations
+    if (_focusModeEnabled) {
+      recommendations.addAll(
+        FocusMode.getFocusRecommendations(
+          currentFocusLevel: 0.8, // Simplified, would calculate from actual data
+          recentSessionProductivity: _sessionHistory.map((s) => s['completed'] as bool).toList(),
+          averageSessionLength: _getAverageSessionLength().toInt(),
+        ),
+      );
+    }
+
+    return recommendations;
+  }
+
+  /// Get session history
+  List<Map<String, dynamic>> getSessionHistory() {
+    return List.unmodifiable(_sessionHistory);
+  }
+
+  /// Export timer data
+  Map<String, dynamic> exportData() {
+    return {
+      'sessionHistory': _sessionHistory,
+      'adaptiveData': adaptivePomodoro.exportLearningData(),
+      'progressData': progressTracker.exportProgressData(),
+      'settings': {'adaptiveTimingEnabled': _adaptiveTimingEnabled, 'focusModeEnabled': _focusModeEnabled},
+    };
+  }
+
+  /// Import timer data
+  void importData(Map<String, dynamic> data) {
+    if (data['sessionHistory'] != null) {
+      _sessionHistory.clear();
+      _sessionHistory.addAll((data['sessionHistory'] as List).cast<Map<String, dynamic>>());
+    }
+
+    if (data['adaptiveData'] != null) {
+      adaptivePomodoro.importLearningData(data['adaptiveData']);
+    }
+
+    if (data['progressData'] != null) {
+      progressTracker.importProgressData(data['progressData']);
+    }
+
+    if (data['settings'] != null) {
+      final settings = data['settings'] as Map<String, dynamic>;
+      _adaptiveTimingEnabled = settings['adaptiveTimingEnabled'] ?? true;
+      _focusModeEnabled = settings['focusModeEnabled'] ?? false;
+    }
+  }
+
+  double _getAverageSessionLength() {
+    if (_sessionHistory.isEmpty) return 25.0;
+
+    final totalLength = _sessionHistory.map((s) => s['duration'] as int).fold<int>(0, (sum, length) => sum + length);
+
+    return totalLength / _sessionHistory.length;
   }
 }

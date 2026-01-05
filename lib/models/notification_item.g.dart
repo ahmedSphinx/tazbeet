@@ -134,6 +134,8 @@ class NotificationTypeAdapter extends TypeAdapter<NotificationType> {
         return NotificationType.emergency;
       case 8:
         return NotificationType.system;
+      case 9:
+        return NotificationType.userSignup;
       default:
         return NotificationType.taskReminder;
     }
@@ -168,6 +170,9 @@ class NotificationTypeAdapter extends TypeAdapter<NotificationType> {
         break;
       case NotificationType.system:
         writer.writeByte(8);
+        break;
+      case NotificationType.userSignup:
+        writer.writeByte(9);
         break;
     }
   }

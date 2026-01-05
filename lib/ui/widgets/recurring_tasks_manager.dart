@@ -48,7 +48,7 @@ class _RecurringTasksManagerState extends State<RecurringTasksManager> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(AppLocalizations.of(context)!.generateRecurringInstances),
-        content: Text('This will generate new instances for all recurring tasks that need them. Continue?'),
+        content: Text(AppLocalizations.of(context)!.generateRecurringConfirmation),
         actions: [
           TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(AppLocalizations.of(context)!.cancelButton)),
           ElevatedButton(onPressed: () => Navigator.of(context).pop(true), child: Text(AppLocalizations.of(context)!.generateRecurringInstances)),
@@ -60,19 +60,31 @@ class _RecurringTasksManagerState extends State<RecurringTasksManager> {
       setState(() => _isLoading = true);
 
       try {
-        for (final task in _tasksNeedingInstances) {
-          final nextInstance = await _repeatService.generateNextRecurringTask(task);
-          if (nextInstance != null) {
-            context.read<TaskListBloc>().add(AddTask(nextInstance));
-          }
+        // Use batch processing for better performance
+        final instances = await _repeatService.generateMultipleRecurringInstances(_tasksNeedingInstances);
+
+        // Add all instances in a single batch operation
+        for (final instance in instances) {
+          context.read<TaskListBloc>().add(AddTask(instance));
         }
 
         await _loadRecurringData();
 
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.recurringInstancesGenerated)));
+        if (instances.isNotEmpty) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.bulkGenerationComplete(instances.length.toString())), backgroundColor: Colors.green, duration: const Duration(seconds: 3)));
+        }
       } catch (e) {
         setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${AppLocalizations.of(context)!.errorGeneratingInstances}: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${AppLocalizations.of(context)!.recurringTaskGenerationFailed}: $e'),
+            backgroundColor: Colors.red,
+            action: SnackBarAction(label: AppLocalizations.of(context)!.recurringTaskRetry, onPressed: () => _generateRecurringInstances()),
+            duration: const Duration(seconds: 5),
+          ),
+        );
       }
     }
   }

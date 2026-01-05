@@ -46,10 +46,12 @@ class TaskDetailsBloc extends Bloc<TaskDetailsEvent, TaskDetailsState> {
       final currentTask = (state as TaskDetailsLoaded).task;
       final updatedTask = currentTask.copyWith(strictCompletionMode: event.strictMode, updatedAt: DateTime.now());
 
+      // Persist FIRST to prevent data loss on crash
+      await taskRepository.updateTask(updatedTask);
+
       final progress = _calculateProgress(updatedTask);
       final canComplete = _canComplete(updatedTask);
       emit(TaskDetailsLoaded(updatedTask, progress, canComplete));
-      await taskRepository.updateTask(updatedTask);
 
       // Sync to Firestore if user is signed in
       final user = FirebaseAuth.instance.currentUser;
@@ -78,10 +80,12 @@ class TaskDetailsBloc extends Bloc<TaskDetailsEvent, TaskDetailsState> {
 
       final updatedTask = addSubtaskToTree(currentTask, event.parentTaskId, event.subtask).copyWith(updatedAt: DateTime.now());
 
+      // Persist FIRST to prevent data loss on crash
+      await taskRepository.updateTask(updatedTask);
+
       final progress = _calculateProgress(updatedTask);
       final canComplete = _canComplete(updatedTask);
       emit(TaskDetailsLoaded(updatedTask, progress, canComplete));
-      await taskRepository.updateTask(updatedTask);
 
       // Sync to Firestore if user is signed in
       final user = FirebaseAuth.instance.currentUser;
@@ -114,10 +118,12 @@ class TaskDetailsBloc extends Bloc<TaskDetailsEvent, TaskDetailsState> {
 
       final updatedTask = updateSubtaskInTree(currentTask, event.updatedSubtask.id, event.updatedSubtask.copyWith(updatedAt: DateTime.now()));
 
+      // Persist FIRST to prevent data loss on crash
+      await taskRepository.updateTask(updatedTask);
+
       final progress = _calculateProgress(updatedTask);
       final canComplete = _canComplete(updatedTask);
       emit(TaskDetailsLoaded(updatedTask, progress, canComplete));
-      await taskRepository.updateTask(updatedTask);
 
       // Sync to Firestore if user is signed in
       final user = FirebaseAuth.instance.currentUser;
@@ -146,10 +152,12 @@ class TaskDetailsBloc extends Bloc<TaskDetailsEvent, TaskDetailsState> {
 
       final updatedTask = deleteSubtaskFromTree(currentTask, event.subtaskId).copyWith(updatedAt: DateTime.now());
 
+      // Persist FIRST to prevent data loss on crash
+      await taskRepository.updateTask(updatedTask);
+
       final progress = _calculateProgress(updatedTask);
       final canComplete = _canComplete(updatedTask);
       emit(TaskDetailsLoaded(updatedTask, progress, canComplete));
-      await taskRepository.updateTask(updatedTask);
 
       // Sync to Firestore if user is signed in
       final user = FirebaseAuth.instance.currentUser;
@@ -168,10 +176,12 @@ class TaskDetailsBloc extends Bloc<TaskDetailsEvent, TaskDetailsState> {
       final currentTask = (state as TaskDetailsLoaded).task;
       final updatedTask = currentTask.copyWith(subtasks: event.reorderedSubtasks, updatedAt: DateTime.now());
 
+      // Persist FIRST to prevent data loss on crash
+      await taskRepository.updateTask(updatedTask);
+
       final progress = _calculateProgress(updatedTask);
       final canComplete = _canComplete(updatedTask);
       emit(TaskDetailsLoaded(updatedTask, progress, canComplete));
-      await taskRepository.updateTask(updatedTask);
 
       // Sync to Firestore if user is signed in
       final user = FirebaseAuth.instance.currentUser;
@@ -186,10 +196,12 @@ class TaskDetailsBloc extends Bloc<TaskDetailsEvent, TaskDetailsState> {
   }
 
   Future<void> _onUpdateTaskDetails(UpdateTaskDetails event, Emitter<TaskDetailsState> emit) async {
+    // Persist FIRST to prevent data loss on crash
+    await taskRepository.updateTask(event.task);
+
     final progress = _calculateProgress(event.task);
     final canComplete = _canComplete(event.task);
     emit(TaskDetailsLoaded(event.task, progress, canComplete));
-    await taskRepository.updateTask(event.task);
 
     // Sync to Firestore if user is signed in
     final user = FirebaseAuth.instance.currentUser;
@@ -269,7 +281,8 @@ class TaskDetailsBloc extends Bloc<TaskDetailsEvent, TaskDetailsState> {
 
   Task _duplicateTask(Task task) {
     final now = DateTime.now();
-    final newId = now.millisecondsSinceEpoch.toString();
+    // Use timestamp + microseconds + hash to avoid ID collisions
+    final newId = '${now.millisecondsSinceEpoch}_${now.microsecond}_${task.id.hashCode.abs() % 10000}';
 
     // Duplicate subtasks recursively
     final duplicatedSubtasks = task.subtasks.map((subtask) => _duplicateTask(subtask)).toList();

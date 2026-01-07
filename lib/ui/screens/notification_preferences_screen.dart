@@ -6,6 +6,7 @@ import '../../blocs/notification/notification_state.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/notification_item.dart';
 import '../../models/notification_preferences.dart';
+import 'notification_history_screen.dart';
 
 /// Comprehensive notification preferences screen with granular controls
 class NotificationPreferencesScreen extends StatefulWidget {
@@ -38,7 +39,7 @@ class _NotificationPreferencesScreenState extends State<NotificationPreferencesS
           }
 
           if (state is! NotificationLoaded) {
-            return const Center(child: Text('Loading preferences...'));
+            return Center(child: Text(AppLocalizations.of(context)!.loadingPreferences));
           }
 
           final preferences = state.preferences;
@@ -142,7 +143,7 @@ class _NotificationPreferencesScreenState extends State<NotificationPreferencesS
                               context.read<NotificationBloc>().add(const ToggleDoNotDisturb(true, duration: Duration(hours: 1)));
                             },
                             icon: const Icon(Icons.timer),
-                            label: const Text('1 Hour'),
+                            label: Text(AppLocalizations.of(context)!.oneHour),
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -152,7 +153,7 @@ class _NotificationPreferencesScreenState extends State<NotificationPreferencesS
                               context.read<NotificationBloc>().add(const ToggleDoNotDisturb(true, duration: Duration(hours: 3)));
                             },
                             icon: const Icon(Icons.timer),
-                            label: const Text('3 Hours'),
+                            label: Text(AppLocalizations.of(context)!.threeHours),
                           ),
                         ),
                       ],
@@ -366,7 +367,7 @@ class _NotificationPreferencesScreenState extends State<NotificationPreferencesS
                 if (typePrefs.enabled) ...[
                   const Divider(),
                   ListTile(
-                    title: Text(l10n.priority, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                    title: Text('Priority', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
                     trailing: DropdownButton<NotificationPriority>(
                       value: typePrefs.priority,
                       items: NotificationPriority.values.map((priority) {
@@ -504,7 +505,7 @@ class _NotificationPreferencesScreenState extends State<NotificationPreferencesS
           child: ElevatedButton.icon(
             onPressed: () {
               context.read<NotificationBloc>().add(const SendTestNotification(NotificationType.system, immediate: true));
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Test notification sent')));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.testNotificationSent)));
             },
             icon: const Icon(Icons.send),
             label: Text(l10n.sendTestNotification),
@@ -527,7 +528,12 @@ class _NotificationPreferencesScreenState extends State<NotificationPreferencesS
           width: double.infinity,
           child: OutlinedButton.icon(
             onPressed: () {
-              Navigator.pushNamed(context, '/notification_history');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider.value(value: context.read<NotificationBloc>(), child: const NotificationHistoryScreen()),
+                ),
+              );
             },
             icon: const Icon(Icons.history),
             label: Text(l10n.viewHistory),

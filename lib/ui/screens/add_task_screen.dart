@@ -6,6 +6,8 @@ import '../../blocs/category/category_bloc.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/task.dart';
 import '../../models/repeat_rule.dart';
+import '../../models/pomodoro_plan.dart';
+import '../../services/pomodoro_planner_service.dart';
 import '../design_system/ds_typography.dart';
 import '../widgets/repeat_config_widget.dart';
 
@@ -27,8 +29,29 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   RepeatRule? selectedRepeatRule;
   bool _showRepeatSettings = false;
 
+  // Pomodoro Planning State
+  final PomodoroPlannerService _plannerService = PomodoroPlannerService();
+  PomodoroPlan? suggestedPomodoroPlan;
+  int focusScore = 5; // 1-10 scale
+  bool enablePomodoroOptimization = true;
+  bool _showPomodoroSettings = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Add listener to update pomodoro plan when title changes
+    _titleController.addListener(_onTitleChanged);
+  }
+
+  void _onTitleChanged() {
+    if (enablePomodoroOptimization) {
+      _updatePomodoroPlan();
+    }
+  }
+
   @override
   void dispose() {
+    _titleController.removeListener(_onTitleChanged);
     _titleController.dispose();
     _descriptionController.dispose();
     super.dispose();
@@ -172,6 +195,93 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     ),
                   ],
 
+                  // Pomodoro Planning Section
+                  const SizedBox(height: 16),
+                  const Divider(),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(AppLocalizations.of(context)!.pomodoroPlanning, style: Theme.of(context).textTheme.titleMedium),
+                      IconButton(
+                        onPressed: () => setState(() {
+                          _showPomodoroSettings = !_showPomodoroSettings;
+                        }),
+                        icon: Icon(_showPomodoroSettings ? Icons.expand_less : Icons.expand_more),
+                      ),
+                    ],
+                  ),
+                  if (_showPomodoroSettings) ...[
+                    const SizedBox(height: 16),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Enable/Disable Pomodoro Optimization
+                            SwitchListTile(
+                              title: Text(AppLocalizations.of(context)!.enablePomodoroOptimization),
+                              subtitle: Text(AppLocalizations.of(context)!.automaticallyPlanWorkSessions),
+                              value: enablePomodoroOptimization,
+                              onChanged: (value) {
+                                setState(() {
+                                  enablePomodoroOptimization = value;
+                                  if (value && _titleController.text.isNotEmpty) {
+                                    _updatePomodoroPlan();
+                                  }
+                                });
+                              },
+                            ),
+
+                            if (enablePomodoroOptimization) ...[
+                              const SizedBox(height: 16),
+
+                              // Focus Difficulty Slider
+                              Text(AppLocalizations.of(context)!.focusDifficulty(focusScore), style: Theme.of(context).textTheme.titleSmall),
+                              const SizedBox(height: 8),
+                              Slider(
+                                value: focusScore.toDouble(),
+                                min: 1,
+                                max: 10,
+                                divisions: 9,
+                                label: '$focusScore',
+                                onChanged: (value) {
+                                  setState(() {
+                                    focusScore = value.round();
+                                    _updatePomodoroPlan();
+                                  });
+                                },
+                              ),
+
+                              const SizedBox(height: 8),
+                              Text(AppLocalizations.of(context)!.easyFocusDeepFocusRequired, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600])),
+
+                              // Suggested Plan Preview
+                              if (suggestedPomodoroPlan != null) ...[
+                                const SizedBox(height: 16),
+                                Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(color: Colors.blue.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(AppLocalizations.of(context)!.suggestedPlan, style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
+                                      const SizedBox(height: 8),
+                                      Text('• ${suggestedPomodoroPlan!.totalSessions} ${AppLocalizations.of(context)!.workSessions}'),
+                                      Text('• ${suggestedPomodoroPlan!.workDuration} ${AppLocalizations.of(context)!.minPerSession}'),
+                                      Text(AppLocalizations.of(context)!.totalEstimatedTime(suggestedPomodoroPlan!.totalSessions * suggestedPomodoroPlan!.workDuration)),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+
                   const SizedBox(height: 24),
                 ],
               ),
@@ -191,6 +301,22 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     final now = DateTime.now();
     // Use timestamp + microseconds + random to avoid ID collisions
     final newId = '${now.millisecondsSinceEpoch}_${now.microsecond}_${now.hashCode.abs() % 10000}';
+
+    // Create pomodoro plan if optimization is enabled
+    PomodoroPlan? pomodoroPlan;
+    if (enablePomodoroOptimization) {
+      final tempTask = Task(
+        id: newId,
+        title: _titleController.text.trim(),
+        description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
+        priority: selectedPriority,
+        focusScore: focusScore,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+      pomodoroPlan = _plannerService.createOptimalPlan(tempTask);
+    }
+
     final task = Task(
       id: newId,
       title: _titleController.text.trim(),
@@ -202,10 +328,38 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       isCompleted: false,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
+      // Enhanced pomodoro fields
+      focusScore: focusScore,
+      isPomodoroOptimized: enablePomodoroOptimization,
+      pomodoroPlan: pomodoroPlan,
+      estimatedDuration: pomodoroPlan != null ? Duration(minutes: pomodoroPlan.totalSessions * pomodoroPlan.workDuration) : const Duration(minutes: 25),
     );
 
     widget.onTaskAdded(task);
     Navigator.of(context).pop();
+  }
+
+  void _updatePomodoroPlan() {
+    if (_titleController.text.trim().isEmpty) {
+      setState(() {
+        suggestedPomodoroPlan = null;
+      });
+      return;
+    }
+
+    final tempTask = Task(
+      id: 'temp',
+      title: _titleController.text.trim(),
+      description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
+      priority: selectedPriority,
+      focusScore: focusScore,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+
+    setState(() {
+      suggestedPomodoroPlan = _plannerService.createOptimalPlan(tempTask);
+    });
   }
 
   String _getPriorityLabel(TaskPriority priority, BuildContext context) {

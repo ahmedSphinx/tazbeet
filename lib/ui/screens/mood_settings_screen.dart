@@ -47,7 +47,7 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
 
       if (suggestedTimes.isEmpty) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No mood history available for suggestions')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.noMoodHistoryAvailableForSuggestions)));
         }
         return;
       }
@@ -73,16 +73,16 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
         });
         _saveSettings();
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added $addedCount suggested check-in times from your mood history')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.addedSuggestedCheckInTimesFromYourMoodHistory(addedCount))));
         }
       } else {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('All suggested times are already in your list')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.allSuggestedTimesAreAlreadyInYourList)));
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to get suggestions: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.failedToGetSuggestions(e.toString()))));
       }
     }
   }
@@ -100,11 +100,11 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
       final notificationService = NotificationService();
       await notificationService.showTestMoodNotificationNow(l10n: l10n);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Test mood notification sent!')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.testMoodNotificationSent)));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to send test notification: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.failedToSendTestNotification(e.toString()))));
       }
     }
   }
@@ -119,20 +119,20 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Pending Mood Notifications'),
+            title: Text(AppLocalizations.of(context)!.pendingMoodNotifications),
             content: Column(
               children: [
                 Text('${moodNotifications.length} mood notifications scheduled\nTotal pending: ${pending.length}'),
                 for (var notification in moodNotifications) Text('${notification.title} at ${notification.body?.toString() ?? ''}'),
               ],
             ),
-            actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('OK'))],
+            actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.okButton))],
           ),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to check pending notifications: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.failedToCheckPendingNotifications(e.toString()))));
       }
     }
   }
@@ -159,7 +159,7 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.deleteButton),
-        content: const Text('Remove this check-in time?'),
+        content: Text(AppLocalizations.of(context)!.removeThisCheckInTime),
         actions: [
           TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(l10n.cancelButton)),
           TextButton(onPressed: () => Navigator.of(context).pop(true), child: Text(l10n.deleteButton)),
@@ -184,7 +184,7 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
             elevation: 2,
             child: SwitchListTile(
               title: Text(l10n.enableMoodNotifications),
-              subtitle: Text('Receive periodic mood check-in reminders'),
+              subtitle: Text(AppLocalizations.of(context)!.receivePeriodicMoodCheckInReminders),
               value: _enableMoodNotifications,
               onChanged: (value) {
                 setState(() {
@@ -236,7 +236,7 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 32.0),
                           child: Text(
-                            'No check-in times set. Add one to get started!',
+                            AppLocalizations.of(context)!.noCheckInTimesSetAddOneToGetStarted,
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
                             textAlign: TextAlign.center,
                           ),
@@ -276,7 +276,7 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Notification Tools', style: Theme.of(context).textTheme.titleMedium),
+                    Text(AppLocalizations.of(context)!.notificationTools, style: Theme.of(context).textTheme.titleMedium),
                     const SizedBox(height: 8),
                     Row(
                       children: [
@@ -315,11 +315,11 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
                           final notificationService = NotificationService();
                           await notificationService.scheduleTestMoodNotification(l10n: l10n);
                           if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Test mood notification scheduled for 1 minute from now!')));
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.testMoodNotificationScheduledFor1MinuteFromNow)));
                           }
                         } catch (e) {
                           if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to schedule test notification: $e')));
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.failedToScheduleTestNotification(e.toString()))));
                           }
                         }
                       },
@@ -342,7 +342,7 @@ class _MoodSettingsScreenState extends State<MoodSettingsScreen> {
                           }
                         } catch (e) {
                           if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to cancel notifications: $e')));
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.failedToCancelNotifications(e.toString()))));
                           }
                         }
                       },

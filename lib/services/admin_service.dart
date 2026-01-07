@@ -16,9 +16,13 @@ class AdminService {
 
     try {
       final querySnapshot = await _firestore!.collection('users').limit(1).get();
-      return querySnapshot.docs.isEmpty;
+      final isFirst = querySnapshot.docs.isEmpty;
+      AppLogging.logInfo('First user check: ${isFirst ? "No users found - this is the first user" : "Existing users found"}', name: 'AdminService');
+      return isFirst;
     } catch (e) {
-      AppLogging.logError('Error checking if first user: $e');
+      AppLogging.logError('Error checking if first user: $e', name: 'AdminService');
+      // If we can't check due to permissions, assume this is not the first user
+      // to avoid accidentally granting admin rights
       return false;
     }
   }
@@ -49,7 +53,7 @@ class AdminService {
 
     try {
       final querySnapshot = await _firestore!.collection('users').where('isAdmin', isEqualTo: true).get();
-      return querySnapshot.docs.map((doc) {
+      final adminUsers = querySnapshot.docs.map((doc) {
         final data = doc.data();
         final Map<String, dynamic> convertedData = {};
         data.forEach((key, value) {
@@ -57,8 +61,11 @@ class AdminService {
         });
         return User.fromJson(convertedData);
       }).toList();
+
+      AppLogging.logInfo('Found ${adminUsers.length} admin users', name: 'AdminService');
+      return adminUsers;
     } catch (e) {
-      AppLogging.logError('Error fetching admin users: $e');
+      AppLogging.logError('Error fetching admin users: $e', name: 'AdminService');
       return [];
     }
   }

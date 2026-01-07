@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:tazbeet/blocs/auth/auth_event.dart';
 import 'package:tazbeet/services/app_logging_service.dart';
 import 'package:tazbeet/services/navigation_service.dart';
 import 'package:tazbeet/services/analytics_service.dart';
@@ -12,15 +14,26 @@ import 'package:tazbeet/services/sync_queue.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:tazbeet/services/settings_service.dart' as settings_service;
 import 'package:tazbeet/blocs/auth/auth_bloc.dart';
-import 'package:tazbeet/blocs/auth/auth_event.dart';
-import 'package:tazbeet/blocs/mood/mood_bloc.dart';
-import 'package:tazbeet/blocs/task_details/task_details_bloc.dart';
-import 'package:tazbeet/blocs/user/user_bloc.dart';
+import 'package:tazbeet/blocs/task_list/task_list_bloc.dart';
+import 'package:tazbeet/blocs/category/category_bloc.dart';
+import 'package:tazbeet/blocs/notification/notification_bloc.dart';
+import 'package:tazbeet/repositories/task_repository.dart';
+import 'package:tazbeet/repositories/category_repository.dart';
+import 'package:tazbeet/ui/screens/splash_screen.dart';
+import 'package:tazbeet/ui/screens/onboarding_screen.dart';
+import 'package:tazbeet/ui/screens/theme_settings_screen.dart';
+import 'package:tazbeet/ui/screens/notification_history_screen.dart';
+import 'package:tazbeet/ui/screens/home/main_screen.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
+import 'models/mood_streak.dart';
+import 'models/user.dart';
+import 'models/notification_item.dart';
+import 'models/notification_preferences.dart';
+
 import 'package:tazbeet/services/auth_service.dart';
 import 'package:tazbeet/services/color_customization_service.dart';
 import 'package:tazbeet/services/task_sound_service.dart';
@@ -29,16 +42,10 @@ import 'package:tazbeet/services/update_service.dart';
 import 'package:tazbeet/services/firebase_service_wrapper.dart';
 import 'models/mood.dart';
 import 'models/mood_achievement.dart';
-import 'models/mood_streak.dart';
-import 'models/user.dart';
-import 'models/notification_item.dart';
-import 'models/notification_preferences.dart';
-import 'blocs/task_list/task_list_bloc.dart';
-import 'blocs/category/category_bloc.dart';
-import 'blocs/notification/notification_bloc.dart';
+import 'blocs/mood/mood_bloc.dart';
+import 'blocs/task_details/task_details_bloc.dart';
+import 'blocs/user/user_bloc.dart';
 import 'blocs/notification/notification_event.dart';
-import 'repositories/task_repository.dart';
-import 'repositories/category_repository.dart';
 import 'repositories/mood_repository.dart';
 import 'services/mood_achievement_service.dart';
 
@@ -49,9 +56,7 @@ import 'services/background_service.dart';
 import 'services/emergency_service.dart';
 import 'services/settings_service.dart' as settings;
 import 'services/localization_service.dart';
-import 'ui/screens/splash_screen.dart';
 import 'ui/screens/home/mood/mood_input_screen.dart';
-import 'ui/screens/notification_history_screen.dart';
 import 'ui/screens/notification_preferences_screen.dart';
 import 'ui/screens/notification_test_screen.dart';
 import 'ui/themes/app_themes.dart';
@@ -216,13 +221,13 @@ class Tazbeet extends StatelessWidget {
     required this.analyticsService,
   });
 
-  ThemeMode _getThemeMode(settings.ThemeMode customThemeMode) {
+  ThemeMode _getThemeMode(settings_service.ThemeMode customThemeMode) {
     switch (customThemeMode) {
-      case settings.ThemeMode.light:
+      case settings_service.ThemeMode.light:
         return ThemeMode.light;
-      case settings.ThemeMode.dark:
+      case settings_service.ThemeMode.dark:
         return ThemeMode.dark;
-      case settings.ThemeMode.system:
+      case settings_service.ThemeMode.system:
         return ThemeMode.system;
     }
   }
@@ -279,6 +284,10 @@ class Tazbeet extends StatelessWidget {
                 navigatorObservers: [analyticsService.getAnalyticsObserver()],
                 title: 'Tazbeet',
                 routes: {
+                  '/onboarding': (context) => const OnboardingScreen(),
+                  '/main': (context) => const MainScreen(),
+                  '/accessibility_setup': (context) => const AccessibilityOnboardingScreen(),
+                  '/theme_settings': (context) => const ThemeSettingsScreen(),
                   '/mood_input': (context) => BlocProvider.value(value: context.read<MoodBloc>(), child: const MoodInputScreen()),
                   '/notification_history': (context) => BlocProvider.value(value: context.read<NotificationBloc>(), child: const NotificationHistoryScreen()),
                   '/notification_preferences': (context) => BlocProvider.value(value: context.read<NotificationBloc>(), child: const NotificationPreferencesScreen()),

@@ -5,6 +5,7 @@ import '../../models/voice_task_result.dart';
 import '../widgets/voice_task_recorder.dart';
 import '../widgets/voice_task_confirmation.dart';
 import '../../ui/themes/design_system.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Voice Task Screen - Main interface for voice task creation
 class VoiceTaskScreen extends StatefulWidget {
@@ -28,7 +29,7 @@ class _VoiceTaskScreenState extends State<VoiceTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Voice Tasks'), backgroundColor: Theme.of(context).colorScheme.primary, foregroundColor: Theme.of(context).colorScheme.onPrimary, elevation: 0),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.voiceTasks), backgroundColor: Theme.of(context).colorScheme.primary, foregroundColor: Theme.of(context).colorScheme.onPrimary, elevation: 0),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.lg),
@@ -64,7 +65,7 @@ class _VoiceTaskScreenState extends State<VoiceTaskScreen> {
           ),
         ),
       ),
-      floatingActionButton: _showRecorder ? null : FloatingActionButton.extended(onPressed: _startVoiceRecording, icon: const Icon(Icons.mic), label: Text('Start Recording')),
+      floatingActionButton: _showRecorder ? null : FloatingActionButton.extended(onPressed: _startVoiceRecording, icon: const Icon(Icons.mic), label: Text(AppLocalizations.of(context)!.startRecording)),
     );
   }
 
@@ -228,7 +229,7 @@ class _VoiceTaskScreenState extends State<VoiceTaskScreen> {
   void _showSuccessMessage() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Tasks created successfully!'),
+        content: Text(AppLocalizations.of(context)!.tasksCreatedSuccessfully),
         backgroundColor: Colors.green,
         duration: const Duration(seconds: 3),
         action: SnackBarAction(
@@ -244,11 +245,11 @@ class _VoiceTaskScreenState extends State<VoiceTaskScreen> {
 
   void _showTextInput() {
     // TODO: Implement text input dialog
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Text input coming soon!'), duration: Duration(seconds: 2)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.textInputComingSoon), duration: const Duration(seconds: 2)));
   }
 
   void _showRecentTasks() {
     // TODO: Implement recent tasks view
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Recent tasks coming soon!'), duration: Duration(seconds: 2)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.recentTasksComingSoon), duration: const Duration(seconds: 2)));
   }
 }

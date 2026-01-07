@@ -111,8 +111,9 @@ class DSTaskCard extends StatelessWidget {
   final VoidCallback? onLongPress;
   final bool isSelected;
   final bool showDeleteButton;
+  final bool isRecommended;
 
-  const DSTaskCard({super.key, required this.task, this.onTap, this.onToggle, this.onDelete, this.onLongPress, this.isSelected = false, this.showDeleteButton = false});
+  const DSTaskCard({super.key, required this.task, this.onTap, this.onToggle, this.onDelete, this.onLongPress, this.isSelected = false, this.showDeleteButton = false, this.isRecommended = false});
 
   @override
   Widget build(BuildContext context) {
@@ -134,8 +135,27 @@ class DSTaskCard extends StatelessWidget {
           padding: const EdgeInsets.all(DSSpacing.md),
           child: Row(
             children: [
-              // Priority Indicator
-              DSPriorityIndicator(priority: task.priority, height: 48),
+              // Priority Indicator with Smart Recommendation Badge
+              Stack(
+                children: [
+                  DSPriorityIndicator(priority: task.priority, height: 48),
+                  if (isRecommended)
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
+                        ),
+                        child: const Icon(Icons.psychology, size: 8, color: Colors.white),
+                      ),
+                    ),
+                ],
+              ),
               const SizedBox(width: DSSpacing.md),
 
               // Checkbox

@@ -87,9 +87,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         AppLogging.logInfo('Gallery permission denied', name: '_pickImage');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Gallery permission is required to select profile image'),
+            content: Text(AppLocalizations.of(context)!.galleryPermissionRequired),
             action: SnackBarAction(
-              label: 'Settings',
+              label: AppLocalizations.of(context)!.settings,
               onPressed: () {
                 openAppSettings();
               },
@@ -164,7 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       } else if (e.toString().contains('permission-denied')) {
         errorMessage = 'Permission denied. Please check your Firebase Storage permissions.';
       } else if (e.toString().contains('unauthorized')) {
-        errorMessage = 'Authentication error. Please log in again.';
+        errorMessage = AppLocalizations.of(context)!.authenticationErrorPleaseLogInAgain;
       }
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));

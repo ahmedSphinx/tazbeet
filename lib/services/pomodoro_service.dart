@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:tazbeet/services/app_logging_service.dart';
 import 'dart:io';
 import '../models/task.dart';
 import 'notification_service.dart';
@@ -278,7 +279,7 @@ class PomodoroTimer extends ChangeNotifier {
         await _audioPlayer.play(AssetSource('sounds/session_complete.mp3'));
       } catch (e) {
         // Sound file may not exist, ignore
-        debugPrint('Could not play completion sound: $e');
+        AppLogging.logError('Could not play completion sound: $e');
       }
     }
   }
@@ -318,66 +319,108 @@ class PomodoroTimer extends ChangeNotifier {
   }
 
   void _moveToNextState({bool completed = true}) async {
-    switch (_state) {
-      case PomodoroState.work:
-        if (completed) {
-          _completedSessions++;
+    try {
+      switch (_state) {
+        case PomodoroState.work:
+          if (completed) {
+            _completedSessions++;
 
-          // Record session data for adaptive learning
-          if (_selectedTask != null && _workStartTime != null) {
-            final workDuration = DateTime.now().difference(_workStartTime!).inMinutes;
-            final sessionData = {'startTime': _workStartTime!.toIso8601String(), 'duration': workDuration, 'completed': true, 'taskId': _selectedTask!.id, 'taskTitle': _selectedTask!.title};
-            _sessionHistory.add(sessionData);
+            // Record session data for adaptive learning
+            if (_selectedTask != null && _workStartTime != null) {
+              final workDuration = DateTime.now().difference(_workStartTime!).inMinutes;
+              final sessionData = {'startTime': _workStartTime!.toIso8601String(), 'duration': workDuration, 'completed': true, 'taskId': _selectedTask!.id, 'taskTitle': _selectedTask!.title};
+              _sessionHistory.add(sessionData);
 
-            // Learn from this session
-            adaptivePomodoro.learnFromSession(
-              _selectedTask!,
-              workDuration,
-              true, // Assume productive for completed sessions
-              null,
-            );
+              // Learn from this session
+              try {
+                adaptivePomodoro.learnFromSession(
+                  _selectedTask!,
+                  workDuration,
+                  true, // Assume productive for completed sessions
+                  null,
+                );
+              } catch (e) {
+                // Adaptive learning errors are non-critical
+                AppLogging.logError('Adaptive learning error: $e');
+              }
 
-            // Update task with enhanced data
-            final updatedTask = _selectedTask!.copyWith(
-              pomodoroCount: _selectedTask!.pomodoroCount + 1,
-              timeSpent: _selectedTask!.timeSpent + Duration(minutes: workDuration),
-              lastPomodoroDate: DateTime.now(),
-              pomodoroSessions: [..._selectedTask!.pomodoroSessions, sessionData],
-              updatedAt: DateTime.now(),
-            );
-            await taskRepository!.updateTask(updatedTask);
+              // Update task with enhanced data
+              final updatedTask = _selectedTask!.copyWith(
+                pomodoroCount: _selectedTask!.pomodoroCount + 1,
+                timeSpent: _selectedTask!.timeSpent + Duration(minutes: workDuration),
+                lastPomodoroDate: DateTime.now(),
+                pomodoroSessions: [..._selectedTask!.pomodoroSessions, sessionData],
+                updatedAt: DateTime.now(),
+              );
 
-            // Update progress tracking
-            progressTracker.calculateProgress(updatedTask);
+              try {
+                await taskRepository!.updateTask(updatedTask);
 
-            // Handle session chaining
-            if (_currentChain != null) {
-              final nextSubtask = _currentChain!.completeSubtaskSession(_selectedTask!, 'Work session completed');
-              if (nextSubtask != null && _currentChain!.shouldContinueChaining()) {
-                setSelectedTask(nextSubtask);
+                // Update progress tracking
+                try {
+                  progressTracker.calculateProgress(updatedTask);
+                } catch (e) {
+                  AppLogging.logError('Progress tracking error: $e');
+                }
+
+                // Handle session chaining
+                if (_currentChain != null) {
+                  try {
+                    final nextSubtask = _currentChain!.completeSubtaskSession(_selectedTask!, 'Work session completed');
+                    if (nextSubtask != null && _currentChain!.shouldContinueChaining()) {
+                      setSelectedTask(nextSubtask);
+                    }
+                  } catch (e) {
+                    AppLogging.logError('Session chaining error: $e');
+                  }
+                }
+              } catch (e) {
+                // Task update errors are critical but shouldn't crash the timer
+                AppLogging.logError('Task update error: $e');
+                // Continue with state transition even if task update fails
               }
             }
           }
-        }
 
-        // Disable focus mode during breaks
-        if (_focusModeEnabled) {
-          await FocusMode.disableFocusMode(reason: 'Break time');
-        }
+          // Disable focus mode during breaks
+          if (_focusModeEnabled) {
+            try {
+              await FocusMode.disableFocusMode(reason: 'Break time');
+            } catch (e) {
+              AppLogging.logError('Focus mode disable error: $e');
+            }
+          }
 
-        if (_shouldTakeLongBreak()) {
-          _startLongBreak();
-        } else {
+          if (_shouldTakeLongBreak()) {
+            _startLongBreak();
+          } else {
+            _startShortBreak();
+          }
+          break;
+        case PomodoroState.shortBreak:
+        case PomodoroState.longBreak:
+          _startWorkSession();
+          break;
+        case PomodoroState.paused:
+        case PomodoroState.idle:
+          // No action needed for these states
+          break;
+      }
+    } catch (e) {
+      // Log error but don't crash the timer
+      AppLogging.logError('Error in _moveToNextState: $e');
+      // Try to continue with basic state transition
+      try {
+        if (_state == PomodoroState.work) {
           _startShortBreak();
+        } else {
+          _startWorkSession();
         }
-        break;
-      case PomodoroState.shortBreak:
-      case PomodoroState.longBreak:
-        _startWorkSession();
-        break;
-      case PomodoroState.paused:
-      case PomodoroState.idle:
-        break;
+      } catch (fallbackError) {
+        AppLogging.logError('Fallback state transition failed: $fallbackError');
+        // Stop the timer if everything fails
+        stop();
+      }
     }
   }
 

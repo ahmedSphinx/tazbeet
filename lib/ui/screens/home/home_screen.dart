@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Stack(children: [_buildBackgroundGradient(context), _buildMainContent(context)]),
-      floatingActionButton: FloatingActionButton(onPressed: () => _showAddTaskDialog(context), child: const Icon(Icons.add_rounded), tooltip: 'Add Task', heroTag: 'home_fab'),
+      // floatingActionButton: FloatingActionButton(onPressed: () => _showAddTaskDialog(context), child: const Icon(Icons.add_rounded), tooltip: 'Add Task', heroTag: 'home_fab'),
     );
   }
 
@@ -189,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 context: context,
                 builder: (context) => AlertDialog(
                   title: Text(AppLocalizations.of(context)!.deleteTask),
-                  content: Text(AppLocalizations.of(context)!.deleteTaskConfirmation(task.title)),
+                  content: Text(AppLocalizations.of(context)!.deleteTaskConfirmation(task.title, task.title)),
                   actions: [
                     TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancelButton)),
                     TextButton(
@@ -217,22 +217,13 @@ class _HomeScreenState extends State<HomeScreen> {
       child: RepaintBoundary(
         child: DSTaskCard(
           task: task,
-          onTap: () {
-            HapticFeedback.lightImpact();
-            _navigateToTaskDetails(context, task);
+          onTap: () async {
+            await Navigator.push(context, MaterialPageRoute(builder: (context) => TaskDetailsScreen(taskId: task.id)));
           },
-          onToggle: () {
-            HapticFeedback.lightImpact();
-            context.read<TaskListBloc>().add(ToggleTaskCompletion(task.id));
-          },
-          onDelete: () {
-            HapticFeedback.mediumImpact();
-            _deleteTask(context, task);
-          },
-          onLongPress: () {
-            HapticFeedback.heavyImpact();
-            _showQuickActions(context, task);
-          },
+          onToggle: () => context.read<TaskListBloc>().add(ToggleTaskCompletion(task.id)),
+          onDelete: () => context.read<TaskListBloc>().add(DeleteTask(task.id)),
+          onLongPress: () => _showQuickActions(context, task),
+          isRecommended: _controller.sortOption.value == TaskSortOption.smart ? _controller.getRecommendedTasks([task]).isNotEmpty : false,
         ),
       ),
     );
@@ -334,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
           tooltip: AppLocalizations.of(context)!.search,
         ),
         IconButton(
-          icon: Icon(Icons.sort, color: _controller.sortOption.value != TaskSortOption.none ? Colors.white : null),
+          icon: Icon(Icons.sort, color: _controller.sortOption.value == TaskSortOption.none ? Theme.of(context).colorScheme.primary : Colors.green),
           onPressed: () => _showOptionsMenu(context),
           tooltip: AppLocalizations.of(context)!.options,
         ),
@@ -630,7 +621,7 @@ class _HomeScreenState extends State<HomeScreen> {
           taskCount = state.tasks.where((t) => !t.isCompleted).length;
         }
 
-        return DSSectionHeader(title: AppLocalizations.of(context)!.todayTasks, icon: Icons.task_alt_rounded, badge: '$taskCount');
+        return DSSectionHeader(title: AppLocalizations.of(context)!.tasks, icon: Icons.task_alt_rounded, badge: '$taskCount');
       },
     );
   }
@@ -756,7 +747,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(DSSpacing.xl),
                                         child: Center(
-                                          child: Text('Error loading tasks', style: DSTypography.body(context).copyWith(color: Theme.of(context).colorScheme.error)),
+                                          child: Text(AppLocalizations.of(context)!.errorLoadingTasks, style: DSTypography.body(context).copyWith(color: Theme.of(context).colorScheme.error)),
                                         ),
                                       ),
                                     );
@@ -937,8 +928,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           task: task,
                           onTap: () => _navigateToTaskDetails(context, task),
                           onToggle: () => context.read<TaskListBloc>().add(ToggleTaskCompletion(task.id)),
-                          onDelete: () => _deleteTask(context, task),
+                          onDelete: () => context.read<TaskListBloc>().add(DeleteTask(task.id)),
                           onLongPress: () => _showQuickActions(context, task),
+                          isRecommended: _controller.sortOption.value == TaskSortOption.smart ? _controller.getRecommendedTasks([task]).isNotEmpty : false,
                         ),
                       ),
                     );
@@ -1057,16 +1049,16 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Icon(Icons.warning_amber_rounded, color: Colors.orange),
             const SizedBox(width: 12),
-            const Text('Delete Task?'),
+            Text(AppLocalizations.of(context)!.deleteTask),
           ],
         ),
-        content: Text('Are you sure you want to delete "${task.title}"?'),
+        content: Text(AppLocalizations.of(context)!.deleteTaskConfirmation(task.title, task.title)),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancelButton)),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.deleteButton),
           ),
         ],
       ),
@@ -1107,7 +1099,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             ListTile(
               leading: const Icon(Icons.info_outline),
-              title: const Text('View Details'),
+              title: Text(AppLocalizations.of(context)!.viewDetails),
               onTap: () {
                 Navigator.pop(context);
                 _navigateToTaskDetails(context, task);
@@ -1115,7 +1107,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.edit),
-              title: const Text('Quick Edit'),
+              title: Text(AppLocalizations.of(context)!.quickEdit),
               onTap: () {
                 Navigator.pop(context);
                 _showEditTaskDialog(context, task);
@@ -1124,7 +1116,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const Divider(),
             ListTile(
               leading: const Icon(Icons.delete, color: Colors.red),
-              title: const Text('Delete', style: TextStyle(color: Colors.red)),
+              title: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.pop(context);
                 _deleteTask(context, task);
@@ -1261,7 +1253,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.pop(context);
                         },
                         icon: const Icon(Icons.clear),
-                        label: Text('Clear'),
+                        label: Text(AppLocalizations.of(context)!.clearButton),
                         style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: DSSpacing.md)),
                       ),
                     ),
@@ -1271,7 +1263,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: ElevatedButton.icon(
                         onPressed: () => Navigator.pop(context),
                         icon: const Icon(Icons.search),
-                        label: Text('Search'),
+                        label: Text(AppLocalizations.of(context)!.searchButton),
                         style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: DSSpacing.md)),
                       ),
                     ),
@@ -1360,6 +1352,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         ), */
                         _buildSortOption(
                           context,
+                          icon: Icons.psychology,
+                          title: 'Smart Sort',
+                          isSelected: currentSort == TaskSortOption.smart,
+                          onTap: () {
+                            _controller.setSortOption(TaskSortOption.smart);
+                            Navigator.pop(context);
+                          },
+                        ),
+                        _buildSortOption(
+                          context,
                           icon: Icons.calendar_today,
                           title: l10n.dueDateLabel,
                           isSelected: currentSort == TaskSortOption.dueDate,
@@ -1371,7 +1373,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         _buildSortOption(
                           context,
                           icon: Icons.priority_high,
-                          title: l10n.priorityLabel,
+                          title: l10n.priorityTitle,
                           isSelected: currentSort == TaskSortOption.priority,
                           onTap: () {
                             _controller.setSortOption(TaskSortOption.priority);
@@ -1927,16 +1929,16 @@ class _CalendarViewPageState extends State<CalendarViewPage> with SingleTickerPr
           children: [
             Icon(Icons.warning_amber_rounded, color: Colors.orange),
             const SizedBox(width: 12),
-            const Text('Delete Task?'),
+            Text(AppLocalizations.of(context)!.deleteTask),
           ],
         ),
-        content: Text('Are you sure you want to delete "${task.title}"?'),
+        content: Text(AppLocalizations.of(context)!.deleteTaskConfirmation(task.title, task.title)),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancelButton)),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),

@@ -5,6 +5,8 @@ import '../../blocs/notification/notification_event.dart';
 import '../../blocs/notification/notification_state.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/notification_item.dart';
+import '../screens/notification_history_screen.dart';
+import '../screens/notification_preferences_screen.dart';
 
 /// Quick action buttons for notification management
 class NotificationQuickActions extends StatelessWidget {
@@ -90,7 +92,7 @@ class NotificationQuickActions extends StatelessWidget {
       avatar: const Icon(Icons.settings, size: 20),
       label: const Text('Settings'),
       onPressed: () {
-        Navigator.pushNamed(context, '/notification_preferences');
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationPreferencesScreen()));
       },
     );
   }
@@ -102,7 +104,12 @@ class NotificationQuickActions extends StatelessWidget {
       avatar: const Icon(Icons.history, size: 20),
       label: Text('History${count > 0 ? " ($count)" : ""}'),
       onPressed: () {
-        Navigator.pushNamed(context, '/notification_history');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider.value(value: context.read<NotificationBloc>(), child: const NotificationHistoryScreen()),
+          ),
+        );
       },
     );
   }

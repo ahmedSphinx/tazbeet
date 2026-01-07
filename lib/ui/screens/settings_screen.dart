@@ -1,6 +1,7 @@
 // ignore_for_file: unused_element
 
 import 'package:flutter/material.dart' hide ThemeMode;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:tazbeet/l10n/app_localizations.dart';
@@ -8,6 +9,9 @@ import '../../services/settings_service.dart' as settings;
 import '../../services/color_customization_service.dart';
 import '../../services/task_sound_service.dart';
 import '../../services/update_service.dart';
+import 'notification_history_screen.dart';
+import 'notification_preferences_screen.dart';
+import '../../blocs/notification/notification_bloc.dart';
 import '../../services/data_sync_service.dart';
 import '../../services/auth_service.dart';
 import '../../repositories/task_repository.dart';
@@ -260,7 +264,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: Text(l10n.notificationHistory),
             subtitle: Text(l10n.viewPastNotifications),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => Navigator.pushNamed(context, '/notification_history'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider.value(value: context.read<NotificationBloc>(), child: const NotificationHistoryScreen()),
+                ),
+              );
+            },
           ),
           const Divider(height: 1),
           ListTile(
@@ -268,7 +279,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: Text(l10n.notificationPreferences),
             subtitle: Text(l10n.customizeNotificationBehavior),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => Navigator.pushNamed(context, '/notification_preferences'),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationPreferencesScreen()));
+            },
           ),
           /*  const Divider(height: 1),
           ListTile(
@@ -276,7 +289,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: Text(l10n.testNotifications),
             subtitle: Text(l10n.tryAllNotificationFeatures),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => Navigator.pushNamed(context, '/notification_test'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const NotificationTestScreen()),
+              );
+            },
           ), */
           /*    const Divider(height: 1),
           SwitchListTile(title: Text(l10n.enableNotifications), value: settingsService.settings.enableNotifications, onChanged: (value) => settingsService.setNotificationsEnabled(value)),
@@ -823,21 +841,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             Icon(Icons.warning_amber_rounded, color: Colors.red[700]),
             const SizedBox(width: 12),
-            const Text('Clear All Local Data'),
+            Text(AppLocalizations.of(context)!.clearAllLocalData),
           ],
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('This will permanently delete:'),
+            Text(AppLocalizations.of(context)!.thisWillPermanentlyDelete),
             const SizedBox(height: 8),
-            const Text('• All tasks\n• All categories\n• All moods\n• All local settings'),
+            Text(AppLocalizations.of(context)!.allTasksCategoriesMoodsLocalSettings),
             const SizedBox(height: 12),
-            const Text('After deletion, the app will resync all data from Firebase.'),
+            Text(AppLocalizations.of(context)!.afterDeletionTheAppWillResyncAllDataFromFirebase),
             const SizedBox(height: 8),
             Text(
-              'This action cannot be undone!',
+              AppLocalizations.of(context)!.thisActionCannotBeUndone,
               style: TextStyle(color: Colors.red[700], fontWeight: FontWeight.bold),
             ),
           ],
@@ -847,7 +865,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red[700], foregroundColor: Colors.white),
-            child: const Text('Delete All Data'),
+            child: Text(AppLocalizations.of(context)!.deleteAllData),
           ),
         ],
       ),

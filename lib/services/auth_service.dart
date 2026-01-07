@@ -97,7 +97,7 @@ class AuthService {
       AppLogging.logInfo('Apple user authenticated: ${appleCredential.email}', name: 'AuthService');
 
       // Create a new Firebase credential
-      final oauthCredential = OAuthProvider("apple.com").credential(idToken: appleCredential.identityToken, accessToken: appleCredential.authorizationCode);
+      final oauthCredential = OAuthProvider("apple.com").credential(idToken: appleCredential.identityToken);
 
       AppLogging.logInfo('Signing in with Firebase using Apple credential', name: 'AuthService');
       // Sign in the user with Firebase

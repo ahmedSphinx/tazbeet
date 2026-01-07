@@ -78,14 +78,21 @@ class MoodBloc extends Bloc<MoodEvent, MoodState> {
         return;
       }
 
-      // Check for duplicate entry
+      // Check for duplicate entry with enhanced error handling
       final isDuplicate = await _checkForDuplicateEntry(event.mood);
       if (isDuplicate) {
-        emit(MoodError('You have already logged your mood today. You can update today\'s entry instead.'));
+        // Create a more user-friendly error with actionable guidance
+        final errorMessage = _createDuplicateMoodError();
+        emit(MoodError(errorMessage));
         return;
       }
 
-      await moodRepository.addMood(event.mood);
+      try {
+        await moodRepository.addMood(event.mood);
+      } catch (e) {
+        emit(MoodError('Failed to add mood: ${e.toString()}'));
+        return;
+      }
 
       // Update streak and check achievements
       await _achievementService.updateStreak(event.mood.date);
@@ -203,7 +210,7 @@ class MoodBloc extends Bloc<MoodEvent, MoodState> {
       // Check for duplicate entry
       final isDuplicate = await _checkForDuplicateEntry(mood);
       if (isDuplicate) {
-        emit(MoodError('You have already logged your mood today. You can update today\'s entry instead.'));
+        emit(MoodError(_createDuplicateMoodError()));
         return;
       }
 
@@ -223,5 +230,18 @@ class MoodBloc extends Bloc<MoodEvent, MoodState> {
     } catch (e) {
       emit(MoodError('Failed to add quick mood: ${e.toString()}'));
     }
+  }
+
+  // Enhanced error handling helper methods
+  String _createDuplicateMoodError() {
+    // Create a more user-friendly error message with actionable guidance
+    return '''You have already logged your mood today. 
+
+You can update today's entry instead by:
+• Going to your mood history
+• Tapping on today's entry
+• Updating your mood and notes
+
+This helps maintain accurate mood tracking!''';
   }
 }

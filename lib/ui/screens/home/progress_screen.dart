@@ -39,9 +39,9 @@ class _ProgressScreenState extends State<ProgressScreen> {
             return const Center(child: CircularProgressIndicator());
           } else if (taskState is TaskListError) {
             AppLogging.logInfo('Error loading tasks: ${taskState.message}', name: 'ProgressScreen');
-            return const Center(child: Text('Unable to load progress data'));
+            return Center(child: Text(AppLocalizations.of(context)!.unableToLoadProgressData));
           } else {
-            return const Center(child: Text('Unable '));
+            return Center(child: Text(AppLocalizations.of(context)!.unableToLoadProgressData));
           }
         },
       ),
@@ -308,7 +308,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
             const SizedBox(height: 16),
             Row(
               children: [
-                Expanded(child: _buildStatItem(AppLocalizations.of(context)!.dueDate, dueTodayCount.toString(), Icons.today, color: dueTodayCount > 0 ? Colors.orange : null)),
+                Expanded(child: _buildStatItem('Due Today', dueTodayCount.toString(), Icons.today, color: dueTodayCount > 0 ? Colors.orange : null)),
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildStatItem(

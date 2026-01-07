@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'repeat_rule.dart';
 import 'pomodoro_strategy.dart';
+import 'pomodoro_plan.dart';
 
 enum TaskPriority { low, medium, high }
 
@@ -42,6 +43,14 @@ class Task extends Equatable {
   final PomodoroStrategy strategy; // How to break down work
   final bool autoStartNextSubtask; // Chain subtasks in sessions
 
+  // NEW: Enhanced Pomodoro Integration
+  final PomodoroPlan? pomodoroPlan; // Detailed pomodoro breakdown
+  final Duration estimatedDuration; // AI-estimated time needed
+  final Duration actualDuration; // Total time spent (enhanced)
+  final List<CompletedPomodoroSession> completedSessions; // Session history
+  final bool isPomodoroOptimized; // Flag for pomodoro-ready tasks
+  final int focusScore; // 1-10 focus difficulty rating
+
   const Task({
     required this.id,
     required this.title,
@@ -78,6 +87,13 @@ class Task extends Equatable {
     this.sessionNotes = const [],
     this.strategy = PomodoroStrategy.sequential,
     this.autoStartNextSubtask = false,
+    // NEW: Enhanced Pomodoro Integration
+    this.pomodoroPlan,
+    this.estimatedDuration = const Duration(minutes: 25),
+    this.actualDuration = Duration.zero,
+    this.completedSessions = const [],
+    this.isPomodoroOptimized = false,
+    this.focusScore = 5,
   });
 
   Task copyWith({
@@ -117,6 +133,14 @@ class Task extends Equatable {
     List<String>? sessionNotes,
     PomodoroStrategy? strategy,
     bool? autoStartNextSubtask,
+
+    // NEW: Enhanced Pomodoro Integration
+    PomodoroPlan? pomodoroPlan,
+    Duration? estimatedDuration,
+    Duration? actualDuration,
+    List<CompletedPomodoroSession>? completedSessions,
+    bool? isPomodoroOptimized,
+    int? focusScore,
   }) {
     return Task(
       id: id ?? this.id,
@@ -155,6 +179,14 @@ class Task extends Equatable {
       sessionNotes: sessionNotes ?? this.sessionNotes,
       strategy: strategy ?? this.strategy,
       autoStartNextSubtask: autoStartNextSubtask ?? this.autoStartNextSubtask,
+
+      // NEW: Enhanced Pomodoro Integration
+      pomodoroPlan: pomodoroPlan ?? this.pomodoroPlan,
+      estimatedDuration: estimatedDuration ?? this.estimatedDuration,
+      actualDuration: actualDuration ?? this.actualDuration,
+      completedSessions: completedSessions ?? this.completedSessions,
+      isPomodoroOptimized: isPomodoroOptimized ?? this.isPomodoroOptimized,
+      focusScore: focusScore ?? this.focusScore,
     );
   }
 

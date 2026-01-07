@@ -71,13 +71,19 @@
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>This app needs local network access for debugging and development purposes.</string>
 
-	<!-- URL schemes (Google only) -->
+	<!-- URL schemes (Google and Apple) -->
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.59269490691-fl4b8m56aqsoo746m1hpqo60j22al495</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>apple-signin</string>
 			</array>
 		</dict>
 	</array>

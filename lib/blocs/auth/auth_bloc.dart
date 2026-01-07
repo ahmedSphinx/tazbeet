@@ -2,12 +2,16 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:tazbeet/services/app_logging_service.dart';
-import 'package:tazbeet/services/auth_service.dart';
-import 'package:tazbeet/services/data_sync_service.dart';
-import 'package:tazbeet/services/admin_service.dart';
-import 'package:tazbeet/models/user.dart' as model;
-import 'package:tazbeet/repositories/category_repository.dart';
-import 'package:tazbeet/repositories/user_repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../repositories/user_repository.dart';
+import '../../repositories/category_repository.dart';
+import '../../services/data_sync_service.dart';
+import '../../services/mood_achievement_service.dart';
+import '../../services/admin_service.dart';
+import '../../services/onboarding_service.dart';
+import '../../services/auth_service.dart';
+import '../../models/user.dart' as user_model;
 import 'auth_event.dart';
 import 'auth_state.dart';
 
@@ -81,7 +85,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // Always force refresh so we see the latest Firestore state
       final existingUser = await userRepository.getUser(firebaseUser.uid, forceRefresh: true);
 
-      model.User userModel;
+      user_model.User userModel;
 
       if (existingUser != null) {
         // Existing user:
@@ -103,7 +107,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } else {
         // New user: compute admin status and start with null birthday
         final isAdmin = await _determineAdminStatus();
-        userModel = model.User(
+        userModel = user_model.User(
           id: firebaseUser.uid,
           name: useDisplayName ? (firebaseUser.displayName ?? '') : '',
           profileImageUrl: useDisplayName ? (firebaseUser.photoURL ?? '') : '',
@@ -279,8 +283,48 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _categoryRepository.createDefaultCategories();
 
       AppLogging.logInfo('Default categories created successfully for first-time user', name: 'AuthBloc');
+
+      // Check if onboarding is needed for first-time users
+      await _handleOnboardingForFirstTimeUser(userId);
     } else {
       AppLogging.logInfo('Returning user detected, skipping default categories creation', name: 'AuthBloc');
+
+      // Even for returning users, check if they haven't completed onboarding
+      await _handleOnboardingForReturningUser(userId);
+    }
+  }
+
+  Future<void> _handleOnboardingForFirstTimeUser(String userId) async {
+    try {
+      final onboardingService = OnboardingService();
+      final hasCompletedOnboarding = await onboardingService.hasCompletedOnboarding;
+
+      if (!hasCompletedOnboarding) {
+        AppLogging.logInfo('First-time user needs onboarding', name: 'AuthBloc');
+        // Reset onboarding status to ensure it shows for first-time users
+        await onboardingService.resetOnboarding();
+      } else {
+        AppLogging.logInfo('First-time user has already completed onboarding', name: 'AuthBloc');
+      }
+    } catch (e) {
+      AppLogging.logError('Error checking onboarding status for first-time user: $e', name: 'AuthBloc');
+    }
+  }
+
+  Future<void> _handleOnboardingForReturningUser(String userId) async {
+    try {
+      final onboardingService = OnboardingService();
+      final hasCompletedOnboarding = await onboardingService.hasCompletedOnboarding;
+
+      if (!hasCompletedOnboarding) {
+        AppLogging.logInfo('Returning user needs onboarding', name: 'AuthBloc');
+        // Reset onboarding status to ensure returning users who skipped it can complete it
+        await onboardingService.resetOnboarding();
+      } else {
+        AppLogging.logInfo('Returning user has completed onboarding', name: 'AuthBloc');
+      }
+    } catch (e) {
+      AppLogging.logError('Error checking onboarding status for returning user: $e', name: 'AuthBloc');
     }
   }
 

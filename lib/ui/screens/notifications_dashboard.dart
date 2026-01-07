@@ -282,7 +282,7 @@ class _NotificationsDashboardState extends State<NotificationsDashboard> {
                   child: ElevatedButton.icon(
                     onPressed: _openNotificationSettings,
                     icon: const Icon(Icons.settings),
-                    label: const Text('Settings'),
+                    label: Text(AppLocalizations.of(context)!.settingsButton),
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.orange, foregroundColor: Colors.white),
                   ),
                 ),

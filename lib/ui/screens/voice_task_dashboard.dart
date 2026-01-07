@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tazbeet/providers/voice_task_provider.dart';
 import 'package:tazbeet/ui/widgets/voice_task_integration.dart';
 import 'package:tazbeet/ui/themes/design_system.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Voice Task Dashboard Widget
 class VoiceTaskDashboard extends StatelessWidget {
@@ -97,12 +98,12 @@ class VoiceTaskDashboard extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Settings', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.settingsTitle, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: AppSpacing.md),
 
             SwitchListTile(
-              title: const Text('Enable Voice Tasks'),
-              subtitle: const Text('Create tasks with your voice'),
+              title: Text(AppLocalizations.of(context)!.enableVoiceTasks),
+              subtitle: Text(AppLocalizations.of(context)!.createTasksWithYourVoice),
               value: provider.isEnabled,
               onChanged: (value) {
                 // TODO: Implement settings update
@@ -122,7 +123,7 @@ class VoiceTaskDashboard extends StatelessWidget {
       child: Consumer<VoiceTaskProvider>(
         builder: (context, provider, child) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Voice Tasks'), backgroundColor: Theme.of(context).colorScheme.primary, foregroundColor: Theme.of(context).colorScheme.onPrimary, elevation: 0),
+            appBar: AppBar(title: Text(AppLocalizations.of(context)!.voiceTasks), backgroundColor: Theme.of(context).colorScheme.primary, foregroundColor: Theme.of(context).colorScheme.onPrimary, elevation: 0),
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(AppSpacing.lg),
               child: Column(
@@ -180,7 +181,7 @@ class VoiceTaskDashboardContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Voice Tasks'), backgroundColor: Theme.of(context).colorScheme.primary, foregroundColor: Theme.of(context).colorScheme.onPrimary, elevation: 0),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.voiceTasks), backgroundColor: Theme.of(context).colorScheme.primary, foregroundColor: Theme.of(context).colorScheme.onPrimary, elevation: 0),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
@@ -339,12 +340,12 @@ class VoiceTaskDashboardContent extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Settings', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.settingsTitle, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: AppSpacing.md),
 
             SwitchListTile(
-              title: const Text('Enable Voice Tasks'),
-              subtitle: const Text('Create tasks with your voice'),
+              title: Text(AppLocalizations.of(context)!.enableVoiceTasks),
+              subtitle: Text(AppLocalizations.of(context)!.createTasksWithYourVoice),
               value: provider.isEnabled,
               onChanged: (value) {
                 // TODO: Implement settings update

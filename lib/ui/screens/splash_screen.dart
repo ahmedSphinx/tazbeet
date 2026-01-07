@@ -9,7 +9,9 @@ import 'package:tazbeet/l10n/app_localizations.dart';
 import 'package:tazbeet/ui/screens/home/main_screen.dart';
 import 'package:tazbeet/ui/screens/login_screen.dart';
 import 'package:tazbeet/ui/screens/profile_screen.dart';
+import 'package:tazbeet/ui/screens/onboarding_screen.dart';
 import 'package:tazbeet/ui/screens/maintenance_screen.dart';
+import 'package:tazbeet/services/onboarding_service.dart';
 
 import '../../services/app_logging_service.dart';
 import '../../services/maintenance_service.dart';
@@ -145,7 +147,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
           _hasNavigated = true;
           AppLogging.logInfo('✅ Valid state received, navigating in 3.5 seconds...');
 
-          Future.delayed(const Duration(milliseconds: 3500), () {
+          Future.delayed(const Duration(milliseconds: 3500), () async {
             if (!mounted) {
               AppLogging.logWarning('⚠️ Widget not mounted, skipping navigation');
               return;
@@ -155,8 +157,17 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
             String screenName;
 
             if (state is AuthAuthenticated) {
-              nextScreen = const MainScreen();
-              screenName = 'MainScreen';
+              // Check if user has completed onboarding
+              final onboardingService = OnboardingService();
+              final hasCompletedOnboarding = await onboardingService.hasCompletedOnboarding;
+
+              if (hasCompletedOnboarding) {
+                nextScreen = const MainScreen();
+                screenName = 'MainScreen';
+              } else {
+                nextScreen = const OnboardingScreen();
+                screenName = 'OnboardingScreen';
+              }
             } else if (state is AuthProfileIncomplete) {
               nextScreen = const ProfileScreen(isProfileCompletion: true);
               screenName = 'ProfileScreen';

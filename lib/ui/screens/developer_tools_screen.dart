@@ -6,6 +6,7 @@ import 'package:tazbeet/services/code_quality_monitor_service.dart';
 import 'package:tazbeet/services/sync_status_service.dart';
 import 'package:tazbeet/services/notification_verification_service.dart';
 import 'package:tazbeet/repositories/task_repository.dart';
+import 'package:tazbeet/l10n/app_localizations.dart';
 
 /// Developer tools screen to view monitoring services
 class DeveloperToolsScreen extends StatefulWidget {
@@ -27,8 +28,8 @@ class _DeveloperToolsScreenState extends State<DeveloperToolsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Developer Tools'),
-        actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: () => setState(() {}), tooltip: 'Refresh')],
+        title: Text(AppLocalizations.of(context)!.developerTools),
+        actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: () => setState(() {}), tooltip: AppLocalizations.of(context)!.refresh)],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -65,14 +66,14 @@ class _DeveloperToolsScreenState extends State<DeveloperToolsScreen> {
               children: [
                 const Icon(Icons.speed, color: Colors.blue),
                 const SizedBox(width: 8),
-                const Text('Performance Monitor', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(AppLocalizations.of(context)!.performanceMonitor, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ],
             ),
             const SizedBox(height: 12),
-            Text('Tracked Operations: ${metrics.length}'),
+            Text(AppLocalizations.of(context)!.trackedOperations(metrics.length)),
             if (slowOps.isNotEmpty) ...[
               const SizedBox(height: 8),
-              Text('Slow Operations (>500ms): ${slowOps.length}', style: const TextStyle(color: Colors.orange)),
+              Text(AppLocalizations.of(context)!.slowOperations(slowOps.length), style: const TextStyle(color: Colors.orange)),
               ...slowOps.map(
                 (op) => Padding(
                   padding: const EdgeInsets.only(left: 16, top: 4),
@@ -84,10 +85,10 @@ class _DeveloperToolsScreenState extends State<DeveloperToolsScreen> {
             ElevatedButton.icon(
               onPressed: () {
                 _performanceMonitor.logPerformanceReport();
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Performance report logged to console')));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.performanceReportLoggedToConsole)));
               },
               icon: const Icon(Icons.article),
-              label: const Text('Log Report'),
+              label: Text(AppLocalizations.of(context)!.logReport),
             ),
           ],
         ),
@@ -108,7 +109,7 @@ class _DeveloperToolsScreenState extends State<DeveloperToolsScreen> {
               children: [
                 const Icon(Icons.memory, color: Colors.green),
                 const SizedBox(width: 8),
-                const Text('Memory Manager', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(AppLocalizations.of(context)!.memoryManager, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ],
             ),
             const SizedBox(height: 12),
@@ -127,20 +128,20 @@ class _DeveloperToolsScreenState extends State<DeveloperToolsScreen> {
                     await _memoryManager.forceCleanup();
                     setState(() {});
                     if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Memory cleanup completed')));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.memoryCleanupCompleted)));
                     }
                   },
                   icon: const Icon(Icons.cleaning_services),
-                  label: const Text('Force Cleanup'),
+                  label: Text(AppLocalizations.of(context)!.forceCleanup),
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton.icon(
                   onPressed: () {
                     _memoryManager.logMemoryStats();
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Memory stats logged to console')));
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.memoryStatsLoggedToConsole)));
                   },
                   icon: const Icon(Icons.article),
-                  label: const Text('Log Stats'),
+                  label: Text(AppLocalizations.of(context)!.logStats),
                 ),
               ],
             ),
@@ -163,7 +164,7 @@ class _DeveloperToolsScreenState extends State<DeveloperToolsScreen> {
               children: [
                 const Icon(Icons.animation, color: Colors.purple),
                 const SizedBox(width: 8),
-                const Text('Animation Optimizer', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(AppLocalizations.of(context)!.animationOptimizer, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ],
             ),
             const SizedBox(height: 12),
@@ -176,10 +177,10 @@ class _DeveloperToolsScreenState extends State<DeveloperToolsScreen> {
             ElevatedButton.icon(
               onPressed: () {
                 _animationOptimizer.logPerformanceStats();
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Animation stats logged to console')));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.animationStatsLoggedToConsole)));
               },
               icon: const Icon(Icons.article),
-              label: const Text('Log Stats'),
+              label: Text(AppLocalizations.of(context)!.logStats),
             ),
           ],
         ),
@@ -206,13 +207,13 @@ class _DeveloperToolsScreenState extends State<DeveloperToolsScreen> {
               children: [
                 const Icon(Icons.code, color: Colors.indigo),
                 const SizedBox(width: 8),
-                const Text('Code Quality Monitor', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(AppLocalizations.of(context)!.codeQualityMonitor, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ],
             ),
             const SizedBox(height: 12),
             Row(
               children: [
-                Text('Quality Score: ', style: const TextStyle(fontSize: 16)),
+                Text(AppLocalizations.of(context)!.qualityScore, style: const TextStyle(fontSize: 16)),
                 Text(
                   '${score.toStringAsFixed(1)}/100',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: scoreColor),
@@ -228,10 +229,10 @@ class _DeveloperToolsScreenState extends State<DeveloperToolsScreen> {
             ElevatedButton.icon(
               onPressed: () {
                 _codeQualityMonitor.logQualityReport();
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Quality report logged to console')));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.qualityReportLoggedToConsole)));
               },
               icon: const Icon(Icons.article),
-              label: const Text('Log Report'),
+              label: Text(AppLocalizations.of(context)!.logReport),
             ),
           ],
         ),
@@ -250,7 +251,7 @@ class _DeveloperToolsScreenState extends State<DeveloperToolsScreen> {
               children: [
                 const Icon(Icons.cloud, color: Colors.cyan),
                 const SizedBox(width: 8),
-                const Text('Sync Status', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(AppLocalizations.of(context)!.syncStatus, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ],
             ),
             const SizedBox(height: 12),
@@ -277,7 +278,7 @@ class _DeveloperToolsScreenState extends State<DeveloperToolsScreen> {
               children: [
                 const Icon(Icons.notifications, color: Colors.amber),
                 const SizedBox(width: 8),
-                const Text('Notification Verification', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(AppLocalizations.of(context)!.notificationVerification, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ],
             ),
             const SizedBox(height: 12),
@@ -285,11 +286,11 @@ class _DeveloperToolsScreenState extends State<DeveloperToolsScreen> {
               onPressed: () async {
                 final count = await _notificationVerification.getPendingNotificationCount();
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Pending notifications: $count')));
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.pendingNotifications(count))));
                 }
               },
               icon: const Icon(Icons.check),
-              label: const Text('Check Pending'),
+              label: Text(AppLocalizations.of(context)!.checkPending),
             ),
             const SizedBox(height: 8),
             ElevatedButton.icon(
@@ -299,11 +300,11 @@ class _DeveloperToolsScreenState extends State<DeveloperToolsScreen> {
                 final tasks = await taskRepo.getAllTasks();
                 await _notificationVerification.logVerificationReport(tasks);
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Verification report logged to console')));
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.verificationReportLoggedToConsole)));
                 }
               },
               icon: const Icon(Icons.article),
-              label: const Text('Verify All Tasks'),
+              label: Text(AppLocalizations.of(context)!.verifyAllTasks),
             ),
           ],
         ),
@@ -322,7 +323,7 @@ class _DeveloperToolsScreenState extends State<DeveloperToolsScreen> {
               children: [
                 const Icon(Icons.build, color: Colors.grey),
                 const SizedBox(width: 8),
-                const Text('Actions', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(AppLocalizations.of(context)!.actions, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ],
             ),
             const SizedBox(height: 12),
@@ -333,19 +334,19 @@ class _DeveloperToolsScreenState extends State<DeveloperToolsScreen> {
                 ElevatedButton.icon(
                   onPressed: () {
                     _performanceMonitor.clearMetrics();
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Performance metrics cleared')));
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.performanceMetricsCleared)));
                   },
                   icon: const Icon(Icons.clear),
-                  label: const Text('Clear Performance'),
+                  label: Text(AppLocalizations.of(context)!.clearPerformance),
                 ),
                 ElevatedButton.icon(
                   onPressed: () {
                     _codeQualityMonitor.clearMetrics();
                     setState(() {});
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Quality metrics cleared')));
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.qualityMetricsCleared)));
                   },
                   icon: const Icon(Icons.clear),
-                  label: const Text('Clear Quality'),
+                  label: Text(AppLocalizations.of(context)!.clearQuality),
                 ),
               ],
             ),

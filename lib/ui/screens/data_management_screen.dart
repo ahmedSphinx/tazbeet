@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/task_list/task_list_bloc.dart';
 import '../../blocs/task_list/task_list_event.dart';
 import '../../services/data_management_service.dart';
+import '../../l10n/app_localizations.dart';
 
 class DataManagementScreen extends StatefulWidget {
   const DataManagementScreen({super.key});
@@ -19,17 +20,17 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Data Management'), backgroundColor: Theme.of(context).colorScheme.inversePrimary),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.dataManagement), backgroundColor: Theme.of(context).colorScheme.inversePrimary),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          _buildSectionHeader('Export Data'),
+          _buildSectionHeader(AppLocalizations.of(context)!.exportData),
           _buildExportSection(),
           const SizedBox(height: 24),
-          _buildSectionHeader('Import Data'),
+          _buildSectionHeader(AppLocalizations.of(context)!.importData),
           _buildImportSection(),
           const SizedBox(height: 24),
-          _buildSectionHeader('Backup & Restore'),
+          _buildSectionHeader(AppLocalizations.of(context)!.backupAndRestore),
           _buildBackupSection(),
         ],
       ),
@@ -50,23 +51,23 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Export your tasks to external formats'),
+            Text(AppLocalizations.of(context)!.exportYourTasksToExternalFormats),
             const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
-                  child: ElevatedButton.icon(onPressed: _isExporting ? null : _exportToCSV, icon: const Icon(Icons.table_chart), label: const Text('Export CSV')),
+                  child: ElevatedButton.icon(onPressed: _isExporting ? null : _exportToCSV, icon: const Icon(Icons.table_chart), label: Text(AppLocalizations.of(context)!.exportCSV)),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: ElevatedButton.icon(onPressed: _isExporting ? null : _exportToJSON, icon: const Icon(Icons.code), label: const Text('Export JSON')),
+                  child: ElevatedButton.icon(onPressed: _isExporting ? null : _exportToJSON, icon: const Icon(Icons.code), label: Text(AppLocalizations.of(context)!.exportJSON)),
                 ),
               ],
             ),
             const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton.icon(onPressed: _isExporting ? null : _exportToICS, icon: const Icon(Icons.calendar_today), label: const Text('Export ICS (Calendar)')),
+              child: ElevatedButton.icon(onPressed: _isExporting ? null : _exportToICS, icon: const Icon(Icons.calendar_today), label: Text(AppLocalizations.of(context)!.exportICSCalendar)),
             ),
             if (_isExporting) const Padding(padding: EdgeInsets.only(top: 16.0), child: LinearProgressIndicator()),
           ],
@@ -82,11 +83,11 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Import tasks from external files'),
+            Text(AppLocalizations.of(context)!.importTasksFromExternalFiles),
             const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton.icon(onPressed: _isImporting ? null : _importFromFile, icon: const Icon(Icons.file_upload), label: const Text('Import from File')),
+              child: ElevatedButton.icon(onPressed: _isImporting ? null : _importFromFile, icon: const Icon(Icons.file_upload), label: Text(AppLocalizations.of(context)!.importFromFile)),
             ),
             if (_isImporting) const Padding(padding: EdgeInsets.only(top: 16.0), child: LinearProgressIndicator()),
           ],
@@ -102,16 +103,16 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Create and restore backups'),
+            Text(AppLocalizations.of(context)!.createAndRestoreBackups),
             const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
-                  child: ElevatedButton.icon(onPressed: _createBackup, icon: const Icon(Icons.backup), label: const Text('Create Backup')),
+                  child: ElevatedButton.icon(onPressed: _createBackup, icon: const Icon(Icons.backup), label: Text(AppLocalizations.of(context)!.createBackup)),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: ElevatedButton.icon(onPressed: _restoreBackup, icon: const Icon(Icons.restore), label: const Text('Restore Backup')),
+                  child: ElevatedButton.icon(onPressed: _restoreBackup, icon: const Icon(Icons.restore), label: Text(AppLocalizations.of(context)!.restoreBackup)),
                 ),
               ],
             ),

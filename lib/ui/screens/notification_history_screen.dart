@@ -73,7 +73,7 @@ class _NotificationHistoryScreenState extends State<NotificationHistoryScreen> {
                     onPressed: () {
                       context.read<NotificationBloc>().add(const LoadNotificationHistory());
                     },
-                    child: const Text('Retry'),
+                    child: Text(AppLocalizations.of(context)!.retry),
                   ),
                 ],
               ),
@@ -195,7 +195,7 @@ class _NotificationHistoryScreenState extends State<NotificationHistoryScreen> {
             spacing: 8,
             children: [
               FilterChip(
-                label: const Text('All'),
+                label: Text(AppLocalizations.of(context)!.all),
                 selected: state.statusFilter == null,
                 onSelected: (_) {
                   context.read<NotificationBloc>().add(const FilterNotificationsByStatus(null));
@@ -440,10 +440,10 @@ class _NotificationHistoryScreenState extends State<NotificationHistoryScreen> {
                     onPressed: () {
                       Navigator.pop(context);
                       context.read<NotificationBloc>().add(DeleteNotification(notification.id));
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Notification deleted')));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.notificationDeleted)));
                     },
                     icon: const Icon(Icons.delete),
-                    label: const Text('Delete'),
+                    label: Text(AppLocalizations.of(context)!.deleteButton),
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
                   ),
                 ),
@@ -475,17 +475,17 @@ class _NotificationHistoryScreenState extends State<NotificationHistoryScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Clear History'),
-        content: const Text('Are you sure you want to clear all notification history?'),
+        title: Text(AppLocalizations.of(context)!.clearHistory),
+        content: Text(AppLocalizations.of(context)!.areYouSureYouWantToClearAllNotificationHistory),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancelButton)),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               context.read<NotificationBloc>().add(const ClearNotificationHistory());
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('History cleared')));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.historyCleared)));
             },
-            child: const Text('Clear All', style: TextStyle(color: Colors.red)),
+            child: Text(AppLocalizations.of(context)!.clearAll, style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),

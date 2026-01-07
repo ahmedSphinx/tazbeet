@@ -55,8 +55,35 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String confirmDeleteTask(String taskTitle) {
-    return 'هل أنت متأكد من حذف \"$taskTitle\"؟';
+    return 'هل أنت متأكد من أنك تريد حذف \"$taskTitle\"؟';
   }
+
+  @override
+  String get addTask => 'إضافة مهمة';
+
+  @override
+  String get addTaskToGetStarted => 'أضف مهمة للبدء';
+
+  @override
+  String get voiceTaskCreate => 'إنشاء مهمة بالصوت';
+
+  @override
+  String get voiceTaskHint => 'اضغط على الميكروفون للتحدث';
+
+  @override
+  String get voiceTaskProcessing => 'جاري معالجة صوتك...';
+
+  @override
+  String get voiceTaskCreated => 'تم إنشاء المهمة الصوتية';
+
+  @override
+  String get taskValidationFailed => 'فشل التحقق من المهمة';
+
+  @override
+  String get errorCreatingTask => 'خطأ في إنشاء المهمة';
+
+  @override
+  String get tryVoiceTasks => 'جرب المهام الصوتية! اضغط على الميكروفون لإنشاء مهام فوراً.';
 
   @override
   String get yes => 'نعم';
@@ -155,7 +182,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get categoryLabel => 'الفئة (اختياري)';
 
   @override
-  String get noCategory => 'بدون فئة';
+  String get noCategory => 'لا توجد فئة';
 
   @override
   String get repeatSettings => 'إعدادات التكرار';
@@ -203,7 +230,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get addCategory => 'إضافة فئة';
 
   @override
-  String get editCategory => 'تعديل فئة';
+  String get editCategory => 'تعديل الفئة';
 
   @override
   String get categoryName => 'اسم الفئة';
@@ -212,7 +239,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get enterCategoryName => 'أدخل اسم الفئة';
 
   @override
-  String get color => 'اللون:';
+  String get color => 'اللون';
 
   @override
   String get pickAColor => 'اختر لوناً';
@@ -221,7 +248,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get select => 'اختر';
 
   @override
-  String get deleteCategory => 'حذف فئة';
+  String get deleteCategory => 'حذف الفئة';
 
   @override
   String confirmDeleteCategory(String categoryName) {
@@ -230,7 +257,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String tasksCount(int count) {
-    return '$count مهمة';
+    return 'عدد المهام';
   }
 
   @override
@@ -279,7 +306,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get totaltasks => 'إجمالي المهام';
 
   @override
-  String get dueDate => 'تاريخ الاستحقاق';
+  String get dueDateTitle => 'تاريخ الاستحقاق';
+
+  @override
+  String dueDate(Object dueDate) {
+    return 'تاريخ الاستحقاق: $dueDate';
+  }
 
   @override
   String get overdue => 'متأخر';
@@ -339,10 +371,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get moodStressLevel => 'مستوى التوتر';
 
   @override
-  String get low => 'منخفض';
+  String get low => 'منخفضة';
 
   @override
-  String get high => 'عالي';
+  String get high => 'عالية';
 
   @override
   String get moodNoteOptional => 'ملاحظة (اختيارية)';
@@ -354,19 +386,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get moodSaveButton => 'حفظ المزاج';
 
   @override
-  String get moodVeryBad => 'سيء جداً';
+  String get moodVeryBad => 'أعاني حقًا';
 
   @override
-  String get moodBad => 'سيء';
+  String get moodBad => 'ليس جيدًا';
 
   @override
-  String get moodNeutral => 'محايد';
+  String get moodNeutral => 'حسنًا';
 
   @override
-  String get moodGood => 'جيد';
+  String get moodGood => 'جيد جدًا';
 
   @override
-  String get moodVeryGood => 'جيد جداً';
+  String get moodVeryGood => 'رائع';
 
   @override
   String get moodSavedSuccess => 'تم حفظ المزاج بنجاح';
@@ -555,16 +587,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get thunderstorm => 'عاصفة رعدية';
 
   @override
-  String get taskCompleted => 'تم إنجاز المهمة! 🎉';
+  String get taskCompleted => 'تم إكمال المهمة بنجاح';
 
   @override
-  String get taskDeleted => 'تم حذف المهمة';
+  String get taskDeleted => 'تم حذف المهمة بنجاح';
 
   @override
-  String get categoryCreated => 'تم إنشاء الفئة';
+  String get categoryCreated => 'تم إنشاء الفئة بنجاح';
 
   @override
-  String get categoryDeleted => 'تم حذف الفئة';
+  String get categoryDeleted => 'تم حذف الفئة بنجاح';
 
   @override
   String get pomodoroStarted => 'بدأت جلسة بومودورو';
@@ -735,7 +767,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get emergency => 'حالة الطوارئ';
 
   @override
-  String get profile => 'الحساب الشخصي';
+  String get profile => 'الملف الشخصي';
 
   @override
   String get signOut => 'تسجيل الخروج';
@@ -747,11 +779,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noTasksInCategory => 'لا توجد مهام في هذه الفئة';
 
   @override
-  String get addTaskToGetStarted => 'أضف مهمة للبدء';
-
-  @override
   String error(String message) {
-    return 'خطأ: $message';
+    return 'خطأ';
   }
 
   @override
@@ -800,10 +829,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hourly => 'كل ساعة';
 
   @override
-  String get daily => 'يومي';
+  String get daily => 'يومياً';
 
   @override
-  String get weekly => 'أسبوعي';
+  String get weekly => 'أسبوعياً';
 
   @override
   String get sound => 'الصوت';
@@ -889,7 +918,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get history => 'التاريخ';
 
   @override
-  String get insights => 'الإحصائيات';
+  String get insights => 'الرؤى';
 
   @override
   String get howAreYouFeeling => '😊 كيف تشعر؟';
@@ -1041,10 +1070,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get yesterday => 'أمس';
 
   @override
-  String get overdueTasks => 'مهمات متأخرة - تحتاج إلى انتباه فوري';
+  String get overdueTasks => 'المهام المتأخرة';
 
   @override
-  String get todayTasks => 'مهمات يجب إنجازها اليوم';
+  String get todayTasks => 'مهام اليوم';
 
   @override
   String get tomorrowTasks => 'مهمات غداً';
@@ -1085,7 +1114,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get testNotificationSent => 'تم إرسال إشعار تجريبي';
+  String get testNotificationSent => 'تم إرسال إشعار اختبار';
 
   @override
   String reminder(String date) {
@@ -1105,7 +1134,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cancelAllNotifications => 'إلغاء الكل';
 
   @override
-  String get allNotificationsCancelled => 'تم إلغاء جميع الإشعارات!';
+  String get allNotificationsCancelled => 'تم إلغاء جميع الإشعارات';
 
   @override
   String get moodCheckInNotificationTitle => 'فحص المزاج';
@@ -1166,7 +1195,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String version(String version) {
-    return 'الإصدار $version';
+    return 'الإصدار: $version';
   }
 
   @override
@@ -1212,16 +1241,18 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noDueDate => 'لا يوجد تاريخ استحقاق';
 
   @override
-  String get priority => 'الأولوية';
+  String priority(Object priority) {
+    return 'الأولوية: $priority';
+  }
 
   @override
   String get reminders => 'التذكيرات';
 
   @override
-  String get repeat => 'تكرار';
+  String get repeat => 'التكرار';
 
   @override
-  String get noSubtasks => 'لا توجد مهام فرعية بعد';
+  String get noSubtasks => 'لا توجد مهام فرعية';
 
   @override
   String get subtasks => 'المهام الفرعية';
@@ -1478,10 +1509,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get taskReminders => 'تذكيرات المهام';
 
   @override
-  String get moodCheckIns => 'تسجيلات المزاج';
+  String get moodCheckIns => 'فحوصات المزاج';
 
   @override
-  String get pomodoroNotifications => 'بومودورو';
+  String get pomodoroNotifications => 'إشعارات بومودورو';
 
   @override
   String get emergencyNotifications => 'الطوارئ';
@@ -1586,10 +1617,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get pomodoroComplete => 'بومودورو مكتمل';
 
   @override
-  String get medium => 'متوسط';
+  String get medium => 'متوسطة';
 
   @override
-  String get urgent => 'عاجل';
+  String get urgent => 'عاجلة';
 
   @override
   String get notificationPreferencesInfo => 'معلومات تفضيلات الإشعارات';
@@ -1740,7 +1771,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get showCalendar => 'عرض التقويم';
 
   @override
-  String get minutes => 'دقيقة';
+  String get minutes => 'دقائق';
 
   @override
   String get recommendedForAdhd => 'موصى به لمن يعاني من ADHD';
@@ -1750,6 +1781,21 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get stopPomodoroConfirmation => 'هل أنت متأكد من إيقاف الجلسة الحالية؟ سيتم فقدان تقدمك.';
+
+  @override
+  String get selectATemplateOrCustomizeYourSession => 'اختر قالباً أو خصص جلستك';
+
+  @override
+  String get stopPomodoroTimer => 'إيقاف المؤقت';
+
+  @override
+  String get resume => 'استئناف';
+
+  @override
+  String get sessionsUntilLongBreak => 'الجلسات حتى الاستراحة الطويلة';
+
+  @override
+  String get customizeYourPomodoroSession => 'خصص جلسة البومودورو الخاصة بك';
 
   @override
   String get whatsHappeningRightNow => 'ما الذي يحدث الآن؟';
@@ -2099,7 +2145,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get pleaseTryAgainLater => 'يرجى المحاولة مرة أخرى لاحقاً';
 
   @override
-  String get icon => 'أيقونة';
+  String icon(Object icon) {
+    return 'الأيقونة: $icon';
+  }
 
   @override
   String get categories => 'الفئات';
@@ -2179,17 +2227,20 @@ class AppLocalizationsAr extends AppLocalizations {
   String get tomorrowShouldBeATypicalDayForYou => 'يجب أن يكون الغد يوماً نموذجياً لك';
 
   @override
-  String get errorTitle => 'عفواً! حدث خطأ ما';
+  String get errorTitle => 'أوبس! حدث خطأ ما';
 
   @override
   String get tryAgain => 'حاول مرة أخرى';
 
   @override
+  String get errorLoadingTasks => 'خطأ في تحميل المهام';
+
+  @override
   String get deleteTask => 'حذف المهمة';
 
   @override
-  String deleteTaskConfirmation(String task) {
-    return 'هل أنت متأكد من حذف \"$task\"؟';
+  String deleteTaskConfirmation(String task, Object taskTitle) {
+    return 'هل أنت متأكد من أنك تريد حذف \"$taskTitle\"؟';
   }
 
   @override
@@ -2286,8 +2337,1676 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get noRecurringTasksFound => 'لم يتم العثور على مهام متكررة';
+  String get signingIn => 'جاري تسجيل الدخول..';
 
   @override
-  String get recurringTasksOptimized => 'تم تحسين المهام المتكررة للأداء';
+  String get yourPersonalTaskManager => 'مدير المهام الشخصي الخاص بك';
+
+  @override
+  String get bySigningInYouAgree => 'بتسجيل الدخول، أنت توافق على شروط الخدمة وسياسة الخصوصية';
+
+  @override
+  String get authenticationServiceNotAvailable => 'خدمة المصادقة غير متاحة. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get anErrorOccurredPleaseTryAgain => 'حدث خطأ. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get or => 'أو';
+
+  @override
+  String get signIn => 'تسجيل الدخول';
+
+  @override
+  String get rememberMe => 'تذكرني';
+
+  @override
+  String get forgotPassword => 'نسيت كلمة المرور؟';
+
+  @override
+  String get register => 'تسجيل';
+
+  @override
+  String get resetPassword => 'إعادة تعيين كلمة المرور';
+
+  @override
+  String get passwordResetFunctionality => 'وظيفة إعادة تعيين كلمة المرور سيتم تنفيذها قريباً. يرجى الاتصال بالدعم للحصول على المساعدة.';
+
+  @override
+  String get ok => 'موافق';
+
+  @override
+  String get smartSortingConsidersTimeOfDayEnergyLevelsAndPatterns => 'الفرز الذكي يأخذ في الاعتبار وقت اليوم ومستويات الطاقة والأنماط';
+
+  @override
+  String get youCanOverrideWithManualSortingAnytime => 'يمكنك تجاوز الفرز اليدوي في أي وقت';
+
+  @override
+  String get trySortingTasksWithSmartSortOption => 'جرب فرز المهام بخيار \"الفرز الذكي\"';
+
+  @override
+  String get adaptivePomodoro => 'بومودورو التكيفي';
+
+  @override
+  String get adaptivePomodoroDescription => 'جلسات تركيز تتكيف مع أدائك';
+
+  @override
+  String get sessionTimingAdjustsBasedOnYourFocusPatterns => 'تتعدل توقيت الجلسة بناءً على أنماط التركيز الخاصة بك';
+
+  @override
+  String get breakSuggestionsMatchYourCurrentEnergyLevel => 'تطابق اقتراحات الاستراحة مستوى طاقتك الحالي';
+
+  @override
+  String get productivityInsightsHelpYouOptimizeWorkSessions => 'رؤى الإنتاجية تساعدك على تحسين جلسات العمل';
+
+  @override
+  String get achievementSystemKeepsYouMotivated => 'نظام الإنجاز يبقيك متحفزًا';
+
+  @override
+  String get startAPomodoroSessionToSeeAdaptiveTiming => 'ابدأ جلسة بومودورو لرؤية التوقيت التكيفي';
+
+  @override
+  String get energyAwarePlanning => 'التخطيط المدرك للطاقة';
+
+  @override
+  String get energyAwarePlanningDescription => 'جدولة المهام بناءً على أنماط الطاقة';
+
+  @override
+  String get morningPeakBestForComplexTasks => 'ذروة الصباح: الأفضل للمهام المعقدة';
+
+  @override
+  String get afternoonSteadyGoodForRoutineWork => 'فترة ما بعد الظهر: جيدة للعمل الروتيني';
+
+  @override
+  String get eveningDeclineLightTasksAndPlanning => 'انخفاض المساء: مهام خفيفة والتخطيط';
+
+  @override
+  String get energyTrackingHelpsIdentifyYourPatterns => 'تتبع الطاقة يساعد في تحديد أنماطك';
+
+  @override
+  String get checkYourEnergyLevelsThroughoutTheDay => 'تحقق من مستويات طاقتك طوال اليوم';
+
+  @override
+  String get analyticsDashboard => 'لوحة التحليلات';
+
+  @override
+  String get analyticsDashboardDescription => 'رؤى عميقة في إنتاجيتك';
+
+  @override
+  String get trackFocusPatternsAndSessionPerformance => 'تتبع أنماط التركيز وأداء الجلسة';
+
+  @override
+  String get identifyYourMostProductiveTimes => 'حدد أوقاتك الأكثر إنتاجية';
+
+  @override
+  String get monitorMoodAndEnergyCorrelations => 'راقب ارتباطات المزاج والطاقة';
+
+  @override
+  String get getPersonalizedProductivityTips => 'احصل على نصائح إنتاجية مخصصة';
+
+  @override
+  String get exploreYourAnalyticsDashboard => 'استكشف لوحة التحليلات الخاصة بك';
+
+  @override
+  String get tutorialCompletedYoureAllSetToUseSmartFeatures => 'اكتمل البرنامج التعليمي! أنت جاهز لاستخدام الميزات الذكية.';
+
+  @override
+  String get errorCompletingTutorial => 'خطأ في إكمال البرنامج التعليمي';
+
+  @override
+  String get accessDenied => 'الوصول مرفوض';
+
+  @override
+  String get youDoNotHaveAdminPrivileges => 'ليس لديك صلاحيات المدير.';
+
+  @override
+  String get activity => 'نشاط';
+
+  @override
+  String get descriptionOfActivity => 'وصف النشاط';
+
+  @override
+  String get noUsersFound => 'لم يتم العثور على مستخدمين';
+
+  @override
+  String get toggleAdminStatus => 'تبديل حالة المدير';
+
+  @override
+  String areYouSureYouWantToToggleAdminRights(Object action, Object userName) {
+    return 'هل أنت متأكد من أنك تريد $action $userName؟';
+  }
+
+  @override
+  String get removeAdminRightsFrom => 'إزالة صلاحيات المدير من';
+
+  @override
+  String get grantAdminRightsTo => 'منح صلاحيات المدير لـ';
+
+  @override
+  String get cancel => 'إلغاء';
+
+  @override
+  String get confirm => 'تأكيد';
+
+  @override
+  String errorUpdatingUser(Object error) {
+    return 'خطأ في تحديث المستخدم: $error';
+  }
+
+  @override
+  String get deleteUser => 'حذف المستخدم';
+
+  @override
+  String areYouSureYouWantToDeleteUser(Object userName) {
+    return 'هل أنت متأكد من أنك تريد حذف $userName؟\n\nسيتم حذف ما يلي بشكل دائم:\n• حساب المستخدم\n• جميع المهام\n• جميع الفئات\n• جميع المزاج\n\nلا يمكن التراجع عن هذا الإجراء.';
+  }
+
+  @override
+  String userAndAllAssociatedDataDeletedSuccessfully(Object userName) {
+    return 'تم حذف $userName وكل البيانات المرتبطة بنجاح';
+  }
+
+  @override
+  String errorDeletingUser(Object error) {
+    return 'خطأ في حذف المستخدم: $error';
+  }
+
+  @override
+  String email(Object email) {
+    return 'البريد الإلكتروني: $email';
+  }
+
+  @override
+  String admin(Object isAdmin) {
+    return 'مدير: $isAdmin';
+  }
+
+  @override
+  String updated(Object date) {
+    return 'تم التحديث: $date';
+  }
+
+  @override
+  String birthday(Object birthday) {
+    return 'عيد الميلاد: $birthday';
+  }
+
+  @override
+  String errorUpdatingTask(Object error) {
+    return 'خطأ في تحديث المهمة: $error';
+  }
+
+  @override
+  String areYouSureYouWantToDeleteTask(Object taskTitle) {
+    return 'هل أنت متأكد من أنك تريد حذف \"$taskTitle\"؟';
+  }
+
+  @override
+  String taskDeletedSuccessfully(Object taskTitle) {
+    return 'تم حذف $taskTitle بنجاح';
+  }
+
+  @override
+  String errorDeletingTask(Object error) {
+    return 'خطأ في حذف المهمة: $error';
+  }
+
+  @override
+  String description(Object description) {
+    return 'الوصف: $description';
+  }
+
+  @override
+  String completed(Object isCompleted) {
+    return 'مكتمل: $isCompleted';
+  }
+
+  @override
+  String userId(Object userId) {
+    return 'معرف المستخدم: $userId';
+  }
+
+  @override
+  String get noCategoriesFound => 'لم يتم العثور على فئات';
+
+  @override
+  String get tasks => 'المهام';
+
+  @override
+  String get selectIcon => 'اختر الأيقونة';
+
+  @override
+  String get errorCreatingCategory => 'خطأ في إنشاء الفئة';
+
+  @override
+  String get categoryCreatedSuccessfully => 'تم إنشاء الفئة بنجاح';
+
+  @override
+  String get categoryUpdatedSuccessfully => 'تم تحديث الفئة بنجاح';
+
+  @override
+  String areYouSureYouWantToDeleteCategory(Object categoryName) {
+    return 'هل أنت متأكد من حذف \"$categoryName\"؟\n\nملاحظة: إذا كانت هذه الفئة مستخدمة من قبل أي مهام، فسيفشل الحذف. يرجى إعادة تعيين تلك المهام أولاً.';
+  }
+
+  @override
+  String categoryDeletedSuccessfully(Object categoryName) {
+    return 'تم حذف الفئة \"$categoryName\" بنجاح';
+  }
+
+  @override
+  String errorDeletingCategory(Object error) {
+    return 'خطأ في حذف الفئة: $error';
+  }
+
+  @override
+  String get na => 'غير متوفر';
+
+  @override
+  String get loadingPreferences => 'جاري تحميل التفضيلات...';
+
+  @override
+  String get oneHour => 'ساعة واحدة';
+
+  @override
+  String get threeHours => '3 ساعات';
+
+  @override
+  String get achievementUnlocks => 'فتح الإنجازات';
+
+  @override
+  String get systemUpdates => 'تحديثات النظام';
+
+  @override
+  String get notificationSounds => 'أصوات الإشعارات';
+
+  @override
+  String get scheduleDnd => 'جدولة عدم الإزعاج';
+
+  @override
+  String get enableSmartNotifications => 'تفعيل الإشعارات الذكية';
+
+  @override
+  String get smartNotificationsDescription => 'ضبط توقيت الإشعارات تلقائياً بناءً على أنماط نشاطك';
+
+  @override
+  String get priorityNotifications => 'الإشعارات ذات الأولوية';
+
+  @override
+  String get priorityNotificationsDescription => 'عرض الإشعارات ذات الأولوية العالية فقط خلال وقت التركيز';
+
+  @override
+  String get quietHours => 'ساعات هادئة';
+
+  @override
+  String get quietHoursDescription => 'كتم جميع الإشعارات مؤقتاً';
+
+  @override
+  String get notificationChannels => 'قنوات الإشعارات';
+
+  @override
+  String get pushNotifications => 'الإشعارات الفورية';
+
+  @override
+  String get emailNotifications => 'إشعارات البريد الإلكتروني';
+
+  @override
+  String get inAppNotifications => 'الإشعارات داخل التطبيق';
+
+  @override
+  String get viewDetails => 'عرض التفاصيل';
+
+  @override
+  String get quickEdit => 'تعديل سريع';
+
+  @override
+  String get clear => 'مسح';
+
+  @override
+  String noTasksFoundForSearch(Object searchQuery) {
+    return 'لم يتم العثور على مهام لـ \"$searchQuery\"';
+  }
+
+  @override
+  String get addYourFirstTask => 'أضف أول مهمة لك';
+
+  @override
+  String get taskUncompleted => 'تم وضع علامة غير مكتمل على المهمة';
+
+  @override
+  String get taskUpdated => 'تم تحديث المهمة بنجاح';
+
+  @override
+  String get createYourFirstCategory => 'أنشئ أول فئة لك لتنظيم المهام';
+
+  @override
+  String get noMoodEntriesFound => 'لم يتم العثور على إدخالات مزاج';
+
+  @override
+  String get startTrackingYourMood => 'ابدأ تتبع مزاجك لرؤية الرؤى';
+
+  @override
+  String get noPomodoroSessionsFound => 'لم يتم العثور على جلسات بومودورو';
+
+  @override
+  String get startYourFirstPomodoroSession => 'ابدأ أول جلسة بومودورو لك لتعزيز الإنتاجية';
+
+  @override
+  String get noProgressData => 'لا توجد بيانات تقدم متاحة';
+
+  @override
+  String get completeTasksToSeeProgress => 'أكمل المهام لرؤية تقدمك';
+
+  @override
+  String get pending => 'معلق';
+
+  @override
+  String get inProgress => 'قيد التنفيذ';
+
+  @override
+  String get allTasks => 'جميع المهام';
+
+  @override
+  String get unableToLoadProgressData => 'غير قادر على تحميل بيانات التقدم';
+
+  @override
+  String get progressOverview => 'نظرة عامة على التقدم';
+
+  @override
+  String get tasksCompleted => 'المهام المكتملة';
+
+  @override
+  String get tasksCompletedThisWeek => 'المهام المكتملة هذا الأسبوع';
+
+  @override
+  String averageCompletionTime(Object time) {
+    return 'متوسط وقت الإنجاز: $time';
+  }
+
+  @override
+  String get streakDays => 'أيام المتابعة';
+
+  @override
+  String get monthlyProgress => 'التقدم الشهري';
+
+  @override
+  String get categoryBreakdown => 'تفصيل الفئات';
+
+  @override
+  String get completionRate => 'معدل الإنجاز';
+
+  @override
+  String get totalTasks => 'إجمالي المهام';
+
+  @override
+  String get pendingTasks => 'المهام المعلقة';
+
+  @override
+  String get productivityTrends => 'اتجاهات الإنتاجية';
+
+  @override
+  String get last7Days => 'آخر 7 أيام';
+
+  @override
+  String get last30Days => 'آخر 30 يوم';
+
+  @override
+  String get last90Days => 'آخر 90 يوم';
+
+  @override
+  String get noProgressDataAvailable => 'لا توجد بيانات تقدم متاحة';
+
+  @override
+  String get completeTasksToSeeYourProgress => 'أكمل المهام لرؤية تقدمك';
+
+  @override
+  String get greatProgress => 'تقدم رائع!';
+
+  @override
+  String get keepUpTheGoodWork => 'استمر في العمل الجيد';
+
+  @override
+  String get youCanDoBetter => 'يمكنك أن تفعل أفضل';
+
+  @override
+  String get tryToCompleteMoreTasks => 'حاول إنجاز المزيد من المهام';
+
+  @override
+  String get excellentPerformance => 'أداء ممتاز!';
+
+  @override
+  String get youAreOnARoll => 'أنت في حالة تألق!';
+
+  @override
+  String get voiceTasks => 'المهام الصوتية';
+
+  @override
+  String get startRecording => 'بدء التسجيل';
+
+  @override
+  String get tasksCreatedSuccessfully => 'تم إنشاء المهام بنجاح!';
+
+  @override
+  String get textInputComingSoon => 'إدخال النص قريباً!';
+
+  @override
+  String get recentTasksComingSoon => 'المهام الحديثة قريباً!';
+
+  @override
+  String get voiceRecording => 'التسجيل الصوتي';
+
+  @override
+  String get listening => 'الاستماع...';
+
+  @override
+  String get processing => 'المعالجة...';
+
+  @override
+  String get tapToStartRecording => 'اضغط لبدء التسجيل';
+
+  @override
+  String get recordingInProgress => 'التسجيل قيد التنفيذ';
+
+  @override
+  String get stopRecording => 'إيقاف التسجيل';
+
+  @override
+  String get errorCreatingVoiceTask => 'خطأ في إنشاء المهمة الصوتية';
+
+  @override
+  String get pleaseTryAgain => 'يرجى المحاولة مرة أخرى';
+
+  @override
+  String get noSpeechDetected => 'لم يتم اكتشاف كلام';
+
+  @override
+  String get speakClearly => 'يرجى التحدث بوضوح';
+
+  @override
+  String get voiceCommands => 'الأوامر الصوتية';
+
+  @override
+  String get showTasks => 'عرض المهام';
+
+  @override
+  String get voiceSettings => 'إعدادات الصوت';
+
+  @override
+  String get enableVoiceCommands => 'تفعيل الأوامر الصوتية';
+
+  @override
+  String get voiceLanguage => 'لغة الصوت';
+
+  @override
+  String get voiceFeedback => 'التغذية الراجعة الصوتية';
+
+  @override
+  String get autoDetectLanguage => 'الكشف التلقائي عن اللغة';
+
+  @override
+  String get voiceRecognitionAccuracy => 'دقة التعرف الصوتي';
+
+  @override
+  String get subtaskCompleted => 'تم إكمال المهمة الفرعية';
+
+  @override
+  String get subtaskUncompleted => 'تم وضع علامة غير مكتمل على المهمة الفرعية';
+
+  @override
+  String get areYouSureYouWantToDeleteSubtask => 'هل أنت متأكد من أنك تريد حذف هذه المهمة الفرعية؟';
+
+  @override
+  String get taskNotes => 'ملاحظات المهمة';
+
+  @override
+  String get addNote => 'إضافة ملاحظة';
+
+  @override
+  String get noNotes => 'لا توجد ملاحظات';
+
+  @override
+  String get taskAttachments => 'المرفقات';
+
+  @override
+  String get addAttachment => 'إضافة مرفق';
+
+  @override
+  String get noAttachments => 'لا توجد مرفقات';
+
+  @override
+  String get taskHistory => 'سجل المهمة';
+
+  @override
+  String get modified => 'تم التعديل';
+
+  @override
+  String get completedAt => 'تم الإكمال في';
+
+  @override
+  String get taskStatistics => 'إحصائيات المهمة';
+
+  @override
+  String get completionTime => 'وقت الإنجاز';
+
+  @override
+  String get categoryColor => 'لون الفئة';
+
+  @override
+  String get categoryIcon => 'أيقونة الفئة';
+
+  @override
+  String get selectColor => 'اختر اللون';
+
+  @override
+  String get categoryUpdated => 'تم تحديث الفئة بنجاح';
+
+  @override
+  String get errorUpdatingCategory => 'خطأ في تحديث الفئة';
+
+  @override
+  String categoryTasksCount(Object count) {
+    return 'المهام: $count';
+  }
+
+  @override
+  String get addTasksToCategory => 'أضف مهام إلى هذه الفئة';
+
+  @override
+  String get categoryStatistics => 'إحصائيات الفئة';
+
+  @override
+  String totalTasksInCategory(Object count) {
+    return 'إجمالي المهام: $count';
+  }
+
+  @override
+  String completedTasksInCategory(Object count) {
+    return 'مكتمل: $count';
+  }
+
+  @override
+  String pendingTasksInCategory(Object count) {
+    return 'معلق: $count';
+  }
+
+  @override
+  String overdueTasksInCategory(Object count) {
+    return 'متأخر: $count';
+  }
+
+  @override
+  String get categoryPerformance => 'أداء الفئة';
+
+  @override
+  String categoryEfficiency(Object score) {
+    return 'الكفاءة: $score%';
+  }
+
+  @override
+  String get errorCompletingOnboarding => 'خطأ في إكمال التوجيه';
+
+  @override
+  String get accessibilitySettingsAppliedSuccessfully => 'تم تطبيق إعدادات الوصول بنجاح';
+
+  @override
+  String errorApplyingSettings(Object error) {
+    return 'خطأ في تطبيق الإعدادات: $error';
+  }
+
+  @override
+  String get skipForNow => 'تخطي حالياً';
+
+  @override
+  String get highContrastMode => 'وضع التباين العالي';
+
+  @override
+  String get largeTextMode => 'وضع النص الكبير';
+
+  @override
+  String get reducedMotion => 'تقليل الحركة';
+
+  @override
+  String get accessibilitySetup => 'إعداد الوصول';
+
+  @override
+  String get accessibilitySetupDescription => 'خصص تجربة التطبيق الخاصة بك لسهولة الوصول الأفضل';
+
+  @override
+  String get weRecommendTheseSettings => 'نوصي بهذه الإعدادات بناءً على تفضيلاتك';
+
+  @override
+  String get youCanChangeTheseLater => 'يمكنك تغيير هذه لاحقًا في الإعدادات';
+
+  @override
+  String get applySettings => 'تطبيق الإعدادات';
+
+  @override
+  String get accessibilityCompleted => 'اكتمل إعداد الوصول';
+
+  @override
+  String get continueToApp => 'متابعة إلى التطبيق';
+
+  @override
+  String get clearAllLocalData => 'مسح جميع البيانات المحلية';
+
+  @override
+  String get thisWillPermanentlyDelete => 'سيتم حذف ما يلي بشكل دائم:';
+
+  @override
+  String get allTasksCategoriesMoodsLocalSettings => '• جميع المهام\n• جميع الفئات\n• جميع المزاج\n• جميع الإعدادات المحلية';
+
+  @override
+  String get afterDeletionTheAppWillResyncAllDataFromFirebase => 'بعد الحذف، سيعيد التطبيق مزامنة جميع البيانات من Firebase.';
+
+  @override
+  String get thisActionCannotBeUndone => 'لا يمكن التراجع عن هذا الإجراء!';
+
+  @override
+  String get deleteAllData => 'حذف جميع البيانات';
+
+  @override
+  String get forceSyncFromFirebase => 'فرض المزامنة من Firebase';
+
+  @override
+  String get thisWill => 'سيقوم هذا بـ:';
+
+  @override
+  String get downloadFreshDataOverwriteLocalChanges => '• تنزيل بيانات جديدة من Firebase\n• استبدال أي تغييرات محلية\n• تحديث جميع المستودعات';
+
+  @override
+  String get anyUnsyncedLocalChangesWillBeLost => 'ستفقد أي تغييرات محلية غير مزامنة!';
+
+  @override
+  String get forceSync => 'فرض المزامنة';
+
+  @override
+  String get clearingData => 'جاري مسح البيانات...';
+
+  @override
+  String get allDataClearedAndResyncedSuccessfully => 'تم مسح جميع البيانات وإعادة المزامنة بنجاح!';
+
+  @override
+  String get syncingFromFirebase => 'جاري المزامنة من Firebase...';
+
+  @override
+  String get dataSyncedSuccessfullyFromFirebase => 'تمت مزامنة البيانات بنجاح من Firebase!';
+
+  @override
+  String syncError(Object error) {
+    return 'خطأ في المزامنة: $error';
+  }
+
+  @override
+  String get developerTools => 'أدوات المطور';
+
+  @override
+  String get performanceMemoryAndQualityMonitoring => 'مراقبة الأداء والذاكرة والجودة';
+
+  @override
+  String get enablePomodoroOptimization => 'تفعيل تحسين بومودورو';
+
+  @override
+  String get automaticallyPlanWorkSessions => 'تخطيط جلسات العمل تلقائياً';
+
+  @override
+  String get suggestedPlan => 'الخطة المقترحة:';
+
+  @override
+  String get workSessions => 'جلسات عمل';
+
+  @override
+  String get minPerSession => 'دقيقة لكل جلسة';
+
+  @override
+  String totalEstimatedTime(Object minutes) {
+    return 'الوقت التقديري الإجمالي: $minutes دقيقة';
+  }
+
+  @override
+  String get taskTitle => 'عنوان المهمة';
+
+  @override
+  String get taskDescription => 'وصف المهمة';
+
+  @override
+  String get optional => 'اختياري';
+
+  @override
+  String get selectCategory => 'اختر الفئة';
+
+  @override
+  String get setDueDate => 'تعيين تاريخ الاستحقاق';
+
+  @override
+  String get setReminder => 'تعيين تذكير';
+
+  @override
+  String get noReminder => 'لا يوجد تذكير';
+
+  @override
+  String get setPriority => 'تعيين الأولوية';
+
+  @override
+  String get addSubtasks => 'إضافة مهام فرعية';
+
+  @override
+  String get saveTask => 'حفظ المهمة';
+
+  @override
+  String get taskCreatedSuccessfully => 'تم إنشاء المهمة بنجاح';
+
+  @override
+  String get pleaseFillAllRequiredFields => 'يرجى ملء جميع الحقول المطلوبة';
+
+  @override
+  String get taskTitleRequired => 'عنوان المهمة مطلوب';
+
+  @override
+  String get invalidDueDate => 'تاريخ استحقاق غير صالح';
+
+  @override
+  String get dueDateMustBeInFuture => 'يجب أن يكون تاريخ الاستحقاق في المستقبل';
+
+  @override
+  String focusModeFor(Object taskTitle) {
+    return 'وضع التركيز لـ $taskTitle';
+  }
+
+  @override
+  String get taskDuplicatedSuccessfully => 'تم تكرار المهمة بنجاح';
+
+  @override
+  String get subtaskAddedSuccessfully => 'تمت إضافة المهمة الفرعية بنجاح';
+
+  @override
+  String failedToAddSubtask(Object error) {
+    return 'فشل في إضافة المهمة الفرعية: $error';
+  }
+
+  @override
+  String reminderSetFor(Object date) {
+    return 'تم تعيين التذكير لـ $date';
+  }
+
+  @override
+  String get startFocusMode => 'بدء وضع التركيز';
+
+  @override
+  String get editTask => 'تعديل المهمة';
+
+  @override
+  String get markAsCompleted => 'وضع علامة مكتمل';
+
+  @override
+  String get markAsIncomplete => 'وضع علامة غير مكتمل';
+
+  @override
+  String get taskActions => 'إجراءات المهمة';
+
+  @override
+  String get taskInformation => 'معلومات المهمة';
+
+  @override
+  String get timeTracking => 'تتبع الوقت';
+
+  @override
+  String get notes => 'الملاحظات';
+
+  @override
+  String get attachments => 'المرفقات';
+
+  @override
+  String get noDataAvailable => 'لا توجد بيانات متاحة';
+
+  @override
+  String get loading => 'جاري التحميل...';
+
+  @override
+  String get galleryPermissionIsRequiredToSelectProfileImage => 'إذن المعرض مطلوب لاختيار صورة الملف الشخصي';
+
+  @override
+  String get settings => 'الإعدادات';
+
+  @override
+  String get editProfile => 'تعديل الملف الشخصي';
+
+  @override
+  String get profilePicture => 'صورة الملف الشخصي';
+
+  @override
+  String get changeProfilePicture => 'تغيير صورة الملف الشخصي';
+
+  @override
+  String get takePhoto => 'التقاط صورة';
+
+  @override
+  String get chooseFromGallery => 'اختر من المعرض';
+
+  @override
+  String get removePhoto => 'إزالة الصورة';
+
+  @override
+  String get personalInformation => 'المعلومات الشخصية';
+
+  @override
+  String get name => 'الاسم';
+
+  @override
+  String get phone => 'الهاتف';
+
+  @override
+  String get bio => 'السيرة الذاتية';
+
+  @override
+  String get tellUsAboutYourself => 'أخبرنا عن نفسك';
+
+  @override
+  String get accountSettings => 'إعدادات الحساب';
+
+  @override
+  String get security => 'الأمان';
+
+  @override
+  String get helpAndSupport => 'المساعدة والدعم';
+
+  @override
+  String get logout => 'تسجيل الخروج';
+
+  @override
+  String get deleteAccount => 'حذف الحساب';
+
+  @override
+  String get profileUpdatedSuccessfully => 'تم تحديث الملف الشخصي بنجاح';
+
+  @override
+  String get errorUpdatingProfile => 'خطأ في تحديث الملف الشخصي';
+
+  @override
+  String get profilePictureUpdatedSuccessfully => 'تم تحديث صورة الملف الشخصي بنجاح';
+
+  @override
+  String get errorUpdatingProfilePicture => 'خطأ في تحديث صورة الملف الشخصي';
+
+  @override
+  String get aboutTazbeet => 'حول تطبيق تزبيت';
+
+  @override
+  String get appDescription => 'تطبيق إدارة مهام ذكي مع تكامل بومودورو وتوصيات مدعومة بالذكاء الاصطناعي.';
+
+  @override
+  String get features => 'المميزات:';
+
+  @override
+  String get smartTaskSortingWithAiRecommendations => '• فرز المهام الذكي مع توصيات الذكاء الاصطناعي';
+
+  @override
+  String get pomodoroTimerWithAdaptiveTiming => '• مؤقت بومودورو مع توقيت متكيف';
+
+  @override
+  String get analyticsAndProductivityInsights => '• تحليلات ورؤى الإنتاجية';
+
+  @override
+  String get moodTrackingAndAmbientSettings => '• تتبع المزاج والإعدادات المحيطة';
+
+  @override
+  String get recurringTaskAutomation => '• أتمتة المهام المتكررة';
+
+  @override
+  String get welcomeToTazbeet => 'مرحباً بك في تطبيق Tazbeet';
+
+  @override
+  String get getStarted => 'ابدأ الآن';
+
+  @override
+  String get exploreFeatures => 'استكشف المميزات';
+
+  @override
+  String get viewAllTasks => 'عرض جميع المهام';
+
+  @override
+  String get createYourFirstTaskToGetStarted => 'أنشئ أول مهمة لك للبدء';
+
+  @override
+  String get searchTasks => 'البحث في المهام...';
+
+  @override
+  String get filterTasks => 'تصفية المهام';
+
+  @override
+  String get sortBy => 'ترتيب حسب';
+
+  @override
+  String get tryDifferentFilters => 'جرب فلاتر أو مصطلحات بحث مختلفة';
+
+  @override
+  String errorLoadingAnalytics(Object error) {
+    return 'خطأ في تحميل التحليلات: $error';
+  }
+
+  @override
+  String weeklyProgressOf(Object goal, Object progress) {
+    return '$progress من $goal جلسة';
+  }
+
+  @override
+  String get recommendedAdjustments => 'التعديلات الموصى بها:';
+
+  @override
+  String get noRecommendationsAvailableAtThisTime => 'لا توجد توصيات متاحة في هذا الوقت.';
+
+  @override
+  String get pomodoroAnalytics => 'تحليلات بومودورو';
+
+  @override
+  String get weeklyStats => 'إحصائيات أسبوعية';
+
+  @override
+  String get monthlyStats => 'إحصائيات شهرية';
+
+  @override
+  String get allTimeStats => 'إحصائيات جميع الأوقات';
+
+  @override
+  String get totalSessions => 'إجمالي الجلسات';
+
+  @override
+  String get completedSessions => 'الجلسات المكتملة';
+
+  @override
+  String get averageSessionLength => 'متوسط طول الجلسة';
+
+  @override
+  String get totalFocusTime => 'إجمالي وقت التركيز';
+
+  @override
+  String get bestPerformanceDay => 'أفضل أداء يوم';
+
+  @override
+  String get mostProductiveHour => 'أكثر ساعة إنتاجية';
+
+  @override
+  String get sessionCompletionRate => 'معدل إكمال الجلسة';
+
+  @override
+  String get focusTimeDistribution => 'توزيع وقت التركيز';
+
+  @override
+  String get breakTimeDistribution => 'توزيع وقت الراحة';
+
+  @override
+  String get recommendations => 'التوصيات';
+
+  @override
+  String get performanceMetrics => 'مقاييس الأداء';
+
+  @override
+  String get sessionHistory => 'سجل الجلسات';
+
+  @override
+  String get exportData => 'تصدير البيانات';
+
+  @override
+  String get shareReport => 'مشاركة التقرير';
+
+  @override
+  String get dateRange => 'نطاق التاريخ';
+
+  @override
+  String get customRange => 'نطاق مخصص';
+
+  @override
+  String defaultValue(Object isDefault) {
+    return 'افتراضي: $isDefault';
+  }
+
+  @override
+  String get editMaintenanceMessage => 'تحرير رسالة الصيانة';
+
+  @override
+  String get blockAllNonAdminUsers => '• حظر جميع المستخدمين غير المسؤولين';
+
+  @override
+  String get showMaintenanceScreenToUsers => '• إظهار شاشة الصيانة للمستخدمين';
+
+  @override
+  String get onlyAdminsCanAccessTheApp => '• فقط المديرون يمكنهم الوصول إلى التطبيق';
+
+  @override
+  String get allowAllUsersToAccessTheApp => '• السماح لجميع المستخدمين بالوصول إلى التطبيق';
+
+  @override
+  String get returnToNormalOperation => '• العودة إلى التشغيل الطبيعي';
+
+  @override
+  String get maintenanceMode => 'وضع الصيانة';
+
+  @override
+  String get maintenanceModeDescription => 'ضع التطبيق في وضع الصيانة';
+
+  @override
+  String get maintenanceMessage => 'رسالة الصيانة';
+
+  @override
+  String get enterMaintenanceMessage => 'أدخل رسالة الصيانة';
+
+  @override
+  String get saveMaintenanceSettings => 'حفظ إعدادات الصيانة';
+
+  @override
+  String get maintenanceSettingsSaved => 'تم حفظ إعدادات الصيانة بنجاح';
+
+  @override
+  String get errorSavingMaintenanceSettings => 'خطأ في حفظ إعدادات الصيانة';
+
+  @override
+  String get viewDetailsButton => 'عرض التفاصيل';
+
+  @override
+  String get quickEditButton => 'تعديل سريع';
+
+  @override
+  String get clearButton => 'مسح';
+
+  @override
+  String get searchButton => 'بحث';
+
+  @override
+  String get confirmDelete => 'تأكيد الحذف';
+
+  @override
+  String get resetToDefaults => 'إعادة تعيين إلى الافتراضي';
+
+  @override
+  String get resetAllThemeSettingsToDefaultValues => 'إعادة تعيين جميع إعدادات السمة إلى القيم الافتراضية';
+
+  @override
+  String get reset => 'إعادة تعيين';
+
+  @override
+  String get resetThemeSettings => 'إعادة تعيين إعدادات السمة';
+
+  @override
+  String get thisWillResetAllThemeSettingsToTheirDefaultValues => 'سيؤدي هذا إلى إعادة تعيين جميع إعدادات السمة إلى قيمها الافتراضية. يمكنك دائماً تغييرها لاحقاً.';
+
+  @override
+  String get themeSettingsResetToDefaults => 'تم إعادة تعيين إعدادات السمة إلى الافتراضي';
+
+  @override
+  String get themeSettings => 'إعدادات السمة';
+
+  @override
+  String get darkMode => 'الوضع الداكن';
+
+  @override
+  String get lightMode => 'الوضع الفاتح';
+
+  @override
+  String get systemMode => 'وضع النظام';
+
+  @override
+  String get followSystemSettings => 'اتباع إعدادات النظام';
+
+  @override
+  String get useDarkTheme => 'استخدام السمة الداكنة';
+
+  @override
+  String get useLightTheme => 'استخدام السمة الفاتحة';
+
+  @override
+  String get colorTheme => 'سمة اللون';
+
+  @override
+  String get accentColor => 'لون التمييز';
+
+  @override
+  String get backgroundColor => 'لون الخلفية';
+
+  @override
+  String get surfaceColor => 'لون السطح';
+
+  @override
+  String get textColor => 'لون النص';
+
+  @override
+  String get enableCustomColors => 'تفعيل الألوان المخصصة';
+
+  @override
+  String get customColorSettings => 'إعدادات الألوان المخصصة';
+
+  @override
+  String get selectPrimaryColor => 'اختر اللون الأساسي';
+
+  @override
+  String get selectAccentColor => 'اختر لون التمييز';
+
+  @override
+  String get selectBackgroundColor => 'اختر لون الخلفية';
+
+  @override
+  String get selectSurfaceColor => 'اختر لون السطح';
+
+  @override
+  String get selectTextColor => 'اختر لون النص';
+
+  @override
+  String get colorPicker => 'منتقي الألوان';
+
+  @override
+  String get chooseColor => 'اختر اللون';
+
+  @override
+  String get selectedColor => 'اللون المحدد';
+
+  @override
+  String get applyColors => 'تطبيق الألوان';
+
+  @override
+  String get resetColors => 'إعادة تعيين الألوان';
+
+  @override
+  String get colorSettingsSaved => 'تم حفظ إعدادات الألوان بنجاح';
+
+  @override
+  String get errorSavingColorSettings => 'خطأ في حفظ إعدادات الألوان';
+
+  @override
+  String get noMoodHistoryAvailableForSuggestions => 'لا يوجد سجل مزاج متاح للاقتراحات';
+
+  @override
+  String addedSuggestedCheckInTimesFromYourMoodHistory(Object count) {
+    return 'تمت إضافة $count أوقات تسجيل مقترحة من سجل مزاجك';
+  }
+
+  @override
+  String get allSuggestedTimesAreAlreadyInYourList => 'جميع الأوقات المقترحة موجودة بالفعل في قائمتك';
+
+  @override
+  String failedToGetSuggestions(Object error) {
+    return 'فشل في الحصول على الاقتراحات: $error';
+  }
+
+  @override
+  String get testMoodNotificationSent => 'تم إرسال إشعار المزاج التجريبي!';
+
+  @override
+  String failedToSendTestNotification(Object error) {
+    return 'فشل في إرسال الإشعار التجريبي: $error';
+  }
+
+  @override
+  String get pendingMoodNotifications => 'إشعارات المزاج المعلقة';
+
+  @override
+  String moodNotificationsScheduledTotalPending(Object count, Object pending) {
+    return '$count إشعار مزاج مجدول\nالإجمالي المعلق: $pending';
+  }
+
+  @override
+  String failedToCheckPendingNotifications(Object error) {
+    return 'فشل في التحقق من الإشعارات المعلقة: $error';
+  }
+
+  @override
+  String get removeThisCheckInTime => 'إزالة وقت التسجيل هذا؟';
+
+  @override
+  String get receivePeriodicMoodCheckInReminders => 'تلقي تذكيرات تسجيل المزاج الدورية';
+
+  @override
+  String get testMoodNotificationScheduledFor1MinuteFromNow => 'تم جدولة إشعار المزاج التجريبي بعد دقيقة واحدة من الآن!';
+
+  @override
+  String failedToScheduleTestNotification(Object error) {
+    return 'فشل في جدولة الإشعار التجريبي: $error';
+  }
+
+  @override
+  String get testScheduledNotification => 'اختبار الإشعار المجدول';
+
+  @override
+  String failedToCancelNotifications(Object error) {
+    return 'فشل في إلغاء الإشعارات: $error';
+  }
+
+  @override
+  String get moodSettings => 'إعدادات المزاج';
+
+  @override
+  String get notificationTimes => 'أوقات الإشعارات';
+
+  @override
+  String get addNotificationTime => 'إضافة وقت الإشعار';
+
+  @override
+  String get selectTime => 'اختر الوقت';
+
+  @override
+  String get suggestedTimes => 'الأوقات المقترحة';
+
+  @override
+  String get getSuggestionsFromHistory => 'الحصول على اقتراحات من السجل';
+
+  @override
+  String get notificationTools => 'أدوات الإشعارات';
+
+  @override
+  String get noCheckInTimesSetAddOneToGetStarted => 'لا توجد أوقات تسجيل محددة. أضف واحداً للبدء!';
+
+  @override
+  String get pomodoroPlanning => 'تخطيط بومودورو';
+
+  @override
+  String focusDifficulty(Object score) {
+    return 'صعوبة التركيز: $score';
+  }
+
+  @override
+  String get easyFocusDeepFocusRequired => '1 = تركيز سهل، 10 = تركيز عميق مطلوب';
+
+  @override
+  String get priorityTitle => 'الأولوية';
+
+  @override
+  String get galleryPermissionRequired => 'إذن المعرض مطلوب لتحديد صورة الملف الشخصي';
+
+  @override
+  String get authenticationErrorPleaseLogInAgain => 'خطأ في المصادقة. يرجى تسجيل الدخول مرة أخرى.';
+
+  @override
+  String get tryAdjustingYourSearchTerms => 'حاول تعديل شروط البحث';
+
+  @override
+  String get defaultLabel => 'افتراضي';
+
+  @override
+  String get defaultCategory => 'الفئة الافتراضية';
+
+  @override
+  String get dashboard => 'لوحة التحكم';
+
+  @override
+  String get refreshData => 'تحديث البيانات';
+
+  @override
+  String get recentActivity => 'النشاط الأخير';
+
+  @override
+  String defaultYes(Object value) {
+    return 'افتراضي: $value';
+  }
+
+  @override
+  String get appSettings => 'إعدادات التطبيق';
+
+  @override
+  String get generalSettings => 'الإعدادات العامة';
+
+  @override
+  String get userRegistration => 'تسجيل المستخدمين';
+
+  @override
+  String get newUsersCanRegister => 'يمكن للمستخدمين الجدد التسجيل';
+
+  @override
+  String get registrationIsDisabled => 'التسجيل معطل';
+
+  @override
+  String get appInformation => 'معلومات التطبيق';
+
+  @override
+  String get appVersion => 'إصدار التطبيق';
+
+  @override
+  String get supportEmail => 'بريد الدعم';
+
+  @override
+  String get lastUpdated => 'آخر تحديث';
+
+  @override
+  String get message => 'الرسالة';
+
+  @override
+  String get enterMessageUsersWillSee => 'أدخل الرسالة التي سيراها المستخدمون...';
+
+  @override
+  String maintenanceModeConfirmation(Object action, Object details) {
+    return 'هل أنت متأكد من $action وضع الصيانة؟\n\n$details';
+  }
+
+  @override
+  String get onlyAdminsCanAccessApp => '• يمكن للمسؤولين فقط الوصول إلى التطبيق';
+
+  @override
+  String get allowAllUsersToAccessApp => '• السماح لجميع المستخدمين بالوصول إلى التطبيق';
+
+  @override
+  String get enableMaintenanceMode => 'تفعيل وضع الصيانة';
+
+  @override
+  String get disableMaintenanceMode => 'تعطيل وضع الصيانة';
+
+  @override
+  String get disable => 'تعطيل';
+
+  @override
+  String get refresh => 'تحديث';
+
+  @override
+  String get performanceMonitor => 'مراقب الأداء';
+
+  @override
+  String trackedOperations(Object count) {
+    return 'العمليات المتتبعة: $count';
+  }
+
+  @override
+  String slowOperations(Object count) {
+    return 'العمليات البطيئة (>500 مللي ثانية): $count';
+  }
+
+  @override
+  String get logReport => 'تسجيل التقرير';
+
+  @override
+  String get memoryManager => 'مدير الذاكرة';
+
+  @override
+  String get forceCleanup => 'فرض التنظيف';
+
+  @override
+  String get logStats => 'تسجيل الإحصائيات';
+
+  @override
+  String get animationOptimizer => 'محسن الرسوم المتحركة';
+
+  @override
+  String get codeQualityMonitor => 'مراقب جودة الكود';
+
+  @override
+  String get qualityScore => 'درجة الجودة: ';
+
+  @override
+  String get notificationVerification => 'التحقق من الإشعارات';
+
+  @override
+  String get checkPending => 'فحص المعلق';
+
+  @override
+  String get verifyAllTasks => 'تحقق من جميع المهام';
+
+  @override
+  String get actions => 'الإجراءات';
+
+  @override
+  String get clearPerformance => 'مسح الأداء';
+
+  @override
+  String get clearQuality => 'مسح الجودة';
+
+  @override
+  String get performanceReportLoggedToConsole => 'تم تسجيل تقرير الأداء في وحدة التحكم';
+
+  @override
+  String get memoryCleanupCompleted => 'تم تنظيف الذاكرة';
+
+  @override
+  String get memoryStatsLoggedToConsole => 'تم تسجيل إحصائيات الذاكرة في وحدة التحكم';
+
+  @override
+  String get animationStatsLoggedToConsole => 'تم تسجيل إحصائيات الرسوم المتحركة في وحدة التحكم';
+
+  @override
+  String get qualityReportLoggedToConsole => 'تم تسجيل تقرير الجودة في وحدة التحكم';
+
+  @override
+  String get performanceMetricsCleared => 'تم مسح مقاييس الأداء';
+
+  @override
+  String get qualityMetricsCleared => 'تم مسح مقاييس الجودة';
+
+  @override
+  String get dataManagement => 'إدارة البيانات';
+
+  @override
+  String get importData => 'استيراد البيانات';
+
+  @override
+  String get backupAndRestore => 'النسخ الاحتياطي والاستعادة';
+
+  @override
+  String get exportYourTasksToExternalFormats => 'تصدير مهامك إلى تنسيقات خارجية';
+
+  @override
+  String get exportCSV => 'تصدير CSV';
+
+  @override
+  String get exportJSON => 'تصدير JSON';
+
+  @override
+  String get exportICSCalendar => 'تصدير ICS (التقويم)';
+
+  @override
+  String get importTasksFromExternalFiles => 'استيراد المهام من ملفات خارجية';
+
+  @override
+  String get importFromFile => 'استيراد من ملف';
+
+  @override
+  String get createAndRestoreBackups => 'إنشاء واستعادة النسخ الاحتياطية';
+
+  @override
+  String get createBackup => 'إنشاء نسخة احتياطية';
+
+  @override
+  String get restoreBackup => 'استعادة نسخة احتياطية';
+
+  @override
+  String get notificationDeleted => 'تم حذف الإشعار';
+
+  @override
+  String get clearHistory => 'مسح السجل';
+
+  @override
+  String get areYouSureYouWantToClearAllNotificationHistory => 'هل أنت متأكد من مسح سجل جميع الإشعارات؟';
+
+  @override
+  String get clearAll => 'مسح الكل';
+
+  @override
+  String get historyCleared => 'تم مسح السجل';
+
+  @override
+  String get smartFeaturesTutorial => 'دليل الميزات الذكية';
+
+  @override
+  String get previous => 'السابق';
+
+  @override
+  String get completeTutorial => 'إكمال الدليل';
+
+  @override
+  String get customizeYourExperience => 'تخصيص تجربتك';
+
+  @override
+  String get adjustTheseSettingsToMakeTheAppWorkBetterForYou => 'اضبط هذه الإعدادات لجعل التطبيق يعمل بشكل أفضل لك';
+
+  @override
+  String get minimizeAnimationsAndTransitions => 'تقليل الرسوم المتحركة والانتقالات';
+
+  @override
+  String get controlTheAppWithYourVoice => 'تحكم في التطبيق بصوتك';
+
+  @override
+  String get increaseColorContrastForBetterVisibility => 'زيادة تباين الألوان لرؤية أفضل';
+
+  @override
+  String get makeTextLargerAndEasierToRead => 'جعل النص أكبر وأسهل في القراءة';
+
+  @override
+  String get needHelp => 'تحتاج مساعدة؟';
+
+  @override
+  String get enableVoiceTasks => 'تفعيل المهام الصوتية';
+
+  @override
+  String get createTasksWithYourVoice => 'إنشاء مهام بصوتك';
+
+  @override
+  String get settingsTitle => 'الإعدادات';
+
+  @override
+  String get thankYouForYourPatience => 'شكراً لصبرك 💙';
+
+  @override
+  String get moodAlreadyLoggedToday => 'لقد قمت بتسجيل مزاجك بالفعل اليوم';
+
+  @override
+  String get updateTodaysEntryInstead => 'يمكنك تحديث إدخال اليوم بدلاً من ذلك';
+
+  @override
+  String get viewAndUpdateMood => 'عرض وتحديث المزاج';
+
+  @override
+  String get okButton => 'موافق';
+
+  @override
+  String get yourIntelligentTaskManagementCompanionWithAIPoweredFeatures => 'رفيقك الذكي لإدارة المهام مع ميزات تعمل بالذكاء الاصطناعي';
+
+  @override
+  String get smartTaskSorting => 'الفرز الذكي للمهام';
+
+  @override
+  String get experienceAIPoweredTaskPrioritizationThatAdaptsToYourPatterns => 'تجربة أولويات المهام المدعومة بالذكاء الاصطناعي التي تتكيف مع أنماطك';
+
+  @override
+  String get pomodoroIntegration => 'تكامل تقنية البومودورو';
+
+  @override
+  String get focusBetterWithAdaptiveTimingAndSmartBreaks => 'ركز بشكل أفضل مع التوقيت التكيفي والاستراحات الذكية';
+
+  @override
+  String get moodEnergyTracking => 'تتبع المزاج والطاقة';
+
+  @override
+  String get understandYourPatternsAndOptimizeYourProductivity => 'افهم أنماطك وحسن إنتاجيتك';
+
+  @override
+  String get accessibilityFeatures => 'ميزات الوصول';
+
+  @override
+  String get customizeTheAppToWorkBestForYou => 'خصص التطبيق ليعمل بشكل أفضل لك';
+
+  @override
+  String get viewAndUpdateTodaysMoodEntry => 'هل ترغب في عرض وتحديث إدخال المزاج اليوم؟';
+
+  @override
+  String hiveBoxes(Object count) {
+    return 'صناديق Hive: $count';
+  }
+
+  @override
+  String status(Object status) {
+    return 'الحالة: $status';
+  }
+
+  @override
+  String pendingNotifications(Object count) {
+    return 'الإشعارات المعلقة: $count';
+  }
+
+  @override
+  String get verificationReportLoggedToConsole => 'تم تسجيل تقرير التحقق في وحدة التحكم';
+
+  @override
+  String get performanceMonitoring => 'مراقبة الأداء';
+
+  @override
+  String get memoryManagement => 'إدارة الذاكرة';
+
+  @override
+  String get animationOptimization => 'تحسين الرسوم المتحركة';
+
+  @override
+  String get codeQuality => 'جودة الكود';
+
+  @override
+  String get dataSync => 'مزامنة البيانات';
+
+  @override
+  String get clearAllMetrics => 'مسح جميع المقاييس';
+
+  @override
+  String get developerOptions => 'خيارات المطور';
+
+  @override
+  String get debugMode => 'وضع التصحيح';
+
+  @override
+  String get enableDebugMode => 'تفعيل وضع التصحيح';
+
+  @override
+  String get disableDebugMode => 'تعطيل وضع التصحيح';
+
+  @override
+  String get debugModeDescription => 'تفعيل التسجيل الإضافي وميزات التصحيح';
+
+  @override
+  String get memoryUsage => 'استخدام الذاكرة';
+
+  @override
+  String get databaseSize => 'حجم قاعدة البيانات';
+
+  @override
+  String get cacheSize => 'حجم ذاكرة التخزين المؤقت';
+
+  @override
+  String get networkRequests => 'طلبات الشبكة';
+
+  @override
+  String get errorTracking => 'تتبع الأخطاء';
+
+  @override
+  String get logLevel => 'مستوى التسجيل';
+
+  @override
+  String get verbose => 'مفصل';
+
+  @override
+  String get debug => 'تصحيح';
+
+  @override
+  String get info => 'معلومات';
+
+  @override
+  String get warning => 'تحذير';
+
+  @override
+  String get none => 'لا شيء';
+
+  @override
+  String get exportLogs => 'تصدير السجلات';
+
+  @override
+  String get importLogs => 'استيراد السجلات';
+
+  @override
+  String get clearLogs => 'مسح السجلات';
+
+  @override
+  String get logsExported => 'تم تصدير السجلات بنجاح';
+
+  @override
+  String get logsImported => 'تم استيراد السجلات بنجاح';
+
+  @override
+  String get logsCleared => 'تم مسح السجلات بنجاح';
+
+  @override
+  String get errorExportingLogs => 'خطأ في تصدير السجلات';
+
+  @override
+  String get errorImportingLogs => 'خطأ في استيراد السجلات';
+
+  @override
+  String get errorClearingLogs => 'خطأ في مسح السجلات';
 }

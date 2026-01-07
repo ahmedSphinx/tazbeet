@@ -192,8 +192,62 @@ abstract class AppLocalizations {
   /// No description provided for @confirmDeleteTask.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to delete this task?'**
+  /// **'Are you sure you want to delete \"{taskTitle}\"?'**
   String confirmDeleteTask(String taskTitle);
+
+  /// No description provided for @addTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Task'**
+  String get addTask;
+
+  /// No description provided for @addTaskToGetStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a task to get started'**
+  String get addTaskToGetStarted;
+
+  /// No description provided for @voiceTaskCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Task with Voice'**
+  String get voiceTaskCreate;
+
+  /// No description provided for @voiceTaskHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap microphone to speak'**
+  String get voiceTaskHint;
+
+  /// No description provided for @voiceTaskProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing your voice...'**
+  String get voiceTaskProcessing;
+
+  /// No description provided for @voiceTaskCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice task created'**
+  String get voiceTaskCreated;
+
+  /// No description provided for @taskValidationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Task validation failed'**
+  String get taskValidationFailed;
+
+  /// No description provided for @errorCreatingTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Error creating task'**
+  String get errorCreatingTask;
+
+  /// No description provided for @tryVoiceTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Try voice tasks! Tap the microphone to create tasks instantly.'**
+  String get tryVoiceTasks;
 
   /// No description provided for @yes.
   ///
@@ -504,7 +558,7 @@ abstract class AppLocalizations {
   /// No description provided for @color.
   ///
   /// In en, this message translates to:
-  /// **'Color:'**
+  /// **'Color'**
   String get color;
 
   /// No description provided for @pickAColor.
@@ -534,7 +588,7 @@ abstract class AppLocalizations {
   /// No description provided for @tasksCount.
   ///
   /// In en, this message translates to:
-  /// **'{count} tasks'**
+  /// **'Tasks Count'**
   String tasksCount(int count);
 
   /// No description provided for @selectButton.
@@ -627,11 +681,17 @@ abstract class AppLocalizations {
   /// **'Total Tasks'**
   String get totaltasks;
 
-  /// No description provided for @dueDate.
+  /// No description provided for @dueDateTitle.
   ///
   /// In en, this message translates to:
   /// **'Due Date'**
-  String get dueDate;
+  String get dueDateTitle;
+
+  /// No description provided for @dueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Due Date: {dueDate}'**
+  String dueDate(Object dueDate);
 
   /// No description provided for @overdue.
   ///
@@ -780,31 +840,31 @@ abstract class AppLocalizations {
   /// No description provided for @moodVeryBad.
   ///
   /// In en, this message translates to:
-  /// **'Very Bad'**
+  /// **'Really struggling'**
   String get moodVeryBad;
 
   /// No description provided for @moodBad.
   ///
   /// In en, this message translates to:
-  /// **'Bad'**
+  /// **'Not great'**
   String get moodBad;
 
   /// No description provided for @moodNeutral.
   ///
   /// In en, this message translates to:
-  /// **'Neutral'**
+  /// **'Okay'**
   String get moodNeutral;
 
   /// No description provided for @moodGood.
   ///
   /// In en, this message translates to:
-  /// **'Good'**
+  /// **'Pretty good'**
   String get moodGood;
 
   /// No description provided for @moodVeryGood.
   ///
   /// In en, this message translates to:
-  /// **'Very Good'**
+  /// **'Great'**
   String get moodVeryGood;
 
   /// No description provided for @moodSavedSuccess.
@@ -1170,25 +1230,25 @@ abstract class AppLocalizations {
   /// No description provided for @taskCompleted.
   ///
   /// In en, this message translates to:
-  /// **'Task completed!'**
+  /// **'Task completed successfully'**
   String get taskCompleted;
 
   /// No description provided for @taskDeleted.
   ///
   /// In en, this message translates to:
-  /// **'Task deleted'**
+  /// **'Task deleted successfully'**
   String get taskDeleted;
 
   /// No description provided for @categoryCreated.
   ///
   /// In en, this message translates to:
-  /// **'Category created'**
+  /// **'Category created successfully'**
   String get categoryCreated;
 
   /// No description provided for @categoryDeleted.
   ///
   /// In en, this message translates to:
-  /// **'Category deleted'**
+  /// **'Category deleted successfully'**
   String get categoryDeleted;
 
   /// No description provided for @pomodoroStarted.
@@ -1551,16 +1611,10 @@ abstract class AppLocalizations {
   /// **'No tasks in this category'**
   String get noTasksInCategory;
 
-  /// No description provided for @addTaskToGetStarted.
-  ///
-  /// In en, this message translates to:
-  /// **'Add a task to get started'**
-  String get addTaskToGetStarted;
-
   /// No description provided for @error.
   ///
   /// In en, this message translates to:
-  /// **'Error: {message}'**
+  /// **'Error'**
   String error(String message);
 
   /// No description provided for @editProfileInfo.
@@ -1920,7 +1974,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteSubtask.
   ///
   /// In en, this message translates to:
-  /// **'Delete Subtask'**
+  /// **'Delete subtask'**
   String get deleteSubtask;
 
   /// No description provided for @confirmDeleteSubtask.
@@ -1950,19 +2004,19 @@ abstract class AppLocalizations {
   /// No description provided for @highPriority.
   ///
   /// In en, this message translates to:
-  /// **'High'**
+  /// **'High Priority'**
   String get highPriority;
 
   /// No description provided for @mediumPriority.
   ///
   /// In en, this message translates to:
-  /// **'Medium'**
+  /// **'Medium Priority'**
   String get mediumPriority;
 
   /// No description provided for @lowPriority.
   ///
   /// In en, this message translates to:
-  /// **'Low'**
+  /// **'Low Priority'**
   String get lowPriority;
 
   /// No description provided for @addSubtask.
@@ -2130,13 +2184,13 @@ abstract class AppLocalizations {
   /// No description provided for @overdueTasks.
   ///
   /// In en, this message translates to:
-  /// **'Overdue tasks - need immediate attention'**
+  /// **'Overdue Tasks'**
   String get overdueTasks;
 
   /// No description provided for @todayTasks.
   ///
   /// In en, this message translates to:
-  /// **'Tasks to complete today'**
+  /// **'Today\'s tasks'**
   String get todayTasks;
 
   /// No description provided for @tomorrowTasks.
@@ -2214,7 +2268,7 @@ abstract class AppLocalizations {
   /// No description provided for @testNotificationSent.
   ///
   /// In en, this message translates to:
-  /// **'Test notification sent!'**
+  /// **'Test notification sent'**
   String get testNotificationSent;
 
   /// No description provided for @reminder.
@@ -2250,7 +2304,7 @@ abstract class AppLocalizations {
   /// No description provided for @allNotificationsCancelled.
   ///
   /// In en, this message translates to:
-  /// **'All notifications cancelled!'**
+  /// **'All notifications cancelled'**
   String get allNotificationsCancelled;
 
   /// No description provided for @moodCheckInNotificationTitle.
@@ -2370,7 +2424,7 @@ abstract class AppLocalizations {
   /// No description provided for @version.
   ///
   /// In en, this message translates to:
-  /// **'Version {version}'**
+  /// **'Version: {version}'**
   String version(String version);
 
   /// No description provided for @updatePersonalInfo.
@@ -2454,14 +2508,14 @@ abstract class AppLocalizations {
   /// No description provided for @noDueDate.
   ///
   /// In en, this message translates to:
-  /// **'No due date'**
+  /// **'No Due Date'**
   String get noDueDate;
 
   /// No description provided for @priority.
   ///
   /// In en, this message translates to:
-  /// **'Priority'**
-  String get priority;
+  /// **'Priority: {priority}'**
+  String priority(Object priority);
 
   /// No description provided for @reminders.
   ///
@@ -2478,7 +2532,7 @@ abstract class AppLocalizations {
   /// No description provided for @noSubtasks.
   ///
   /// In en, this message translates to:
-  /// **'No subtasks yet'**
+  /// **'No subtasks'**
   String get noSubtasks;
 
   /// No description provided for @subtasks.
@@ -2994,7 +3048,7 @@ abstract class AppLocalizations {
   /// No description provided for @pomodoroNotifications.
   ///
   /// In en, this message translates to:
-  /// **'Pomodoro'**
+  /// **'Pomodoro Notifications'**
   String get pomodoroNotifications;
 
   /// No description provided for @emergencyNotifications.
@@ -3504,7 +3558,7 @@ abstract class AppLocalizations {
   /// No description provided for @minutes.
   ///
   /// In en, this message translates to:
-  /// **'min'**
+  /// **'minutes'**
   String get minutes;
 
   /// No description provided for @recommendedForAdhd.
@@ -3524,6 +3578,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to stop the current session? Your progress will be lost.'**
   String get stopPomodoroConfirmation;
+
+  /// No description provided for @selectATemplateOrCustomizeYourSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a template or customize your session'**
+  String get selectATemplateOrCustomizeYourSession;
+
+  /// No description provided for @stopPomodoroTimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop Timer'**
+  String get stopPomodoroTimer;
+
+  /// No description provided for @resume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get resume;
+
+  /// No description provided for @sessionsUntilLongBreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions until Long Break'**
+  String get sessionsUntilLongBreak;
+
+  /// No description provided for @customizeYourPomodoroSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize your pomodoro session'**
+  String get customizeYourPomodoroSession;
 
   /// No description provided for @whatsHappeningRightNow.
   ///
@@ -4218,8 +4302,8 @@ abstract class AppLocalizations {
   /// No description provided for @icon.
   ///
   /// In en, this message translates to:
-  /// **'Icon'**
-  String get icon;
+  /// **'Icon: {icon}'**
+  String icon(Object icon);
 
   /// No description provided for @categories.
   ///
@@ -4383,6 +4467,12 @@ abstract class AppLocalizations {
   /// **'Try Again'**
   String get tryAgain;
 
+  /// No description provided for @errorLoadingTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading tasks'**
+  String get errorLoadingTasks;
+
   /// No description provided for @deleteTask.
   ///
   /// In en, this message translates to:
@@ -4392,8 +4482,8 @@ abstract class AppLocalizations {
   /// No description provided for @deleteTaskConfirmation.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to delete \"{task}\"?'**
-  String deleteTaskConfirmation(String task);
+  /// **'Are you sure you want to delete \"{taskTitle}\"?'**
+  String deleteTaskConfirmation(String task, Object taskTitle);
 
   /// No description provided for @delete.
   ///
@@ -4557,17 +4647,3149 @@ abstract class AppLocalizations {
   /// **'Error in recurring task: {error}'**
   String recurringTaskError(String error);
 
-  /// No description provided for @noRecurringTasksFound.
+  /// No description provided for @signingIn.
   ///
   /// In en, this message translates to:
-  /// **'No recurring tasks found'**
-  String get noRecurringTasksFound;
+  /// **'Signing you in..'**
+  String get signingIn;
 
-  /// No description provided for @recurringTasksOptimized.
+  /// No description provided for @yourPersonalTaskManager.
   ///
   /// In en, this message translates to:
-  /// **'Recurring tasks optimized for performance'**
-  String get recurringTasksOptimized;
+  /// **'Your Personal Task Manager'**
+  String get yourPersonalTaskManager;
+
+  /// No description provided for @bySigningInYouAgree.
+  ///
+  /// In en, this message translates to:
+  /// **'By signing in, you agree to our Terms of Service and Privacy Policy'**
+  String get bySigningInYouAgree;
+
+  /// No description provided for @authenticationServiceNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication service not available. Please try again.'**
+  String get authenticationServiceNotAvailable;
+
+  /// No description provided for @anErrorOccurredPleaseTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred. Please try again.'**
+  String get anErrorOccurredPleaseTryAgain;
+
+  /// No description provided for @or.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get or;
+
+  /// No description provided for @signIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get signIn;
+
+  /// No description provided for @rememberMe.
+  ///
+  /// In en, this message translates to:
+  /// **'Remember me'**
+  String get rememberMe;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get forgotPassword;
+
+  /// No description provided for @register.
+  ///
+  /// In en, this message translates to:
+  /// **'Register'**
+  String get register;
+
+  /// No description provided for @resetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Password'**
+  String get resetPassword;
+
+  /// No description provided for @passwordResetFunctionality.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset functionality will be implemented soon. Please contact support for assistance.'**
+  String get passwordResetFunctionality;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @smartSortingConsidersTimeOfDayEnergyLevelsAndPatterns.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart sorting considers time of day, energy levels, and patterns'**
+  String get smartSortingConsidersTimeOfDayEnergyLevelsAndPatterns;
+
+  /// No description provided for @youCanOverrideWithManualSortingAnytime.
+  ///
+  /// In en, this message translates to:
+  /// **'You can override with manual sorting anytime'**
+  String get youCanOverrideWithManualSortingAnytime;
+
+  /// No description provided for @trySortingTasksWithSmartSortOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Try sorting tasks with \"Smart Sort\" option'**
+  String get trySortingTasksWithSmartSortOption;
+
+  /// No description provided for @adaptivePomodoro.
+  ///
+  /// In en, this message translates to:
+  /// **'Adaptive Pomodoro'**
+  String get adaptivePomodoro;
+
+  /// No description provided for @adaptivePomodoroDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus sessions that adapt to your performance'**
+  String get adaptivePomodoroDescription;
+
+  /// No description provided for @sessionTimingAdjustsBasedOnYourFocusPatterns.
+  ///
+  /// In en, this message translates to:
+  /// **'Session timing adjusts based on your focus patterns'**
+  String get sessionTimingAdjustsBasedOnYourFocusPatterns;
+
+  /// No description provided for @breakSuggestionsMatchYourCurrentEnergyLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Break suggestions match your current energy level'**
+  String get breakSuggestionsMatchYourCurrentEnergyLevel;
+
+  /// No description provided for @productivityInsightsHelpYouOptimizeWorkSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Productivity insights help you optimize work sessions'**
+  String get productivityInsightsHelpYouOptimizeWorkSessions;
+
+  /// No description provided for @achievementSystemKeepsYouMotivated.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievement system keeps you motivated'**
+  String get achievementSystemKeepsYouMotivated;
+
+  /// No description provided for @startAPomodoroSessionToSeeAdaptiveTiming.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a Pomodoro session to see adaptive timing'**
+  String get startAPomodoroSessionToSeeAdaptiveTiming;
+
+  /// No description provided for @energyAwarePlanning.
+  ///
+  /// In en, this message translates to:
+  /// **'Energy-Aware Planning'**
+  String get energyAwarePlanning;
+
+  /// No description provided for @energyAwarePlanningDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule tasks based on your energy patterns'**
+  String get energyAwarePlanningDescription;
+
+  /// No description provided for @morningPeakBestForComplexTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning peak: Best for complex tasks'**
+  String get morningPeakBestForComplexTasks;
+
+  /// No description provided for @afternoonSteadyGoodForRoutineWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Afternoon steady: Good for routine work'**
+  String get afternoonSteadyGoodForRoutineWork;
+
+  /// No description provided for @eveningDeclineLightTasksAndPlanning.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening decline: Light tasks and planning'**
+  String get eveningDeclineLightTasksAndPlanning;
+
+  /// No description provided for @energyTrackingHelpsIdentifyYourPatterns.
+  ///
+  /// In en, this message translates to:
+  /// **'Energy tracking helps identify your patterns'**
+  String get energyTrackingHelpsIdentifyYourPatterns;
+
+  /// No description provided for @checkYourEnergyLevelsThroughoutTheDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your energy levels throughout the day'**
+  String get checkYourEnergyLevelsThroughoutTheDay;
+
+  /// No description provided for @analyticsDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics Dashboard'**
+  String get analyticsDashboard;
+
+  /// No description provided for @analyticsDashboardDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep insights into your productivity'**
+  String get analyticsDashboardDescription;
+
+  /// No description provided for @trackFocusPatternsAndSessionPerformance.
+  ///
+  /// In en, this message translates to:
+  /// **'Track focus patterns and session performance'**
+  String get trackFocusPatternsAndSessionPerformance;
+
+  /// No description provided for @identifyYourMostProductiveTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Identify your most productive times'**
+  String get identifyYourMostProductiveTimes;
+
+  /// No description provided for @monitorMoodAndEnergyCorrelations.
+  ///
+  /// In en, this message translates to:
+  /// **'Monitor mood and energy correlations'**
+  String get monitorMoodAndEnergyCorrelations;
+
+  /// No description provided for @getPersonalizedProductivityTips.
+  ///
+  /// In en, this message translates to:
+  /// **'Get personalized productivity tips'**
+  String get getPersonalizedProductivityTips;
+
+  /// No description provided for @exploreYourAnalyticsDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore your analytics dashboard'**
+  String get exploreYourAnalyticsDashboard;
+
+  /// No description provided for @tutorialCompletedYoureAllSetToUseSmartFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'Tutorial completed! You\'re all set to use smart features.'**
+  String get tutorialCompletedYoureAllSetToUseSmartFeatures;
+
+  /// No description provided for @errorCompletingTutorial.
+  ///
+  /// In en, this message translates to:
+  /// **'Error completing tutorial'**
+  String get errorCompletingTutorial;
+
+  /// No description provided for @accessDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Access Denied'**
+  String get accessDenied;
+
+  /// No description provided for @youDoNotHaveAdminPrivileges.
+  ///
+  /// In en, this message translates to:
+  /// **'You do not have admin privileges.'**
+  String get youDoNotHaveAdminPrivileges;
+
+  /// No description provided for @activity.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get activity;
+
+  /// No description provided for @descriptionOfActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Description of activity'**
+  String get descriptionOfActivity;
+
+  /// No description provided for @noUsersFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No users found'**
+  String get noUsersFound;
+
+  /// No description provided for @toggleAdminStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle Admin Status'**
+  String get toggleAdminStatus;
+
+  /// No description provided for @areYouSureYouWantToToggleAdminRights.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to {action} {userName}?'**
+  String areYouSureYouWantToToggleAdminRights(Object action, Object userName);
+
+  /// No description provided for @removeAdminRightsFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'remove admin rights from'**
+  String get removeAdminRightsFrom;
+
+  /// No description provided for @grantAdminRightsTo.
+  ///
+  /// In en, this message translates to:
+  /// **'grant admin rights to'**
+  String get grantAdminRightsTo;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @errorUpdatingUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating user: {error}'**
+  String errorUpdatingUser(Object error);
+
+  /// No description provided for @deleteUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete User'**
+  String get deleteUser;
+
+  /// No description provided for @areYouSureYouWantToDeleteUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete {userName}?\n\nThis will permanently delete:\n• User account\n• All tasks\n• All categories\n• All moods\n\nThis action cannot be undone.'**
+  String areYouSureYouWantToDeleteUser(Object userName);
+
+  /// No description provided for @userAndAllAssociatedDataDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'{userName} and all associated data deleted successfully'**
+  String userAndAllAssociatedDataDeletedSuccessfully(Object userName);
+
+  /// No description provided for @errorDeletingUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting user: {error}'**
+  String errorDeletingUser(Object error);
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email: {email}'**
+  String email(Object email);
+
+  /// No description provided for @admin.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin: {isAdmin}'**
+  String admin(Object isAdmin);
+
+  /// No description provided for @updated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated: {date}'**
+  String updated(Object date);
+
+  /// No description provided for @birthday.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday: {birthday}'**
+  String birthday(Object birthday);
+
+  /// No description provided for @errorUpdatingTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating task: {error}'**
+  String errorUpdatingTask(Object error);
+
+  /// No description provided for @areYouSureYouWantToDeleteTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{taskTitle}\"?'**
+  String areYouSureYouWantToDeleteTask(Object taskTitle);
+
+  /// No description provided for @taskDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'{taskTitle} deleted successfully'**
+  String taskDeletedSuccessfully(Object taskTitle);
+
+  /// No description provided for @errorDeletingTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting task: {error}'**
+  String errorDeletingTask(Object error);
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description: {description}'**
+  String description(Object description);
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed: {isCompleted}'**
+  String completed(Object isCompleted);
+
+  /// No description provided for @userId.
+  ///
+  /// In en, this message translates to:
+  /// **'User ID: {userId}'**
+  String userId(Object userId);
+
+  /// No description provided for @noCategoriesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No categories found'**
+  String get noCategoriesFound;
+
+  /// No description provided for @tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks'**
+  String get tasks;
+
+  /// No description provided for @selectIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Icon'**
+  String get selectIcon;
+
+  /// No description provided for @errorCreatingCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Error creating category'**
+  String get errorCreatingCategory;
+
+  /// No description provided for @categoryCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Category created successfully'**
+  String get categoryCreatedSuccessfully;
+
+  /// No description provided for @categoryUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Category updated successfully'**
+  String get categoryUpdatedSuccessfully;
+
+  /// No description provided for @areYouSureYouWantToDeleteCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{categoryName}\"?\n\nNote: If this category is being used by any tasks, deletion will fail. Please reassign those tasks first.'**
+  String areYouSureYouWantToDeleteCategory(Object categoryName);
+
+  /// No description provided for @categoryDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Category \"{categoryName}\" deleted successfully'**
+  String categoryDeletedSuccessfully(Object categoryName);
+
+  /// No description provided for @errorDeletingCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting category: {error}'**
+  String errorDeletingCategory(Object error);
+
+  /// No description provided for @na.
+  ///
+  /// In en, this message translates to:
+  /// **'N/A'**
+  String get na;
+
+  /// No description provided for @loadingPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading preferences...'**
+  String get loadingPreferences;
+
+  /// No description provided for @oneHour.
+  ///
+  /// In en, this message translates to:
+  /// **'1 Hour'**
+  String get oneHour;
+
+  /// No description provided for @threeHours.
+  ///
+  /// In en, this message translates to:
+  /// **'3 Hours'**
+  String get threeHours;
+
+  /// No description provided for @achievementUnlocks.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievement Unlocks'**
+  String get achievementUnlocks;
+
+  /// No description provided for @systemUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'System Updates'**
+  String get systemUpdates;
+
+  /// No description provided for @notificationSounds.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Sounds'**
+  String get notificationSounds;
+
+  /// No description provided for @scheduleDnd.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule DND'**
+  String get scheduleDnd;
+
+  /// No description provided for @enableSmartNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Smart Notifications'**
+  String get enableSmartNotifications;
+
+  /// No description provided for @smartNotificationsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically adjust notification timing based on your activity patterns'**
+  String get smartNotificationsDescription;
+
+  /// No description provided for @priorityNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority Notifications'**
+  String get priorityNotifications;
+
+  /// No description provided for @priorityNotificationsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Only show high-priority notifications during focus time'**
+  String get priorityNotificationsDescription;
+
+  /// No description provided for @quietHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiet Hours'**
+  String get quietHours;
+
+  /// No description provided for @quietHoursDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Temporarily silence all notifications'**
+  String get quietHoursDescription;
+
+  /// No description provided for @notificationChannels.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Channels'**
+  String get notificationChannels;
+
+  /// No description provided for @pushNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Push Notifications'**
+  String get pushNotifications;
+
+  /// No description provided for @emailNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Notifications'**
+  String get emailNotifications;
+
+  /// No description provided for @inAppNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'In-App Notifications'**
+  String get inAppNotifications;
+
+  /// No description provided for @viewDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View Details'**
+  String get viewDetails;
+
+  /// No description provided for @quickEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Edit'**
+  String get quickEdit;
+
+  /// No description provided for @clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// No description provided for @noTasksFoundForSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'No tasks found for \"{searchQuery}\"'**
+  String noTasksFoundForSearch(Object searchQuery);
+
+  /// No description provided for @addYourFirstTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Your First Task'**
+  String get addYourFirstTask;
+
+  /// No description provided for @taskUncompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Task marked as incomplete'**
+  String get taskUncompleted;
+
+  /// No description provided for @taskUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Task updated successfully'**
+  String get taskUpdated;
+
+  /// No description provided for @createYourFirstCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first category to organize tasks'**
+  String get createYourFirstCategory;
+
+  /// No description provided for @noMoodEntriesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No mood entries found'**
+  String get noMoodEntriesFound;
+
+  /// No description provided for @startTrackingYourMood.
+  ///
+  /// In en, this message translates to:
+  /// **'Start tracking your mood to see insights'**
+  String get startTrackingYourMood;
+
+  /// No description provided for @noPomodoroSessionsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No Pomodoro sessions found'**
+  String get noPomodoroSessionsFound;
+
+  /// No description provided for @startYourFirstPomodoroSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Start your first Pomodoro session to boost productivity'**
+  String get startYourFirstPomodoroSession;
+
+  /// No description provided for @noProgressData.
+  ///
+  /// In en, this message translates to:
+  /// **'No progress data available'**
+  String get noProgressData;
+
+  /// No description provided for @completeTasksToSeeProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete tasks to see your progress'**
+  String get completeTasksToSeeProgress;
+
+  /// No description provided for @pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pending;
+
+  /// No description provided for @inProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get inProgress;
+
+  /// No description provided for @allTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'All Tasks'**
+  String get allTasks;
+
+  /// No description provided for @unableToLoadProgressData.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load progress data'**
+  String get unableToLoadProgressData;
+
+  /// No description provided for @progressOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress Overview'**
+  String get progressOverview;
+
+  /// No description provided for @tasksCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks Completed'**
+  String get tasksCompleted;
+
+  /// No description provided for @tasksCompletedThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks Completed This Week'**
+  String get tasksCompletedThisWeek;
+
+  /// No description provided for @averageCompletionTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg completion time: {time}'**
+  String averageCompletionTime(Object time);
+
+  /// No description provided for @streakDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak Days'**
+  String get streakDays;
+
+  /// No description provided for @monthlyProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Progress'**
+  String get monthlyProgress;
+
+  /// No description provided for @categoryBreakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Category Breakdown'**
+  String get categoryBreakdown;
+
+  /// No description provided for @completionRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion Rate'**
+  String get completionRate;
+
+  /// No description provided for @totalTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Tasks'**
+  String get totalTasks;
+
+  /// No description provided for @pendingTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Tasks'**
+  String get pendingTasks;
+
+  /// No description provided for @productivityTrends.
+  ///
+  /// In en, this message translates to:
+  /// **'Productivity Trends'**
+  String get productivityTrends;
+
+  /// No description provided for @last7Days.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 7 Days'**
+  String get last7Days;
+
+  /// No description provided for @last30Days.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 30 Days'**
+  String get last30Days;
+
+  /// No description provided for @last90Days.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 90 Days'**
+  String get last90Days;
+
+  /// No description provided for @noProgressDataAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No progress data available'**
+  String get noProgressDataAvailable;
+
+  /// No description provided for @completeTasksToSeeYourProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete tasks to see your progress'**
+  String get completeTasksToSeeYourProgress;
+
+  /// No description provided for @greatProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Great progress!'**
+  String get greatProgress;
+
+  /// No description provided for @keepUpTheGoodWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep up the good work'**
+  String get keepUpTheGoodWork;
+
+  /// No description provided for @youCanDoBetter.
+  ///
+  /// In en, this message translates to:
+  /// **'You can do better'**
+  String get youCanDoBetter;
+
+  /// No description provided for @tryToCompleteMoreTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Try to complete more tasks'**
+  String get tryToCompleteMoreTasks;
+
+  /// No description provided for @excellentPerformance.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent performance!'**
+  String get excellentPerformance;
+
+  /// No description provided for @youAreOnARoll.
+  ///
+  /// In en, this message translates to:
+  /// **'You are on a roll!'**
+  String get youAreOnARoll;
+
+  /// No description provided for @voiceTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice Tasks'**
+  String get voiceTasks;
+
+  /// No description provided for @startRecording.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Recording'**
+  String get startRecording;
+
+  /// No description provided for @tasksCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks created successfully!'**
+  String get tasksCreatedSuccessfully;
+
+  /// No description provided for @textInputComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Text input coming soon!'**
+  String get textInputComingSoon;
+
+  /// No description provided for @recentTasksComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent tasks coming soon!'**
+  String get recentTasksComingSoon;
+
+  /// No description provided for @voiceRecording.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice Recording'**
+  String get voiceRecording;
+
+  /// No description provided for @listening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening...'**
+  String get listening;
+
+  /// No description provided for @processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing...'**
+  String get processing;
+
+  /// No description provided for @tapToStartRecording.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to start recording'**
+  String get tapToStartRecording;
+
+  /// No description provided for @recordingInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Recording in progress'**
+  String get recordingInProgress;
+
+  /// No description provided for @stopRecording.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop Recording'**
+  String get stopRecording;
+
+  /// No description provided for @errorCreatingVoiceTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Error creating voice task'**
+  String get errorCreatingVoiceTask;
+
+  /// No description provided for @pleaseTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Please try again'**
+  String get pleaseTryAgain;
+
+  /// No description provided for @noSpeechDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'No speech detected'**
+  String get noSpeechDetected;
+
+  /// No description provided for @speakClearly.
+  ///
+  /// In en, this message translates to:
+  /// **'Please speak clearly'**
+  String get speakClearly;
+
+  /// No description provided for @voiceCommands.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice Commands'**
+  String get voiceCommands;
+
+  /// No description provided for @showTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Show tasks'**
+  String get showTasks;
+
+  /// No description provided for @voiceSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice Settings'**
+  String get voiceSettings;
+
+  /// No description provided for @enableVoiceCommands.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Voice Commands'**
+  String get enableVoiceCommands;
+
+  /// No description provided for @voiceLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice Language'**
+  String get voiceLanguage;
+
+  /// No description provided for @voiceFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice Feedback'**
+  String get voiceFeedback;
+
+  /// No description provided for @autoDetectLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-detect Language'**
+  String get autoDetectLanguage;
+
+  /// No description provided for @voiceRecognitionAccuracy.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice Recognition Accuracy'**
+  String get voiceRecognitionAccuracy;
+
+  /// No description provided for @subtaskCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtask completed'**
+  String get subtaskCompleted;
+
+  /// No description provided for @subtaskUncompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtask marked as incomplete'**
+  String get subtaskUncompleted;
+
+  /// No description provided for @areYouSureYouWantToDeleteSubtask.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this subtask?'**
+  String get areYouSureYouWantToDeleteSubtask;
+
+  /// No description provided for @taskNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Notes'**
+  String get taskNotes;
+
+  /// No description provided for @addNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Note'**
+  String get addNote;
+
+  /// No description provided for @noNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'No notes'**
+  String get noNotes;
+
+  /// No description provided for @taskAttachments.
+  ///
+  /// In en, this message translates to:
+  /// **'Attachments'**
+  String get taskAttachments;
+
+  /// No description provided for @addAttachment.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Attachment'**
+  String get addAttachment;
+
+  /// No description provided for @noAttachments.
+  ///
+  /// In en, this message translates to:
+  /// **'No attachments'**
+  String get noAttachments;
+
+  /// No description provided for @taskHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Task History'**
+  String get taskHistory;
+
+  /// No description provided for @modified.
+  ///
+  /// In en, this message translates to:
+  /// **'Modified'**
+  String get modified;
+
+  /// No description provided for @completedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed at'**
+  String get completedAt;
+
+  /// No description provided for @taskStatistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Statistics'**
+  String get taskStatistics;
+
+  /// No description provided for @completionTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion Time'**
+  String get completionTime;
+
+  /// No description provided for @categoryColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Category Color'**
+  String get categoryColor;
+
+  /// No description provided for @categoryIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Category Icon'**
+  String get categoryIcon;
+
+  /// No description provided for @selectColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Color'**
+  String get selectColor;
+
+  /// No description provided for @categoryUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Category updated successfully'**
+  String get categoryUpdated;
+
+  /// No description provided for @errorUpdatingCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating category'**
+  String get errorUpdatingCategory;
+
+  /// No description provided for @categoryTasksCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks: {count}'**
+  String categoryTasksCount(Object count);
+
+  /// No description provided for @addTasksToCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Add tasks to this category'**
+  String get addTasksToCategory;
+
+  /// No description provided for @categoryStatistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Category Statistics'**
+  String get categoryStatistics;
+
+  /// No description provided for @totalTasksInCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Total tasks: {count}'**
+  String totalTasksInCategory(Object count);
+
+  /// No description provided for @completedTasksInCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed: {count}'**
+  String completedTasksInCategory(Object count);
+
+  /// No description provided for @pendingTasksInCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending: {count}'**
+  String pendingTasksInCategory(Object count);
+
+  /// No description provided for @overdueTasksInCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue: {count}'**
+  String overdueTasksInCategory(Object count);
+
+  /// No description provided for @categoryPerformance.
+  ///
+  /// In en, this message translates to:
+  /// **'Category Performance'**
+  String get categoryPerformance;
+
+  /// No description provided for @categoryEfficiency.
+  ///
+  /// In en, this message translates to:
+  /// **'Efficiency: {score}%'**
+  String categoryEfficiency(Object score);
+
+  /// No description provided for @errorCompletingOnboarding.
+  ///
+  /// In en, this message translates to:
+  /// **'Error completing onboarding'**
+  String get errorCompletingOnboarding;
+
+  /// No description provided for @accessibilitySettingsAppliedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Accessibility settings applied successfully'**
+  String get accessibilitySettingsAppliedSuccessfully;
+
+  /// No description provided for @errorApplyingSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Error applying settings: {error}'**
+  String errorApplyingSettings(Object error);
+
+  /// No description provided for @skipForNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip for Now'**
+  String get skipForNow;
+
+  /// No description provided for @highContrastMode.
+  ///
+  /// In en, this message translates to:
+  /// **'High Contrast Mode'**
+  String get highContrastMode;
+
+  /// No description provided for @largeTextMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Large Text Mode'**
+  String get largeTextMode;
+
+  /// No description provided for @reducedMotion.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduced Motion'**
+  String get reducedMotion;
+
+  /// No description provided for @accessibilitySetup.
+  ///
+  /// In en, this message translates to:
+  /// **'Accessibility Setup'**
+  String get accessibilitySetup;
+
+  /// No description provided for @accessibilitySetupDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize your app experience for better accessibility'**
+  String get accessibilitySetupDescription;
+
+  /// No description provided for @weRecommendTheseSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'We recommend these settings based on your preferences'**
+  String get weRecommendTheseSettings;
+
+  /// No description provided for @youCanChangeTheseLater.
+  ///
+  /// In en, this message translates to:
+  /// **'You can change these later in settings'**
+  String get youCanChangeTheseLater;
+
+  /// No description provided for @applySettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Settings'**
+  String get applySettings;
+
+  /// No description provided for @accessibilityCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accessibility setup completed'**
+  String get accessibilityCompleted;
+
+  /// No description provided for @continueToApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to App'**
+  String get continueToApp;
+
+  /// No description provided for @clearAllLocalData.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All Local Data'**
+  String get clearAllLocalData;
+
+  /// No description provided for @thisWillPermanentlyDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently delete:'**
+  String get thisWillPermanentlyDelete;
+
+  /// No description provided for @allTasksCategoriesMoodsLocalSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'• All tasks\n• All categories\n• All moods\n• All local settings'**
+  String get allTasksCategoriesMoodsLocalSettings;
+
+  /// No description provided for @afterDeletionTheAppWillResyncAllDataFromFirebase.
+  ///
+  /// In en, this message translates to:
+  /// **'After deletion, the app will resync all data from Firebase.'**
+  String get afterDeletionTheAppWillResyncAllDataFromFirebase;
+
+  /// No description provided for @thisActionCannotBeUndone.
+  ///
+  /// In en, this message translates to:
+  /// **'This action cannot be undone!'**
+  String get thisActionCannotBeUndone;
+
+  /// No description provided for @deleteAllData.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All Data'**
+  String get deleteAllData;
+
+  /// No description provided for @forceSyncFromFirebase.
+  ///
+  /// In en, this message translates to:
+  /// **'Force Sync from Firebase'**
+  String get forceSyncFromFirebase;
+
+  /// No description provided for @thisWill.
+  ///
+  /// In en, this message translates to:
+  /// **'This will:'**
+  String get thisWill;
+
+  /// No description provided for @downloadFreshDataOverwriteLocalChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'• Download fresh data from Firebase\n• Overwrite any local changes\n• Update all repositories'**
+  String get downloadFreshDataOverwriteLocalChanges;
+
+  /// No description provided for @anyUnsyncedLocalChangesWillBeLost.
+  ///
+  /// In en, this message translates to:
+  /// **'Any unsynced local changes will be lost!'**
+  String get anyUnsyncedLocalChangesWillBeLost;
+
+  /// No description provided for @forceSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Force Sync'**
+  String get forceSync;
+
+  /// No description provided for @clearingData.
+  ///
+  /// In en, this message translates to:
+  /// **'Clearing data...'**
+  String get clearingData;
+
+  /// No description provided for @allDataClearedAndResyncedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'All data cleared and resynced successfully!'**
+  String get allDataClearedAndResyncedSuccessfully;
+
+  /// No description provided for @syncingFromFirebase.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing from Firebase...'**
+  String get syncingFromFirebase;
+
+  /// No description provided for @dataSyncedSuccessfullyFromFirebase.
+  ///
+  /// In en, this message translates to:
+  /// **'Data synced successfully from Firebase!'**
+  String get dataSyncedSuccessfullyFromFirebase;
+
+  /// No description provided for @syncError.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync error: {error}'**
+  String syncError(Object error);
+
+  /// No description provided for @developerTools.
+  ///
+  /// In en, this message translates to:
+  /// **'Developer Tools'**
+  String get developerTools;
+
+  /// No description provided for @performanceMemoryAndQualityMonitoring.
+  ///
+  /// In en, this message translates to:
+  /// **'Performance, memory, and quality monitoring'**
+  String get performanceMemoryAndQualityMonitoring;
+
+  /// No description provided for @enablePomodoroOptimization.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Pomodoro Optimization'**
+  String get enablePomodoroOptimization;
+
+  /// No description provided for @automaticallyPlanWorkSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically plan work sessions'**
+  String get automaticallyPlanWorkSessions;
+
+  /// No description provided for @suggestedPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested Plan:'**
+  String get suggestedPlan;
+
+  /// No description provided for @workSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'work sessions'**
+  String get workSessions;
+
+  /// No description provided for @minPerSession.
+  ///
+  /// In en, this message translates to:
+  /// **'min per session'**
+  String get minPerSession;
+
+  /// No description provided for @totalEstimatedTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Total estimated time: {minutes} min'**
+  String totalEstimatedTime(Object minutes);
+
+  /// No description provided for @taskTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Title'**
+  String get taskTitle;
+
+  /// No description provided for @taskDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Description'**
+  String get taskDescription;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optional;
+
+  /// No description provided for @selectCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Category'**
+  String get selectCategory;
+
+  /// No description provided for @setDueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Due Date'**
+  String get setDueDate;
+
+  /// No description provided for @setReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Reminder'**
+  String get setReminder;
+
+  /// No description provided for @noReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'No Reminder'**
+  String get noReminder;
+
+  /// No description provided for @setPriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Priority'**
+  String get setPriority;
+
+  /// No description provided for @addSubtasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Subtasks'**
+  String get addSubtasks;
+
+  /// No description provided for @saveTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Task'**
+  String get saveTask;
+
+  /// No description provided for @taskCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Task created successfully'**
+  String get taskCreatedSuccessfully;
+
+  /// No description provided for @pleaseFillAllRequiredFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill all required fields'**
+  String get pleaseFillAllRequiredFields;
+
+  /// No description provided for @taskTitleRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Task title is required'**
+  String get taskTitleRequired;
+
+  /// No description provided for @invalidDueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid due date'**
+  String get invalidDueDate;
+
+  /// No description provided for @dueDateMustBeInFuture.
+  ///
+  /// In en, this message translates to:
+  /// **'Due date must be in the future'**
+  String get dueDateMustBeInFuture;
+
+  /// No description provided for @focusModeFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus mode for {taskTitle}'**
+  String focusModeFor(Object taskTitle);
+
+  /// No description provided for @taskDuplicatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Task duplicated successfully'**
+  String get taskDuplicatedSuccessfully;
+
+  /// No description provided for @subtaskAddedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtask added successfully'**
+  String get subtaskAddedSuccessfully;
+
+  /// No description provided for @failedToAddSubtask.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to add subtask: {error}'**
+  String failedToAddSubtask(Object error);
+
+  /// No description provided for @reminderSetFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder set for {date}'**
+  String reminderSetFor(Object date);
+
+  /// No description provided for @startFocusMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Focus Mode'**
+  String get startFocusMode;
+
+  /// No description provided for @editTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Task'**
+  String get editTask;
+
+  /// No description provided for @markAsCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as Completed'**
+  String get markAsCompleted;
+
+  /// No description provided for @markAsIncomplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as Incomplete'**
+  String get markAsIncomplete;
+
+  /// No description provided for @taskActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Actions'**
+  String get taskActions;
+
+  /// No description provided for @taskInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Information'**
+  String get taskInformation;
+
+  /// No description provided for @timeTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Tracking'**
+  String get timeTracking;
+
+  /// No description provided for @notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notes;
+
+  /// No description provided for @attachments.
+  ///
+  /// In en, this message translates to:
+  /// **'Attachments'**
+  String get attachments;
+
+  /// No description provided for @noDataAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No data available'**
+  String get noDataAvailable;
+
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get loading;
+
+  /// No description provided for @galleryPermissionIsRequiredToSelectProfileImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery permission is required to select profile image'**
+  String get galleryPermissionIsRequiredToSelectProfileImage;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @editProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get editProfile;
+
+  /// No description provided for @profilePicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Picture'**
+  String get profilePicture;
+
+  /// No description provided for @changeProfilePicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Profile Picture'**
+  String get changeProfilePicture;
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get takePhoto;
+
+  /// No description provided for @chooseFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get chooseFromGallery;
+
+  /// No description provided for @removePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Photo'**
+  String get removePhoto;
+
+  /// No description provided for @personalInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Information'**
+  String get personalInformation;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get phone;
+
+  /// No description provided for @bio.
+  ///
+  /// In en, this message translates to:
+  /// **'Bio'**
+  String get bio;
+
+  /// No description provided for @tellUsAboutYourself.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us about yourself'**
+  String get tellUsAboutYourself;
+
+  /// No description provided for @accountSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Settings'**
+  String get accountSettings;
+
+  /// No description provided for @security.
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get security;
+
+  /// No description provided for @helpAndSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Support'**
+  String get helpAndSupport;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get deleteAccount;
+
+  /// No description provided for @profileUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully'**
+  String get profileUpdatedSuccessfully;
+
+  /// No description provided for @errorUpdatingProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating profile'**
+  String get errorUpdatingProfile;
+
+  /// No description provided for @profilePictureUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile picture updated successfully'**
+  String get profilePictureUpdatedSuccessfully;
+
+  /// No description provided for @errorUpdatingProfilePicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating profile picture'**
+  String get errorUpdatingProfilePicture;
+
+  /// No description provided for @aboutTazbeet.
+  ///
+  /// In en, this message translates to:
+  /// **'About Tazbeet'**
+  String get aboutTazbeet;
+
+  /// No description provided for @appDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A smart task management app with Pomodoro integration and AI-powered recommendations.'**
+  String get appDescription;
+
+  /// No description provided for @features.
+  ///
+  /// In en, this message translates to:
+  /// **'Features:'**
+  String get features;
+
+  /// No description provided for @smartTaskSortingWithAiRecommendations.
+  ///
+  /// In en, this message translates to:
+  /// **'• Smart task sorting with AI recommendations'**
+  String get smartTaskSortingWithAiRecommendations;
+
+  /// No description provided for @pomodoroTimerWithAdaptiveTiming.
+  ///
+  /// In en, this message translates to:
+  /// **'• Pomodoro timer with adaptive timing'**
+  String get pomodoroTimerWithAdaptiveTiming;
+
+  /// No description provided for @analyticsAndProductivityInsights.
+  ///
+  /// In en, this message translates to:
+  /// **'• Analytics and productivity insights'**
+  String get analyticsAndProductivityInsights;
+
+  /// No description provided for @moodTrackingAndAmbientSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'• Mood tracking and ambient settings'**
+  String get moodTrackingAndAmbientSettings;
+
+  /// No description provided for @recurringTaskAutomation.
+  ///
+  /// In en, this message translates to:
+  /// **'• Recurring task automation'**
+  String get recurringTaskAutomation;
+
+  /// No description provided for @welcomeToTazbeet.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Tazbeet'**
+  String get welcomeToTazbeet;
+
+  /// No description provided for @getStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get getStarted;
+
+  /// No description provided for @exploreFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore Features'**
+  String get exploreFeatures;
+
+  /// No description provided for @viewAllTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'View All Tasks'**
+  String get viewAllTasks;
+
+  /// No description provided for @createYourFirstTaskToGetStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first task to get started'**
+  String get createYourFirstTaskToGetStarted;
+
+  /// No description provided for @searchTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Search tasks...'**
+  String get searchTasks;
+
+  /// No description provided for @filterTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter tasks'**
+  String get filterTasks;
+
+  /// No description provided for @sortBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by'**
+  String get sortBy;
+
+  /// No description provided for @tryDifferentFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Try different filters or search terms'**
+  String get tryDifferentFilters;
+
+  /// No description provided for @errorLoadingAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading analytics: {error}'**
+  String errorLoadingAnalytics(Object error);
+
+  /// No description provided for @weeklyProgressOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{progress} of {goal} sessions'**
+  String weeklyProgressOf(Object goal, Object progress);
+
+  /// No description provided for @recommendedAdjustments.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended Adjustments:'**
+  String get recommendedAdjustments;
+
+  /// No description provided for @noRecommendationsAvailableAtThisTime.
+  ///
+  /// In en, this message translates to:
+  /// **'No recommendations available at this time.'**
+  String get noRecommendationsAvailableAtThisTime;
+
+  /// No description provided for @pomodoroAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro Analytics'**
+  String get pomodoroAnalytics;
+
+  /// No description provided for @weeklyStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Stats'**
+  String get weeklyStats;
+
+  /// No description provided for @monthlyStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Stats'**
+  String get monthlyStats;
+
+  /// No description provided for @allTimeStats.
+  ///
+  /// In en, this message translates to:
+  /// **'All-Time Stats'**
+  String get allTimeStats;
+
+  /// No description provided for @totalSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Sessions'**
+  String get totalSessions;
+
+  /// No description provided for @completedSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed Sessions'**
+  String get completedSessions;
+
+  /// No description provided for @averageSessionLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Average Session Length'**
+  String get averageSessionLength;
+
+  /// No description provided for @totalFocusTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Focus Time'**
+  String get totalFocusTime;
+
+  /// No description provided for @bestPerformanceDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Performance Day'**
+  String get bestPerformanceDay;
+
+  /// No description provided for @mostProductiveHour.
+  ///
+  /// In en, this message translates to:
+  /// **'Most Productive Hour'**
+  String get mostProductiveHour;
+
+  /// No description provided for @sessionCompletionRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Session Completion Rate'**
+  String get sessionCompletionRate;
+
+  /// No description provided for @focusTimeDistribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus Time Distribution'**
+  String get focusTimeDistribution;
+
+  /// No description provided for @breakTimeDistribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Break Time Distribution'**
+  String get breakTimeDistribution;
+
+  /// No description provided for @recommendations.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommendations'**
+  String get recommendations;
+
+  /// No description provided for @performanceMetrics.
+  ///
+  /// In en, this message translates to:
+  /// **'Performance Metrics'**
+  String get performanceMetrics;
+
+  /// No description provided for @sessionHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Session History'**
+  String get sessionHistory;
+
+  /// No description provided for @exportData.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Data'**
+  String get exportData;
+
+  /// No description provided for @shareReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Report'**
+  String get shareReport;
+
+  /// No description provided for @dateRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Date Range'**
+  String get dateRange;
+
+  /// No description provided for @customRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Range'**
+  String get customRange;
+
+  /// No description provided for @defaultValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Default: {isDefault}'**
+  String defaultValue(Object isDefault);
+
+  /// No description provided for @editMaintenanceMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Maintenance Message'**
+  String get editMaintenanceMessage;
+
+  /// No description provided for @blockAllNonAdminUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'• Block all non-admin users'**
+  String get blockAllNonAdminUsers;
+
+  /// No description provided for @showMaintenanceScreenToUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'• Show maintenance screen to users'**
+  String get showMaintenanceScreenToUsers;
+
+  /// No description provided for @onlyAdminsCanAccessTheApp.
+  ///
+  /// In en, this message translates to:
+  /// **'• Only admins can access the app'**
+  String get onlyAdminsCanAccessTheApp;
+
+  /// No description provided for @allowAllUsersToAccessTheApp.
+  ///
+  /// In en, this message translates to:
+  /// **'• Allow all users to access the app'**
+  String get allowAllUsersToAccessTheApp;
+
+  /// No description provided for @returnToNormalOperation.
+  ///
+  /// In en, this message translates to:
+  /// **'• Return to normal operation'**
+  String get returnToNormalOperation;
+
+  /// No description provided for @maintenanceMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance Mode'**
+  String get maintenanceMode;
+
+  /// No description provided for @maintenanceModeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Put the app in maintenance mode'**
+  String get maintenanceModeDescription;
+
+  /// No description provided for @maintenanceMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance Message'**
+  String get maintenanceMessage;
+
+  /// No description provided for @enterMaintenanceMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter maintenance message'**
+  String get enterMaintenanceMessage;
+
+  /// No description provided for @saveMaintenanceSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Maintenance Settings'**
+  String get saveMaintenanceSettings;
+
+  /// No description provided for @maintenanceSettingsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance settings saved successfully'**
+  String get maintenanceSettingsSaved;
+
+  /// No description provided for @errorSavingMaintenanceSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving maintenance settings'**
+  String get errorSavingMaintenanceSettings;
+
+  /// No description provided for @viewDetailsButton.
+  ///
+  /// In en, this message translates to:
+  /// **'View Details'**
+  String get viewDetailsButton;
+
+  /// No description provided for @quickEditButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Edit'**
+  String get quickEditButton;
+
+  /// No description provided for @clearButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clearButton;
+
+  /// No description provided for @searchButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get searchButton;
+
+  /// No description provided for @confirmDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Delete'**
+  String get confirmDelete;
+
+  /// No description provided for @resetToDefaults.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to Defaults'**
+  String get resetToDefaults;
+
+  /// No description provided for @resetAllThemeSettingsToDefaultValues.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset all theme settings to default values'**
+  String get resetAllThemeSettingsToDefaultValues;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @resetThemeSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Theme Settings'**
+  String get resetThemeSettings;
+
+  /// No description provided for @thisWillResetAllThemeSettingsToTheirDefaultValues.
+  ///
+  /// In en, this message translates to:
+  /// **'This will reset all theme settings to their default values. You can always change them back later.'**
+  String get thisWillResetAllThemeSettingsToTheirDefaultValues;
+
+  /// No description provided for @themeSettingsResetToDefaults.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme settings reset to defaults'**
+  String get themeSettingsResetToDefaults;
+
+  /// No description provided for @themeSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Settings'**
+  String get themeSettings;
+
+  /// No description provided for @darkMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get darkMode;
+
+  /// No description provided for @lightMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Light Mode'**
+  String get lightMode;
+
+  /// No description provided for @systemMode.
+  ///
+  /// In en, this message translates to:
+  /// **'System Mode'**
+  String get systemMode;
+
+  /// No description provided for @followSystemSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow system settings'**
+  String get followSystemSettings;
+
+  /// No description provided for @useDarkTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Use dark theme'**
+  String get useDarkTheme;
+
+  /// No description provided for @useLightTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Use light theme'**
+  String get useLightTheme;
+
+  /// No description provided for @colorTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Color Theme'**
+  String get colorTheme;
+
+  /// No description provided for @accentColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Accent Color'**
+  String get accentColor;
+
+  /// No description provided for @backgroundColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Background Color'**
+  String get backgroundColor;
+
+  /// No description provided for @surfaceColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Surface Color'**
+  String get surfaceColor;
+
+  /// No description provided for @textColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Text Color'**
+  String get textColor;
+
+  /// No description provided for @enableCustomColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Custom Colors'**
+  String get enableCustomColors;
+
+  /// No description provided for @customColorSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Color Settings'**
+  String get customColorSettings;
+
+  /// No description provided for @selectPrimaryColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Primary Color'**
+  String get selectPrimaryColor;
+
+  /// No description provided for @selectAccentColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Accent Color'**
+  String get selectAccentColor;
+
+  /// No description provided for @selectBackgroundColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Background Color'**
+  String get selectBackgroundColor;
+
+  /// No description provided for @selectSurfaceColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Surface Color'**
+  String get selectSurfaceColor;
+
+  /// No description provided for @selectTextColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Text Color'**
+  String get selectTextColor;
+
+  /// No description provided for @colorPicker.
+  ///
+  /// In en, this message translates to:
+  /// **'Color Picker'**
+  String get colorPicker;
+
+  /// No description provided for @chooseColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Color'**
+  String get chooseColor;
+
+  /// No description provided for @selectedColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected Color'**
+  String get selectedColor;
+
+  /// No description provided for @applyColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Colors'**
+  String get applyColors;
+
+  /// No description provided for @resetColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Colors'**
+  String get resetColors;
+
+  /// No description provided for @colorSettingsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Color settings saved successfully'**
+  String get colorSettingsSaved;
+
+  /// No description provided for @errorSavingColorSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving color settings'**
+  String get errorSavingColorSettings;
+
+  /// No description provided for @noMoodHistoryAvailableForSuggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'No mood history available for suggestions'**
+  String get noMoodHistoryAvailableForSuggestions;
+
+  /// No description provided for @addedSuggestedCheckInTimesFromYourMoodHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Added {count} suggested check-in times from your mood history'**
+  String addedSuggestedCheckInTimesFromYourMoodHistory(Object count);
+
+  /// No description provided for @allSuggestedTimesAreAlreadyInYourList.
+  ///
+  /// In en, this message translates to:
+  /// **'All suggested times are already in your list'**
+  String get allSuggestedTimesAreAlreadyInYourList;
+
+  /// No description provided for @failedToGetSuggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to get suggestions: {error}'**
+  String failedToGetSuggestions(Object error);
+
+  /// No description provided for @testMoodNotificationSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Test mood notification sent!'**
+  String get testMoodNotificationSent;
+
+  /// No description provided for @failedToSendTestNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send test notification: {error}'**
+  String failedToSendTestNotification(Object error);
+
+  /// No description provided for @pendingMoodNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Mood Notifications'**
+  String get pendingMoodNotifications;
+
+  /// No description provided for @moodNotificationsScheduledTotalPending.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} mood notifications scheduled\nTotal pending: {pending}'**
+  String moodNotificationsScheduledTotalPending(Object count, Object pending);
+
+  /// No description provided for @failedToCheckPendingNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to check pending notifications: {error}'**
+  String failedToCheckPendingNotifications(Object error);
+
+  /// No description provided for @removeThisCheckInTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this check-in time?'**
+  String get removeThisCheckInTime;
+
+  /// No description provided for @receivePeriodicMoodCheckInReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive periodic mood check-in reminders'**
+  String get receivePeriodicMoodCheckInReminders;
+
+  /// No description provided for @testMoodNotificationScheduledFor1MinuteFromNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Test mood notification scheduled for 1 minute from now!'**
+  String get testMoodNotificationScheduledFor1MinuteFromNow;
+
+  /// No description provided for @failedToScheduleTestNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to schedule test notification: {error}'**
+  String failedToScheduleTestNotification(Object error);
+
+  /// No description provided for @testScheduledNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Scheduled Notification'**
+  String get testScheduledNotification;
+
+  /// No description provided for @failedToCancelNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to cancel notifications: {error}'**
+  String failedToCancelNotifications(Object error);
+
+  /// No description provided for @moodSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood Settings'**
+  String get moodSettings;
+
+  /// No description provided for @notificationTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Times'**
+  String get notificationTimes;
+
+  /// No description provided for @addNotificationTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Notification Time'**
+  String get addNotificationTime;
+
+  /// No description provided for @selectTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Time'**
+  String get selectTime;
+
+  /// No description provided for @suggestedTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested Times'**
+  String get suggestedTimes;
+
+  /// No description provided for @getSuggestionsFromHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Suggestions from History'**
+  String get getSuggestionsFromHistory;
+
+  /// No description provided for @notificationTools.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Tools'**
+  String get notificationTools;
+
+  /// No description provided for @noCheckInTimesSetAddOneToGetStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'No check-in times set. Add one to get started!'**
+  String get noCheckInTimesSetAddOneToGetStarted;
+
+  /// No description provided for @pomodoroPlanning.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro Planning'**
+  String get pomodoroPlanning;
+
+  /// No description provided for @focusDifficulty.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus Difficulty: {score}'**
+  String focusDifficulty(Object score);
+
+  /// No description provided for @easyFocusDeepFocusRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'1 = Easy focus, 10 = Deep focus required'**
+  String get easyFocusDeepFocusRequired;
+
+  /// No description provided for @priorityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority'**
+  String get priorityTitle;
+
+  /// No description provided for @galleryPermissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery permission is required to select profile image'**
+  String get galleryPermissionRequired;
+
+  /// No description provided for @authenticationErrorPleaseLogInAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication error. Please log in again.'**
+  String get authenticationErrorPleaseLogInAgain;
+
+  /// No description provided for @tryAdjustingYourSearchTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting your search terms'**
+  String get tryAdjustingYourSearchTerms;
+
+  /// No description provided for @defaultLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get defaultLabel;
+
+  /// No description provided for @defaultCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Default Category'**
+  String get defaultCategory;
+
+  /// No description provided for @dashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get dashboard;
+
+  /// No description provided for @refreshData.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Data'**
+  String get refreshData;
+
+  /// No description provided for @recentActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Activity'**
+  String get recentActivity;
+
+  /// No description provided for @defaultYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Default: {value}'**
+  String defaultYes(Object value);
+
+  /// No description provided for @appSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'App Settings'**
+  String get appSettings;
+
+  /// No description provided for @generalSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'General Settings'**
+  String get generalSettings;
+
+  /// No description provided for @userRegistration.
+  ///
+  /// In en, this message translates to:
+  /// **'User Registration'**
+  String get userRegistration;
+
+  /// No description provided for @newUsersCanRegister.
+  ///
+  /// In en, this message translates to:
+  /// **'New users can register'**
+  String get newUsersCanRegister;
+
+  /// No description provided for @registrationIsDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration is disabled'**
+  String get registrationIsDisabled;
+
+  /// No description provided for @appInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'App Information'**
+  String get appInformation;
+
+  /// No description provided for @appVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'App Version'**
+  String get appVersion;
+
+  /// No description provided for @supportEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Support Email'**
+  String get supportEmail;
+
+  /// No description provided for @lastUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Updated'**
+  String get lastUpdated;
+
+  /// No description provided for @message.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get message;
+
+  /// No description provided for @enterMessageUsersWillSee.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the message users will see...'**
+  String get enterMessageUsersWillSee;
+
+  /// No description provided for @maintenanceModeConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to {action} maintenance mode?\n\n{details}'**
+  String maintenanceModeConfirmation(Object action, Object details);
+
+  /// No description provided for @onlyAdminsCanAccessApp.
+  ///
+  /// In en, this message translates to:
+  /// **'• Only admins can access the app'**
+  String get onlyAdminsCanAccessApp;
+
+  /// No description provided for @allowAllUsersToAccessApp.
+  ///
+  /// In en, this message translates to:
+  /// **'• Allow all users to access the app'**
+  String get allowAllUsersToAccessApp;
+
+  /// No description provided for @enableMaintenanceMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Maintenance Mode'**
+  String get enableMaintenanceMode;
+
+  /// No description provided for @disableMaintenanceMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable Maintenance Mode'**
+  String get disableMaintenanceMode;
+
+  /// No description provided for @disable.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable'**
+  String get disable;
+
+  /// No description provided for @refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// No description provided for @performanceMonitor.
+  ///
+  /// In en, this message translates to:
+  /// **'Performance Monitor'**
+  String get performanceMonitor;
+
+  /// No description provided for @trackedOperations.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracked Operations: {count}'**
+  String trackedOperations(Object count);
+
+  /// No description provided for @slowOperations.
+  ///
+  /// In en, this message translates to:
+  /// **'Slow Operations (>500ms): {count}'**
+  String slowOperations(Object count);
+
+  /// No description provided for @logReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Report'**
+  String get logReport;
+
+  /// No description provided for @memoryManager.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory Manager'**
+  String get memoryManager;
+
+  /// No description provided for @forceCleanup.
+  ///
+  /// In en, this message translates to:
+  /// **'Force Cleanup'**
+  String get forceCleanup;
+
+  /// No description provided for @logStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Stats'**
+  String get logStats;
+
+  /// No description provided for @animationOptimizer.
+  ///
+  /// In en, this message translates to:
+  /// **'Animation Optimizer'**
+  String get animationOptimizer;
+
+  /// No description provided for @codeQualityMonitor.
+  ///
+  /// In en, this message translates to:
+  /// **'Code Quality Monitor'**
+  String get codeQualityMonitor;
+
+  /// No description provided for @qualityScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Quality Score: '**
+  String get qualityScore;
+
+  /// No description provided for @notificationVerification.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Verification'**
+  String get notificationVerification;
+
+  /// No description provided for @checkPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Pending'**
+  String get checkPending;
+
+  /// No description provided for @verifyAllTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify All Tasks'**
+  String get verifyAllTasks;
+
+  /// No description provided for @actions.
+  ///
+  /// In en, this message translates to:
+  /// **'Actions'**
+  String get actions;
+
+  /// No description provided for @clearPerformance.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Performance'**
+  String get clearPerformance;
+
+  /// No description provided for @clearQuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Quality'**
+  String get clearQuality;
+
+  /// No description provided for @performanceReportLoggedToConsole.
+  ///
+  /// In en, this message translates to:
+  /// **'Performance report logged to console'**
+  String get performanceReportLoggedToConsole;
+
+  /// No description provided for @memoryCleanupCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory cleanup completed'**
+  String get memoryCleanupCompleted;
+
+  /// No description provided for @memoryStatsLoggedToConsole.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory stats logged to console'**
+  String get memoryStatsLoggedToConsole;
+
+  /// No description provided for @animationStatsLoggedToConsole.
+  ///
+  /// In en, this message translates to:
+  /// **'Animation stats logged to console'**
+  String get animationStatsLoggedToConsole;
+
+  /// No description provided for @qualityReportLoggedToConsole.
+  ///
+  /// In en, this message translates to:
+  /// **'Quality report logged to console'**
+  String get qualityReportLoggedToConsole;
+
+  /// No description provided for @performanceMetricsCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Performance metrics cleared'**
+  String get performanceMetricsCleared;
+
+  /// No description provided for @qualityMetricsCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Quality metrics cleared'**
+  String get qualityMetricsCleared;
+
+  /// No description provided for @dataManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Management'**
+  String get dataManagement;
+
+  /// No description provided for @importData.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Data'**
+  String get importData;
+
+  /// No description provided for @backupAndRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup & Restore'**
+  String get backupAndRestore;
+
+  /// No description provided for @exportYourTasksToExternalFormats.
+  ///
+  /// In en, this message translates to:
+  /// **'Export your tasks to external formats'**
+  String get exportYourTasksToExternalFormats;
+
+  /// No description provided for @exportCSV.
+  ///
+  /// In en, this message translates to:
+  /// **'Export CSV'**
+  String get exportCSV;
+
+  /// No description provided for @exportJSON.
+  ///
+  /// In en, this message translates to:
+  /// **'Export JSON'**
+  String get exportJSON;
+
+  /// No description provided for @exportICSCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Export ICS (Calendar)'**
+  String get exportICSCalendar;
+
+  /// No description provided for @importTasksFromExternalFiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Import tasks from external files'**
+  String get importTasksFromExternalFiles;
+
+  /// No description provided for @importFromFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Import from File'**
+  String get importFromFile;
+
+  /// No description provided for @createAndRestoreBackups.
+  ///
+  /// In en, this message translates to:
+  /// **'Create and restore backups'**
+  String get createAndRestoreBackups;
+
+  /// No description provided for @createBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Backup'**
+  String get createBackup;
+
+  /// No description provided for @restoreBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore Backup'**
+  String get restoreBackup;
+
+  /// No description provided for @notificationDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification deleted'**
+  String get notificationDeleted;
+
+  /// No description provided for @clearHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear History'**
+  String get clearHistory;
+
+  /// No description provided for @areYouSureYouWantToClearAllNotificationHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to clear all notification history?'**
+  String get areYouSureYouWantToClearAllNotificationHistory;
+
+  /// No description provided for @clearAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All'**
+  String get clearAll;
+
+  /// No description provided for @historyCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'History cleared'**
+  String get historyCleared;
+
+  /// No description provided for @smartFeaturesTutorial.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Features Tutorial'**
+  String get smartFeaturesTutorial;
+
+  /// No description provided for @previous.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get previous;
+
+  /// No description provided for @completeTutorial.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Tutorial'**
+  String get completeTutorial;
+
+  /// No description provided for @customizeYourExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize your experience'**
+  String get customizeYourExperience;
+
+  /// No description provided for @adjustTheseSettingsToMakeTheAppWorkBetterForYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust these settings to make the app work better for you'**
+  String get adjustTheseSettingsToMakeTheAppWorkBetterForYou;
+
+  /// No description provided for @minimizeAnimationsAndTransitions.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimize animations and transitions'**
+  String get minimizeAnimationsAndTransitions;
+
+  /// No description provided for @controlTheAppWithYourVoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Control the app with your voice'**
+  String get controlTheAppWithYourVoice;
+
+  /// No description provided for @increaseColorContrastForBetterVisibility.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase color contrast for better visibility'**
+  String get increaseColorContrastForBetterVisibility;
+
+  /// No description provided for @makeTextLargerAndEasierToRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Make text larger and easier to read'**
+  String get makeTextLargerAndEasierToRead;
+
+  /// No description provided for @needHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Need help?'**
+  String get needHelp;
+
+  /// No description provided for @enableVoiceTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Voice Tasks'**
+  String get enableVoiceTasks;
+
+  /// No description provided for @createTasksWithYourVoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Create tasks with your voice'**
+  String get createTasksWithYourVoice;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @thankYouForYourPatience.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for your patience 💙'**
+  String get thankYouForYourPatience;
+
+  /// No description provided for @moodAlreadyLoggedToday.
+  ///
+  /// In en, this message translates to:
+  /// **'You have already logged your mood today'**
+  String get moodAlreadyLoggedToday;
+
+  /// No description provided for @updateTodaysEntryInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'You can update today\'s entry instead'**
+  String get updateTodaysEntryInstead;
+
+  /// No description provided for @viewAndUpdateMood.
+  ///
+  /// In en, this message translates to:
+  /// **'View & Update Mood'**
+  String get viewAndUpdateMood;
+
+  /// No description provided for @okButton.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get okButton;
+
+  /// No description provided for @yourIntelligentTaskManagementCompanionWithAIPoweredFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'Your intelligent task management companion with AI-powered features'**
+  String get yourIntelligentTaskManagementCompanionWithAIPoweredFeatures;
+
+  /// No description provided for @smartTaskSorting.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Task Sorting'**
+  String get smartTaskSorting;
+
+  /// No description provided for @experienceAIPoweredTaskPrioritizationThatAdaptsToYourPatterns.
+  ///
+  /// In en, this message translates to:
+  /// **'Experience AI-powered task prioritization that adapts to your patterns'**
+  String get experienceAIPoweredTaskPrioritizationThatAdaptsToYourPatterns;
+
+  /// No description provided for @pomodoroIntegration.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro Integration'**
+  String get pomodoroIntegration;
+
+  /// No description provided for @focusBetterWithAdaptiveTimingAndSmartBreaks.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus better with adaptive timing and smart breaks'**
+  String get focusBetterWithAdaptiveTimingAndSmartBreaks;
+
+  /// No description provided for @moodEnergyTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood & Energy Tracking'**
+  String get moodEnergyTracking;
+
+  /// No description provided for @understandYourPatternsAndOptimizeYourProductivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Understand your patterns and optimize your productivity'**
+  String get understandYourPatternsAndOptimizeYourProductivity;
+
+  /// No description provided for @accessibilityFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'Accessibility Features'**
+  String get accessibilityFeatures;
+
+  /// No description provided for @customizeTheAppToWorkBestForYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize the app to work best for you'**
+  String get customizeTheAppToWorkBestForYou;
+
+  /// No description provided for @viewAndUpdateTodaysMoodEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Would you like to view and update today\'s mood entry?'**
+  String get viewAndUpdateTodaysMoodEntry;
+
+  /// No description provided for @hiveBoxes.
+  ///
+  /// In en, this message translates to:
+  /// **'Hive Boxes: {count}'**
+  String hiveBoxes(Object count);
+
+  /// No description provided for @status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status: {status}'**
+  String status(Object status);
+
+  /// No description provided for @pendingNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending notifications: {count}'**
+  String pendingNotifications(Object count);
+
+  /// No description provided for @verificationReportLoggedToConsole.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification report logged to console'**
+  String get verificationReportLoggedToConsole;
+
+  /// No description provided for @performanceMonitoring.
+  ///
+  /// In en, this message translates to:
+  /// **'Performance Monitoring'**
+  String get performanceMonitoring;
+
+  /// No description provided for @memoryManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory Management'**
+  String get memoryManagement;
+
+  /// No description provided for @animationOptimization.
+  ///
+  /// In en, this message translates to:
+  /// **'Animation Optimization'**
+  String get animationOptimization;
+
+  /// No description provided for @codeQuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Code Quality'**
+  String get codeQuality;
+
+  /// No description provided for @dataSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Sync'**
+  String get dataSync;
+
+  /// No description provided for @clearAllMetrics.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All Metrics'**
+  String get clearAllMetrics;
+
+  /// No description provided for @developerOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Developer Options'**
+  String get developerOptions;
+
+  /// No description provided for @debugMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Debug Mode'**
+  String get debugMode;
+
+  /// No description provided for @enableDebugMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Debug Mode'**
+  String get enableDebugMode;
+
+  /// No description provided for @disableDebugMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable Debug Mode'**
+  String get disableDebugMode;
+
+  /// No description provided for @debugModeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable additional logging and debugging features'**
+  String get debugModeDescription;
+
+  /// No description provided for @memoryUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory Usage'**
+  String get memoryUsage;
+
+  /// No description provided for @databaseSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Database Size'**
+  String get databaseSize;
+
+  /// No description provided for @cacheSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Cache Size'**
+  String get cacheSize;
+
+  /// No description provided for @networkRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Network Requests'**
+  String get networkRequests;
+
+  /// No description provided for @errorTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'Error Tracking'**
+  String get errorTracking;
+
+  /// No description provided for @logLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Level'**
+  String get logLevel;
+
+  /// No description provided for @verbose.
+  ///
+  /// In en, this message translates to:
+  /// **'Verbose'**
+  String get verbose;
+
+  /// No description provided for @debug.
+  ///
+  /// In en, this message translates to:
+  /// **'Debug'**
+  String get debug;
+
+  /// No description provided for @info.
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get info;
+
+  /// No description provided for @warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get warning;
+
+  /// No description provided for @none.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get none;
+
+  /// No description provided for @exportLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Logs'**
+  String get exportLogs;
+
+  /// No description provided for @importLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Logs'**
+  String get importLogs;
+
+  /// No description provided for @clearLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Logs'**
+  String get clearLogs;
+
+  /// No description provided for @logsExported.
+  ///
+  /// In en, this message translates to:
+  /// **'Logs exported successfully'**
+  String get logsExported;
+
+  /// No description provided for @logsImported.
+  ///
+  /// In en, this message translates to:
+  /// **'Logs imported successfully'**
+  String get logsImported;
+
+  /// No description provided for @logsCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Logs cleared successfully'**
+  String get logsCleared;
+
+  /// No description provided for @errorExportingLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Error exporting logs'**
+  String get errorExportingLogs;
+
+  /// No description provided for @errorImportingLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Error importing logs'**
+  String get errorImportingLogs;
+
+  /// No description provided for @errorClearingLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Error clearing logs'**
+  String get errorClearingLogs;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -116,7 +116,7 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
       body: CustomScrollView(
         slivers: [
           // App Bar with Search
-      /*     SliverAppBar(
+          /*     SliverAppBar(
             floating: true,
             snap: true,
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -168,7 +168,8 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
                 : null,
           ),
 
-       */    // Categories List
+       */
+          // Categories List
           BlocBuilder<CategoryBloc, CategoryState>(
             builder: (context, state) {
               if (state is CategoryLoading) {
@@ -299,9 +300,9 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
         children: [
           Icon(Icons.search_off, size: 64, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
           const SizedBox(height: 16),
-          Text('No categories found', style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
+          Text(AppLocalizations.of(context)!.noCategoriesFound, style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
           const SizedBox(height: 8),
-          Text('Try adjusting your search terms', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5))),
+          Text(AppLocalizations.of(context)!.tryAdjustingYourSearchTerms, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5))),
         ],
       ),
     );
@@ -314,7 +315,7 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
         children: [
           Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error.withValues(alpha: 0.5)),
           const SizedBox(height: 16),
-          Text('Something went wrong', style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Theme.of(context).colorScheme.error)),
+          Text(AppLocalizations.of(context)!.somethingWentWrong, style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Theme.of(context).colorScheme.error)),
           const SizedBox(height: 8),
           Text(
             message,
@@ -325,7 +326,7 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
           ElevatedButton.icon(
             onPressed: () => context.read<CategoryBloc>().add(LoadCategories()),
             icon: const Icon(Icons.refresh),
-            label: const Text('Try Again'),
+            label: Text(AppLocalizations.of(context)!.tryAgain),
             style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.error, foregroundColor: Colors.white),
           ),
         ],
@@ -383,7 +384,7 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
                           child: Text(
-                            'Default',
+                            AppLocalizations.of(context)!.defaultLabel,
                             style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
                           ),
                         ),
@@ -481,7 +482,7 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
                             child: Text(
-                              'Default Category',
+                              AppLocalizations.of(context)!.defaultCategory,
                               style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
                             ),
                           ),
@@ -634,7 +635,7 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
                         children: [
                           const SizedBox(height: 8),
                           ExpansionTile(
-                            title: Text(AppLocalizations.of(context)!.icon, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+                            title: Text('icon', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
                             children: [
                               Container(
                                 // constraints: const BoxConstraints(maxHeight: 100),

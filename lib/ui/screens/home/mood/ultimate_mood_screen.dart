@@ -648,9 +648,66 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
     AppLogging.logError(message);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red.shade400));
+        // Enhanced error handling with specific actions for duplicate mood errors
+        if (message.contains('already logged your mood today')) {
+          _showDuplicateMoodDialog();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(message),
+              backgroundColor: Colors.red.shade400,
+              action: SnackBarAction(label: 'Dismiss', onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar()),
+            ),
+          );
+        }
       }
     });
+  }
+
+  void _showDuplicateMoodDialog() {
+    final l10n = AppLocalizations.of(context)!;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.info_outline, color: Colors.orange),
+            const SizedBox(width: 8),
+            Expanded(child: Text(l10n.moodAlreadyLoggedToday)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.updateTodaysEntryInstead),
+            const SizedBox(height: 16),
+            Text(l10n.viewAndUpdateTodaysMoodEntry, style: TextStyle(fontSize: 14, color: Colors.grey.shade600)),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(l10n.cancelButton)),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              // Navigate to today's mood entry for editing
+              _navigateToTodaysMood();
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+            child: Text(l10n.viewAndUpdateMood),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _navigateToTodaysMood() {
+    // Find today's mood and navigate to edit screen
+    final todayMoods = _getTodayMoods(_moods);
+    if (todayMoods.isNotEmpty) {
+      final todayMood = todayMoods.first;
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => MoodDetailScreen(mood: todayMood)));
+    }
   }
 
   Widget _buildQuickInsights(List<Mood> moods) {
@@ -985,17 +1042,18 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
   }
 
   String _getMoodText(MoodLevel level) {
+    final l10n = AppLocalizations.of(context)!;
     switch (level) {
       case MoodLevel.very_bad:
-        return 'Really struggling';
+        return l10n.moodVeryBad;
       case MoodLevel.bad:
-        return 'Not great';
+        return l10n.moodBad;
       case MoodLevel.neutral:
-        return 'Okay';
+        return l10n.moodNeutral;
       case MoodLevel.good:
-        return 'Pretty good';
+        return l10n.moodGood;
       case MoodLevel.very_good:
-        return 'Great';
+        return l10n.moodVeryGood;
     }
   }
 }

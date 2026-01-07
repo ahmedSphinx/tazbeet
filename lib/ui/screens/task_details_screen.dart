@@ -291,10 +291,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
                 ),
                 const SizedBox(height: 16),
               ],
-              _buildDetailRow(Icons.calendar_today, l10n.dueDate, task.dueDate != null ? DateFormat.yMMMd().format(task.dueDate!) : l10n.noDueDate),
-              _buildDetailRow(Icons.flag, l10n.priority, _getPriorityText(task.priority, l10n)),
-              if (task.reminderIntervals.isNotEmpty) ...[_buildDetailRow(Icons.notifications, l10n.reminders, task.reminderIntervals.map((min) => '${min}m').join(', '))],
-              if (task.repeatRule != null) ...[_buildDetailRow(Icons.repeat, l10n.repeat, task.repeatRule!.getDisplayText())],
+              _buildDetailRow(Icons.calendar_today, AppLocalizations.of(context)!.dueDateTitle, task.dueDate != null ? DateFormat.yMMMd().format(task.dueDate!) : AppLocalizations.of(context)!.noDueDate),
+              _buildDetailRow(Icons.flag, AppLocalizations.of(context)!.priorityTitle, _getPriorityText(task.priority, l10n)),
+              if (task.reminderIntervals.isNotEmpty) ...[_buildDetailRow(Icons.notifications, AppLocalizations.of(context)!.reminders, task.reminderIntervals.map((min) => '${min}m').join(', '))],
+              if (task.repeatRule != null) ...[_buildDetailRow(Icons.repeat, AppLocalizations.of(context)!.repeat, task.repeatRule!.getDisplayText())],
               const SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: () => _setReminder(context, task, l10n),
@@ -446,9 +446,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
           children: [
             Text(l10n.timeline, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
-            _buildTimelineItem(Icons.add, l10n.created, DateFormat.yMMMd().format(task.createdAt)),
-            _buildTimelineItem(Icons.update, l10n.lastModified, DateFormat.yMMMd().format(task.updatedAt)),
-            if (task.dueDate != null) _buildTimelineItem(Icons.event, l10n.dueDate, DateFormat.yMMMd().format(task.dueDate!)),
+            _buildTimelineItem(Icons.add, AppLocalizations.of(context)!.created, DateFormat.yMMMd().format(task.createdAt)),
+            _buildTimelineItem(Icons.update, AppLocalizations.of(context)!.lastModified, DateFormat.yMMMd().format(task.updatedAt)),
+            if (task.dueDate != null) _buildTimelineItem(Icons.event, AppLocalizations.of(context)!.dueDateTitle, DateFormat.yMMMd().format(task.dueDate!)),
           ],
         ),
       ),
@@ -525,7 +525,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
 
   void _duplicateTask(BuildContext context, Task task) {
     context.read<TaskDetailsBloc>().add(DuplicateTask(task.id));
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Task duplicated successfully')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.taskDuplicatedSuccessfully)));
   }
 
   void _deleteTask(BuildContext context, Task task, AppLocalizations l10n) {
@@ -562,11 +562,11 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
               context.read<TaskDetailsBloc>().add(AddSubtask(task.id, subtask));
               AppLogging.logInfo('Subtask added successfully: ${subtask.id}', name: 'TaskDetailsScreen');
               Navigator.of(dialogContext).pop();
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Subtask added successfully')));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.subtaskAddedSuccessfully)));
             } catch (e, stackTrace) {
               AppLogging.logError('Error adding subtask: $e', name: 'TaskDetailsScreen', error: e, stackTrace: stackTrace);
               Navigator.of(dialogContext).pop();
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to add subtask: $e'), backgroundColor: Colors.red));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e'), backgroundColor: Colors.red));
             }
           },
           isSubtask: true,

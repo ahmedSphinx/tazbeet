@@ -10,6 +10,7 @@ import '../../models/app_settings.dart';
 import '../../services/admin_service.dart';
 import '../../services/analytics_service.dart';
 import '../../services/maintenance_service.dart';
+import '../../l10n/app_localizations.dart';
 
 class AdminPanelScreen extends StatefulWidget {
   const AdminPanelScreen({super.key});
@@ -100,14 +101,14 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with TickerProvider
       builder: (context, userState) {
         if (userState is! UserLoaded || !userState.user.isAdmin!) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Access Denied')),
-            body: const Center(child: Text('You do not have admin privileges.')),
+            appBar: AppBar(title: Text(AppLocalizations.of(context)!.accessDenied)),
+            body: Center(child: Text(AppLocalizations.of(context)!.youDoNotHaveAdminPrivileges)),
           );
         }
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Admin Panel'),
+            title: Text(AppLocalizations.of(context)!.adminPanel),
             bottom: TabBar(
               controller: _tabController,
               tabs: const [
@@ -140,8 +141,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with TickerProvider
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Dashboard', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                IconButton(icon: const Icon(Icons.refresh), onPressed: _loadDashboardMetrics, tooltip: 'Refresh Data'),
+                Text(AppLocalizations.of(context)!.dashboard, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                IconButton(icon: const Icon(Icons.refresh), onPressed: _loadDashboardMetrics, tooltip: AppLocalizations.of(context)!.refreshData),
               ],
             ),
             const SizedBox(height: 16),
@@ -161,7 +162,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with TickerProvider
               ],
             ),
             const SizedBox(height: 24),
-            const Text('Recent Activity', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.recentActivity, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             _buildActivityList(),
           ],
@@ -197,8 +198,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with TickerProvider
       itemBuilder: (context, index) {
         return ListTile(
           leading: const Icon(Icons.history),
-          title: Text('Activity ${index + 1}'),
-          subtitle: Text('Description of activity ${index + 1}'),
+          title: Text('${AppLocalizations.of(context)!.activity} ${index + 1}'),
+          subtitle: Text(AppLocalizations.of(context)!.descriptionOfActivity),
           trailing: Text('${DateTime.now().subtract(Duration(hours: index)).hour}:00'),
         );
       },
@@ -299,7 +300,7 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
           child: _isLoading
               ? const Center(child: CircularProgressIndicator())
               : _filteredUsers.isEmpty
-              ? const Center(child: Text('No users found'))
+              ? Center(child: Text(AppLocalizations.of(context)!.noUsersFound))
               : ListView.builder(
                   itemCount: _filteredUsers.length,
                   itemBuilder: (context, index) {
@@ -336,11 +337,11 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Toggle Admin Status'),
+        title: Text(AppLocalizations.of(context)!.toggleAdminStatus),
         content: Text('Are you sure you want to ${user.isAdmin! ? 'remove admin rights from' : 'grant admin rights to'} ${user.name}?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Confirm')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: Text(AppLocalizations.of(context)!.confirm)),
         ],
       ),
     );
@@ -376,7 +377,7 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
           SnackBar(
             content: Text('Error updating user: $e'),
             backgroundColor: Colors.red,
-            action: SnackBarAction(label: 'Retry', onPressed: () => _toggleAdmin(user)),
+            action: SnackBarAction(label: AppLocalizations.of(context)!.retry, onPressed: () => _toggleAdmin(user)),
           ),
         );
       }
@@ -387,14 +388,14 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete User'),
+        title: Text(AppLocalizations.of(context)!.deleteUser),
         content: Text('Are you sure you want to delete ${user.name}?\n\nThis will permanently delete:\n• User account\n• All tasks\n• All categories\n• All moods\n\nThis action cannot be undone.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -430,7 +431,7 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
           SnackBar(
             content: Text('Error deleting user: $e'),
             backgroundColor: Colors.red,
-            action: SnackBarAction(label: 'Retry', onPressed: () => _deleteUser(user)),
+            action: SnackBarAction(label: AppLocalizations.of(context)!.retry, onPressed: () => _deleteUser(user)),
           ),
         );
       }
@@ -453,7 +454,7 @@ class _UsersManagementWidgetState extends State<UsersManagementWidget> {
             if (user.birthday != null) Text('Birthday: ${user.birthday}'),
           ],
         ),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Close'))],
+        actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.close))],
       ),
     );
   }
@@ -564,7 +565,7 @@ class _TasksManagementWidgetState extends State<TasksManagementWidget> {
           child: _isLoading
               ? const Center(child: CircularProgressIndicator())
               : _filteredTasksByUser.isEmpty
-              ? const Center(child: Text('No tasks found'))
+              ? Center(child: Text(AppLocalizations.of(context)!.noTasksFound))
               : ListView.builder(
                   itemCount: _filteredTasksByUser.length,
                   itemBuilder: (context, index) {
@@ -627,14 +628,14 @@ class _TasksManagementWidgetState extends State<TasksManagementWidget> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Task'),
+        title: Text(AppLocalizations.of(context)!.deleteTask),
         content: Text('Are you sure you want to delete "${task.title}"?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -670,7 +671,7 @@ class _TasksManagementWidgetState extends State<TasksManagementWidget> {
           SnackBar(
             content: Text('Error deleting task: $e'),
             backgroundColor: Colors.red,
-            action: SnackBarAction(label: 'Retry', onPressed: () => _deleteTask(task)),
+            action: SnackBarAction(label: AppLocalizations.of(context)!.retry, onPressed: () => _deleteTask(task)),
           ),
         );
       }
@@ -695,7 +696,7 @@ class _TasksManagementWidgetState extends State<TasksManagementWidget> {
             Text('Updated: ${task.updatedAt}'),
           ],
         ),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Close'))],
+        actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.close))],
       ),
     );
   }
@@ -778,7 +779,7 @@ class _CategoriesManagementWidgetState extends State<CategoriesManagementWidget>
                 ),
               ),
               const SizedBox(width: 16),
-              ElevatedButton.icon(onPressed: _showAddCategoryDialog, icon: const Icon(Icons.add), label: const Text('Add Category')),
+              ElevatedButton.icon(onPressed: _showAddCategoryDialog, icon: const Icon(Icons.add), label: Text(AppLocalizations.of(context)!.addCategory)),
             ],
           ),
         ),
@@ -786,7 +787,7 @@ class _CategoriesManagementWidgetState extends State<CategoriesManagementWidget>
           child: _isLoading
               ? const Center(child: CircularProgressIndicator())
               : _filteredCategories.isEmpty
-              ? const Center(child: Text('No categories found'))
+              ? Center(child: Text(AppLocalizations.of(context)!.noCategoriesFound))
               : ListView.builder(
                   itemCount: _filteredCategories.length,
                   itemBuilder: (context, index) {
@@ -797,7 +798,7 @@ class _CategoriesManagementWidgetState extends State<CategoriesManagementWidget>
                         child: Text(category.icon, style: const TextStyle(color: Colors.white)),
                       ),
                       title: Text(category.name),
-                      subtitle: Text('Tasks: ${category.tasksCount}'),
+                      subtitle: Text('${AppLocalizations.of(context)!.tasks}: ${category.tasksCount}'),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -854,7 +855,7 @@ class _CategoriesManagementWidgetState extends State<CategoriesManagementWidget>
               const SizedBox(height: 16),
               Row(
                 children: [
-                  const Text('Color: '),
+                  Text(AppLocalizations.of(context)!.color + ': '),
                   const SizedBox(width: 16),
                   ...[Colors.red, Colors.blue, Colors.green, Colors.orange, Colors.purple].map(
                     (color) => GestureDetector(
@@ -876,7 +877,7 @@ class _CategoriesManagementWidgetState extends State<CategoriesManagementWidget>
             ],
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+            TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancelButton)),
             TextButton(
               onPressed: () async {
                 final name = nameController.text.trim();
@@ -923,14 +924,14 @@ class _CategoriesManagementWidgetState extends State<CategoriesManagementWidget>
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Category'),
-        content: Text('Are you sure you want to delete "${category.name}"?\n\nNote: If this category is being used by any tasks, deletion will fail. Please reassign those tasks first.'),
+        title: Text(AppLocalizations.of(context)!.deleteCategory),
+        content: Text(AppLocalizations.of(context)!.areYouSureYouWantToDeleteCategory(category.name)),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.deleteButton),
           ),
         ],
       ),
@@ -982,9 +983,14 @@ class _CategoriesManagementWidgetState extends State<CategoriesManagementWidget>
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [Text('Icon: ${category.icon}'), Text('Tasks Count: ${category.tasksCount}'), Text('Default: ${category.isDefault ? 'Yes' : 'No'}'), Text('Created: ${category.createdAt}')],
+          children: [
+            Text('${AppLocalizations.of(context)!.icon}: ${category.icon}'),
+            Text('${AppLocalizations.of(context)!.tasksCount}: ${category.tasksCount}'),
+            Text(AppLocalizations.of(context)!.defaultYes(category.isDefault ? 'Yes' : 'No')),
+            Text('${AppLocalizations.of(context)!.created}: ${category.createdAt}'),
+          ],
         ),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Close'))],
+        actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.close))],
       ),
     );
   }
@@ -1071,7 +1077,7 @@ class _SettingsManagementWidgetState extends State<SettingsManagementWidget> {
             children: [
               Icon(Icons.settings, size: 32, color: theme.colorScheme.primary),
               const SizedBox(width: 12),
-              const Text('App Settings', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              Text(AppLocalizations.of(context)!.appSettings, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             ],
           ),
           const SizedBox(height: 24),
@@ -1082,7 +1088,7 @@ class _SettingsManagementWidgetState extends State<SettingsManagementWidget> {
           const SizedBox(height: 24),
 
           // General Settings
-          const Text('General Settings', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(AppLocalizations.of(context)!.generalSettings, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
           Card(
             elevation: 2,
@@ -1091,8 +1097,8 @@ class _SettingsManagementWidgetState extends State<SettingsManagementWidget> {
               child: Column(
                 children: [
                   SwitchListTile(
-                    title: const Text('User Registration', style: TextStyle(fontWeight: FontWeight.w500)),
-                    subtitle: Text(_settings!.registrationEnabled ? 'New users can register' : 'Registration is disabled'),
+                    title: Text(AppLocalizations.of(context)!.userRegistration, style: const TextStyle(fontWeight: FontWeight.w500)),
+                    subtitle: Text(_settings!.registrationEnabled ? AppLocalizations.of(context)!.newUsersCanRegister : AppLocalizations.of(context)!.registrationIsDisabled),
                     value: _settings!.registrationEnabled,
                     secondary: Icon(_settings!.registrationEnabled ? Icons.person_add : Icons.person_off, color: _settings!.registrationEnabled ? Colors.green : Colors.grey),
                     onChanged: (value) => _toggleRegistration(value),
@@ -1105,7 +1111,7 @@ class _SettingsManagementWidgetState extends State<SettingsManagementWidget> {
           const SizedBox(height: 24),
 
           // App Information
-          const Text('App Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(AppLocalizations.of(context)!.appInformation, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
           Card(
             elevation: 2,
@@ -1115,21 +1121,21 @@ class _SettingsManagementWidgetState extends State<SettingsManagementWidget> {
                 children: [
                   ListTile(
                     leading: const Icon(Icons.info, color: Colors.blue),
-                    title: const Text('App Version', style: TextStyle(fontWeight: FontWeight.w500)),
+                    title: Text(AppLocalizations.of(context)!.appVersion, style: const TextStyle(fontWeight: FontWeight.w500)),
                     subtitle: Text(_appVersion),
                     trailing: const Icon(Icons.check_circle, color: Colors.green),
                   ),
                   const Divider(height: 1),
                   ListTile(
                     leading: const Icon(Icons.email, color: Colors.orange),
-                    title: const Text('Support Email', style: TextStyle(fontWeight: FontWeight.w500)),
+                    title: Text(AppLocalizations.of(context)!.supportEmail, style: const TextStyle(fontWeight: FontWeight.w500)),
                     subtitle: Text(_settings!.supportEmail),
                     trailing: IconButton(icon: const Icon(Icons.edit), onPressed: () => _editSupportEmail()),
                   ),
                   const Divider(height: 1),
                   ListTile(
                     leading: const Icon(Icons.access_time, color: Colors.purple),
-                    title: const Text('Last Updated', style: TextStyle(fontWeight: FontWeight.w500)),
+                    title: Text(AppLocalizations.of(context)!.lastUpdated, style: const TextStyle(fontWeight: FontWeight.w500)),
                     subtitle: Text(_formatDateTime(_settings!.lastUpdated)),
                   ),
                 ],
@@ -1205,7 +1211,7 @@ class _SettingsManagementWidgetState extends State<SettingsManagementWidget> {
               OutlinedButton.icon(
                 onPressed: _editMaintenanceMessage,
                 icon: const Icon(Icons.edit),
-                label: const Text('Edit Maintenance Message'),
+                label: Text(AppLocalizations.of(context)!.editMaintenanceMessage),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.red.shade700,
                   side: BorderSide(color: Colors.red.shade300),
@@ -1244,7 +1250,7 @@ class _SettingsManagementWidgetState extends State<SettingsManagementWidget> {
           children: [
             Icon(value ? Icons.construction : Icons.check_circle, color: value ? Colors.red : Colors.green),
             const SizedBox(width: 8),
-            Expanded(child: Text(value ? 'Enable Maintenance Mode' : 'Disable Maintenance Mode', overflow: TextOverflow.ellipsis, maxLines: 2)),
+            Expanded(child: Text(value ? AppLocalizations.of(context)!.enableMaintenanceMode : AppLocalizations.of(context)!.disableMaintenanceMode, overflow: TextOverflow.ellipsis, maxLines: 2)),
           ],
         ),
         content: Column(
@@ -1271,7 +1277,7 @@ class _SettingsManagementWidgetState extends State<SettingsManagementWidget> {
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(backgroundColor: value ? Colors.red : Colors.green),
-            child: Text(value ? 'Enable' : 'Disable'),
+            child: Text(value ? AppLocalizations.of(context)!.enable : AppLocalizations.of(context)!.disable),
           ),
         ],
       ),

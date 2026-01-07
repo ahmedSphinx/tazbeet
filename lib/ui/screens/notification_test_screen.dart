@@ -5,6 +5,8 @@ import '../../blocs/notification/notification_event.dart';
 import '../../blocs/notification/notification_state.dart';
 import '../../models/notification_item.dart';
 import '../../l10n/app_localizations.dart';
+import 'notification_history_screen.dart';
+import 'notification_preferences_screen.dart';
 
 /// Quick test screen to try all notification features
 class NotificationTestScreen extends StatelessWidget {
@@ -182,7 +184,12 @@ class NotificationTestScreen extends StatelessWidget {
                 subtitle: l10n.seeAllPastNotifications,
                 color: Colors.purple,
                 onTap: () {
-                  Navigator.pushNamed(context, '/notification_history');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider.value(value: context.read<NotificationBloc>(), child: const NotificationHistoryScreen()),
+                    ),
+                  );
                 },
               ),
               _buildTestButton(
@@ -192,7 +199,7 @@ class NotificationTestScreen extends StatelessWidget {
                 subtitle: l10n.configureNotificationSettings,
                 color: Colors.indigo,
                 onTap: () {
-                  Navigator.pushNamed(context, '/notification_preferences');
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationPreferencesScreen()));
                 },
               ),
 

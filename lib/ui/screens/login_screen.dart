@@ -142,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'Signing you in..',
+                    AppLocalizations.of(context)!.signingIn,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(height: 32),
@@ -218,7 +218,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                               border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2), width: 1),
                             ),
                             child: Text(
-                              'Your Personal Task Manager',
+                              AppLocalizations.of(context)!.yourPersonalTaskManager,
                               style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500),
                               textAlign: TextAlign.center,
                             ),
@@ -264,7 +264,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   duration: const Duration(milliseconds: 800),
                   child: SlideAnimation(
                     verticalOffset: 30.0,
-                    child: FadeInAnimation(child: Column(children: [_buildDivider(context), const SizedBox(height: 16), _buildAppleSignInButton(context), const SizedBox(height: 16), _buildGoogleSignInButton(context)])),
+                    child: FadeInAnimation(child: Column(children: [_buildDivider(context), const SizedBox(height: 16), _buildGoogleSignInButton(context), const SizedBox(height: 16), _buildAppleSignInButton(context)])),
                   ),
                 ),
                 SizedBox(height: height * 0.05),
@@ -277,7 +277,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     verticalOffset: 30.0,
                     child: FadeInAnimation(
                       child: Text(
-                        'By signing in, you agree to our Terms of Service and Privacy Policy',
+                        AppLocalizations.of(context)!.bySigningInYouAgree,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), height: 1.4),
                         textAlign: TextAlign.center,
                       ),
@@ -305,14 +305,14 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             // Check if Firebase is initialized
             if (FirebaseServiceWrapper.firebaseAuth == null) {
               AppLogging.logError('Firebase Auth not initialized', name: 'LoginScreen');
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Authentication service not available. Please try again.'), backgroundColor: Colors.red));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.authenticationServiceNotAvailable), backgroundColor: Colors.red));
               return;
             }
 
             context.read<AuthBloc>().add(AuthSignInRequested());
           } catch (e) {
             AppLogging.logError('Error in Google Sign-In button', name: 'LoginScreen', error: e);
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred. Please try again.'), backgroundColor: Colors.red));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.anErrorOccurredPleaseTryAgain), backgroundColor: Colors.red));
           }
         },
         borderRadius: BorderRadius.circular(16),
@@ -351,14 +351,14 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             // Check if Firebase is initialized
             if (FirebaseServiceWrapper.firebaseAuth == null) {
               AppLogging.logError('Firebase Auth not initialized', name: 'LoginScreen');
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Authentication service not available. Please try again.'), backgroundColor: Colors.red));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.authenticationServiceNotAvailable), backgroundColor: Colors.red));
               return;
             }
 
             context.read<AuthBloc>().add(AuthAppleSignInRequested());
           } catch (e) {
             AppLogging.logError('Error in Apple Sign-In button', name: 'LoginScreen', error: e);
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred. Please try again.'), backgroundColor: Colors.red));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.anErrorOccurredPleaseTryAgain), backgroundColor: Colors.red));
           }
         },
         borderRadius: BorderRadius.circular(16),
@@ -451,7 +451,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            'or',
+            AppLocalizations.of(context)!.or,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontWeight: FontWeight.w500),
           ),
         ),
@@ -626,7 +626,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Sign In',
+                              AppLocalizations.of(context)!.signIn,
                               style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onPrimary),
                             ),
                             if (_isBiometricAvailable) ...[const SizedBox(width: 8), Icon(Icons.fingerprint, color: Theme.of(context).colorScheme.onPrimary)],
@@ -653,7 +653,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
               activeColor: Theme.of(context).colorScheme.primary,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
             ),
-            Text('Remember me', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8))),
+            Text(AppLocalizations.of(context)!.rememberMe, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8))),
           ],
         ),
         const Spacer(),
@@ -662,7 +662,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           onPressed: _isLoading ? null : _handleForgotPassword,
           style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size.zero, tapTargetSize: MaterialTapTargetSize.shrinkWrap),
           child: Text(
-            'Forgot Password?',
+            AppLocalizations.of(context)!.forgotPassword,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500),
           ),
         ),
@@ -683,7 +683,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 },
           style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size.zero, tapTargetSize: MaterialTapTargetSize.shrinkWrap),
           child: Text(
-            'Register',
+            AppLocalizations.of(context)!.register,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
           ),
         ),
@@ -730,9 +730,9 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Reset Password'),
-        content: const Text('Password reset functionality will be implemented soon. Please contact support for assistance.'),
-        actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('OK'))],
+        title: Text(AppLocalizations.of(context)!.resetPassword),
+        content: Text(AppLocalizations.of(context)!.passwordResetFunctionality),
+        actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.ok))],
       ),
     );
   }

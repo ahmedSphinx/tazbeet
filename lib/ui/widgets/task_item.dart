@@ -21,6 +21,7 @@ class TaskItem extends StatelessWidget {
   final bool batchSelectionMode;
   final Function(String)? onTaskSelected;
   final bool selected;
+  final VoidCallback? onStartPomodoro;
 
   const TaskItem({
     super.key,
@@ -33,6 +34,7 @@ class TaskItem extends StatelessWidget {
     this.batchSelectionMode = false,
     this.onTaskSelected,
     this.selected = false,
+    this.onStartPomodoro,
   });
 
   double _calculateProgress() {
@@ -244,11 +246,53 @@ class TaskItem extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text('${(progress * 100).round()}% ${AppLocalizations.of(context)!.completedLabel}', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
                       ],
+                      // Pomodoro integration indicators
+                      if (task.pomodoroCount > 0) ...[
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Icon(Icons.timer_outlined, size: 14, color: Colors.blue[600]),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${task.pomodoroCount} sessions',
+                              style: TextStyle(fontSize: 11, color: Colors.blue[600], fontWeight: FontWeight.w500),
+                            ),
+                            if (task.estimatedSessions > 0) ...[const SizedBox(width: 8), Text('/ ${task.estimatedSessions} est.', style: TextStyle(fontSize: 11, color: Colors.grey[600]))],
+                            if (task.timeSpent.inMinutes > 0) ...[const SizedBox(width: 8), Text('• ${task.timeSpent.inMinutes}min', style: TextStyle(fontSize: 11, color: Colors.grey[600]))],
+                          ],
+                        ),
+                        // Pomodoro progress bar
+                        if (task.estimatedSessions > 0) ...[
+                          const SizedBox(height: 4),
+                          LinearProgressIndicator(
+                            value: (task.pomodoroCount / task.estimatedSessions).clamp(0.0, 1.0),
+                            backgroundColor: Colors.blue.withValues(alpha: 0.2),
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.blue.shade600),
+                            minHeight: 3,
+                          ),
+                        ],
+                      ],
                     ],
                   ),
-                  trailing: Tooltip(
-                    message: 'Priority: ${task.priority.name}',
-                    child: PriorityIndicator(priority: task.priority),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Pomodoro quick action button
+                      if (onStartPomodoro != null)
+                        Tooltip(
+                          message: 'Start Pomodoro session',
+                          child: IconButton(
+                            icon: Icon(Icons.timer_outlined, size: 20, color: task.pomodoroCount > 0 ? Colors.blue[600] : Colors.grey[600]),
+                            onPressed: onStartPomodoro,
+                            visualDensity: VisualDensity.compact,
+                          ),
+                        ),
+                      // Priority indicator
+                      Tooltip(
+                        message: 'Priority: ${task.priority.name}',
+                        child: PriorityIndicator(priority: task.priority),
+                      ),
+                    ],
                   ),
                   onTap: batchSelectionMode ? () => onTaskSelected?.call(task.id) : (onTap ?? () => _handleToggle(context)),
                   onLongPress: batchSelectionMode ? () => onTaskSelected?.call(task.id) : (onLongTap ?? () => _handleToggle(context)),

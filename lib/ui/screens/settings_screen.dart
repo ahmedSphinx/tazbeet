@@ -9,21 +9,23 @@ import '../../services/settings_service.dart' as settings;
 import '../../services/color_customization_service.dart';
 import '../../services/task_sound_service.dart';
 import '../../services/update_service.dart';
-import 'notification_history_screen.dart';
-import 'notification_preferences_screen.dart';
-import '../../blocs/notification/notification_bloc.dart';
-import '../../services/data_sync_service.dart';
 import '../../services/auth_service.dart';
+import '../../services/data_sync_service.dart';
 import '../../repositories/task_repository.dart';
 import '../../repositories/category_repository.dart';
 import '../../repositories/mood_repository.dart';
+import '../../repositories/user_repository.dart';
 import '../../ui/widgets/color_customization_widget.dart';
 import '../../ui/widgets/animated_expansion_card.dart';
 import '../../ui/themes/design_system.dart';
+import 'notification_history_screen.dart';
+import 'notification_preferences_screen.dart';
+import '../../blocs/notification/notification_bloc.dart';
 
 import 'profile_screen.dart';
 import 'mood_settings_screen.dart';
 import 'developer_tools_screen.dart';
+import 'splash_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -46,18 +48,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)!.settingsScreenTitle,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onPrimary),
+          l10n.settingsScreenTitle,
+          style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600, color: colorScheme.onSurface),
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
-        //  flexibleSpace: Container(decoration: BoxDecoration(gradient: AppThemes.getPrimaryGradient(isDark))),
+        scrolledUnderElevation: 1,
+        shadowColor: colorScheme.shadow,
+        surfaceTintColor: colorScheme.surfaceTint,
         actions: [
-          TextButton(
+          TextButton.icon(
             onPressed: () async {
               final confirmed = await showDialog<bool>(
                 context: context,
@@ -66,7 +73,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   content: Text(l10n.resetSettingsConfirmation),
                   actions: [
                     TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(l10n.cancelButton)),
-                    ElevatedButton(onPressed: () => Navigator.of(context).pop(true), child: Text(l10n.resetButton)),
+                    ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      style: ElevatedButton.styleFrom(backgroundColor: colorScheme.error, foregroundColor: colorScheme.onError),
+                      child: Text(l10n.resetButton),
+                    ),
                   ],
                 ),
               );
@@ -75,40 +86,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 context.read<ColorCustomizationService>().resetToDefault();
               }
             },
-            child: Text(AppLocalizations.of(context)!.resetButton, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+            icon: const Icon(Icons.restore),
+            label: Text(l10n.resetButton),
+            style: TextButton.styleFrom(foregroundColor: colorScheme.error),
           ),
         ],
       ),
       body: Consumer2<settings.SettingsService, ColorCustomizationService>(
         builder: (context, settingsService, colorService, child) {
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(AppSpacing.md),
-                child: Semantics(
-                  label: l10n.searchSettings,
-                  hint: l10n.typeToFilterSettingsSections,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.search),
-                      hintText: l10n.searchSettingsHint,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        _searchQuery = value.toLowerCase();
-                      });
-                    },
-                  ),
+          return CustomScrollView(
+            slivers: [
+              // Search Section
+              SliverToBoxAdapter(child: _buildSearchSection(context, l10n, colorScheme)),
+
+              // Settings Sections
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final sections = _filteredSections(settingsService, colorService);
+                    if (index < sections.length) {
+                      return sections[index];
+                    }
+                    return null;
+                  }, childCount: _filteredSections(settingsService, colorService).length),
                 ),
               ),
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.lg),
-                  children: _filteredSections(settingsService, colorService),
-                ),
-              ),
+
+              // Bottom padding
+              const SliverToBoxAdapter(child: SizedBox(height: 32)),
             ],
           );
         },
@@ -116,51 +122,212 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  Widget _buildSearchSection(BuildContext context, AppLocalizations l10n, ColorScheme colorScheme) {
+    return Container(
+      margin: const EdgeInsets.all(16),
+      child: Material(
+        elevation: 2,
+        borderRadius: BorderRadius.circular(16),
+        color: colorScheme.surface,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
+          ),
+          child: TextField(
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.search, color: colorScheme.onSurface.withValues(alpha: 0.6)),
+              hintText: l10n.searchSettingsHint,
+              hintStyle: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.6)),
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            ),
+            onChanged: (value) {
+              setState(() {
+                _searchQuery = value.toLowerCase();
+              });
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildProfileSection() {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: ListTile(
-        leading: const Icon(Icons.person),
-        title: Text(AppLocalizations.of(context)!.profile),
-        subtitle: Text(AppLocalizations.of(context)!.editProfileInfo),
-        trailing: const Icon(Icons.arrow_forward_ios),
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ProfileScreen()));
-        },
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Material(
+        elevation: 2,
+        borderRadius: BorderRadius.circular(16),
+        color: colorScheme.surface,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ProfileScreen()));
+          },
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(color: colorScheme.primary.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+                  child: Icon(Icons.person, color: colorScheme.primary, size: 24),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.profile,
+                        style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: colorScheme.onSurface),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(l10n.editProfileInfo, style: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface.withValues(alpha: 0.7))),
+                    ],
+                  ),
+                ),
+                Icon(Icons.arrow_forward_ios, color: colorScheme.onSurface.withValues(alpha: 0.5), size: 16),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildMoodSection() {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: ListTile(
-        leading: const Icon(Icons.mood),
-        title: Text(AppLocalizations.of(context)!.moodSettingsTitle),
-        subtitle: Text(AppLocalizations.of(context)!.moodSettingsSubtitle),
-        trailing: const Icon(Icons.arrow_forward_ios),
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MoodSettingsScreen()));
-        },
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Material(
+        elevation: 2,
+        borderRadius: BorderRadius.circular(16),
+        color: colorScheme.surface,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MoodSettingsScreen()));
+          },
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(color: Colors.purple.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+                  child: Icon(Icons.mood, color: Colors.purple, size: 24),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.moodSettingsTitle,
+                        style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: colorScheme.onSurface),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(l10n.moodSettingsSubtitle, style: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface.withValues(alpha: 0.7))),
+                    ],
+                  ),
+                ),
+                Icon(Icons.arrow_forward_ios, color: colorScheme.onSurface.withValues(alpha: 0.5), size: 16),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildAppearanceSection(settings.SettingsService settingsService, ColorCustomizationService colorService) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context)!;
-    return AnimatedExpansionCard(
-      leading: const Icon(Icons.palette),
-      title: Text(l10n.appearanceSection),
-      children: [
-        _buildThemeSettings(settingsService),
-        _buildAccessibilitySettings(settingsService),
-        ColorCustomizationWidget(colorService: colorService),
-      ],
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Material(
+        elevation: 2,
+        borderRadius: BorderRadius.circular(16),
+        color: colorScheme.surface,
+        child: Column(
+          children: [
+            // Header
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+                border: Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(color: colorScheme.primary.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+                    child: Icon(Icons.palette, color: colorScheme.primary, size: 24),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Text(
+                      l10n.appearanceSection,
+                      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: colorScheme.onSurface),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Content
+            Container(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16)),
+                border: Border(
+                  top: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
+                  left: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
+                  right: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
+                  bottom: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
+                ),
+              ),
+              child: Column(
+                children: [
+                  _buildThemeSettings(settingsService),
+                  const SizedBox(height: 16),
+                  _buildAccessibilitySettings(settingsService),
+                  const SizedBox(height: 16),
+                  ColorCustomizationWidget(colorService: colorService),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   Widget _buildThemeSettings(settings.SettingsService settingsService) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context)!;
+
     String getThemeModeName(settings.ThemeMode mode) {
       switch (mode) {
         case settings.ThemeMode.system:
@@ -173,23 +340,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
 
     return Container(
-      decoration: AppCardStyles.standard(context),
-      margin: EdgeInsets.zero,
-      child: Column(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(color: colorScheme.surfaceContainer.withValues(alpha: 0.5), borderRadius: BorderRadius.circular(12)),
+      child: Row(
         children: [
-          ListTile(
-            title: Text(l10n.themeLabel),
-            subtitle: Text(getThemeModeName(settingsService.settings.themeMode)),
-            trailing: DropdownButton<settings.ThemeMode>(
-              value: settingsService.settings.themeMode,
-              onChanged: (value) {
-                if (value != null) {
-                  settingsService.setThemeMode(value);
-                }
-              },
-              items: settings.ThemeMode.values.map((mode) {
-                return DropdownMenuItem(value: mode, child: Text(getThemeModeName(mode)));
-              }).toList(),
+          Icon(Icons.brightness_6, color: colorScheme.onSurface.withValues(alpha: 0.7), size: 20),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.themeLabel,
+                  style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500, color: colorScheme.onSurface),
+                ),
+                const SizedBox(height: 4),
+                Text(getThemeModeName(settingsService.settings.themeMode), style: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface.withValues(alpha: 0.7))),
+              ],
             ),
           ),
         ],
@@ -198,44 +365,146 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildAccessibilitySettings(settings.SettingsService settingsService) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context)!;
+
     return Container(
-      decoration: AppCardStyles.standard(context),
-      margin: EdgeInsets.zero,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(color: colorScheme.surfaceContainer.withValues(alpha: 0.5), borderRadius: BorderRadius.circular(12)),
       child: Column(
         children: [
-          SwitchListTile(
-            title: Text(l10n.highContrast),
-            subtitle: Text(l10n.increaseContrastForBetterVisibility),
+          _buildAccessibilitySwitch(
+            title: l10n.highContrast,
+            subtitle: l10n.increaseContrastForBetterVisibility,
+            icon: Icons.contrast,
             value: settingsService.settings.enableHighContrast,
             onChanged: (value) {
               settingsService.updateSettings(settingsService.settings.copyWith(enableHighContrast: value));
             },
+            colorScheme: colorScheme,
+            theme: theme,
           ),
-          SwitchListTile(
-            title: Text(l10n.largeText),
-            subtitle: Text(l10n.useLargerFontSizes),
+          const SizedBox(height: 12),
+          _buildAccessibilitySwitch(
+            title: l10n.largeText,
+            subtitle: l10n.useLargerFontSizes,
+            icon: Icons.text_increase,
             value: settingsService.settings.enableLargeText,
             onChanged: (value) {
               settingsService.updateSettings(settingsService.settings.copyWith(enableLargeText: value));
             },
+            colorScheme: colorScheme,
+            theme: theme,
           ),
-          SwitchListTile(
-            title: Text(l10n.screenReader),
-            subtitle: Text(l10n.enableScreenReaderSupport),
+          const SizedBox(height: 12),
+          _buildAccessibilitySwitch(
+            title: l10n.screenReader,
+            subtitle: l10n.enableScreenReaderSupport,
+            icon: Icons.record_voice_over,
             value: settingsService.settings.enableScreenReader,
             onChanged: (value) {
               settingsService.updateSettings(settingsService.settings.copyWith(enableScreenReader: value));
             },
+            colorScheme: colorScheme,
+            theme: theme,
           ),
         ],
       ),
     );
   }
 
+  Widget _buildAccessibilitySwitch({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required bool value,
+    required ValueChanged<bool> onChanged,
+    required ColorScheme colorScheme,
+    required ThemeData theme,
+  }) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(color: colorScheme.primary.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
+          child: Icon(icon, color: colorScheme.primary, size: 20),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500, color: colorScheme.onSurface),
+              ),
+              const SizedBox(height: 2),
+              Text(subtitle, style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.onSurface.withValues(alpha: 0.7))),
+            ],
+          ),
+        ),
+        Switch(value: value, onChanged: onChanged, activeColor: colorScheme.primary),
+      ],
+    );
+  }
+
   Widget _buildNotificationsSection(settings.SettingsService settingsService) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context)!;
-    return AnimatedExpansionCard(leading: const Icon(Icons.notifications), title: Text(l10n.notificationsSection), children: [_buildNotificationSettings(settingsService)]);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Material(
+        elevation: 2,
+        borderRadius: BorderRadius.circular(16),
+        color: colorScheme.surface,
+        child: Column(
+          children: [
+            // Header
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+                border: Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(color: Colors.green.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+                    child: Icon(Icons.notifications, color: Colors.green, size: 24),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Text(
+                      l10n.notificationsSection,
+                      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: colorScheme.onSurface),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Content
+            Container(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16)),
+                border: Border(
+                  top: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
+                  left: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
+                  right: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
+                  bottom: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
+                ),
+              ),
+              child: _buildNotificationSettings(settingsService),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildNotificationSettings(settings.SettingsService settingsService) {
@@ -575,6 +844,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
               settingsService.updateSettings(settingsService.settings.copyWith(enableCrashReporting: value));
             },
           ),
+          const Divider(height: 1),
+          ListTile(
+            leading: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(color: Colors.red[100], borderRadius: BorderRadius.circular(8)),
+              child: Icon(Icons.delete_forever, color: Colors.red[700], size: 20),
+            ),
+            title: Text(
+              l10n.deleteAccount,
+              style: TextStyle(fontWeight: FontWeight.w600, color: Colors.red[700]),
+            ),
+            subtitle: Text('Permanently delete your account and all associated data', style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => _showDeleteAccountDialog(),
+          ),
         ],
       ),
     );
@@ -741,8 +1025,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       {'title': l10n.appearance, 'widget': _buildAppearanceSection(settingsService, colorService)},
       {'title': l10n.notifications, 'widget': _buildNotificationsSection(settingsService)},
       {'title': l10n.taskSounds, 'widget': _buildTaskSoundsSection()},
-      {'title': l10n.pomodoro, 'widget': _buildPomodoroSection(settingsService)},
-      {'title': l10n.backup, 'widget': _buildBackupSection(settingsService)},
+      // {'title': l10n.pomodoro, 'widget': _buildPomodoroSection(settingsService)},
+      // {'title': l10n.backup, 'widget': _buildBackupSection(settingsService)},
       {'title': l10n.privacy, 'widget': _buildPrivacySection(settingsService)},
       {'title': l10n.regional, 'widget': _buildRegionalSection(settingsService)},
       {'title': l10n.updates, 'widget': _buildUpdatesSection()},
@@ -1052,5 +1336,125 @@ class _SettingsScreenState extends State<SettingsScreen> {
         },
       ),
     );
+  }
+
+  Future<void> _showDeleteAccountDialog() async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.warning_amber_rounded, color: Colors.red[700]),
+            const SizedBox(width: 12),
+            Text(l10n.deleteAccount),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Are you sure you want to delete your account?\n\nThis will permanently delete:\n• User account\n• All tasks\n• All categories\n• All moods\n\nThis action cannot be undone.',
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.red[50],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.red[200]!),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.info_outline, color: Colors.red[700], size: 20),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text('For your security, you may need to re-authenticate before account deletion.', style: TextStyle(fontSize: 12, color: Colors.red[700])),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(l10n.cancelButton)),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red[700], foregroundColor: Colors.white),
+            child: Text('Delete Account'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      await _deleteAccount();
+    }
+  }
+
+  Future<void> _deleteAccount() async {
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(content: Row(children: [const CircularProgressIndicator(), const SizedBox(width: 16), Text('Deleting account...')])),
+    );
+
+    try {
+      final authService = AuthService();
+      final user = authService.currentUser;
+
+      if (user == null) {
+        throw Exception('No authenticated user found');
+      }
+
+      // Delete user data from Firestore
+      final userRepository = UserRepository();
+      await userRepository.init();
+      await userRepository.deleteUser(user.uid);
+
+      // Delete user's authentication account
+      await user.delete();
+
+      // Sign out and navigate to login
+      await authService.signOut();
+
+      // Close loading dialog
+      if (context.mounted) {
+        Navigator.of(context).pop();
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Account deleted successfully'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            margin: const EdgeInsets.all(16),
+          ),
+        );
+
+        // Navigate to login screen
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const SplashScreen()), (route) => false);
+      }
+    } catch (e) {
+      // Close loading dialog
+      if (context.mounted) {
+        Navigator.of(context).pop();
+
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to delete account: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            margin: const EdgeInsets.all(16),
+          ),
+        );
+      }
+    }
   }
 }

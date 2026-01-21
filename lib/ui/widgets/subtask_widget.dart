@@ -5,7 +5,10 @@ import 'package:tazbeet/l10n/app_localizations.dart';
 import '../../models/task.dart';
 import '../../blocs/task_details/task_details_bloc.dart';
 import '../../blocs/task_details/task_details_event.dart';
+import '../../blocs/task_details/task_details_state.dart';
 import '../../services/task_sound_service.dart';
+import '../../services/app_logging_service.dart';
+import '../screens/subtask_details_screen.dart';
 import 'add_task_dialog.dart';
 
 class SubtaskWidget extends StatefulWidget {
@@ -312,9 +315,24 @@ class _SubtaskWidgetState extends State<SubtaskWidget> with TickerProviderStateM
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.subtask.title,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, decoration: _isCompleted ? TextDecoration.lineThrough : null, color: _isCompleted ? Colors.grey[600] : Theme.of(context).textTheme.bodyLarge?.color),
+        GestureDetector(
+          onTap: () {
+            // Navigate to subtask details with the full subtask object
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => SubtaskDetailsScreen(subtask: widget.subtask, parentTask: _getParentTask()),
+              ),
+            );
+          },
+          child: Text(
+            widget.subtask.title,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              decoration: _isCompleted ? TextDecoration.lineThrough : null,
+              color: _isCompleted ? Colors.grey[600] : Theme.of(context).textTheme.bodyLarge?.color,
+            ).copyWith(decoration: TextDecoration.underline, decorationColor: _isCompleted ? Colors.grey[400] : Theme.of(context).colorScheme.primary.withValues(alpha: 0.5), decorationThickness: 1.0),
+          ),
         ),
         if (widget.subtask.description != null && widget.subtask.description!.isNotEmpty) ...[
           const SizedBox(height: 4),
@@ -327,6 +345,21 @@ class _SubtaskWidgetState extends State<SubtaskWidget> with TickerProviderStateM
         ],
       ],
     );
+  }
+
+  // Helper method to get parent task context
+  Task? _getParentTask() {
+    // Try to get the parent task from the TaskDetailsBloc
+    try {
+      final bloc = context.read<TaskDetailsBloc>();
+      if (bloc.state is TaskDetailsLoaded) {
+        return (bloc.state as TaskDetailsLoaded).task;
+      }
+    } catch (e) {
+      // If we can't get the parent task, return null
+      AppLogging.logError('Could not get parent task for subtask navigation: $e', name: 'SubtaskWidget');
+    }
+    return null;
   }
 
   Widget _buildEditMode() {

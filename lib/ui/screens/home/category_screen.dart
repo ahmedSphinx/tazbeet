@@ -19,9 +19,7 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
   late AnimationController _fabAnimationController;
   late AnimationController _searchAnimationController;
   late Animation<double> _fabScaleAnimation;
-  late Animation<double> _searchFadeAnimation;
   String _searchQuery = '';
-  bool _isSearching = false;
 
   // Available icons for categories
   static final List<IconData> _availableIcons = [
@@ -99,8 +97,6 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
     _searchAnimationController = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
 
     _fabScaleAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(parent: _fabAnimationController, curve: Curves.easeInOut));
-
-    _searchFadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _searchAnimationController, curve: Curves.easeInOut));
   }
 
   @override
@@ -116,59 +112,36 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
       body: CustomScrollView(
         slivers: [
           // App Bar with Search
-          /*     SliverAppBar(
+          SliverAppBar(
             floating: true,
             snap: true,
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             elevation: 0,
-            title: AnimatedBuilder(
-              animation: _searchFadeAnimation,
-              builder: (context, child) {
-                return FadeTransition(
-                  opacity: _isSearching ? Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(parent: _searchAnimationController, curve: Curves.easeInOut)) : const AlwaysStoppedAnimation(1.0),
-                  child: Text(
-                    _isSearching ? AppLocalizations.of(context)!.searchCategories : AppLocalizations.of(context)!.categories,
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+            title: Text(AppLocalizations.of(context)!.categories, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+            actions: [IconButton(onPressed: () {}, icon: Icon(Icons.search))],
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(60),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value;
+                    });
+                  },
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context)!.searchCategories,
+                    prefixIcon: const Icon(Icons.search),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.surface,
                   ),
-                );
-              },
-              child: Text(AppLocalizations.of(context)!.categories, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
-            ),
-            actions: [
-              AnimatedBuilder(
-                animation: _searchFadeAnimation,
-                builder: (context, child) {
-                  return FadeTransition(opacity: _searchFadeAnimation, child: child);
-                },
-                child: IconButton(onPressed: _toggleSearch, icon: Icon(_isSearching ? Icons.close : Icons.search)),
+                ),
               ),
-            ],
-            bottom: _isSearching
-                ? PreferredSize(
-                    preferredSize: const Size.fromHeight(60),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        onChanged: (value) {
-                          setState(() {
-                            _searchQuery = value;
-                          });
-                        },
-                        autofocus: true,
-                        decoration: InputDecoration(
-                          hintText: AppLocalizations.of(context)!.searchCategories,
-                          prefixIcon: const Icon(Icons.search),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-                          filled: true,
-                          fillColor: Theme.of(context).colorScheme.surface,
-                        ),
-                      ),
-                    ),
-                  )
-                : null,
+            ),
           ),
 
-       */
           // Categories List
           BlocBuilder<CategoryBloc, CategoryState>(
             builder: (context, state) {
@@ -243,21 +216,6 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
     if (_searchQuery.isEmpty) return categories;
 
     return categories.where((category) => category.name.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
-  }
-
-  void _toggleSearch() {
-    setState(() {
-      if (_isSearching) {
-        _isSearching = false;
-        _searchQuery = '';
-        _searchAnimationController.reverse();
-        _fabAnimationController.reverse();
-      } else {
-        _isSearching = true;
-        _searchAnimationController.forward();
-        _fabAnimationController.forward();
-      }
-    });
   }
 
   Widget _buildEmptyState() {
@@ -396,22 +354,19 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
                 // Actions
                 PopupMenuButton<String>(
                   onSelected: (value) {
-                    switch (value) {
-                      case 'edit':
-                        _showEditCategoryDialog(category);
-                        break;
-                      case 'delete':
-                        _showDeleteConfirmation(category);
-                        break;
+                    if (value == AppLocalizations.of(context)!.edit) {
+                      _showEditCategoryDialog(category);
+                    } else if (value == AppLocalizations.of(context)!.delete) {
+                      _showDeleteConfirmation(category);
                     }
                   },
                   itemBuilder: (context) => [
                     PopupMenuItem(
-                      value: 'edit',
+                      value: AppLocalizations.of(context)!.edit,
                       child: Row(children: [Icon(Icons.edit, size: 20), const SizedBox(width: 12), Text(AppLocalizations.of(context)!.editButton)]),
                     ),
                     PopupMenuItem(
-                      value: 'delete',
+                      value: AppLocalizations.of(context)!.delete,
                       child: Row(
                         children: [
                           Icon(Icons.delete, color: Colors.red, size: 20),
@@ -562,6 +517,7 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
     Color selectedColor = category?.color ?? Colors.blue;
     IconData selectedIcon = category != null ? _getIconFromString(category.icon) : Icons.folder;
 
+    var _iconSelectionController = ExpansibleController();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -635,7 +591,14 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
                         children: [
                           const SizedBox(height: 8),
                           ExpansionTile(
-                            title: Text('icon', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+                            controller: _iconSelectionController,
+                            title: Row(
+                              children: [
+                                Icon(selectedIcon, color: Colors.white, size: 24),
+                                const SizedBox(width: 8),
+                                Text('icon', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+                              ],
+                            ),
                             children: [
                               Container(
                                 // constraints: const BoxConstraints(maxHeight: 100),
@@ -657,6 +620,7 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
                                       onTap: () {
                                         setState(() {
                                           selectedIcon = icon;
+                                          _iconSelectionController.collapse();
                                         });
                                       },
                                       child: Container(

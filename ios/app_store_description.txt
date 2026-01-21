@@ -1,0 +1,28 @@
+Tazbeet - Task Management
+
+Smart Task Management with Pomodoro & Mood Tracking
+
+Tazbeet is a comprehensive task management app designed to boost your productivity. Features include:
+
+• Task creation and management with categories
+• Pomodoro timer for focused work sessions  
+• Mood tracking to monitor your well-being
+• Smart notifications and reminders
+• Calendar integration
+• Progress tracking and analytics
+• Recurring tasks support
+• Data synchronization across devices
+
+Perfect for students, professionals, and anyone looking to organize their life and achieve their goals.
+
+Key Features:
+- Intuitive task management with categories and priorities
+- Built-in Pomodoro timer for time management
+- Daily mood tracking with insights and patterns
+- Customizable notifications and reminders
+- Calendar view for better planning
+- Progress analytics and reporting
+- Recurring task automation
+- Cross-device synchronization
+
+Download Tazbeet today and transform your productivity!

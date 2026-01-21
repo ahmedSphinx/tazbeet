@@ -116,7 +116,7 @@ class _EnhancedSearchBarState extends State<EnhancedSearchBar> {
                   Padding(
                     padding: const EdgeInsets.all(DSSpacing.md),
                     child: Text(
-                      AppLocalizations.of(context)!.searchHint ?? 'Suggestions',
+                      AppLocalizations.of(context)!.searchHint,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant, fontWeight: FontWeight.w600),
                     ),
                   ),
@@ -135,7 +135,7 @@ class _EnhancedSearchBarState extends State<EnhancedSearchBar> {
                         ),
                         TextButton(
                           onPressed: widget.searchManager.clearHistory,
-                          child: Text(AppLocalizations.of(context)!.clearAllButton ?? 'Clear', style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 12)),
+                          child: Text(AppLocalizations.of(context)!.clearAllButton, style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 12)),
                         ),
                       ],
                     ),

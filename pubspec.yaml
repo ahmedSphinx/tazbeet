@@ -4,7 +4,7 @@ description: "تطبيق تظبيت - تطبيق شامل لإدارة المه�
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.11+11
+version: 1.0.13+13
 
 environment:
   sdk: ^3.8.1
@@ -89,6 +89,7 @@ flutter:
     - assets/fonts/
     - assets/logo/
     - assets/animations/
+    - lib/ui/screens/home/pomodoro/template.json
 
 icons_launcher:
   image_path: "assets/logo/logo.png"

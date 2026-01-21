@@ -82,7 +82,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
               DropdownButtonFormField<TaskPriority>(
                 value: selectedPriority,
                 decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.priorityLabel,
+                  labelText: AppLocalizations.of(context)!.priority,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 items: TaskPriority.values.map((priority) {

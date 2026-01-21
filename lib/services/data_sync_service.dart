@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tazbeet/services/app_logging_service.dart';
 import 'package:tazbeet/services/sync_status_service.dart';
+import 'package:tazbeet/services/auth_service.dart';
 import '../models/task.dart';
 import '../models/category.dart';
 import '../models/mood.dart';
@@ -26,15 +27,38 @@ class DataSyncService {
   final MoodRepository _moodRepository = MoodRepository();
   final UserRepository _userRepository = UserRepository();
   final SettingsService _settingsService = SettingsService();
+  final AuthService _authService = AuthService();
+
+  /// Get the current authenticated user ID
+  String? get _currentUserId {
+    final user = _authService.currentUser;
+    if (user == null) {
+      AppLogging.logError('No authenticated user found for Firestore sync');
+      return null;
+    }
+    return user.uid;
+  }
+
+  /// Get user document reference with proper authentication
+  DocumentReference? _getUserDocRef() {
+    final userId = _currentUserId;
+    if (userId == null) return null;
+    return _firestore?.collection('users').doc(userId);
+  }
 
   // Individual sync methods for sync queue
   Future<void> syncTaskToFirestore(Task task) async {
-    if (_firestore == null) return;
+    final userDoc = _getUserDocRef();
+    if (userDoc == null) {
+      AppLogging.logError('Cannot sync task: No authenticated user');
+      return;
+    }
 
     try {
-      final userDoc = _firestore.collection('users').doc(task.userId ?? 'unknown');
-      await userDoc.collection('tasks').doc(task.id).set(task.toJson());
-      AppLogging.logInfo('Synced task to Firestore: ${task.id}');
+      // Update task with current user ID if not set
+      final taskToSync = task.userId == null ? task.copyWith(userId: _currentUserId) : task;
+      await userDoc.collection('tasks').doc(taskToSync.id).set(taskToSync.toJson());
+      AppLogging.logInfo('Synced task to Firestore: ${taskToSync.id}');
     } catch (e) {
       AppLogging.logError('Failed to sync task to Firestore: ${task.id} - $e');
       rethrow;
@@ -42,13 +66,13 @@ class DataSyncService {
   }
 
   Future<void> deleteTaskFromFirestore(String taskId) async {
-    if (_firestore == null) return;
+    final userDoc = _getUserDocRef();
+    if (userDoc == null) {
+      AppLogging.logError('Cannot delete task: No authenticated user');
+      return;
+    }
 
     try {
-      // We need to find which user this task belongs to
-      // For now, we'll try to delete from current user's collection
-      // In a real implementation, you'd store the userId with the operation
-      final userDoc = _firestore.collection('users').doc('current_user'); // This should be the actual user ID
       await userDoc.collection('tasks').doc(taskId).delete();
       AppLogging.logInfo('Deleted task from Firestore: $taskId');
     } catch (e) {
@@ -58,10 +82,13 @@ class DataSyncService {
   }
 
   Future<void> syncCategoryToFirestore(Category category) async {
-    if (_firestore == null) return;
+    final userDoc = _getUserDocRef();
+    if (userDoc == null) {
+      AppLogging.logError('Cannot sync category: No authenticated user');
+      return;
+    }
 
     try {
-      final userDoc = _firestore.collection('users').doc('current_user'); // This should be the actual user ID
       await userDoc.collection('categories').doc(category.id).set(category.toJson());
       AppLogging.logInfo('Synced category to Firestore: ${category.id}');
     } catch (e) {
@@ -71,10 +98,13 @@ class DataSyncService {
   }
 
   Future<void> deleteCategoryFromFirestore(String categoryId) async {
-    if (_firestore == null) return;
+    final userDoc = _getUserDocRef();
+    if (userDoc == null) {
+      AppLogging.logError('Cannot delete category: No authenticated user');
+      return;
+    }
 
     try {
-      final userDoc = _firestore.collection('users').doc('current_user'); // This should be the actual user ID
       await userDoc.collection('categories').doc(categoryId).delete();
       AppLogging.logInfo('Deleted category from Firestore: $categoryId');
     } catch (e) {

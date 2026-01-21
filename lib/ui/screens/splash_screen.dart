@@ -137,7 +137,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
         AppLogging.logInfo('🔔 Auth State Changed: ${state.runtimeType}');
 
         // Navigate based on auth state after splash animation
-        if (state is AuthAuthenticated || state is AuthUnauthenticated || state is AuthProfileIncomplete || state is AuthError) {
+        if (state is AuthAuthenticated || state is AuthUnauthenticated || state is AuthProfileIncomplete || state is AuthError || state is AuthenticatedAsGuest) {
           // Prevent multiple navigation attempts
           if (_hasNavigated) {
             AppLogging.logInfo('⚠️ Navigation already triggered, skipping');
@@ -168,13 +168,23 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                 nextScreen = const OnboardingScreen();
                 screenName = 'OnboardingScreen';
               }
+            } else if (state is AuthenticatedAsGuest) {
+              // Guest mode - go directly to main screen
+              nextScreen = const MainScreen();
+              screenName = 'MainScreen (Guest Mode)';
             } else if (state is AuthProfileIncomplete) {
               nextScreen = const ProfileScreen(isProfileCompletion: true);
               screenName = 'ProfileScreen';
             } else {
-              // AuthUnauthenticated or AuthError
-              nextScreen = const LoginScreen();
-              screenName = 'LoginScreen';
+              // AuthUnauthenticated or AuthError - use guest mode as fallback
+              if (state is AuthError) {
+                AppLogging.logInfo('🔔 Auth error detected, using guest mode fallback');
+                nextScreen = const MainScreen();
+                screenName = 'MainScreen (Guest Mode)';
+              } else {
+                nextScreen = const LoginScreen();
+                screenName = 'LoginScreen';
+              }
             }
 
             AppLogging.logInfo('🚀 Navigating to $screenName');

@@ -6,10 +6,6 @@ import 'package:tazbeet/services/navigation_service.dart';
 import 'package:tazbeet/services/analytics_service.dart';
 import 'package:tazbeet/services/error_notification_service.dart';
 import 'package:tazbeet/services/sync_status_service.dart';
-import 'package:tazbeet/services/performance_monitor_service.dart';
-import 'package:tazbeet/services/memory_manager_service.dart';
-import 'package:tazbeet/services/animation_optimizer_service.dart';
-import 'package:tazbeet/services/code_quality_monitor_service.dart';
 import 'package:tazbeet/services/sync_queue.dart';
 
 import 'package:flutter/material.dart';
@@ -132,7 +128,7 @@ void main() async {
     await syncStatusService.initialize();
 
     // Initialize performance monitor service (singleton)
-    if (kDebugMode) {
+    /*  if (kDebugMode) {
       PerformanceMonitorService();
       AppLogging.logInfo('Performance monitor initialized');
 
@@ -147,7 +143,7 @@ void main() async {
       // Initialize code quality monitor service (singleton)
       CodeQualityMonitorService();
       AppLogging.logInfo('Code quality monitor initialized');
-    }
+    } */
   }
 
   // Perform automatic update check

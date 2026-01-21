@@ -92,12 +92,24 @@ class AuthService {
     AppLogging.logInfo('Starting Apple Sign-In process', name: 'AuthService');
     try {
       // Request credential for the currently signed in Apple account
-      final appleCredential = await SignInWithApple.getAppleIDCredential(scopes: [AppleIDAuthorizationScopes.email, AppleIDAuthorizationScopes.fullName]);
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [AppleIDAuthorizationScopes.email, AppleIDAuthorizationScopes.fullName],
+        webAuthenticationOptions: WebAuthenticationOptions(clientId: 'com.company.tazbeet', redirectUri: Uri.parse('https://tazbeet-app.firebaseapp.com/__/auth/handler')),
+      );
 
       AppLogging.logInfo('Apple user authenticated: ${appleCredential.email}', name: 'AuthService');
 
+      // Check if identityToken is available
+      if (appleCredential.identityToken == null) {
+        AppLogging.logError('Apple identityToken is null', name: 'AuthService');
+        throw Exception('Failed to get identity token from Apple Sign-In');
+      }
+
       // Create a new Firebase credential
-      final oauthCredential = OAuthProvider("apple.com").credential(idToken: appleCredential.identityToken);
+      final oauthCredential = OAuthProvider("apple.com").credential(
+        idToken: appleCredential.identityToken,
+        accessToken: appleCredential.authorizationCode, // Include authorizationCode as fallback
+      );
 
       AppLogging.logInfo('Signing in with Firebase using Apple credential', name: 'AuthService');
       // Sign in the user with Firebase

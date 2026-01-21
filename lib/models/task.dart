@@ -350,6 +350,59 @@ class Task extends Equatable {
     return total == 0 ? 0.0 : completed / total;
   }
 
+  // NEW: Helper method to get task path (breadcrumb)
+  static List<String> getTaskPath(Task task, Task? rootTask) {
+    final path = <String>[];
+
+    // If we have a root task, find the path from root to this task
+    if (rootTask != null) {
+      path.add(rootTask.title);
+
+      // Find the path to the target task
+      bool findPath(Task node, List<String> currentPath) {
+        if (node.id == task.id) {
+          return true;
+        }
+
+        for (var subtask in node.subtasks) {
+          currentPath.add(subtask.title);
+          if (findPath(subtask, currentPath)) {
+            return true;
+          }
+          currentPath.removeLast();
+        }
+
+        return false;
+      }
+
+      final searchPath = <String>[rootTask.title];
+      if (findPath(rootTask, searchPath)) {
+        return searchPath;
+      }
+    } else {
+      // For standalone tasks, just return the title
+      path.add(task.title);
+    }
+
+    return path;
+  }
+
+  // NEW: Helper method to find a task by ID in the task tree
+  static Task? findTaskById(String taskId, Task rootTask) {
+    if (rootTask.id == taskId) {
+      return rootTask;
+    }
+
+    for (var subtask in rootTask.subtasks) {
+      final found = findTaskById(taskId, subtask);
+      if (found != null) {
+        return found;
+      }
+    }
+
+    return null;
+  }
+
   @override
   List<Object?> get props => [
     id,

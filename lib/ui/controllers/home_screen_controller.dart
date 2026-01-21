@@ -25,6 +25,10 @@ class HomeScreenController {
   final ValueNotifier<bool> showUndatedOnly = ValueNotifier<bool>(false);
   final ValueNotifier<bool> showCompletedSection = ValueNotifier<bool>(false);
 
+  // Multi-selection state
+  final ValueNotifier<bool> isSelectionMode = ValueNotifier<bool>(false);
+  final ValueNotifier<Set<String>> selectedTaskIds = ValueNotifier<Set<String>>({});
+
   // Smart recommendation engine
   final PomodoroRecommendationEngine _recommendationEngine = PomodoroRecommendationEngine();
 
@@ -229,6 +233,63 @@ class HomeScreenController {
     }
   }
 
+  // ==========================================================================
+  // MULTI-SELECTION METHODS
+  // ==========================================================================
+
+  /// Enter selection mode with the first selected task
+  void enterSelectionMode(String taskId) {
+    isSelectionMode.value = true;
+    selectedTaskIds.value = {taskId};
+  }
+
+  /// Exit selection mode and clear all selections
+  void exitSelectionMode() {
+    isSelectionMode.value = false;
+    selectedTaskIds.value = {};
+  }
+
+  /// Toggle selection for a specific task
+  void toggleTaskSelection(String taskId) {
+    final currentSelection = Set<String>.from(selectedTaskIds.value);
+
+    if (currentSelection.contains(taskId)) {
+      currentSelection.remove(taskId);
+      // Exit selection mode if no tasks are selected
+      if (currentSelection.isEmpty) {
+        isSelectionMode.value = false;
+      }
+    } else {
+      currentSelection.add(taskId);
+    }
+
+    selectedTaskIds.value = currentSelection;
+  }
+
+  /// Select all tasks from the provided list
+  void selectAllTasks(List<Task> tasks) {
+    selectedTaskIds.value = tasks.map((t) => t.id).toSet();
+    if (selectedTaskIds.value.isNotEmpty) {
+      isSelectionMode.value = true;
+    }
+  }
+
+  /// Clear all selections without exiting selection mode
+  void clearSelection() {
+    selectedTaskIds.value = {};
+  }
+
+  /// Check if a task is selected
+  bool isTaskSelected(String taskId) {
+    return selectedTaskIds.value.contains(taskId);
+  }
+
+  /// Get count of selected tasks
+  int get selectedCount => selectedTaskIds.value.length;
+
+  /// Get list of selected task IDs
+  List<String> get selectedTaskIdsList => selectedTaskIds.value.toList();
+
   void dispose() {
     _searchTimer?.cancel();
     selectedDate.dispose();
@@ -243,5 +304,7 @@ class HomeScreenController {
     showOverdueOnly.dispose();
     showUndatedOnly.dispose();
     showCompletedSection.dispose();
+    isSelectionMode.dispose();
+    selectedTaskIds.dispose();
   }
 }

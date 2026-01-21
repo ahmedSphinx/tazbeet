@@ -4,6 +4,8 @@ import '../services/pomodoro_recommendation_engine.dart';
 import '../services/adaptive_session_timing_service.dart';
 import 'app_logging_service.dart';
 import 'notification_service.dart';
+import 'package:tazbeet/l10n/app_localizations.dart';
+import 'package:tazbeet/services/navigation_service.dart';
 
 /// Enhanced notification service for pomodoro workflow
 class PomodoroNotificationService {
@@ -13,6 +15,11 @@ class PomodoroNotificationService {
   PomodoroNotificationService({required NotificationService notificationService, required PomodoroRecommendationEngine recommendationEngine, AdaptiveSessionTimingService? timingService})
     : _notificationService = notificationService,
       _recommendationEngine = recommendationEngine;
+
+  AppLocalizations? get _l10n {
+    final context = NavigationService.navigatorKey.currentContext;
+    return context != null ? AppLocalizations.of(context) : null;
+  }
 
   /// Initialize pomodoro notification channel
   Future<void> initialize() async {
@@ -26,7 +33,8 @@ class PomodoroNotificationService {
   Future<void> sendTaskBriefingNotification(Task task, PomodoroPlan plan) async {
     AppLogging.logInfo('Sending task briefing for: ${task.title}', name: 'PomodoroNotificationService');
 
-    final title = '🍅 Starting: ${task.title}';
+    final l10n = _l10n;
+    final title = l10n?.startingTask(task.title) ?? '🍅 Starting: ${task.title}';
     final body = _buildTaskBriefingBody(task, plan);
     final payload = _buildTaskPayload(task, 'briefing');
 
@@ -37,7 +45,8 @@ class PomodoroNotificationService {
   Future<void> sendSessionCompletionNotification({required Task? completedTask, required int sessionNumber, required int totalSessions, required int focusRating, required bool wasCompleted, Task? nextTask}) async {
     AppLogging.logInfo('Sending session completion notification', name: 'PomodoroNotificationService');
 
-    final title = wasCompleted ? '✅ Session Complete!' : '⏸️ Session Paused';
+    final l10n = _l10n;
+    final title = wasCompleted ? (l10n?.sessionComplete ?? '✅ Session Complete!') : (l10n?.sessionPaused ?? '⏸️ Session Paused');
     final body = _buildSessionCompletionBody(sessionNumber, totalSessions, focusRating, completedTask, nextTask);
     final payload = _buildSessionPayload(completedTask, sessionNumber, wasCompleted);
 
@@ -48,7 +57,8 @@ class PomodoroNotificationService {
   Future<void> sendProgressUpdateNotification({required Task currentTask, required int completedSessions, required int totalSessions, required double overallProgress}) async {
     AppLogging.logInfo('Sending progress update for: ${currentTask.title}', name: 'PomodoroNotificationService');
 
-    final title = '📈 Progress Update';
+    final l10n = _l10n;
+    final title = l10n?.progressUpdate ?? '📈 Progress Update';
     final body = _buildProgressUpdateBody(currentTask, completedSessions, totalSessions, overallProgress);
     final payload = _buildProgressPayload(currentTask, overallProgress);
 
@@ -72,7 +82,8 @@ class PomodoroNotificationService {
   Future<void> sendQueueCompletionNotification(List<Task> completedTasks) async {
     AppLogging.logInfo('Sending queue completion notification', name: 'PomodoroNotificationService');
 
-    final title = '🎉 Queue Complete!';
+    final l10n = _l10n;
+    final title = l10n?.queueComplete ?? '🎉 Queue Complete!';
     final body = _buildQueueCompletionBody(completedTasks);
     final payload = _buildQueuePayload(completedTasks);
 
@@ -83,7 +94,8 @@ class PomodoroNotificationService {
   Future<void> sendDailySummaryNotification({required int totalSessions, required double avgFocus, required int completedTasks, required int currentStreak}) async {
     AppLogging.logInfo('Sending daily summary notification', name: 'PomodoroNotificationService');
 
-    final title = '📊 Daily Summary';
+    final l10n = _l10n;
+    final title = l10n?.dailySummary ?? '📊 Daily Summary';
     final body = _buildDailySummaryBody(totalSessions, avgFocus, completedTasks, currentStreak);
     final payload = _buildDailySummaryPayload(totalSessions, avgFocus, completedTasks, currentStreak);
 
@@ -94,7 +106,8 @@ class PomodoroNotificationService {
   Future<void> sendStreakMotivationNotification({required int currentStreak, required int targetStreak}) async {
     AppLogging.logInfo('Sending streak motivation notification', name: 'PomodoroNotificationService');
 
-    final title = '🔥 Keep it Going!';
+    final l10n = _l10n;
+    final title = l10n?.keepItGoing ?? '🔥 Keep it Going!';
     final body = _buildStreakMotivationBody(currentStreak, targetStreak);
     final payload = _buildStreakPayload(currentStreak, targetStreak);
 
@@ -127,7 +140,8 @@ class PomodoroNotificationService {
   Future<void> sendWeeklyGoalReminder({required int currentProgress, required int weeklyGoal, required int daysRemaining}) async {
     AppLogging.logInfo('Sending weekly goal reminder', name: 'PomodoroNotificationService');
 
-    final title = '🎯 Weekly Goal Progress';
+    final l10n = _l10n;
+    final title = l10n?.weeklyGoalProgress ?? '🎯 Weekly Goal Progress';
     final body = _buildWeeklyGoalBody(currentProgress, weeklyGoal, daysRemaining);
     final payload = _buildWeeklyGoalPayload(currentProgress, weeklyGoal, daysRemaining);
 
@@ -137,172 +151,192 @@ class PomodoroNotificationService {
   // Private helper methods for building notification content
 
   String _buildTaskBriefingBody(Task task, PomodoroPlan plan) {
+    if (_l10n == null) return '';
+    final l10n = _l10n!;
     final buffer = StringBuffer();
 
-    buffer.writeln('📋 ${plan.totalSessions} sessions planned');
-    buffer.writeln('⏱️ ${plan.workDuration} min per session');
-    buffer.writeln('🎯 Focus level: ${task.focusScore}/10');
+    buffer.writeln(l10n.sessionsPlanned(plan.totalSessions));
+    buffer.writeln(l10n.minutesPerSession(plan.workDuration));
+    buffer.writeln(l10n.focusLevel(task.focusScore));
 
     if (task.description != null && task.description!.isNotEmpty) {
       buffer.writeln('📝 ${task.description!.substring(0, 50)}${task.description!.length > 50 ? '...' : ''}');
     }
 
     if (plan.sessions.isNotEmpty && plan.sessions.first.focusArea != null) {
-      buffer.writeln('🎯 Focus: ${plan.sessions.first.focusArea}');
+      buffer.writeln(l10n.focusArea(plan.sessions.first.focusArea!));
     }
 
     return buffer.toString().trim();
   }
 
   String _buildSessionCompletionBody(int sessionNumber, int totalSessions, int focusRating, Task? completedTask, Task? nextTask) {
+    if (_l10n == null) return '';
+    final l10n = _l10n!;
     final buffer = StringBuffer();
 
-    buffer.writeln('Session $sessionNumber of $totalSessions');
-    buffer.writeln('Focus rating: $focusRating/10');
+    buffer.writeln(l10n.sessionNofM(sessionNumber, totalSessions));
+    buffer.writeln(l10n.focusRating(focusRating));
 
     if (completedTask != null) {
-      buffer.writeln('Completed: ${completedTask.title}');
+      buffer.writeln(l10n.completedTaskNotification(completedTask.title));
     }
 
     if (nextTask != null) {
-      buffer.writeln('Next: ${nextTask.title}');
-      buffer.writeln('Priority: ${nextTask.priority.name}');
+      buffer.writeln(l10n.nextTask(nextTask.title));
+      buffer.writeln(l10n.priorityLabel(nextTask.priority.name));
     } else {
-      buffer.writeln('🎉 All tasks completed!');
+      buffer.writeln(l10n.allTasksCompleted);
     }
 
     return buffer.toString().trim();
   }
 
   String _buildProgressUpdateBody(Task currentTask, int completedSessions, int totalSessions, double overallProgress) {
+    if (_l10n == null) return '';
+    final l10n = _l10n!;
     final buffer = StringBuffer();
 
-    buffer.writeln('Task: ${currentTask.title}');
-    buffer.writeln('Progress: ${(overallProgress * 100).toInt()}%');
-    buffer.writeln('Sessions: $completedSessions/$totalSessions');
+    buffer.writeln('${l10n.taskTitle}: ${currentTask.title}');
+    buffer.writeln(l10n.progressPercent((overallProgress * 100).toInt()));
+    buffer.writeln(l10n.sessionsProgress(completedSessions, totalSessions));
 
     if (overallProgress >= 0.75) {
-      buffer.writeln('🔥 Almost there! Keep going!');
+      buffer.writeln(l10n.almostThere);
     } else if (overallProgress >= 0.5) {
-      buffer.writeln('💪 Halfway done!');
+      buffer.writeln(l10n.halfwayDone);
     } else {
-      buffer.writeln('🚀 Great start!');
+      buffer.writeln(l10n.greatStart);
     }
 
     return buffer.toString().trim();
   }
 
   String _buildBreakBody(BreakType breakType, int duration, BreakActivity activity) {
+    if (_l10n == null) return '';
+    final l10n = _l10n!;
     final buffer = StringBuffer();
 
-    buffer.writeln('⏰ $duration minute ${breakType.name}');
-    buffer.writeln('💡 Suggested activity: ${_getActivityDescription(activity)}');
+    buffer.writeln(l10n.minuteBreak(duration, _getBreakTitle(breakType)));
+    buffer.writeln(l10n.suggestedActivity(_getActivityDescription(activity)));
 
     if (breakType == BreakType.longBreak) {
-      buffer.writeln('🌿 Time to recharge!');
+      buffer.writeln(l10n.timeToRecharge);
     } else {
-      buffer.writeln('🧘 Quick refresh');
+      buffer.writeln(l10n.quickRefresh);
     }
 
     return buffer.toString().trim();
   }
 
   String _buildQueueCompletionBody(List<Task> completedTasks) {
+    if (_l10n == null) return '';
+    final l10n = _l10n!;
     final buffer = StringBuffer();
 
-    buffer.writeln('🎉 All ${completedTasks.length} tasks completed!');
-    buffer.writeln('⏱️ Total time: ${_calculateTotalTime(completedTasks)}');
-    buffer.writeln('🔥 Great job staying focused!');
+    buffer.writeln(l10n.allTasksCompletedCount(completedTasks.length));
+    buffer.writeln(l10n.totalTime(_calculateTotalTime(completedTasks)));
+    buffer.writeln(l10n.greatJobFocused);
 
     return buffer.toString().trim();
   }
 
   String _buildDailySummaryBody(int totalSessions, double avgFocus, int completedTasks, int currentStreak) {
+    if (_l10n == null) return '';
+    final l10n = _l10n!;
     final buffer = StringBuffer();
 
-    buffer.writeln('📊 Today\'s Performance:');
-    buffer.writeln('⏱️ $totalSessions sessions');
-    buffer.writeln('🎯 Avg focus: ${avgFocus.toStringAsFixed(1)}/10');
-    buffer.writeln('✅ $completedTasks tasks completed');
-    buffer.writeln('🔥 $currentStreak day streak');
+    buffer.writeln(l10n.todaysPerformance);
+    buffer.writeln(l10n.sessionsCount(totalSessions));
+    buffer.writeln(l10n.avgFocus(avgFocus.toStringAsFixed(1)));
+    buffer.writeln(l10n.tasksCompletedCount(completedTasks));
+    buffer.writeln(l10n.dayStreak(currentStreak));
 
     if (avgFocus >= 8) {
-      buffer.writeln('🌟 Excellent focus today!');
+      buffer.writeln(l10n.excellentFocus);
     } else if (avgFocus >= 6) {
-      buffer.writeln('👍 Good focus maintained!');
+      buffer.writeln(l10n.goodFocus);
     } else {
-      buffer.writeln('💪 Tomorrow\'s a new day!');
+      buffer.writeln(l10n.tomorrowsNewDay);
     }
 
     return buffer.toString().trim();
   }
 
   String _buildStreakMotivationBody(int currentStreak, int targetStreak) {
+    if (_l10n == null) return '';
+    final l10n = _l10n!;
     final buffer = StringBuffer();
 
-    buffer.writeln('🔥 Current streak: $currentStreak days');
+    buffer.writeln(l10n.currentStreakDays(currentStreak));
 
     if (currentStreak >= targetStreak) {
-      buffer.writeln('🏆 Goal achieved! New target: ${targetStreak + 7} days');
+      buffer.writeln(l10n.goalAchievedNewTarget(targetStreak + 7));
     } else {
-      buffer.writeln('🎯 Target: $targetStreak days');
-      buffer.writeln('📈 ${targetStreak - currentStreak} days to go!');
+      buffer.writeln(l10n.targetDays(targetStreak));
+      buffer.writeln(l10n.daysToGo(targetStreak - currentStreak));
     }
 
     if (currentStreak >= 7) {
-      buffer.writeln('💪 You\'re on fire!');
+      buffer.writeln(l10n.youreOnFire);
     } else if (currentStreak >= 3) {
-      buffer.writeln('🌟 Building momentum!');
+      buffer.writeln(l10n.buildingMomentum);
     } else {
-      buffer.writeln('🚀 Keep it going!');
+      buffer.writeln(l10n.keepItGoingBody);
     }
 
     return buffer.toString().trim();
   }
 
   String _buildAdaptiveTimingBody(Task task, int suggestedDuration, String reason) {
+    if (_l10n == null) return '';
+    final l10n = _l10n!;
     final buffer = StringBuffer();
 
-    buffer.writeln('Task: ${task.title}');
-    buffer.writeln('⏱️ Suggested: $suggestedDuration min');
-    buffer.writeln('💭 Reason: $reason');
+    buffer.writeln('${l10n.taskTitle}: ${task.title}');
+    buffer.writeln(l10n.suggestedDuration(suggestedDuration));
+    buffer.writeln(l10n.reason(reason));
 
     return buffer.toString().trim();
   }
 
   String _buildEnergyLevelBody(EnergyLevel currentEnergy, List<Task> recommendedTasks) {
+    if (_l10n == null) return '';
+    final l10n = _l10n!;
     final buffer = StringBuffer();
 
-    buffer.writeln('⚡ Current energy: ${currentEnergy.name}');
+    buffer.writeln(l10n.currentEnergyLevel(currentEnergy.name));
 
     if (recommendedTasks.isNotEmpty) {
-      buffer.writeln('📋 Recommended tasks:');
+      buffer.writeln(l10n.recommendedTasks);
       for (int i = 0; i < recommendedTasks.length && i < 3; i++) {
         buffer.writeln('• ${recommendedTasks[i].title}');
       }
     } else {
-      buffer.writeln('🌿 Consider lighter tasks or take a break');
+      buffer.writeln(l10n.considerLighterTasks);
     }
 
     return buffer.toString().trim();
   }
 
   String _buildWeeklyGoalBody(int currentProgress, int weeklyGoal, int daysRemaining) {
+    if (_l10n == null) return '';
+    final l10n = _l10n!;
     final buffer = StringBuffer();
 
-    buffer.writeln('🎯 Weekly Goal: $weeklyGoal sessions');
-    buffer.writeln('✅ Progress: $currentProgress/$weeklyGoal');
-    buffer.writeln('📅 Days remaining: $daysRemaining');
+    buffer.writeln(l10n.weeklyGoalSessions(weeklyGoal));
+    buffer.writeln(l10n.weeklyProgressStatus(currentProgress, weeklyGoal));
+    buffer.writeln(l10n.daysRemaining(daysRemaining));
 
     final progress = currentProgress / weeklyGoal;
     if (progress >= 1.0) {
-      buffer.writeln('🏆 Goal achieved! Amazing work!');
+      buffer.writeln(l10n.goalAchieved);
     } else if (progress >= 0.8) {
-      buffer.writeln('🌟 Almost there! Keep it up!');
+      buffer.writeln(l10n.almostThereKeepItUp);
     } else if (progress >= 0.5) {
-      buffer.writeln('💪 Halfway there!');
+      buffer.writeln(l10n.halfwayThere);
     } else {
-      buffer.writeln('🚀 Let\'s pick up the pace!');
+      buffer.writeln(l10n.pickUpPace);
     }
 
     return buffer.toString().trim();
@@ -311,58 +345,66 @@ class PomodoroNotificationService {
   // Private helper methods for titles and payloads
 
   String _getBreakTitle(BreakType breakType) {
+    if (_l10n == null) return '';
+    final l10n = _l10n!;
     switch (breakType) {
       case BreakType.shortBreak:
-        return '☕ Short Break';
+        return l10n.breakTitleShort;
       case BreakType.longBreak:
-        return '🌿 Long Break';
+        return l10n.breakTitleLong;
     }
   }
 
   String _getAdaptiveTimingTitle(AdjustmentType adjustmentType) {
+    if (_l10n == null) return '';
+    final l10n = _l10n!;
     switch (adjustmentType) {
       case AdjustmentType.extend:
-        return '⏱️ Extend Session';
+        return l10n.extendSession;
       case AdjustmentType.shorten:
-        return '⏰ Shorten Session';
+        return l10n.shortenSession;
       case AdjustmentType.none:
-        return '⚙️ Session Optimization';
+        return l10n.sessionOptimization;
     }
   }
 
   String _getEnergyLevelTitle(EnergyLevel energyLevel) {
+    if (_l10n == null) return '';
+    final l10n = _l10n!;
     switch (energyLevel) {
       case EnergyLevel.veryHigh:
-        return '⚡ High Energy!';
+        return l10n.energyLevelHigh;
       case EnergyLevel.high:
-        return '🔥 Good Energy';
+        return l10n.energyLevelGood;
       case EnergyLevel.medium:
-        return '⚖️ Moderate Energy';
+        return l10n.energyLevelModerate;
       case EnergyLevel.low:
-        return '🔋 Low Energy';
+        return l10n.energyLevelLow;
       case EnergyLevel.veryLow:
-        return '😴 Very Low Energy';
+        return l10n.energyLevelVeryLow;
     }
   }
 
   String _getActivityDescription(BreakActivity activity) {
+    if (_l10n == null) return '';
+    final l10n = _l10n!;
     switch (activity) {
       case BreakActivity.meditation:
-        return 'Mindful breathing (2-5 min)';
+        return l10n.activityMeditation;
       case BreakActivity.stretching:
-        return 'Desk stretches (2-3 min)';
+        return l10n.activityStretching;
       case BreakActivity.hydration:
-        return 'Drink water & walk around';
+        return l10n.activityHydration;
       case BreakActivity.eyeRest:
-        return '20-20-20 eye exercises';
+        return l10n.activityEyeRest;
       case BreakActivity.walking:
-        return 'Short walk (3-5 min)';
+        return l10n.activityWalking;
       case BreakActivity.breathing:
-        return 'Deep breathing exercises';
+        return l10n.activityBreathing;
       case BreakActivity.music:
-        return 'Listen to calming music';
+        return l10n.activityMusic;
       case BreakActivity.social:
-        return 'Quick chat with colleague';
+        return l10n.activitySocial;
     }
   }
 

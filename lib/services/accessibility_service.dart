@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/semantics.dart';
 import 'app_logging_service.dart';
 
 /// Comprehensive accessibility and UI/UX optimization service

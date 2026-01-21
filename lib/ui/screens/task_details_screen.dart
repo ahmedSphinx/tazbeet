@@ -23,6 +23,7 @@ import '../widgets/edit_task_dialog.dart';
 import '../widgets/error_display.dart';
 import '../../services/notification_service.dart';
 import 'home/pomodoro/pomodoro_screen.dart';
+import 'home/pomodoro/pomodoro_template_screen.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
   final String taskId;
@@ -91,32 +92,42 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
     final progress = state.progress;
     isCompleted = task.isCompleted;
     // AppLogging.logInfo('Building content for task: ${task.id} with progress: $progress', name: 'TaskDetailsScreen');
-    return CustomScrollView(
-      controller: _scrollController,
-      slivers: [
-        _buildAppBar(context, task, l10n),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildMotivationalQuote(context, task, l10n),
-                const SizedBox(height: 16),
-                if (task.subtasks.isNotEmpty) _buildProgressCard(context, progress, task, l10n),
-                const SizedBox(height: 16),
-                _buildTaskDetails(context, task, l10n),
-                const SizedBox(height: 16),
-                _buildSubtasksSection(context, task, l10n),
-                const SizedBox(height: 16),
-                _buildPomodoroSection(context, task, l10n),
-                const SizedBox(height: 16),
-                _buildTimelineSection(context, task, l10n),
-              ],
+    return RefreshIndicator(
+      onRefresh: () async {
+        // Trigger refresh by reloading task details
+        context.read<TaskDetailsBloc>().add(LoadTaskDetails(widget.taskId));
+        AppLogging.logInfo('TaskDetailsScreen: Manual refresh triggered for task ${widget.taskId}', name: 'TaskDetailsRefresh');
+      },
+      child: CustomScrollView(
+        controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(), // Enable pull-to-refresh
+        slivers: [
+          _buildAppBar(context, task, l10n),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildMotivationalQuote(context, task, l10n),
+                  const SizedBox(height: 16),
+                  if (task.subtasks.isNotEmpty) _buildProgressCard(context, progress, task, l10n),
+                  const SizedBox(height: 16),
+                  _buildTaskPath(context, task, l10n),
+                  const SizedBox(height: 16),
+                  _buildTaskDetails(context, task, l10n),
+                  const SizedBox(height: 16),
+                  _buildSubtasksSection(context, task, l10n),
+                  const SizedBox(height: 16),
+                  _buildPomodoroSection(context, task, l10n),
+                  const SizedBox(height: 16),
+                  _buildTimelineSection(context, task, l10n),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -330,6 +341,65 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
     );
   }
 
+  Widget _buildTaskPath(BuildContext context, Task task, AppLocalizations l10n) {
+    // Only show path if this is a subtask (has parentId)
+    if (task.parentId == null) {
+      return const SizedBox.shrink();
+    }
+
+    // Get the root task from the bloc state
+    final currentState = context.read<TaskDetailsBloc>().state;
+    Task? rootTask;
+
+    if (currentState is TaskDetailsLoaded) {
+      rootTask = currentState.task;
+    }
+
+    final path = Task.getTaskPath(task, rootTask);
+
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.taskPath,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Colors.grey[600], fontWeight: FontWeight.w500),
+            ),
+            const SizedBox(height: 8),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: path.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final title = entry.value;
+                  final isLast = index == path.length - 1;
+
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (index > 0) ...[Icon(Icons.chevron_right, size: 16, color: Colors.grey[400]), const SizedBox(width: 4)],
+                      Flexible(
+                        child: Text(
+                          title,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: isLast ? Theme.of(context).colorScheme.primary : Colors.grey[700], fontWeight: isLast ? FontWeight.w600 : FontWeight.normal),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  );
+                }).toList(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildSubtasksSection(BuildContext context, Task task, AppLocalizations l10n) {
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 500),
@@ -396,7 +466,6 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
   }
 
   Widget _buildPomodoroSection(BuildContext context, Task task, AppLocalizations l10n) {
-    //  AppLogging.logInfo('Building Pomodoro section for task: ${task.id}, isCompleted $isCompleted', name: 'TaskDetailsScreen');
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 500),
       opacity: isCompleted ? 0.5 : 1.0,
@@ -408,16 +477,85 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(l10n.pomodoroSessions, style: Theme.of(context).textTheme.titleLarge),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(l10n.pomodoroSessions, style: Theme.of(context).textTheme.titleLarge),
+                  if (task.pomodoroCount > 0)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(12)),
+                      child: Text(
+                        '${task.pomodoroCount} sessions',
+                        style: TextStyle(fontSize: 12, color: Colors.blue.shade600, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                ],
+              ),
               const SizedBox(height: 16),
-              // Placeholder for Pomodoro stats - would integrate with Pomodoro service
-              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [_buildPomodoroStat(l10n.sessions, '0'), _buildPomodoroStat(l10n.timeSpent, '0m'), _buildPomodoroStat(l10n.avgSession, '0m')]),
+
+              // Enhanced Pomodoro Stats
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildPomodoroStat(l10n.sessions, '${task.pomodoroCount}', Icons.timer_outlined, Colors.blue),
+                  _buildPomodoroStat(l10n.timeSpent, '${_formatDuration(task.timeSpent)}', Icons.schedule, Colors.green),
+                  _buildPomodoroStat(l10n.avgSession, '${_calculateAverageSession(task)}', Icons.trending_up, Colors.orange),
+                ],
+              ),
+
+              // Progress Bar
+              if (task.estimatedSessions > 0) ...[
+                const SizedBox(height: 16),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Progress', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                        Text('${((task.pomodoroCount / task.estimatedSessions) * 100).round()}%', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    LinearProgressIndicator(
+                      value: (task.pomodoroCount / task.estimatedSessions).clamp(0.0, 1.0),
+                      backgroundColor: Colors.grey.shade200,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue.shade600),
+                      minHeight: 8,
+                    ),
+                    const SizedBox(height: 4),
+                    Text('${task.pomodoroCount} of ${task.estimatedSessions} estimated sessions', style: TextStyle(fontSize: 11, color: Colors.grey[600])),
+                  ],
+                ),
+              ],
+
+              // Session History
+              if (task.pomodoroSessions.isNotEmpty) ...[
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Session History', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                    TextButton(
+                      onPressed: () => _showAllSessions(context, task),
+                      child: Text('View All (${task.pomodoroSessions.length})', style: TextStyle(fontSize: 12, color: Colors.blue.shade600)),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Container(height: 200, child: _buildSessionsChart(task)),
+                const SizedBox(height: 12),
+                // Recent sessions list
+                _buildRecentSessionsList(task),
+              ],
+
               const SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: isCompleted ? null : () => _startPomodoro(context, task),
                 icon: const Icon(Icons.play_arrow),
                 label: Text(l10n.startPomodoroSession),
-                style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 48)),
+                style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 48), backgroundColor: Colors.blue.shade600, foregroundColor: Colors.white),
               ),
             ],
           ),
@@ -426,12 +564,256 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
     );
   }
 
-  Widget _buildPomodoroStat(String label, String value) {
+  Widget _buildPomodoroStat(String label, String value, IconData icon, Color color) {
     return Column(
       children: [
-        Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(color: color.withValues(alpha: 0.1), shape: BoxShape.circle),
+          child: Icon(icon, color: color, size: 24),
+        ),
+        const SizedBox(height: 8),
+        Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
       ],
+    );
+  }
+
+  // Helper methods for Pomodoro section
+  String _formatDuration(Duration duration) {
+    if (duration.inHours > 0) {
+      return '${duration.inHours}h ${duration.inMinutes % 60}m';
+    } else {
+      return '${duration.inMinutes}m';
+    }
+  }
+
+  String _calculateAverageSession(Task task) {
+    if (task.pomodoroCount == 0) return '0m';
+    final avgMinutes = task.timeSpent.inMinutes / task.pomodoroCount;
+    return '${avgMinutes.round()}m';
+  }
+
+  Widget _buildSessionsChart(Task task) {
+    if (task.pomodoroSessions.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.bar_chart, size: 48, color: Colors.grey[400]),
+            const SizedBox(height: 8),
+            Text('No sessions yet', style: TextStyle(color: Colors.grey[600])),
+          ],
+        ),
+      );
+    }
+
+    // Take last 10 sessions for the chart
+    final recentSessions = task.pomodoroSessions.take(10).toList();
+
+    return LineChart(
+      LineChartData(
+        gridData: FlGridData(show: false),
+        titlesData: FlTitlesData(
+          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              getTitlesWidget: (value, meta) {
+                if (value.toInt() >= 0 && value.toInt() < recentSessions.length) {
+                  return Text('S${value.toInt() + 1}', style: TextStyle(fontSize: 10, color: Colors.grey[600]));
+                }
+                return const Text('');
+              },
+            ),
+          ),
+        ),
+        borderData: FlBorderData(show: false),
+        lineBarsData: [
+          LineChartBarData(
+            spots: recentSessions.asMap().entries.map((entry) {
+              final session = entry.value;
+              final duration = session['duration'] as int? ?? 25; // Default 25 minutes
+              return FlSpot(entry.key.toDouble(), duration.toDouble());
+            }).toList(),
+            isCurved: true,
+            color: Colors.blue.shade600,
+            barWidth: 3,
+            isStrokeCapRound: true,
+            dotData: FlDotData(
+              show: true,
+              getDotPainter: (spot, percent, barData, index) {
+                return FlDotCirclePainter(radius: 4, color: Colors.blue.shade600, strokeWidth: 2, strokeColor: Colors.white);
+              },
+            ),
+            belowBarData: BarAreaData(show: true, color: Colors.blue.shade100),
+          ),
+        ],
+        minY: 0,
+      ),
+    );
+  }
+
+  Widget _buildRecentSessionsList(Task task) {
+    final recentSessions = task.pomodoroSessions.take(3).toList();
+
+    return Column(
+      children: recentSessions.asMap().entries.map((entry) {
+        final session = entry.value;
+        final startTime = session['startTime'] as String?;
+        final duration = session['duration'] as int? ?? 25;
+        final completed = session['completed'] as bool? ?? true;
+
+        DateTime? sessionDate;
+        if (startTime != null) {
+          try {
+            sessionDate = DateTime.parse(startTime);
+          } catch (e) {
+            sessionDate = null;
+          }
+        }
+
+        return Container(
+          margin: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: completed ? Colors.green.shade50 : Colors.orange.shade50,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: completed ? Colors.green.shade200 : Colors.orange.shade200, width: 1),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(color: completed ? Colors.green : Colors.orange, shape: BoxShape.circle),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${duration} minute session',
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: completed ? Colors.green.shade800 : Colors.orange.shade800),
+                    ),
+                    if (sessionDate != null) Text(_formatSessionDate(sessionDate), style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                  ],
+                ),
+              ),
+              Icon(completed ? Icons.check_circle : Icons.timer, size: 16, color: completed ? Colors.green : Colors.orange),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  String _formatSessionDate(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+
+    if (difference.inDays == 0) {
+      return 'Today at ${DateFormat.jm().format(date)}';
+    } else if (difference.inDays == 1) {
+      return 'Yesterday at ${DateFormat.jm().format(date)}';
+    } else if (difference.inDays < 7) {
+      return '${DateFormat.E().format(date)} at ${DateFormat.jm().format(date)}';
+    } else {
+      return DateFormat.yMMMd().add_jm().format(date);
+    }
+  }
+
+  void _showAllSessions(BuildContext context, Task task) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        maxChildSize: 0.9,
+        minChildSize: 0.5,
+        builder: (context, scrollController) => Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('All Sessions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.close)),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: ListView.builder(
+                  controller: scrollController,
+                  itemCount: task.pomodoroSessions.length,
+                  itemBuilder: (context, index) {
+                    final session = task.pomodoroSessions[task.pomodoroSessions.length - 1 - index];
+                    return _buildDetailedSessionItem(session, task);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetailedSessionItem(Map<String, dynamic> session, Task task) {
+    final startTime = session['startTime'] as String?;
+    final duration = session['duration'] as int? ?? 25;
+    final completed = session['completed'] as bool? ?? true;
+    final notes = session['notes'] as String?;
+
+    DateTime? sessionDate;
+    if (startTime != null) {
+      try {
+        sessionDate = DateTime.parse(startTime);
+      } catch (e) {
+        sessionDate = null;
+      }
+    }
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(completed ? Icons.check_circle : Icons.timer, color: completed ? Colors.green : Colors.orange, size: 20),
+                    const SizedBox(width: 8),
+                    Text('${duration} minute session', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                  ],
+                ),
+                if (sessionDate != null) Text(DateFormat.yMMMd().add_jm().format(sessionDate), style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+              ],
+            ),
+            if (notes != null && notes.isNotEmpty) ...[const SizedBox(height: 8), Text(notes, style: TextStyle(fontSize: 14, color: Colors.grey[700]))],
+            const SizedBox(height: 8),
+            Row(children: [_buildSessionTag('Session ${task.pomodoroSessions.indexOf(session) + 1}'), const SizedBox(width: 8), _buildSessionTag(completed ? 'Completed' : 'Incomplete')]),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSessionTag(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(12)),
+      child: Text(label, style: TextStyle(fontSize: 11, color: Colors.grey.shade700)),
     );
   }
 
@@ -620,9 +1002,15 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
     context.read<TaskDetailsBloc>().add(ReorderSubtasks(task.id, subtasks));
   }
 
-  void _startPomodoro(BuildContext context, Task task) {
-    // Navigate to Pomodoro screen with task pre-selected
-    Navigator.push(context, MaterialPageRoute(builder: (context) => PomodoroScreen(initialTask: task)));
+  void _startPomodoro(BuildContext context, Task task) async {
+    // Show template selection modal and wait for result
+    final template = await PomodoroTemplateScreen.showAsModal(context, initialTask: task);
+
+    // If user selected a template, launch Pomodoro screen with both task and template
+    if (template != null) {
+      HapticFeedback.mediumImpact();
+      PomodoroScreen.showAsPage(context, initialTask: task, template: template);
+    }
   }
 
   void _completeTask(BuildContext context, Task task) {

@@ -22,12 +22,17 @@ import '../add_task_screen.dart';
 import '../../screens/task_details_screen.dart';
 import 'package:tazbeet/ui/widgets/optimized_filter_chips.dart';
 
+import 'package:tazbeet/ui/widgets/selection_toolbar.dart';
+import 'package:tazbeet/ui/widgets/quick_task_input.dart';
+import 'package:tazbeet/ui/widgets/common/quick_actions_fab.dart';
+
 /// Complete Redesigned Home Screen
 /// Following WCAG AA standards and design system tokens
 class HomeScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldGlobalKey;
+  final Function(int)? onTabSwitchRequested;
 
-  const HomeScreen({super.key, required this.scaffoldGlobalKey});
+  const HomeScreen({super.key, required this.scaffoldGlobalKey, this.onTabSwitchRequested});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -52,10 +57,196 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: Stack(children: [_buildBackgroundGradient(context), _buildMainContent(context)]),
-      // floatingActionButton: FloatingActionButton(onPressed: () => _showAddTaskDialog(context), child: const Icon(Icons.add_rounded), tooltip: 'Add Task', heroTag: 'home_fab'),
+    return ValueListenableBuilder<bool>(
+      valueListenable: _controller.isSelectionMode,
+      builder: (context, isSelectionMode, _) {
+        return Scaffold(
+          body: Stack(children: [_buildBackgroundGradient(context), _buildMainContent(context)]),
+          bottomNavigationBar: isSelectionMode
+              ? ValueListenableBuilder<Set<String>>(
+                  valueListenable: _controller.selectedTaskIds,
+                  builder: (context, selectedIds, _) {
+                    return SelectionToolbar(
+                      selectedCount: selectedIds.length,
+                      onClearSelection: () => _controller.clearSelection(),
+                      onCompleteSelected: () {
+                        context.read<TaskListBloc>().add(BulkToggleTaskCompletion(selectedIds.toList()));
+                        _controller.exitSelectionMode();
+                      },
+                      onDeleteSelected: () async {
+                        final confirmed =
+                            await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text(AppLocalizations.of(context)!.delete),
+                                content: Text(AppLocalizations.of(context)!.bulkDeleteConfirmation(selectedIds.length)),
+                                actions: [
+                                  TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancelButton)),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, true),
+                                    child: Text(AppLocalizations.of(context)!.delete, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                                  ),
+                                ],
+                              ),
+                            ) ??
+                            false;
+                        if (confirmed) {
+                          if (context.mounted) {
+                            context.read<TaskListBloc>().add(BulkDeleteTasks(selectedIds.toList()));
+                            _controller.exitSelectionMode();
+                          }
+                        }
+                      },
+                      onRescheduleSelected: () async {
+                        final now = DateTime.now();
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: now,
+                          firstDate: now.subtract(const Duration(days: 365)),
+                          lastDate: now.add(const Duration(days: 365 * 5)),
+                          helpText: AppLocalizations.of(context)!.rescheduleSelectedTasks,
+                        );
+                        if (date != null && context.mounted) {
+                          context.read<TaskListBloc>().add(BulkUpdateTasksDueDate(selectedIds.toList(), date));
+                          _controller.exitSelectionMode();
+                        }
+                      },
+                      onSetCategorySelected: () async {
+                        final categoryState = context.read<CategoryBloc>().state;
+                        if (categoryState is CategoryLoaded && categoryState.categories.isNotEmpty) {
+                          showModalBottomSheet(
+                            context: context,
+                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(DSBorderRadius.lg))),
+                            builder: (context) {
+                              return ConstrainedBox(
+                                constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.7),
+                                child: SafeArea(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(DSSpacing.md),
+                                        child: Text(AppLocalizations.of(context)!.selectCategory, style: DSTypography.subtitle(context)),
+                                      ),
+                                      const Divider(height: 1),
+                                      Flexible(
+                                        child: ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: categoryState.categories.length + 1,
+                                          itemBuilder: (context, index) {
+                                            if (index == 0) {
+                                              return ListTile(
+                                                leading: const Icon(Icons.remove_circle_outline),
+                                                title: Text(AppLocalizations.of(context)!.noCategory),
+                                                onTap: () {
+                                                  context.read<TaskListBloc>().add(BulkUpdateTasksCategory(selectedIds.toList(), ''));
+                                                  Navigator.pop(context);
+                                                  _controller.exitSelectionMode();
+                                                },
+                                              );
+                                            }
+                                            final category = categoryState.categories[index - 1];
+                                            return ListTile(
+                                              leading: Icon(
+                                                Icons.folder, // Using default icon as Category model stores icon as string without helper here
+                                                color: category.color,
+                                              ),
+                                              title: Text(category.name),
+                                              onTap: () {
+                                                context.read<TaskListBloc>().add(BulkUpdateTasksCategory(selectedIds.toList(), category.id));
+                                                Navigator.pop(context);
+                                                _controller.exitSelectionMode();
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.noCategory)));
+                        }
+                      },
+                      onSetPrioritySelected: () async {
+                        showModalBottomSheet(
+                          context: context,
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(DSBorderRadius.lg))),
+                          builder: (context) {
+                            return SafeArea(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(DSSpacing.md),
+                                    child: Text(AppLocalizations.of(context)!.priority, style: DSTypography.subtitle(context)),
+                                  ),
+                                  const Divider(height: 1),
+                                  ...TaskPriority.values.map((priority) {
+                                    final isDark = Theme.of(context).brightness == Brightness.dark;
+                                    final color = DSColors.getPriorityColor(priority, isDark);
+                                    return ListTile(
+                                      leading: Icon(Icons.flag, color: color),
+                                      title: Text(priority.name.toUpperCase()),
+                                      onTap: () {
+                                        context.read<TaskListBloc>().add(BulkUpdateTasksPriority(selectedIds.toList(), priority));
+                                        Navigator.pop(context);
+                                        _controller.exitSelectionMode();
+                                      },
+                                    );
+                                  }),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                )
+              : null,
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+          floatingActionButton: isSelectionMode ? null : _buildEnhancedFAB(context),
+        );
+      },
+    );
+  }
+
+  Widget _buildEnhancedFAB(BuildContext context) {
+    return QuickActionsFAB(
+      actions: AppQuickActions.forHomeScreen(
+        context,
+        onLogMood: () => widget.onTabSwitchRequested?.call(4),
+        onQuickAddTask: () => _showQuickAddTaskDialog(context),
+        onAddDetailedTask: () => _showAddTaskDialog(context),
+        onAddCategory: () => widget.onTabSwitchRequested?.call(3),
+      ),
+      primaryColor: Theme.of(context).colorScheme.primary,
+    );
+  }
+
+  void _showQuickAddTaskDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.addTaskTitle),
+        content: TextField(
+          decoration: InputDecoration(hintText: AppLocalizations.of(context)!.addTaskTitle),
+          autofocus: true,
+          onSubmitted: (value) {
+            if (value.isNotEmpty) {
+              final task = Task(id: DateTime.now().millisecondsSinceEpoch.toString(), title: value, createdAt: DateTime.now(), updatedAt: DateTime.now(), priority: TaskPriority.medium);
+              context.read<TaskListBloc>().add(AddTask(task));
+              Navigator.pop(context);
+            }
+          },
+        ),
+        actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancelButton))],
+      ),
     );
   }
 
@@ -166,66 +357,95 @@ class _HomeScreenState extends State<HomeScreen> {
   // ==========================================================================
 
   Widget _buildSwipeableTaskCard(BuildContext context, Task task) {
-    return Dismissible(
-      key: Key(task.id),
-      direction: DismissDirection.endToStart,
-      background: Container(
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: DSSpacing.md),
-        decoration: BoxDecoration(color: Theme.of(context).colorScheme.error, borderRadius: DSBorderRadius.lgRadius),
-        child: Icon(Icons.delete, color: Theme.of(context).colorScheme.onError),
-      ),
-      secondaryBackground: Container(
-        alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.only(left: DSSpacing.md),
-        decoration: BoxDecoration(color: task.isCompleted ? Theme.of(context).colorScheme.outline : Theme.of(context).colorScheme.error, borderRadius: DSBorderRadius.lgRadius),
-        child: Icon(Icons.delete_forever_outlined, color: Theme.of(context).colorScheme.onError),
-      ),
-      confirmDismiss: (direction) async {
-        HapticFeedback.mediumImpact();
-        if (direction == DismissDirection.endToStart) {
-          // Delete action
-          return await showDialog<bool>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text(AppLocalizations.of(context)!.deleteTask),
-                  content: Text(AppLocalizations.of(context)!.deleteTaskConfirmation(task.title, task.title)),
-                  actions: [
-                    TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancelButton)),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      child: Text(AppLocalizations.of(context)!.delete, style: TextStyle(color: Theme.of(context).colorScheme.error)),
-                    ),
-                  ],
+    return ValueListenableBuilder<bool>(
+      valueListenable: _controller.isSelectionMode,
+      builder: (context, isSelectionMode, _) {
+        return ValueListenableBuilder<Set<String>>(
+          valueListenable: _controller.selectedTaskIds,
+          builder: (context, selectedTaskIds, _) {
+            final isSelected = selectedTaskIds.contains(task.id);
+
+            return Dismissible(
+              key: Key(task.id),
+              direction: isSelectionMode ? DismissDirection.none : DismissDirection.endToStart,
+              background: Container(
+                alignment: Alignment.centerRight,
+                padding: const EdgeInsets.only(right: DSSpacing.md),
+                decoration: BoxDecoration(color: Theme.of(context).colorScheme.error, borderRadius: DSBorderRadius.lgRadius),
+                child: Icon(Icons.delete, color: Theme.of(context).colorScheme.onError),
+              ),
+              secondaryBackground: Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(left: DSSpacing.md),
+                decoration: BoxDecoration(color: task.isCompleted ? Theme.of(context).colorScheme.outline : Theme.of(context).colorScheme.error, borderRadius: DSBorderRadius.lgRadius),
+                child: Icon(Icons.delete_forever_outlined, color: Theme.of(context).colorScheme.onError),
+              ),
+              confirmDismiss: (direction) async {
+                HapticFeedback.mediumImpact();
+                if (direction == DismissDirection.endToStart) {
+                  // Delete action
+                  return await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text(AppLocalizations.of(context)!.deleteTask),
+                          content: Text(AppLocalizations.of(context)!.deleteTaskConfirmation(task.title, task.title)),
+                          actions: [
+                            TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancelButton)),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              child: Text(AppLocalizations.of(context)!.delete, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                            ),
+                          ],
+                        ),
+                      ) ??
+                      false;
+                } else {
+                  // Complete action - only allow if task is not already completed
+                  return !task.isCompleted;
+                }
+              },
+              onDismissed: (direction) {
+                if (direction == DismissDirection.endToStart) {
+                  // Delete task
+                  _deleteTask(context, task);
+                } else {
+                  // Complete task
+                  context.read<TaskListBloc>().add(ToggleTaskCompletion(task.id));
+                }
+              },
+              child: RepaintBoundary(
+                child: DSTaskCard(
+                  task: task,
+                  isSelected: isSelected,
+                  onTap: () async {
+                    if (isSelectionMode) {
+                      // In selection mode, tap toggles selection
+                      HapticFeedback.selectionClick();
+                      _controller.toggleTaskSelection(task.id);
+                    } else {
+                      // Normal mode, navigate to details
+                      await Navigator.push(context, MaterialPageRoute(builder: (context) => TaskDetailsScreen(taskId: task.id)));
+                    }
+                  },
+                  onToggle: () => context.read<TaskListBloc>().add(ToggleTaskCompletion(task.id)),
+                  onDelete: () => context.read<TaskListBloc>().add(DeleteTask(task.id)),
+                  onLongPress: () {
+                    if (!isSelectionMode) {
+                      // Enter selection mode with this task
+                      HapticFeedback.mediumImpact();
+                      _controller.enterSelectionMode(task.id);
+                    } else {
+                      // Already in selection mode, show quick actions
+                      _showQuickActions(context, task);
+                    }
+                  },
+                  isRecommended: _controller.sortOption.value == TaskSortOption.smart ? _controller.getRecommendedTasks([task]).isNotEmpty : false,
                 ),
-              ) ??
-              false;
-        } else {
-          // Complete action - only allow if task is not already completed
-          return !task.isCompleted;
-        }
-      },
-      onDismissed: (direction) {
-        if (direction == DismissDirection.endToStart) {
-          // Delete task
-          _deleteTask(context, task);
-        } else {
-          // Complete task
-          context.read<TaskListBloc>().add(ToggleTaskCompletion(task.id));
-        }
-      },
-      child: RepaintBoundary(
-        child: DSTaskCard(
-          task: task,
-          onTap: () async {
-            await Navigator.push(context, MaterialPageRoute(builder: (context) => TaskDetailsScreen(taskId: task.id)));
+              ),
+            );
           },
-          onToggle: () => context.read<TaskListBloc>().add(ToggleTaskCompletion(task.id)),
-          onDelete: () => context.read<TaskListBloc>().add(DeleteTask(task.id)),
-          onLongPress: () => _showQuickActions(context, task),
-          isRecommended: _controller.sortOption.value == TaskSortOption.smart ? _controller.getRecommendedTasks([task]).isNotEmpty : false,
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -305,31 +525,68 @@ class _HomeScreenState extends State<HomeScreen> {
   // ==========================================================================
 
   Widget _buildAppBar(BuildContext context) {
-    return SliverAppBar(
-      floating: true,
-      snap: true,
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      leading: IconButton(
-        icon: const Icon(Icons.menu_rounded),
-        onPressed: () {
-          AppLogging.logEvent('Menu Button Pressed', name: 'MenuButton');
-          widget.scaffoldGlobalKey.currentState?.openDrawer();
-        },
-      ),
-      title: Text(AppLocalizations.of(context)!.appTitle, style: DSTypography.title(context).copyWith(color: Theme.of(context).colorScheme.primary)),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.search_rounded, color: _controller.searchQuery.value.isNotEmpty ? Colors.white : null),
-          onPressed: () => _showSearchDialog(context),
-          tooltip: AppLocalizations.of(context)!.search,
-        ),
-        IconButton(
-          icon: Icon(Icons.sort, color: _controller.sortOption.value == TaskSortOption.none ? Theme.of(context).colorScheme.primary : Colors.green),
-          onPressed: () => _showOptionsMenu(context),
-          tooltip: AppLocalizations.of(context)!.options,
-        ),
-      ],
+    return ValueListenableBuilder<bool>(
+      valueListenable: _controller.isSelectionMode,
+      builder: (context, isSelectionMode, _) {
+        if (isSelectionMode) {
+          // Selection mode app bar
+          return ValueListenableBuilder<Set<String>>(
+            valueListenable: _controller.selectedTaskIds,
+            builder: (context, selectedTaskIds, _) {
+              return SliverAppBar(
+                floating: true,
+                snap: true,
+                elevation: 2,
+                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                leading: IconButton(icon: const Icon(Icons.close), onPressed: () => _controller.exitSelectionMode(), tooltip: 'Exit selection mode'),
+                title: Text(AppLocalizations.of(context)!.itemsSelected(selectedTaskIds.length), style: DSTypography.title(context).copyWith(color: Theme.of(context).colorScheme.onPrimaryContainer)),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.select_all),
+                    onPressed: () {
+                      // Get current visible tasks and select all
+                      final state = context.read<TaskListBloc>().state;
+                      if (state is TaskListLoaded) {
+                        final incompleteTasks = state.tasks.where((t) => !t.isCompleted).toList();
+                        _controller.selectAllTasks(incompleteTasks);
+                      }
+                    },
+                    tooltip: 'Select all',
+                  ),
+                ],
+              );
+            },
+          );
+        }
+
+        // Normal mode app bar
+        return SliverAppBar(
+          floating: true,
+          snap: true,
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          leading: IconButton(
+            icon: const Icon(Icons.menu_rounded),
+            onPressed: () {
+              AppLogging.logEvent('Menu Button Pressed', name: 'MenuButton');
+              widget.scaffoldGlobalKey.currentState?.openDrawer();
+            },
+          ),
+          title: Text(AppLocalizations.of(context)!.appTitle, style: DSTypography.title(context).copyWith(color: Theme.of(context).colorScheme.primary)),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.search_rounded, color: _controller.searchQuery.value.isNotEmpty ? Colors.white : null),
+              onPressed: () => _showSearchDialog(context),
+              tooltip: AppLocalizations.of(context)!.search,
+            ),
+            IconButton(
+              icon: Icon(Icons.sort, color: _controller.sortOption.value == TaskSortOption.none ? Theme.of(context).colorScheme.primary : Colors.green),
+              onPressed: () => _showOptionsMenu(context),
+              tooltip: AppLocalizations.of(context)!.options,
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -728,18 +985,42 @@ class _HomeScreenState extends State<HomeScreen> {
                                         emptyMessage = AppLocalizations.of(context)!.addTaskToGetStarted;
                                       }
 
-                                      if (tasks.isEmpty) {
-                                        return SliverFillRemaining(
-                                          hasScrollBody: false,
-                                          child: _buildEmptyState(context, emptyTitle, emptyMessage, onAction: () => _showAddTaskDialog(context), actionText: AppLocalizations.of(context)!.addTaskToGetStarted),
-                                        );
-                                      }
-
                                       return SliverList(
                                         delegate: SliverChildBuilderDelegate((context, index) {
-                                          final task = tasks[index];
-                                          return _buildAnimatedTaskCard(context, task);
-                                        }, childCount: tasks.length),
+                                          if (index == 0) {
+                                            return QuickTaskInput(
+                                              onSubmitted: (title) {
+                                                final newTask = Task(
+                                                  id: DateTime.now().millisecondsSinceEpoch.toString(),
+                                                  title: title,
+                                                  createdAt: DateTime.now(),
+                                                  updatedAt: DateTime.now(),
+                                                  dueDate: selectedDate,
+                                                  categoryId: selectedCategoryId ?? 'default',
+                                                );
+                                                context.read<TaskListBloc>().add(AddTask(newTask));
+                                                HapticFeedback.lightImpact();
+                                              },
+                                            );
+                                          }
+
+                                          // Show tasks if they exist
+                                          if (tasks.isNotEmpty) {
+                                            return _buildAnimatedTaskCard(context, tasks[index - 1]);
+                                          }
+
+                                          // Handle empty state separately as a sliver is better,
+                                          // but since we are in a SliverList, we must return a widget.
+                                          // If chores are empty, show empty state as the second item.
+                                          if (index == 1 && tasks.isEmpty) {
+                                            return SizedBox(
+                                              height: 400, // Approximate height for empty state
+                                              child: _buildEmptyState(context, emptyTitle, emptyMessage, onAction: () => _showAddTaskDialog(context), actionText: AppLocalizations.of(context)!.addTaskToGetStarted),
+                                            );
+                                          }
+
+                                          return null;
+                                        }, childCount: tasks.isEmpty ? 2 : tasks.length + 1),
                                       );
                                     }
 
@@ -1113,6 +1394,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 _showEditTaskDialog(context, task);
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.calendar_today),
+              title: Text(AppLocalizations.of(context)!.rescheduleTask),
+              onTap: () async {
+                Navigator.pop(context);
+                final now = DateTime.now();
+                final date = await showDatePicker(
+                  context: context,
+                  initialDate: task.dueDate ?? now,
+                  firstDate: now.subtract(const Duration(days: 365)),
+                  lastDate: now.add(const Duration(days: 365 * 5)),
+                  helpText: AppLocalizations.of(context)!.rescheduleTask,
+                );
+
+                if (date != null && context.mounted) {
+                  final updatedTask = task.copyWith(dueDate: date, updatedAt: DateTime.now());
+                  context.read<TaskListBloc>().add(UpdateTask(updatedTask));
+                  HapticFeedback.mediumImpact();
+                }
+              },
+            ),
             const Divider(),
             ListTile(
               leading: const Icon(Icons.delete, color: Colors.red),
@@ -1163,7 +1465,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Icon(Icons.search, color: Theme.of(context).colorScheme.primary),
                     const SizedBox(width: DSSpacing.sm),
-                    Text('Search Tasks', style: DSTypography.title(context)),
+                    Text(AppLocalizations.of(context)!.searchTasks, style: DSTypography.title(context)),
                     const Spacer(),
                     IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
                   ],
@@ -1201,7 +1503,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: DSSpacing.md),
                 // Quick filters
-                Text('Quick Filters', style: DSTypography.subtitle(context)),
+                Text(AppLocalizations.of(context)!.quickFilters, style: DSTypography.subtitle(context)),
                 const SizedBox(height: DSSpacing.sm),
                 Wrap(
                   spacing: DSSpacing.sm,
@@ -1317,7 +1619,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Icon(Icons.tune, color: Theme.of(context).colorScheme.primary),
                       const SizedBox(width: DSSpacing.sm),
-                      Text('Sort & Filter', style: DSTypography.title(context)),
+                      Text(AppLocalizations.of(context)!.sortAndFilter, style: DSTypography.title(context)),
                       const Spacer(),
                       IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
                     ],
@@ -1331,7 +1633,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Icon(Icons.sort, size: 20, color: Theme.of(context).colorScheme.outline),
                       const SizedBox(width: DSSpacing.sm),
-                      Text('Sort By', style: DSTypography.subtitle(context)),
+                      Text(AppLocalizations.of(context)!.sortBy, style: DSTypography.subtitle(context)),
                     ],
                   ),
                 ),
@@ -1363,7 +1665,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         _buildSortOption(
                           context,
                           icon: Icons.calendar_today,
-                          title: l10n.dueDateLabel,
+                          title: l10n.overdueTasks,
                           isSelected: currentSort == TaskSortOption.dueDate,
                           onTap: () {
                             _controller.setSortOption(TaskSortOption.dueDate);
@@ -1427,7 +1729,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             _buildFilterOption(
                               context,
                               icon: Icons.warning_amber_rounded,
-                              title: l10n.overdue,
+                              title: l10n.overdueTasks,
                               subtitle: 'Show overdue tasks',
                               isSelected: showOverdue,
                               color: DSColors.getOverdueColor(context),
@@ -1992,7 +2294,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> with SingleTickerPr
           children: [
             ListTile(
               leading: const Icon(Icons.info_outline),
-              title: const Text('View Details'),
+              title: Text(AppLocalizations.of(context)!.details),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(context, MaterialPageRoute(builder: (context) => TaskDetailsScreen(taskId: task.id)));
@@ -2000,7 +2302,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> with SingleTickerPr
             ),
             ListTile(
               leading: const Icon(Icons.edit),
-              title: const Text('Quick Edit'),
+              title: Text(AppLocalizations.of(context)!.quickEdit),
               onTap: () {
                 Navigator.pop(context);
                 _showEditTaskDialog(context, task);
@@ -2009,7 +2311,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> with SingleTickerPr
             const Divider(),
             ListTile(
               leading: const Icon(Icons.delete, color: Colors.red),
-              title: const Text('Delete', style: TextStyle(color: Colors.red)),
+              title: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.pop(context);
                 _deleteTask(context, task);

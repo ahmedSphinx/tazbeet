@@ -1,0 +1,59 @@
+{
+  "app_info": {
+    "name": "Tazbeet",
+    "bundle_id": "com.company.tazbeet",
+    "version": "1.4",
+    "build_number": "4",
+    "category": "public.app-category.productivity",
+    "platform": "ios"
+  },
+  "app_store_listing": {
+    "app_name": "Tazbeet - Task Management",
+    "subtitle": "Smart Task Management with Pomodoro & Mood Tracking",
+    "description": "Tazbeet is a comprehensive task management app designed to boost your productivity.\n\nFeatures include:\n\n- Task creation and management with categories\n- Pomodoro timer for focused work sessions\n- Mood tracking to monitor your well-being\n- Smart notifications and reminders\n- Calendar integration\n- Progress tracking and analytics\n- Recurring tasks support\n- Data synchronization across devices\n\nPerfect for students, professionals, and anyone looking to organize their life and achieve their goals.",
+    "keywords": [
+      "task",
+      "productivity",
+      "pomodoro",
+      "mood tracking",
+      "calendar",
+      "reminders",
+      "organization"
+    ],
+    "support_url": "https://tazbeet.com/support",
+    "marketing_url": "https://tazbeet.com",
+    "privacy_policy_url": "https://tazbeet.com/privacy"
+  },
+  "app_review_info": {
+    "first_name": "Developer",
+    "last_name": "Team",
+    "email": "developer@tazbeet.com",
+    "phone": "+1234567890",
+    "notes": "Tazbeet is a productivity app that includes task management, a Pomodoro timer, and mood tracking. It uses Firebase for authentication and data storage and supports Apple Sign-In."
+  },
+  "pricing": {
+    "price_tier": "0",
+    "availability": "worldwide"
+  },
+  "app_status": {
+    "ready_for_distribution": true,
+    "uses_encrypted_data": true,
+    "contains_third_party_content": true,
+    "third_party_content": [
+      "Firebase - Authentication and data storage",
+      "Google Sign-In - Authentication",
+      "Apple Sign-In - Authentication"
+    ]
+  },
+  "required_metadata": {
+    "age_rating": "4+",
+    "content_rights": "does_not_contain_third_party_content",
+    "cultural_notes": "",
+    "primary_language": "en-US",
+    "secondary_languages": [
+      "ar-SA",
+      "es-ES",
+      "fr-FR"
+    ]
+  }
+}

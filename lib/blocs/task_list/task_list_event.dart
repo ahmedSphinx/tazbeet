@@ -121,3 +121,51 @@ class ProcessCompletedRecurringTask extends TaskListEvent {
   @override
   List<Object?> get props => [task];
 }
+
+class BulkDeleteTasks extends TaskListEvent {
+  final List<String> taskIds;
+
+  const BulkDeleteTasks(this.taskIds);
+
+  @override
+  List<Object?> get props => [taskIds];
+}
+
+class BulkToggleTaskCompletion extends TaskListEvent {
+  final List<String> taskIds;
+
+  const BulkToggleTaskCompletion(this.taskIds);
+
+  @override
+  List<Object?> get props => [taskIds];
+}
+
+class BulkUpdateTasksCategory extends TaskListEvent {
+  final List<String> taskIds;
+  final String categoryId;
+
+  const BulkUpdateTasksCategory(this.taskIds, this.categoryId);
+
+  @override
+  List<Object?> get props => [taskIds, categoryId];
+}
+
+class BulkUpdateTasksPriority extends TaskListEvent {
+  final List<String> taskIds;
+  final TaskPriority priority;
+
+  const BulkUpdateTasksPriority(this.taskIds, this.priority);
+
+  @override
+  List<Object?> get props => [taskIds, priority];
+}
+
+class BulkUpdateTasksDueDate extends TaskListEvent {
+  final List<String> taskIds;
+  final DateTime? dueDate;
+
+  const BulkUpdateTasksDueDate(this.taskIds, this.dueDate);
+
+  @override
+  List<Object?> get props => [taskIds, dueDate];
+}

@@ -39,7 +39,7 @@ import 'category_screen.dart';
 import '../emergency_screen.dart';
 import 'home_screen.dart';
 import 'mood/ultimate_mood_screen.dart';
-import 'pomodoro/pomodoro_screen.dart';
+import 'pomodoro/pomodoro_home_screen.dart';
 import 'progress_screen.dart';
 import '../settings_screen.dart';
 import '../task_details_screen.dart';
@@ -64,7 +64,6 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
   bool _isConnected = true;
   int _selectedIndex = 0;
   bool _isSearching = false;
-  String _searchQuery = '';
 
   // New focused controllers
   late final NavigationController _navigationController;
@@ -76,7 +75,6 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
   late AnimationController _categorySearchAnimationController;
   late AnimationController _categoryFabAnimationController;
   late Animation<double> _categorySearchFadeAnimation;
-  late Animation<double> _categoryFabScaleAnimation;
 
   // Screens list - created once to preserve state
   late final List<Widget> _screens;
@@ -87,8 +85,6 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
   final GlobalKey _categoryFilterKey = GlobalKey();
   final GlobalKey _moodTrackingKey = GlobalKey();
   final GlobalKey _taskDetailsKey = GlobalKey();
-
-  bool _hasShownTutorial = false;
 
   // Pull-to-refresh functionality
   Future<void> _onRefresh() async {
@@ -137,10 +133,15 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
     _categorySearchAnimationController = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
     _categoryFabAnimationController = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
     _categorySearchFadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _categorySearchAnimationController, curve: Curves.easeInOut));
-    _categoryFabScaleAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(parent: _categoryFabAnimationController, curve: Curves.easeInOut));
 
     // Initialize screens once to preserve state across tab switches
-    _screens = [HomeScreen(scaffoldGlobalKey: _scaffoldGlobleKey), const ProgressScreen(), const PomodoroScreen(), const CategoryScreen(), UltimateMoodScreen(tabController: moodTabController)];
+    _screens = [
+      HomeScreen(scaffoldGlobalKey: _scaffoldGlobleKey, onTabSwitchRequested: (index) => _onItemTapped(index)),
+      const ProgressScreen(),
+      const PomodoroHomeScreen(),
+      const CategoryScreen(),
+      UltimateMoodScreen(tabController: moodTabController),
+    ];
 
     WidgetsBinding.instance.addObserver(this);
 
@@ -199,7 +200,6 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
       _searchController.clear();
       setState(() {
         _isSearching = false;
-        _searchQuery = '';
       });
     }
     // Show Pomodoro tutorial step if Pomodoro tab selected and tutorial not shown
@@ -228,7 +228,7 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Priority Filter
-                  Text(AppLocalizations.of(context)!.priorityLabel, style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600)),
+                  Text(AppLocalizations.of(context)!.priorityLabel(''), style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600)),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -495,9 +495,7 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
           margin: const EdgeInsets.symmetric(horizontal: 16),
           child: TextField(
             onChanged: (value) {
-              setState(() {
-                _searchQuery = value;
-              });
+              // Search functionality handled by SearchManager
             },
             autofocus: true,
             decoration: InputDecoration(
@@ -544,7 +542,7 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
             // Sort functionality handled by HomeScreen
           },
           onLongPress: _showFilterDialog,
-          tooltip: AppLocalizations.of(context)?.priorityLabel ?? 'الأولوية',
+          tooltip: AppLocalizations.of(context)?.priority ?? 'الأولوية',
         ),
         IconButton(
           icon: Icon(_isSearching || _searchController.text.isNotEmpty ? Icons.close : Icons.search, color: iconColor),
@@ -605,7 +603,6 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
     setState(() {
       if (_isSearching) {
         _isSearching = false;
-        _searchQuery = '';
         _categorySearchAnimationController.reverse();
         _categoryFabAnimationController.reverse();
       } else {
@@ -702,88 +699,12 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
             Expanded(child: _buildDrawerItems()),
 
             // Drawer Footer Items
-            /*     Container(
+            Container(
               decoration: BoxDecoration(
                 border: Border(top: BorderSide(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2), width: 1)),
               ),
               child: Column(
                 children: [
-                  // Admin Panel (only for admin users)
-                  BlocBuilder<UserBloc, UserState>(
-                    builder: (context, userState) {
-                      if (userState is UserLoaded && userState.user.isAdmin!) {
-                        return ListTile(
-                          leading: Icon(Icons.admin_panel_settings, color: Theme.of(context).colorScheme.primary),
-                          title: Text(
-                            AppLocalizations.of(context)!.adminPanel,
-                            style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w500),
-                          ),
-                          onTap: () {
-                            // Track admin panel access
-                            final analytics = context.read<AnalyticsService>();
-                            analytics.logCustomEvent(name: 'admin_panel_opened', parameters: {'user_id': userState.user.id});
-
-                            Navigator.pop(context);
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminPanelScreen()));
-                          },
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
-
-                  // Ambient Mode
-                  ListTile(
-                    leading: Icon(Icons.wb_sunny_outlined, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                    title: Text(
-                      AppLocalizations.of(context)!.ambientMode,
-                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w500),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const AmbientScreen()));
-                    },
-                  ),
-
-                  // Emergency
-                  ListTile(
-                    leading: Icon(Icons.emergency, color: Theme.of(context).colorScheme.error),
-                    title: Text(
-                      AppLocalizations.of(context)!.emergency,
-                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w500),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const EmergencyScreen()));
-                    },
-                  ),
-
-                  // Recurring Tasks
-                  ListTile(
-                    leading: Icon(Icons.replay, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                    title: Text(
-                      AppLocalizations.of(context)!.recurringTasksManager,
-                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w500),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const RecurringTasksScreen()));
-                    },
-                  ),
-
-                  // Settings
-                  ListTile(
-                    leading: Icon(Icons.settings, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                    title: Text(
-                      AppLocalizations.of(context)!.settingsScreenTitle,
-                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w500),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsScreen()));
-                    },
-                  ),
-
                   // Sign Out
                   ListTile(
                     leading: Icon(Icons.logout, color: Theme.of(context).colorScheme.error),
@@ -792,14 +713,12 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
                       style: TextStyle(color: Theme.of(context).colorScheme.error, fontWeight: FontWeight.w500),
                     ),
                     onTap: () {
-                      context.read<AuthBloc>().add(AuthSignOutRequested());
-                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SplashScreen()), (route) => false);
+                      _showLogoutConfirmationDialog();
                     },
                   ),
                 ],
               ),
             ),
-         */
           ],
         ),
       ),
@@ -839,7 +758,11 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
                   color: Colors.white.withValues(alpha: 0.2),
                   border: Border.all(color: Colors.white.withValues(alpha: 0.5), width: 3),
                 ),
-                child: userImage != null && userImage.isNotEmpty ? CachedNetworkImage(imageUrl: userImage, width: 40, height: 40, fit: BoxFit.cover) : Icon(Icons.person, size: 40, color: Colors.white),
+                child: userImage != null && userImage.isNotEmpty
+                    ? ClipOval(
+                        child: CachedNetworkImage(imageUrl: userImage, width: 40, height: 40, fit: BoxFit.cover),
+                      )
+                    : Icon(Icons.person, size: 40, color: Colors.white),
               ),
               const SizedBox(height: 16),
 
@@ -887,7 +810,7 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
         const SizedBox(height: 8),
 
         // Main Navigation Section
-        _buildDrawerSectionHeader('Main Navigation'),
+        _buildDrawerSectionHeader(AppLocalizations.of(context)!.mainNavigation),
         _buildModernDrawerItem(
           icon: Icons.home_rounded,
           title: AppLocalizations.of(context)!.homeScreenTitle,
@@ -932,15 +855,16 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
         const SizedBox(height: 16),
 
         // Smart Features Section
-        _buildDrawerSectionHeader('Smart Features'),
+        _buildDrawerSectionHeader(AppLocalizations.of(context)!.smartFeatures),
         _buildModernDrawerItem(
           icon: Icons.psychology_rounded,
-          title: 'Pomodoro Analytics',
-          subtitle: 'AI-powered insights & trends',
+          title: AppLocalizations.of(context)!.pomodoroAnalytics,
+          subtitle: AppLocalizations.of(context)!.aiPoweredInsights,
           isSelected: false,
           onTap: () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const PomodoroAnalyticsScreen()));
+            final taskRepository = context.read<TaskListBloc>().taskRepository;
+            Navigator.push(context, MaterialPageRoute(builder: (context) => PomodoroAnalyticsScreen(taskRepository: taskRepository)));
           },
           badge: _getAnalyticsBadge(),
         ),
@@ -948,7 +872,7 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
         _buildModernDrawerItem(
           icon: Icons.replay_rounded,
           title: AppLocalizations.of(context)!.recurringTasksManager,
-          subtitle: 'Automated task scheduling',
+          subtitle: AppLocalizations.of(context)!.automatedTaskScheduling,
           isSelected: false,
           onTap: () {
             Navigator.pop(context);
@@ -970,7 +894,7 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
         _buildModernDrawerItem(
           icon: Icons.emergency_rounded,
           title: AppLocalizations.of(context)!.emergency,
-          subtitle: 'Quick emergency access',
+          subtitle: AppLocalizations.of(context)!.quickEmergencyAccess,
           isSelected: false,
           onTap: () {
             Navigator.pop(context);
@@ -980,7 +904,7 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
         const SizedBox(height: 16),
 
         // Tools & Settings Section
-        _buildDrawerSectionHeader('Tools & Settings'),
+        _buildDrawerSectionHeader(AppLocalizations.of(context)!.toolsAndSettings),
         _buildModernDrawerItem(
           icon: Icons.settings_rounded,
           title: AppLocalizations.of(context)!.settingsScreenTitle,
@@ -1007,11 +931,11 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
             if (userState is UserLoaded && userState.user.isAdmin!) {
               return Column(
                 children: [
-                  _buildDrawerSectionHeader('Admin Tools'),
+                  _buildDrawerSectionHeader(AppLocalizations.of(context)!.adminTools),
                   _buildModernDrawerItem(
                     icon: Icons.admin_panel_settings_rounded,
                     title: AppLocalizations.of(context)!.adminPanel,
-                    subtitle: 'System administration',
+                    subtitle: AppLocalizations.of(context)!.systemAdministration,
                     isSelected: false,
                     onTap: () {
                       // Track admin panel access
@@ -1123,9 +1047,9 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(10)),
-      child: const Text(
-        'NEW',
-        style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold),
+      child: Text(
+        AppLocalizations.of(context)!.newFeature,
+        style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -1153,6 +1077,33 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
           ],
         ),
         actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.close))],
+      ),
+    );
+  }
+
+  void _showLogoutConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.logout, color: Theme.of(context).colorScheme.error),
+            const SizedBox(width: 12),
+            Text(AppLocalizations.of(context)!.signOut),
+          ],
+        ),
+        content: Text(AppLocalizations.of(context)!.areYouSureYouWantToSignOut),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancelButton)),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close dialog
+              context.read<AuthBloc>().add(AuthSignOutRequested());
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SplashScreen()), (route) => false);
+            },
+            child: Text(AppLocalizations.of(context)!.signOut, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+          ),
+        ],
       ),
     );
   }
@@ -1286,11 +1237,11 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
   }
 
   Widget _buildFloatingActionButton() {
-    /*  if (_selectedIndex == 0) return const SizedBox.shrink(); */
     if (_selectedIndex == 0) {
-      return _buildMultiActionFAB();
-    } else {
+      // Home Screen manages its own selection-aware FAB
       return const SizedBox.shrink();
+    } else {
+      return const SizedBox.shrink(); // Previously other tabs didn't have FAB either or were hidden
     }
   }
 
@@ -1613,7 +1564,7 @@ class _FilterDialogState extends State<FilterDialog> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(AppLocalizations.of(context)!.priorityLabel, style: Theme.of(context).textTheme.titleMedium),
+                Text(AppLocalizations.of(context)!.priority, style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,

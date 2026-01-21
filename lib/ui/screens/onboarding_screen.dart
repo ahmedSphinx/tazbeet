@@ -107,6 +107,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   }
 
   Widget _buildOnboardingPage(OnboardingStep step) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -132,7 +134,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
 
                             // Title
                             Text(
-                              step.title,
+                              _getLocalizedTitle(l10n, step.title),
                               style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.bold),
                               textAlign: TextAlign.center,
                             ),
@@ -140,7 +142,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
 
                             // Description
                             Text(
-                              step.description,
+                              _getLocalizedDescription(l10n, step.description),
                               style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8)),
                               textAlign: TextAlign.center,
                             ),
@@ -162,7 +164,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               builder: (context, child) {
                 return SlideTransition(
                   position: Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic)),
-                  child: FadeTransition(opacity: _animationController, child: _buildHighlightsList(step.highlights)),
+                  child: FadeTransition(opacity: _animationController, child: _buildHighlightsList(step.highlights.map((highlight) => _getLocalizedHighlight(l10n, highlight)).toList())),
                 );
               },
             ),
@@ -308,6 +310,183 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
       if (mounted) {
         setState(() => _isAnimating = false);
       }
+    }
+  }
+
+  // Helper methods for localization
+  String _getLocalizedTitle(AppLocalizations l10n, String titleKey) {
+    switch (titleKey) {
+      case 'welcomeToTazbeet':
+        return l10n.welcomeToTazbeet;
+      case 'smartTaskSorting':
+        return l10n.smartTaskSorting;
+      case 'pomodoroIntegration':
+        return l10n.pomodoroIntegration;
+      case 'moodAndEnergyTracking':
+        return l10n.moodEnergyTracking;
+      case 'accessibilityFeatures':
+        return l10n.accessibilityFeatures;
+      default:
+        // Fallback to English for unsupported languages
+        return _getEnglishTitle(titleKey);
+    }
+  }
+
+  // English fallback for unsupported languages
+  String _getEnglishTitle(String titleKey) {
+    switch (titleKey) {
+      case 'welcomeToTazbeet':
+        return 'Welcome to Tazbeet';
+      case 'smartTaskSorting':
+        return 'Smart Task Sorting';
+      case 'pomodoroIntegration':
+        return 'Pomodoro Integration';
+      case 'moodAndEnergyTracking':
+        return 'Mood & Energy Tracking';
+      case 'accessibilityFeatures':
+        return 'Accessibility Features';
+      default:
+        return titleKey;
+    }
+  }
+
+  String _getLocalizedDescription(AppLocalizations l10n, String descriptionKey) {
+    try {
+      switch (descriptionKey) {
+        case 'yourIntelligentTaskManagementCompanionWithAiPoweredFeatures':
+          return l10n.yourIntelligentTaskManagementCompanionWithAiPoweredFeatures;
+        case 'experienceAiPoweredTaskPrioritizationThatAdaptsToYourPatterns':
+          return l10n.experienceAiPoweredTaskPrioritizationThatAdaptsToYourPatterns;
+        case 'focusBetterWithAdaptiveTimingAndSmartBreaks':
+          return l10n.focusBetterWithAdaptiveTimingAndSmartBreaks;
+        case 'understandYourPatternsAndOptimizeYourProductivity':
+          return l10n.understandYourPatternsAndOptimizeYourProductivity;
+        case 'customizeTheAppToWorkBestForYou':
+          return l10n.customizeTheAppToWorkBestForYou;
+        default:
+          return _getEnglishDescription(descriptionKey);
+      }
+    } catch (e) {
+      // Fallback to English if localization fails
+      return _getEnglishDescription(descriptionKey);
+    }
+  }
+
+  // English fallback for unsupported languages
+  String _getEnglishDescription(String descriptionKey) {
+    switch (descriptionKey) {
+      case 'yourIntelligentTaskManagementCompanionWithAiPoweredFeatures':
+        return 'Your intelligent task management companion with AI-powered features';
+      case 'experienceAiPoweredTaskPrioritizationThatAdaptsToYourPatterns':
+        return 'Experience AI-powered task prioritization that adapts to your patterns';
+      case 'focusBetterWithAdaptiveTimingAndSmartBreaks':
+        return 'Focus better with adaptive timing and smart breaks';
+      case 'understandYourPatternsAndOptimizeYourProductivity':
+        return 'Understand your patterns and optimize your productivity';
+      case 'customizeTheAppToWorkBestForYou':
+        return 'Customize the app to work best for you';
+      default:
+        return descriptionKey;
+    }
+  }
+
+  String _getLocalizedHighlight(AppLocalizations l10n, String highlightKey) {
+    try {
+      switch (highlightKey) {
+        case 'smartTaskSortingWithAiRecommendations':
+          return l10n.smartTaskSortingWithAiRecommendations;
+        case 'adaptivePomodoroTiming':
+          return l10n.adaptivePomodoroTiming;
+        case 'moodAndEnergyTracking':
+          return l10n.moodEnergyTracking;
+        case 'productivityAnalytics':
+          return l10n.productivityAnalytics;
+        case 'tasksSortedByPriorityAndSuitability':
+          return l10n.tasksSortedByPriorityAndSuitability;
+        case 'timeBasedRecommendations':
+          return l10n.timeBasedRecommendations;
+        case 'energyAwareScheduling':
+          return l10n.energyAwareScheduling;
+        case 'visualIndicatorsForAiSuggestions':
+          return l10n.visualIndicatorsForAiSuggestions;
+        case '25MinuteFocusSessions':
+          return l10n.minuteFocusSessions(25);
+        case 'adaptiveBreakSuggestions':
+          return l10n.adaptiveBreakSuggestions;
+        case 'energyLevelTracking':
+          return l10n.energyLevelTracking;
+        case 'productivityInsights':
+          return l10n.productivityInsights;
+        case 'dailyMoodCheckIns':
+          return l10n.dailyMoodCheckIns;
+        case 'energyLevelMonitoring':
+          return l10n.energyLevelMonitoring;
+        case 'achievementSystem':
+          return l10n.achievementSystem;
+        case 'wellnessInsights':
+          return l10n.wellnessInsights;
+        case 'highContrastMode':
+          return l10n.highContrastMode;
+        case 'largeTextOptions':
+          return l10n.largeTextOptions;
+        case 'reducedMotionSettings':
+          return l10n.reducedMotionSettings;
+        case 'voiceCommandsSupport':
+          return l10n.voiceCommandsSupport;
+        default:
+          return _getEnglishHighlight(highlightKey);
+      }
+    } catch (e) {
+      // Fallback to English if localization fails
+      return _getEnglishHighlight(highlightKey);
+    }
+  }
+
+  // English fallback for unsupported languages
+  String _getEnglishHighlight(String highlightKey) {
+    switch (highlightKey) {
+      case 'smartTaskSortingWithAiRecommendations':
+        return 'Smart task sorting with AI recommendations';
+      case 'adaptivePomodoroTiming':
+        return 'Adaptive Pomodoro timing';
+      case 'moodAndEnergyTracking':
+        return 'Mood and energy tracking';
+      case 'productivityAnalytics':
+        return 'Productivity analytics';
+      case 'tasksSortedByPriorityAndSuitability':
+        return 'Tasks sorted by priority and suitability';
+      case 'timeBasedRecommendations':
+        return 'Time-based recommendations';
+      case 'energyAwareScheduling':
+        return 'Energy-aware scheduling';
+      case 'visualIndicatorsForAiSuggestions':
+        return 'Visual indicators for AI suggestions';
+      case '25MinuteFocusSessions':
+        return '25-minute focus sessions';
+      case 'adaptiveBreakSuggestions':
+        return 'Adaptive break suggestions';
+      case 'energyLevelTracking':
+        return 'Energy level tracking';
+      case 'productivityInsights':
+        return 'Productivity insights';
+      case 'dailyMoodCheckIns':
+        return 'Daily mood check-ins';
+      case 'energyLevelMonitoring':
+        return 'Energy level monitoring';
+      case 'achievementSystem':
+        return 'Achievement system';
+      case 'wellnessInsights':
+        return 'Wellness insights';
+      case 'highContrastMode':
+        return 'High contrast mode';
+      case 'largeTextOptions':
+        return 'Large text options';
+      case 'reducedMotionSettings':
+        return 'Reduced motion settings';
+      case 'voiceCommandsSupport':
+        return 'Voice commands support';
+      default:
+        return highlightKey;
     }
   }
 }

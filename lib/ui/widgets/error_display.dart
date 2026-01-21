@@ -10,7 +10,7 @@ class ErrorDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppLogging.logInfo(message, name: 'ErrorDisplay');
+    AppLogging.logError(message, name: 'ErrorDisplay');
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),

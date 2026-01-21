@@ -1,20 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:tazbeet/services/app_logging_service.dart';
 import 'dart:io';
-import '../models/task.dart';
-import 'notification_service.dart';
-import 'localization_service.dart';
-import '../repositories/task_repository.dart';
-import 'settings_service.dart';
+import '../../models/task.dart';
+import '../../repositories/task_repository.dart';
+import '../../services/notification_service.dart';
+import '../../services/localization_service.dart';
 import 'adaptive_pomodoro.dart';
 import 'session_chain.dart';
 import 'enhanced_progress.dart';
 import 'focus_mode.dart';
+import 'pomodoro_audio_manager.dart';
 
 enum PomodoroState { idle, work, shortBreak, longBreak, paused }
 
@@ -32,29 +30,32 @@ class PomodoroTimer extends ChangeNotifier {
   final TaskRepository? taskRepository;
   final AdaptivePomodoro adaptivePomodoro;
   final ProgressTracker progressTracker;
+  final PomodoroAudioManager audioManager;
 
   // Callback for state changes (for UI to play sounds, show animations)
   void Function(PomodoroState oldState, PomodoroState newState)? onStateChange;
-
-  // Audio player for session completion sounds
-  final AudioPlayer _audioPlayer = AudioPlayer();
-  bool _enableSound = true;
-  bool _enableVibration = true;
 
   // Enhanced features
   SessionChain? _currentChain;
   bool _adaptiveTimingEnabled = true;
   bool _focusModeEnabled = false;
-  final List<Map<String, dynamic>> _sessionHistory = [];
+  bool isUsingCustomTemplate = false;
 
-  PomodoroTimer({PomodoroSession? session, this.taskRepository, AdaptivePomodoro? adaptivePomodoro, ProgressTracker? progressTracker})
+  PomodoroTimer({PomodoroSession? session, this.taskRepository, AdaptivePomodoro? adaptivePomodoro, ProgressTracker? progressTracker, PomodoroAudioManager? audioManager})
     : session = session ?? const PomodoroSession(),
       adaptivePomodoro = adaptivePomodoro ?? AdaptivePomodoro(),
-      progressTracker = progressTracker ?? ProgressTracker();
+      progressTracker = progressTracker ?? ProgressTracker(),
+      audioManager = audioManager ?? PomodoroAudioManager();
 
   void updateSession(PomodoroSession newSession) {
     session = newSession;
     notifyListeners();
+  }
+
+  /// Set that a custom template is being used (disables adaptive timing)
+  void setUsingCustomTemplate(bool usingCustom) {
+    isUsingCustomTemplate = usingCustom;
+    AppLogging.logWarning('Custom template flag set to: $usingCustom');
   }
 
   Task? _selectedTask;
@@ -71,22 +72,39 @@ class PomodoroTimer extends ChangeNotifier {
   Task? get selectedTask => _selectedTask;
 
   void setSelectedTask(Task? task) {
-    _selectedTask = task;
+    try {
+      if (task != null) {
+        // Initialize session chaining if task has subtasks
+        if (task.subtasks.isNotEmpty && _currentChain == null) {
+          try {
+            _currentChain = SessionChain(parentTask: task, availableSubtasks: task.subtasks, strategy: task.strategy);
+          } catch (e) {
+            AppLogging.logError('Failed to initialize session chain: $e');
+            // Continue without session chaining
+          }
+        }
 
-    // Initialize session chain if task has subtasks and auto-start is enabled
-    if (task != null && task.autoStartNextSubtask) {
-      _currentChain = SessionChain.createForTask(task);
-    } else {
-      _currentChain = null;
+        // Apply adaptive timing only if no template was explicitly set
+        // Don't override user-selected templates
+        if (_adaptiveTimingEnabled && _state == PomodoroState.work && !isUsingCustomTemplate) {
+          try {
+            final optimalDuration = adaptivePomodoro.calculateOptimalDuration(task);
+            _remainingSeconds = optimalDuration * 60;
+            AppLogging.logInfo('Applied adaptive timing: ${optimalDuration}min for task: ${task.title}');
+          } catch (e) {
+            AppLogging.logError('Failed to calculate adaptive duration: $e');
+            // Continue with default duration
+          }
+        }
+      }
+      _selectedTask = task;
+      notifyListeners();
+    } catch (e) {
+      AppLogging.logError('Error in setSelectedTask: $e');
+      // Still try to set the task even if some features fail
+      _selectedTask = task;
+      notifyListeners();
     }
-
-    // Update session duration based on task if adaptive timing is enabled
-    if (_adaptiveTimingEnabled && task != null) {
-      final optimalDuration = adaptivePomodoro.calculateOptimalDuration(task);
-      session = PomodoroSession(workDuration: optimalDuration, shortBreakDuration: session.shortBreakDuration, longBreakDuration: session.longBreakDuration, sessionsUntilLongBreak: session.sessionsUntilLongBreak);
-    }
-
-    notifyListeners();
   }
 
   static const String _pomodoroDataKey = 'pomodoro_data';
@@ -141,15 +159,12 @@ class PomodoroTimer extends ChangeNotifier {
 
   Future<void> initialize() async {
     await _loadState();
-    // Load sound/vibration settings
-    final settings = SettingsService().settings;
-    _enableSound = settings.enableSound;
-    _enableVibration = settings.enableVibration;
+    // Audio settings are handled by AudioManager
   }
 
   void updateSoundSettings({bool? enableSound, bool? enableVibration}) {
-    if (enableSound != null) _enableSound = enableSound;
-    if (enableVibration != null) _enableVibration = enableVibration;
+    if (enableSound != null) audioManager.setSoundEnabled(enableSound);
+    if (enableVibration != null) audioManager.setVibrationEnabled(enableVibration);
   }
 
   void start() {
@@ -271,17 +286,7 @@ class PomodoroTimer extends ChangeNotifier {
   }
 
   Future<void> _playCompletionFeedback() async {
-    if (_enableVibration) {
-      HapticFeedback.heavyImpact();
-    }
-    if (_enableSound) {
-      try {
-        await _audioPlayer.play(AssetSource('sounds/session_complete.mp3'));
-      } catch (e) {
-        // Sound file may not exist, ignore
-        AppLogging.logError('Could not play completion sound: $e');
-      }
-    }
+    await audioManager.playCompletionFeedback();
   }
 
   void _resume() {
@@ -300,6 +305,8 @@ class PomodoroTimer extends ChangeNotifier {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       if (_remainingSeconds > 0) {
         _remainingSeconds--;
+
+        // Notify listeners every second for smooth countdown
         // Save state every 10 seconds for persistence
         if (_remainingSeconds % 10 == 0) {
           await _saveState();
@@ -329,7 +336,6 @@ class PomodoroTimer extends ChangeNotifier {
             if (_selectedTask != null && _workStartTime != null) {
               final workDuration = DateTime.now().difference(_workStartTime!).inMinutes;
               final sessionData = {'startTime': _workStartTime!.toIso8601String(), 'duration': workDuration, 'completed': true, 'taskId': _selectedTask!.id, 'taskTitle': _selectedTask!.title};
-              _sessionHistory.add(sessionData);
 
               // Learn from this session
               try {
@@ -531,8 +537,10 @@ class PomodoroTimer extends ChangeNotifier {
   @override
   void dispose() {
     _timer?.cancel();
-    _audioPlayer.dispose();
+    _timer = null;
+    audioManager.dispose();
     FocusMode.dispose();
+    _clearState();
     super.dispose();
   }
 
@@ -593,8 +601,8 @@ class PomodoroTimer extends ChangeNotifier {
       recommendations.addAll(
         FocusMode.getFocusRecommendations(
           currentFocusLevel: 0.8, // Simplified, would calculate from actual data
-          recentSessionProductivity: _sessionHistory.map((s) => s['completed'] as bool).toList(),
-          averageSessionLength: _getAverageSessionLength().toInt(),
+          recentSessionProductivity: [true], // Simplified - would get from actual data
+          averageSessionLength: 25, // Simplified - would calculate from actual data
         ),
       );
     }
@@ -602,15 +610,9 @@ class PomodoroTimer extends ChangeNotifier {
     return recommendations;
   }
 
-  /// Get session history
-  List<Map<String, dynamic>> getSessionHistory() {
-    return List.unmodifiable(_sessionHistory);
-  }
-
   /// Export timer data
   Map<String, dynamic> exportData() {
     return {
-      'sessionHistory': _sessionHistory,
       'adaptiveData': adaptivePomodoro.exportLearningData(),
       'progressData': progressTracker.exportProgressData(),
       'settings': {'adaptiveTimingEnabled': _adaptiveTimingEnabled, 'focusModeEnabled': _focusModeEnabled},
@@ -619,11 +621,6 @@ class PomodoroTimer extends ChangeNotifier {
 
   /// Import timer data
   void importData(Map<String, dynamic> data) {
-    if (data['sessionHistory'] != null) {
-      _sessionHistory.clear();
-      _sessionHistory.addAll((data['sessionHistory'] as List).cast<Map<String, dynamic>>());
-    }
-
     if (data['adaptiveData'] != null) {
       adaptivePomodoro.importLearningData(data['adaptiveData']);
     }
@@ -637,13 +634,5 @@ class PomodoroTimer extends ChangeNotifier {
       _adaptiveTimingEnabled = settings['adaptiveTimingEnabled'] ?? true;
       _focusModeEnabled = settings['focusModeEnabled'] ?? false;
     }
-  }
-
-  double _getAverageSessionLength() {
-    if (_sessionHistory.isEmpty) return 25.0;
-
-    final totalLength = _sessionHistory.map((s) => s['duration'] as int).fold<int>(0, (sum, length) => sum + length);
-
-    return totalLength / _sessionHistory.length;
   }
 }

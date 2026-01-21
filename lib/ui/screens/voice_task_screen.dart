@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../models/task.dart';
 import '../../services/voice_task_service.dart';
 import '../../models/voice_task_result.dart';
 import '../widgets/voice_task_recorder.dart';
@@ -18,7 +19,7 @@ class VoiceTaskScreen extends StatefulWidget {
 class _VoiceTaskScreenState extends State<VoiceTaskScreen> {
   final VoiceTaskService _voiceService = VoiceTaskService();
   bool _showRecorder = false;
-  VoiceTaskResult? _lastResult;
+  List<Task> _recentTasks = [];
 
   @override
   void dispose() {
@@ -194,10 +195,8 @@ class _VoiceTaskScreenState extends State<VoiceTaskScreen> {
 
   void _onTaskCreated(VoiceTaskResult result) {
     setState(() {
-      _lastResult = result;
       _showRecorder = false;
     });
-
     _showConfirmationDialog(result);
   }
 
@@ -244,12 +243,152 @@ class _VoiceTaskScreenState extends State<VoiceTaskScreen> {
   }
 
   void _showTextInput() {
-    // TODO: Implement text input dialog
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.textInputComingSoon), duration: const Duration(seconds: 2)));
+    final TextEditingController _titleController = TextEditingController();
+    final TextEditingController _descriptionController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.enterTaskManually),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _titleController,
+              decoration: InputDecoration(labelText: AppLocalizations.of(context)!.taskTitle, border: OutlineInputBorder()),
+              autofocus: true,
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _descriptionController,
+              decoration: InputDecoration(labelText: AppLocalizations.of(context)!.enterTaskDescription, border: OutlineInputBorder()),
+              maxLines: 3,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancel)),
+          ElevatedButton(
+            onPressed: () {
+              if (_titleController.text.trim().isNotEmpty) {
+                // Create a task from the text input
+                final task = Task(
+                  id: DateTime.now().millisecondsSinceEpoch.toString(),
+                  title: _titleController.text.trim(),
+                  description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
+                  priority: TaskPriority.medium,
+                  createdAt: DateTime.now(),
+                  updatedAt: DateTime.now(),
+                  progress: 0,
+                  index: 0,
+                  subtasks: [],
+                  maxSubtaskDepth: 0,
+                  strictCompletionMode: false,
+                  reminderIntervals: [],
+                  tags: [],
+                );
+
+                // Add task to recent tasks list
+                setState(() {
+                  _recentTasks.insert(0, task);
+                  // Keep only the last 10 tasks
+                  if (_recentTasks.length > 10) {
+                    _recentTasks = _recentTasks.take(10).toList();
+                  }
+                });
+
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.taskAddedSuccessfully), duration: const Duration(seconds: 2)));
+              }
+            },
+            child: Text(AppLocalizations.of(context)!.addTask),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showRecentTasks() {
-    // TODO: Implement recent tasks view
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.recentTasksComingSoon), duration: const Duration(seconds: 2)));
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+        ),
+        child: Column(
+          children: [
+            // Handle bar
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.symmetric(vertical: 12),
+              decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3), borderRadius: BorderRadius.circular(2)),
+            ),
+
+            // Header
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              child: Row(
+                children: [
+                  Icon(Icons.history, color: Theme.of(context).colorScheme.primary),
+                  const SizedBox(width: 12),
+                  Text(AppLocalizations.of(context)!.recentTasks, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+                  const Spacer(),
+                  if (_recentTasks.isNotEmpty)
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _recentTasks.clear();
+                        });
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(AppLocalizations.of(context)!.clearAll),
+                    ),
+                ],
+              ),
+            ),
+
+            const Divider(),
+
+            // Tasks list
+            Expanded(
+              child: _recentTasks.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.inbox_outlined, size: 64, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3)),
+                          const SizedBox(height: 16),
+                          Text(AppLocalizations.of(context)!.noRecentTasks, style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),
+                        ],
+                      ),
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: _recentTasks.length,
+                      itemBuilder: (context, index) {
+                        final task = _recentTasks[index];
+                        return Card(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          child: ListTile(
+                            title: Text(task.title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+                            subtitle: task.description != null ? Text(task.description!, maxLines: 2, overflow: TextOverflow.ellipsis) : null,
+                            trailing: Icon(Icons.arrow_forward_ios, size: 16, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
+                            onTap: () {
+                              // Here you could navigate to task details or edit the task
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

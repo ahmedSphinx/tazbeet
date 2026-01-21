@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:tazbeet/services/app_logging_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../../repositories/user_repository.dart';
 import '../../repositories/category_repository.dart';
 import '../../services/data_sync_service.dart';
-import '../../services/mood_achievement_service.dart';
 import '../../services/admin_service.dart';
 import '../../services/onboarding_service.dart';
 import '../../services/auth_service.dart';
@@ -26,6 +23,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthStarted>(_onAuthStarted);
     on<AuthSignInRequested>(_onSignInRequested);
     on<AuthAppleSignInRequested>(_onAppleSignInRequested);
+    on<AuthGuestModeRequested>(_onGuestModeRequested);
     // Facebook sign-in removed
     on<AuthEmailSignInRequested>(_onEmailSignInRequested);
     on<AuthEmailSignUpRequested>(_onEmailSignUpRequested);
@@ -210,6 +208,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       AppLogging.logError('Apple sign-in failed', name: 'AuthBloc', error: e);
       final errorMessage = _cleanErrorMessage(e.toString());
       emit(AuthError(errorMessage));
+    }
+  }
+
+  void _onGuestModeRequested(AuthGuestModeRequested event, Emitter<AuthState> emit) async {
+    AppLogging.logInfo('Guest mode requested', name: 'AuthBloc');
+    emit(AuthLoading());
+
+    try {
+      // Create a guest user session without Firebase authentication
+      // We'll use a mock user object for guest mode
+      final now = DateTime.now();
+      final guestUser = user_model.User(id: 'guest_user', name: 'Guest User', email: 'guest@tazbeet.local', createdAt: now, updatedAt: now, isAdmin: false);
+      AppLogging.logInfo('Guest mode activated', name: 'AuthBloc');
+
+      emit(AuthenticatedAsGuest(guestUser));
+    } catch (e) {
+      AppLogging.logError('Failed to initialize guest mode', name: 'AuthBloc', error: e);
+      emit(AuthError('Failed to start guest mode. Please try again.'));
     }
   }
 

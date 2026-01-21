@@ -1,760 +1,347 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
-import 'package:confetti/confetti.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+import 'package:provider/provider.dart' show ChangeNotifierProvider;
 import 'package:tazbeet/l10n/app_localizations.dart';
-import '../../../../models/task.dart';
-import '../../../../services/pomodoro_service.dart';
+import 'package:tazbeet/models/task.dart';
+import 'package:tazbeet/services/app_logging_service.dart';
+import 'package:tazbeet/services/pomodoro_service.dart';
+import 'package:tazbeet/models/pomodoro_template_model.dart';
 
-class PomodoroScreen extends StatefulWidget {
-  final Task? initialTask;
-  final List<Task>? taskQueue;
+import '../../../../services/localization_service.dart';
+import '../../../../services/pomodoro_service_locator.dart';
 
-  const PomodoroScreen({super.key, this.initialTask, this.taskQueue});
+// Session completion celebration
+class _SessionCompletionCelebration extends StatefulWidget {
+  final VoidCallback onDismiss;
+
+  const _SessionCompletionCelebration({required this.onDismiss});
 
   @override
-  State<PomodoroScreen> createState() => _PomodoroScreenState();
+  State<_SessionCompletionCelebration> createState() => _SessionCompletionCelebrationState();
 }
 
-class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStateMixin {
-  // ====================================================================
-  // CORE UI LOGIC CONCEPTS - Clean Architecture
-  // ====================================================================
+class _SessionCompletionCelebrationState extends State<_SessionCompletionCelebration> with TickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _opacityAnimation;
 
-  // 1. STATE-DRIVEN UI ARCHITECTURE
-  final _uiState = PomodoroUiState();
-
-  // 2. MULTI-CONTROLLER ANIMATION SYSTEM
-  late final _animationSystem = PomodoroAnimationSystem(this);
-
-  // 3. LAYERED STACK ARCHITECTURE
-  final _layerManager = PomodoroLayerManager();
-
-  // 4. CONTEXT-AWARE DYNAMIC BACKGROUNDS
-  final _backgroundSystem = PomodoroBackgroundSystem();
-
-  // 5. CONDITIONAL VIEW RENDERING
-  final _viewController = PomodoroViewController();
-
-  // 6. PROVIDER PATTERN INTEGRATION
-  // late final _stateManager = PomodoroStateManager();
-
-  // 7. SAFE ASYNC INITIALIZATION
-  final _initializer = PomodoroInitializer();
-
-  // 8. POST-FRAME CALLBACK PATTERN
-  // final _safeUpdater = PomodoroSafeUpdater();
-
-  // 9. MODULAR WIDGET BUILDING
-  final _widgetFactory = PomodoroWidgetFactory();
-
-  // 10. ENHANCED VISUAL EFFECTS SYSTEM
-  final _effectsSystem = PomodoroEffectsSystem();
-
-  // 11. RESPONSIVE LAYOUT STRATEGY
-  final _layoutSystem = PomodoroLayoutSystem();
-
-  // 12. THEME INTEGRATION
-  final _themeSystem = PomodoroThemeSystem();
-
-  // 13. DYNAMIC TIME ADJUSTMENT
-  late PomodoroTimeAdjustment _timeAdjustment;
-
-  // 14. CONTEXTUAL QUICK ACTIONS
-  late PomodoroQuickActions _quickActions;
-
-  // ====================================================================
-  // CORE TIMER MANAGEMENT
-  // ====================================================================
-  late PomodoroTimer _timer;
-
-  // ====================================================================
-  // SESSION CUSTOMIZATION (Available for future use)
-  // ====================================================================
-  // int _workDuration = 25;
-  // int _breakDuration = 5;
-  // int _longBreakDuration = 15;
-  // int _sessionsBeforeLongBreak = 4;
-  // late List<PomodoroTemplate> _templates;
-
-  // ====================================================================
-  // TASK QUEUE MANAGEMENT (Available for future use)
-  // ====================================================================
-  // List<Task> _currentTaskQueue = [];
-  // Task? _currentTask;
-  // PomodoroPlan? _currentPlan;
-
-  // ====================================================================
-  // INITIALIZATION
-  // ====================================================================
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
 
-    // Initialize timer
-    _initializeTimer();
+    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
 
-    // Initialize UI systems with context
-    _timeAdjustment = PomodoroTimeAdjustment(context: context);
-    _quickActions = PomodoroQuickActions(context: context);
+    _opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    // Initialize UI systems
-    _initializer.initializeAll(onInitialized: () => setState(() {}), animationSystem: _animationSystem, effectsSystem: _effectsSystem);
+    _controller.forward();
 
-    // Setup timer listeners
-    _setupTimerListeners();
-
-    // Update UI state
-    _updateUIState(context);
-  }
-
-  void _initializeTimer() {
-    _timer = PomodoroTimer(session: const PomodoroSession(workDuration: 25, shortBreakDuration: 5, longBreakDuration: 15, sessionsUntilLongBreak: 4));
-
-    // Set initial task if provided
-    if (widget.initialTask != null) {
-      _timer.setSelectedTask(widget.initialTask);
-      _uiState.setTaskName(widget.initialTask?.title ?? 'Unknown Task');
-    }
-  }
-
-  void _setupTimerListeners() {
-    _timer.addListener(() {
+    // Auto dismiss after 3 seconds
+    Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
-        setState(() {
-          _updateUIState(context);
+        _controller.reverse().then((_) {
+          if (mounted) widget.onDismiss();
         });
       }
     });
   }
 
-  void _updateUIState(BuildContext context) {
-    _uiState.updateTheme(context);
-
-    // Update completion percentage
-    final totalSeconds = _getTotalSecondsForState(_timer.effectiveState);
-    final completedSeconds = totalSeconds - _timer.remainingSeconds;
-    _uiState.updateCompletion(completedSeconds / totalSeconds);
-  }
-
-  int _getTotalSecondsForState(PomodoroState state) {
-    switch (state) {
-      case PomodoroState.work:
-        return 25 * 60; // 25 minutes
-      case PomodoroState.shortBreak:
-        return 5 * 60; // 5 minutes
-      case PomodoroState.longBreak:
-        return 15 * 60; // 15 minutes
-      default:
-        return 25 * 60;
-    }
-  }
-
   @override
   void dispose() {
-    _timer.dispose();
-    _animationSystem.dispose();
-    _effectsSystem.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
-  // ====================================================================
-  // MAIN BUILD METHOD - Clean Architecture
-  // ====================================================================
   @override
   Widget build(BuildContext context) {
-    // 7. SAFE ASYNC INITIALIZATION
-    if (!_initializer.isReady) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-
-    // 6. PROVIDER PATTERN INTEGRATION
-    return ChangeNotifierProvider.value(
-      value: _timer,
-      child: Scaffold(
-        body: _layerManager.buildStack(
-          children: [
-            // 4. CONTEXT-AWARE DYNAMIC BACKGROUNDS
-            _backgroundSystem.buildBackground(context, _timer),
-
-            // 5. CONDITIONAL VIEW RENDERING
-            Consumer<PomodoroTimer>(
-              builder: (context, timer, child) => _viewController.buildCurrentView(
-                context: context,
-                timer: timer,
-                widgetFactory: _widgetFactory,
-                layoutSystem: _layoutSystem,
-                themeSystem: _themeSystem,
-                timeAdjustment: _timeAdjustment,
-                quickActions: _quickActions,
-                uiState: _uiState,
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Opacity(
+          opacity: _opacityAnimation.value,
+          child: Center(
+            child: Transform.scale(
+              scale: _scaleAnimation.value,
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.95),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 10))],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.celebration, size: 48, color: Colors.green),
+                    const SizedBox(height: 16),
+                    Text(
+                      AppLocalizations.of(context)!.sessionComplete,
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black87),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(AppLocalizations.of(context)!.greatJobTakeABreak, style: TextStyle(fontSize: 16, color: Colors.black54)),
+                  ],
+                ),
               ),
             ),
-
-            // 3. LAYERED STACK ARCHITECTURE - Floating Elements
-            ..._layerManager.buildFloatingLayers(context: context, timer: _timer, timeAdjustment: _timeAdjustment, quickActions: _quickActions, effectsSystem: _effectsSystem),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ====================================================================
-// UI LOGIC CONCEPT 1: STATE-DRIVEN UI ARCHITECTURE
-// ====================================================================
-class PomodoroUiState {
-  bool showCustomization = true;
-  int selectedTemplateIndex = 0;
-  bool isDarkMode = false;
-  String currentTaskName = '';
-  double completionPercentage = 0.0;
-  bool showQuickControls = true;
-  int quickAdjustAmount = 5;
-
-  final List<String> motivationalQuotes = [
-    "Focus on progress, not perfection",
-    "Every moment is a fresh beginning",
-    "Small steps daily lead to big changes",
-    "Your only limit is your mind",
-    "Success is the sum of small efforts",
-    "Stay focused, stay brilliant",
-    "One session at a time",
-    "Your future self will thank you",
-  ];
-
-  void updateTheme(BuildContext context) {
-    isDarkMode = Theme.of(context).brightness == Brightness.dark;
-  }
-
-  void setTaskName(String name) {
-    currentTaskName = name;
-  }
-
-  void updateCompletion(double percentage) {
-    completionPercentage = percentage;
-  }
-}
-
-// ====================================================================
-// UI LOGIC CONCEPT 2: MULTI-CONTROLLER ANIMATION SYSTEM
-// ====================================================================
-class PomodoroAnimationSystem {
-  late final AnimationController mainController;
-  late final AnimationController pulseController;
-  late final AnimationController slideController;
-  late final AnimationController fadeController;
-
-  final TickerProvider vsync;
-
-  PomodoroAnimationSystem(this.vsync) {
-    mainController = AnimationController(duration: const Duration(milliseconds: 300), vsync: vsync);
-    pulseController = AnimationController(duration: const Duration(milliseconds: 1000), vsync: vsync);
-    slideController = AnimationController(duration: const Duration(milliseconds: 600), vsync: vsync);
-    fadeController = AnimationController(duration: const Duration(milliseconds: 800), vsync: vsync);
-  }
-
-  void startEntranceAnimations() {
-    Future.delayed(const Duration(milliseconds: 100), () {
-      slideController.forward();
-      fadeController.forward();
-    });
-  }
-
-  void dispose() {
-    mainController.dispose();
-    pulseController.dispose();
-    slideController.dispose();
-    fadeController.dispose();
-  }
-}
-
-// ====================================================================
-// UI LOGIC CONCEPT 3: LAYERED STACK ARCHITECTURE
-// ====================================================================
-class PomodoroLayerManager {
-  Widget buildStack({required List<Widget> children}) {
-    return Stack(children: children);
-  }
-
-  List<Widget> buildFloatingLayers({
-    required BuildContext context,
-    required PomodoroTimer timer,
-    required PomodoroTimeAdjustment timeAdjustment,
-    required PomodoroQuickActions quickActions,
-    required PomodoroEffectsSystem effectsSystem,
-  }) {
-    return [
-      // Floating Controls Layer
-      _buildFloatingControls(context, timer, timeAdjustment),
-
-      // Motivational Quote Layer
-      _buildMotivationalQuote(context, timer),
-
-      // Effects Layer (Confetti)
-      effectsSystem.buildConfettiOverlay(),
-    ];
-  }
-
-  Widget _buildFloatingControls(BuildContext context, PomodoroTimer timer, PomodoroTimeAdjustment timeAdjustment) {
-    return Positioned(top: 20, right: 20, child: _buildFloatingControlPanel(context, timer, timeAdjustment));
-  }
-
-  Widget _buildFloatingControlPanel(BuildContext context, PomodoroTimer timer, PomodoroTimeAdjustment timeAdjustment) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface.withOpacity(0.95),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Theme.of(context).shadowColor.withOpacity(0.2), blurRadius: 10, offset: const Offset(0, 4))],
-      ),
-      child: Column(mainAxisSize: MainAxisSize.min, children: [_buildTimeAdjustButtons(context, timer, timeAdjustment), const SizedBox(height: 8), _buildTimerControlButtons(context, timer, timeAdjustment)]),
-    );
-  }
-
-  Widget _buildTimeAdjustButtons(BuildContext context, PomodoroTimer timer, PomodoroTimeAdjustment timeAdjustment) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _buildFloatingButton(context: context, icon: Icons.add, label: '+5m', color: Theme.of(context).colorScheme.primary, onTap: () => timeAdjustment.addTime(timer, 5)),
-        const SizedBox(height: 4),
-        _buildFloatingButton(context: context, icon: Icons.remove, label: '-5m', color: Theme.of(context).colorScheme.error, onTap: () => timeAdjustment.addTime(timer, -5)),
-      ],
-    );
-  }
-
-  Widget _buildTimerControlButtons(BuildContext context, PomodoroTimer timer, PomodoroTimeAdjustment timeAdjustment) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(height: 1, color: Theme.of(context).colorScheme.outline.withOpacity(0.3), margin: const EdgeInsets.symmetric(horizontal: 8)),
-        const SizedBox(height: 8),
-        _buildFloatingButton(
-          context: context,
-          icon: timer.isPaused ? Icons.play_arrow : Icons.pause,
-          label: timer.isPaused ? 'Play' : 'Pause',
-          color: Theme.of(context).colorScheme.primary,
-          onTap: timer.isPaused ? timer.start : timer.pause,
-        ),
-        const SizedBox(height: 4),
-        _buildFloatingButton(context: context, icon: Icons.stop, label: 'Stop', color: Theme.of(context).colorScheme.error, onTap: () => timeAdjustment.stopTimer(timer)),
-      ],
-    );
-  }
-
-  Widget _buildFloatingButton({required BuildContext context, required IconData icon, required String label, required Color color, required VoidCallback onTap}) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: color, size: 20),
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMotivationalQuote(BuildContext context, PomodoroTimer timer) {
-    if (timer.state == PomodoroState.idle) return const SizedBox.shrink();
-
-    final quotes = [
-      "Focus on progress, not perfection",
-      "Every moment is a fresh beginning",
-      "Small steps daily lead to big changes",
-      "Your only limit is your mind",
-      "Success is the sum of small efforts",
-      "Stay focused, stay brilliant",
-      "One session at a time",
-      "Your future self will thank you",
-    ];
-
-    final quoteIndex = (timer.currentSession - 1) % quotes.length;
-    final quote = quotes[quoteIndex];
-
-    return Positioned(
-      bottom: 20,
-      left: 20,
-      right: 20,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [Theme.of(context).colorScheme.surface.withOpacity(0.9), Theme.of(context).colorScheme.surface.withOpacity(0.7)]),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
-          boxShadow: [BoxShadow(color: Theme.of(context).shadowColor.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.format_quote, color: Theme.of(context).colorScheme.primary, size: 20),
-            const SizedBox(height: 8),
-            Text(
-              quote,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface, fontStyle: FontStyle.italic),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ====================================================================
-// UI LOGIC CONCEPT 4: CONTEXT-AWARE DYNAMIC BACKGROUNDS
-// ====================================================================
-class PomodoroBackgroundSystem {
-  Widget buildBackground(BuildContext context, PomodoroTimer timer) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: _getBackgroundColors(timer.effectiveState, context)),
-      ),
-    );
-  }
-
-  List<Color> _getBackgroundColors(PomodoroState state, BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
-    switch (state) {
-      case PomodoroState.work:
-        return isDark
-            ? [const Color(0xFFE63946).withOpacity(0.8), const Color(0xFFD62828).withOpacity(0.9), const Color(0xFFA61E4D).withOpacity(0.95)]
-            : [const Color(0xFFFF6B6B), const Color(0xFFE63946), const Color(0xFFD62828)];
-
-      case PomodoroState.shortBreak:
-        return isDark
-            ? [const Color(0xFF2A9D8F).withOpacity(0.8), const Color(0xFF264653).withOpacity(0.9), const Color(0xFF1B5E3F).withOpacity(0.95)]
-            : [const Color(0xFF52B788), const Color(0xFF2A9D8F), const Color(0xFF40916C)];
-
-      case PomodoroState.longBreak:
-        return isDark
-            ? [const Color(0xFF457B9D).withOpacity(0.8), const Color(0xFF1D3557).withOpacity(0.9), const Color(0xFF1A237E).withOpacity(0.95)]
-            : [const Color(0xFF90E0EF), const Color(0xFF48CAE4), const Color(0xFF00B4D8)];
-
-      case PomodoroState.idle:
-        return isDark
-            ? [const Color(0xFF2D3436).withOpacity(0.9), const Color(0xFF636E72).withOpacity(0.85), const Color(0xFFB2BEC3).withOpacity(0.8)]
-            : [const Color(0xFFDFE6E9), const Color(0xFFB2BEC3), const Color(0xFF74B9FF)];
-
-      default:
-        return isDark
-            ? [const Color(0xFF6C5CE7).withOpacity(0.8), const Color(0xFFA29BFE).withOpacity(0.85), const Color(0xFFFD79A8).withOpacity(0.9)]
-            : [const Color(0xFF667EEA), const Color(0xFF764BA2), const Color(0xFFF093FB)];
-    }
-  }
-}
-
-// ====================================================================
-// UI LOGIC CONCEPT 5: CONDITIONAL VIEW RENDERING
-// ====================================================================
-class PomodoroViewController {
-  Widget buildCurrentView({
-    required BuildContext context,
-    required PomodoroTimer timer,
-    required PomodoroWidgetFactory widgetFactory,
-    required PomodoroLayoutSystem layoutSystem,
-    required PomodoroThemeSystem themeSystem,
-    required PomodoroTimeAdjustment timeAdjustment,
-    required PomodoroQuickActions quickActions,
-    required PomodoroUiState uiState,
-  }) {
-    return SafeArea(
-      child: uiState.showCustomization
-          ? widgetFactory.buildTaskSelectionView(context: context, timer: timer, layoutSystem: layoutSystem, themeSystem: themeSystem)
-          : widgetFactory.buildTimerView(context: context, timer: timer, layoutSystem: layoutSystem, themeSystem: themeSystem, timeAdjustment: timeAdjustment, quickActions: quickActions),
-    );
-  }
-}
-
-// ====================================================================
-// UI LOGIC CONCEPT 9: MODULAR WIDGET BUILDING
-// ====================================================================
-class PomodoroWidgetFactory {
-  Widget buildTaskSelectionView({required BuildContext context, required PomodoroTimer timer, required PomodoroLayoutSystem layoutSystem, required PomodoroThemeSystem themeSystem}) {
-    return layoutSystem.buildResponsiveLayout(context: context, children: [themeSystem.buildModernHeader(context, 'Select Timer'), const SizedBox(height: 20), _buildTemplateGrid(context, timer)]);
-  }
-
-  Widget buildTimerView({
-    required BuildContext context,
-    required PomodoroTimer timer,
-    required PomodoroLayoutSystem layoutSystem,
-    required PomodoroThemeSystem themeSystem,
-    required PomodoroTimeAdjustment timeAdjustment,
-    required PomodoroQuickActions quickActions,
-  }) {
-    return layoutSystem.buildResponsiveLayout(
-      context: context,
-      children: [
-        // Timer Display Section
-        Expanded(flex: 3, child: _buildTimerDisplay(context, timer)),
-
-        // Controls Section
-        Expanded(
-          flex: 2,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [themeSystem.buildModernControls(context, timer), const SizedBox(height: 16), quickActions.buildQuickActions(context, timer, timeAdjustment)],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTimerDisplay(BuildContext context, PomodoroTimer timer) {
-    return Center(
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [_buildAnimatedStateLabel(context, timer), const SizedBox(height: 30), _buildModernCircularTimer(context, timer), const SizedBox(height: 20), _buildSessionProgress(context, timer)],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAnimatedStateLabel(BuildContext context, PomodoroTimer timer) {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 500),
-      transitionBuilder: (child, animation) {
-        return FadeTransition(
-          opacity: animation,
-          child: SlideTransition(
-            position: Tween<Offset>(begin: const Offset(0, -0.2), end: Offset.zero).animate(animation),
-            child: child,
           ),
         );
       },
-      child: Text(
-        _getLocalizedLabel(timer.effectiveState, timer.isPaused, context),
-        key: ValueKey(timer.effectiveState.toString() + timer.isPaused.toString()),
-        style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.bold),
-      ),
     );
   }
+}
 
-  Widget _buildModernCircularTimer(BuildContext context, PomodoroTimer timer) {
-    return Container(
-      width: 280,
-      height: 280,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Theme.of(context).colorScheme.surface.withOpacity(0.1), Theme.of(context).colorScheme.surface.withOpacity(0.05)]),
-        boxShadow: [BoxShadow(color: _getGaugeColor(timer.effectiveState, context).withOpacity(0.2), blurRadius: 30, offset: const Offset(0, 10))],
-      ),
-      child: Stack(children: [_buildBackgroundRing(context), _buildProgressGauge(context, timer), _buildTimerText(context, timer)]),
-    );
+// Animated button with accessibility
+class _AnimatedButton extends StatefulWidget {
+  final Widget child;
+  final VoidCallback onTap;
+  final String? semanticLabel;
+
+  const _AnimatedButton({required this.child, required this.onTap, this.semanticLabel});
+
+  @override
+  State<_AnimatedButton> createState() => _AnimatedButtonState();
+}
+
+class _AnimatedButtonState extends State<_AnimatedButton> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(duration: const Duration(milliseconds: 150), vsync: this);
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
-  Widget _buildBackgroundRing(BuildContext context) {
-    return Positioned.fill(
-      child: Container(
-        margin: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1), width: 8),
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: widget.semanticLabel,
+      child: GestureDetector(
+        onTapDown: (_) => _controller.forward(),
+        onTapUp: (_) {
+          _controller.reverse();
+          widget.onTap();
+        },
+        onTapCancel: () => _controller.reverse(),
+        child: AnimatedBuilder(
+          animation: _scaleAnimation,
+          builder: (context, child) {
+            return Transform.scale(scale: _scaleAnimation.value, child: child);
+          },
+          child: widget.child,
         ),
       ),
     );
   }
+}
 
-  Widget _buildProgressGauge(BuildContext context, PomodoroTimer timer) {
-    return Positioned.fill(
-      child: SfRadialGauge(
-        axes: <RadialAxis>[
-          RadialAxis(
-            minimum: 0,
-            maximum: _getTotalSecondsForState(timer.effectiveState).toDouble(),
-            showLabels: false,
-            showTicks: false,
-            startAngle: 270,
-            endAngle: 270,
-            axisLineStyle: AxisLineStyle(thickness: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1), cornerStyle: CornerStyle.bothCurve),
-            pointers: <GaugePointer>[
-              RangePointer(
-                value: timer.remainingSeconds.toDouble(),
-                width: 12,
-                color: _getGaugeColor(timer.effectiveState, context),
-                cornerStyle: CornerStyle.bothCurve,
-                gradient: SweepGradient(colors: [_getGaugeColor(timer.effectiveState, context), _getGaugeColor(timer.effectiveState, context).withOpacity(0.6)], stops: const [0.0, 1.0]),
-              ),
-            ],
+class PomodoroScreen extends StatefulWidget {
+  final Task? initialTask;
+  final PomodoroTemplate? template;
+  final VoidCallback? onTimerStopped;
+
+  const PomodoroScreen({super.key, this.initialTask, this.template, this.onTimerStopped});
+
+  @override
+  State<PomodoroScreen> createState() => _PomodoroScreenState();
+
+  // Static method to show as modal page
+  static Future<void> showAsPage(BuildContext context, {Task? initialTask, PomodoroTemplate? template}) {
+    AppLogging.logInfo('PomodoroScreen: Starting navigation to timer screen', name: 'PomodoroNavigation');
+    AppLogging.logInfo('PomodoroScreen: Navigation stack depth before push: ${Navigator.of(context).canPop() ? "has back stack" : "no back stack"}', name: 'PomodoroNavigation');
+
+    return Navigator.of(context)
+        .push(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => PomodoroScreen(initialTask: initialTask, template: template),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              const begin = Offset(0.0, 1.0);
+              const end = Offset.zero;
+              const curve = Curves.ease;
+
+              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+              return SlideTransition(position: animation.drive(tween), child: child);
+            },
           ),
-        ],
-      ),
-    );
+        )
+        .then((_) {
+          AppLogging.logInfo('PomodoroScreen: Returned from timer screen', name: 'PomodoroNavigation');
+        });
+  }
+}
+
+class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStateMixin, WidgetsBindingObserver {
+  late PomodoroTimer _timer;
+  late PomodoroTemplate _currentTemplate;
+
+  // Statistics data
+  int _completedSessions = 0;
+  int _workTimeMinutes = 0;
+  int _breakTimeMinutes = 0;
+
+  // Celebration state
+  bool _showCelebration = false;
+  PomodoroState _lastState = PomodoroState.idle;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Add lifecycle observer for state restoration
+    WidgetsBinding.instance.addObserver(this);
+
+    // Initialize services
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      LocalizationService.initialize(context);
+    });
+
+    // Initialize PomodoroServiceLocator if not already done
+    if (PomodoroServiceLocator.taskRepository == null) {
+      PomodoroServiceLocator.initialize();
+    }
+
+    // Use provided template or default
+    _currentTemplate = widget.template ?? PomodoroTemplate(id: 'classic', name: AppLocalizations.of(context)!.classicPreset, workDuration: 25, restDuration: 5, longRestDuration: 15, cycles: 4, recommendedFor: 'normal');
+
+    // Log template info for debugging
+    if (widget.template != null) {
+      AppLogging.logInfo('PomodoroScreen received template: ${widget.template!.name} - Work: ${widget.template!.workDuration}min, Rest: ${widget.template!.restDuration}min');
+    } else {
+      AppLogging.logInfo('PomodoroScreen received no template, using default: ${_currentTemplate.name}');
+    }
+
+    // Initialize timer with template (async)
+    _initializeTimer();
   }
 
-  Widget _buildTimerText(BuildContext context, PomodoroTimer timer) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            _formatDuration(timer.remainingSeconds),
-            style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 36, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
-          ),
-          const SizedBox(height: 8),
-          Text('Session ${timer.currentSession}/4', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),
-        ],
-      ),
-    );
+  @override
+  void dispose() {
+    AppLogging.logInfo('PomodoroScreen: Disposing - saving state', name: 'PomodoroNavigation');
+    _saveTimerState();
+    WidgetsBinding.instance.removeObserver(this);
+    _timer.dispose();
+    super.dispose();
   }
 
-  Widget _buildSessionProgress(BuildContext context, PomodoroTimer timer) {
-    final totalSessions = 4;
-    final completedSessions = timer.currentSession - 1;
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('Session Progress', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              totalSessions,
-              (index) => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: Container(
-                  width: 16,
-                  height: 8,
-                  decoration: BoxDecoration(color: index < completedSessions ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.outline.withOpacity(0.3), borderRadius: BorderRadius.circular(4)),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    switch (state) {
+      case AppLifecycleState.paused:
+        AppLogging.logInfo('PomodoroScreen: App paused - saving timer state', name: 'PomodoroNavigation');
+        _saveTimerState();
+        break;
+      case AppLifecycleState.resumed:
+        AppLogging.logInfo('PomodoroScreen: App resumed - checking for state restoration', name: 'PomodoroNavigation');
+        _restoreTimerState();
+        break;
+      case AppLifecycleState.detached:
+        AppLogging.logInfo('PomodoroScreen: App detached - cleaning up', name: 'PomodoroNavigation');
+        _saveTimerState();
+        break;
+      default:
+        break;
+    }
   }
 
-  Widget _buildTemplateGrid(BuildContext context, PomodoroTimer timer) {
-    final templates = [
-      PomodoroTemplate(
-        id: 'classic',
-        name: 'Classic Pomodoro',
-        workDuration: 25,
-        shortBreakDuration: 5,
-        longBreakDuration: 15,
-        sessionsUntilLongBreak: 4,
-        isRecommended: true,
-        description: 'Traditional 25-5-15 minute cycle',
-      ),
-      PomodoroTemplate(id: 'short', name: 'Short Sessions', workDuration: 15, shortBreakDuration: 3, longBreakDuration: 10, sessionsUntilLongBreak: 4, isRecommended: false, description: 'Quick 15-3-10 minute cycles'),
-      PomodoroTemplate(id: 'long', name: 'Deep Work', workDuration: 50, shortBreakDuration: 10, longBreakDuration: 30, sessionsUntilLongBreak: 2, isRecommended: false, description: 'Extended 50-10-30 minute sessions'),
-    ];
+  void _saveTimerState() {
+    try {
+      // Save current timer state (simplified version)
+      final timerState = {
+        'remainingSeconds': _timer.remainingSeconds,
+        'currentState': _timer.state.toString(),
+        'completedSessions': _completedSessions,
+        'workTimeMinutes': _workTimeMinutes,
+        'breakTimeMinutes': _breakTimeMinutes,
+        'templateId': _currentTemplate.id,
+        'timestamp': DateTime.now().toIso8601String(),
+      };
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          Text(
-            'Choose Your Timer Style',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
-          ),
-          const SizedBox(height: 20),
-          Expanded(
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.8, crossAxisSpacing: 16, mainAxisSpacing: 16),
-              itemCount: templates.length,
-              itemBuilder: (context, index) {
-                final template = templates[index];
-                return _buildTemplateCard(context, template, timer);
-              },
-            ),
-          ),
-        ],
-      ),
-    );
+      // In a real implementation, you would save this to SharedPreferences or similar
+      AppLogging.logInfo('PomodoroScreen: Timer state saved: ${timerState['remainingSeconds']}s remaining', name: 'PomodoroNavigation');
+    } catch (e) {
+      AppLogging.logError('PomodoroScreen: Error saving timer state: $e', name: 'PomodoroNavigation');
+    }
   }
 
-  Widget _buildTemplateCard(BuildContext context, PomodoroTemplate template, PomodoroTimer timer) {
-    return GestureDetector(
-      onTap: () => _startTemplate(template, timer),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: template.isRecommended
-                ? [Theme.of(context).colorScheme.primary.withOpacity(0.1), Theme.of(context).colorScheme.primary.withOpacity(0.05)]
-                : [Theme.of(context).colorScheme.surface.withOpacity(0.5), Theme.of(context).colorScheme.surface.withOpacity(0.3)],
-          ),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: template.isRecommended ? Theme.of(context).colorScheme.primary.withOpacity(0.3) : Theme.of(context).colorScheme.outline.withOpacity(0.2), width: template.isRecommended ? 2 : 1),
-          boxShadow: [BoxShadow(color: Theme.of(context).shadowColor.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (template.isRecommended)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary, borderRadius: BorderRadius.circular(12)),
-                child: Text(
-                  'RECOMMENDED',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
-                ),
-              ),
-            const SizedBox(height: 8),
-            Text(
-              template.name,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
-            ),
-            const SizedBox(height: 4),
-            Text(template.description, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),
-            const Spacer(),
-            Row(children: [_buildDurationChip(context, '${template.workDuration}m', 'Work'), const SizedBox(width: 4), _buildDurationChip(context, '${template.shortBreakDuration}m', 'Break')]),
-          ],
-        ),
-      ),
-    );
+  void _restoreTimerState() {
+    try {
+      // In a real implementation, you would load this from SharedPreferences
+      // For now, we'll just log that restoration would happen here
+      AppLogging.logInfo('PomodoroScreen: Timer state restoration would happen here', name: 'PomodoroNavigation');
+
+      // Example restoration logic (commented out for now):
+      /*
+      final savedState = await _loadTimerState();
+      if (savedState != null && _isStateValid(savedState)) {
+        // Restore timer state
+        _timer.restoreFromState(savedState);
+        _completedSessions = savedState['completedSessions'] ?? 0;
+        _workTimeMinutes = savedState['workTimeMinutes'] ?? 0;
+        _breakTimeMinutes = savedState['breakTimeMinutes'] ?? 0;
+        
+        AppLogging.logInfo('PomodoroScreen: Timer state restored successfully', name: 'PomodoroNavigation');
+      }
+      */
+    } catch (e) {
+      AppLogging.logError('PomodoroScreen: Error restoring timer state: $e', name: 'PomodoroNavigation');
+    }
   }
 
-  Widget _buildDurationChip(BuildContext context, String duration, String label) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
-      child: Text(
-        duration,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600, fontSize: 10),
-  void _startTemplate(PomodoroTemplate template, PomodoroTimer timer) {
-    HapticFeedback.mediumImpact();
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Started ${template.name} template'),
-        duration: const Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
+  void _initializeTimer() async {
+    AppLogging.logInfo('_initializeTimer called with template: ${_currentTemplate.name}');
+    AppLogging.logInfo('Session settings - Work: ${_currentTemplate.workDuration}min, Rest: ${_currentTemplate.restDuration}min, Long Rest: ${_currentTemplate.longRestDuration}min, Cycles: ${_currentTemplate.cycles}');
+
+    _timer = PomodoroServiceLocator.createTimer(
+      session: PomodoroSession(
+        workDuration: _currentTemplate.workDuration,
+        shortBreakDuration: _currentTemplate.restDuration,
+        longBreakDuration: _currentTemplate.longRestDuration,
+        sessionsUntilLongBreak: _currentTemplate.cycles,
       ),
     );
-    
-    timer.start();
-    
-    _uiState.showCustomization = false;
+
+    // Mark that we're using a custom template (disables adaptive timing)
+    _timer.setUsingCustomTemplate(true);
+
+    // Initialize the timer
+    await _timer.initialize();
+
+    // Set initial task if provided
+    if (widget.initialTask != null) {
+      _timer.setSelectedTask(widget.initialTask);
+    }
+
+    // Setup timer listeners
+    _timer.addListener(() {
+      if (mounted) {
+        // Check for state transitions that should trigger celebration
+        if (_timer.state != _lastState) {
+          // Celebration when transitioning from work to break
+          if (_lastState == PomodoroState.work && (_timer.state == PomodoroState.shortBreak || _timer.state == PomodoroState.longBreak)) {
+            _showCelebration = true;
+            _updateStatistics();
+          }
+          _lastState = _timer.state;
+        }
+        setState(() {});
+      }
+    });
+
+    // Auto-start the timer when screen opens
+    _timer.start();
   }
 
   String _formatDuration(int seconds) {
@@ -763,235 +350,263 @@ class PomodoroWidgetFactory {
     return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
-  String _getLocalizedLabel(PomodoroState state, bool isPaused, BuildContext context) {
+  String _getStateLabel() {
     final l10n = AppLocalizations.of(context)!;
+    switch (_timer.effectiveState) {
+      case PomodoroState.work:
+        return l10n.work;
+      case PomodoroState.shortBreak:
+        return l10n.shortBreak;
+      case PomodoroState.longBreak:
+        return l10n.longBreak;
+      case PomodoroState.idle:
+      default:
+        return l10n.work;
+    }
+  }
+
+  void _adjustTime(int minutes) {
+    // Adjust the current session duration
+    if (_timer.state != PomodoroState.idle) {
+      if (minutes > 0) {
+        _timer.addTime(minutes);
+      } else {
+        _timer.subtractTime(minutes.abs());
+      }
+      HapticFeedback.lightImpact();
+    }
+  }
+
+  void _showStopConfirmation() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            AppLocalizations.of(context)!.stopSession,
+            style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),
+          ),
+          content: Text(AppLocalizations.of(context)!.areYouSureYouWantToStopTheCurrentSession, style: TextStyle(color: Colors.black54)),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+              },
+              child: Text(
+                AppLocalizations.of(context)!.cancel,
+                style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.w500),
+              ),
+            ),
+
+            TextButton(
+              onPressed: () {
+                AppLogging.logInfo('PomodoroScreen: Stop timer requested', name: 'PomodoroNavigation');
+
+                try {
+                  // Close dialog first
+                  Navigator.of(context).pop();
+
+                  // Stop timer and update statistics
+                  _timer.stop();
+                  _updateStatistics();
+
+                  // Call the callback to notify parent screen
+                  widget.onTimerStopped?.call();
+
+                  // Then pop back to the previous screen
+                  Navigator.of(context).pop();
+                  AppLogging.logInfo('PomodoroScreen: Timer stopped and returned to previous screen', name: 'PomodoroNavigation');
+                } catch (e) {
+                  AppLogging.logError('Error during timer exit: $e', name: 'PomodoroNavigation');
+                  // Fallback to simple pop if something fails
+                  try {
+                    Navigator.of(context).pop();
+                  } catch (e2) {
+                    AppLogging.logError('Fallback navigation also failed: $e2', name: 'PomodoroNavigation');
+                  }
+                }
+              },
+              child: Text(
+                AppLocalizations.of(context)!.stop,
+                style: TextStyle(color: Colors.red[600], fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _updateStatistics() {
+    // Update statistics when sessions complete
+    if (_timer.state == PomodoroState.idle && _timer.currentSession > 0) {
+      setState(() {
+        _completedSessions = _timer.currentSession - 1;
+        _workTimeMinutes = _completedSessions * _currentTemplate.workDuration;
+        _breakTimeMinutes = _completedSessions * _currentTemplate.restDuration;
+      });
+    }
+  }
+
+  List<Color> _getBackgroundColors(PomodoroState state) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
 
     switch (state) {
       case PomodoroState.work:
-        return isPaused ? 'Work (Paused)' : l10n.work;
+        return isDark ? [colorScheme.primary.withOpacity(0.8), colorScheme.primaryContainer.withOpacity(0.6)] : [const Color(0xFF6366F1), const Color(0xFF8B5CF6)];
       case PomodoroState.shortBreak:
-        return isPaused ? 'Short Break (Paused)' : l10n.shortBreak;
+        return isDark ? [colorScheme.secondary.withOpacity(0.8), colorScheme.secondaryContainer.withOpacity(0.6)] : [const Color(0xFF10B981), const Color(0xFF34D399)];
       case PomodoroState.longBreak:
-        return isPaused ? 'Long Break (Paused)' : l10n.longBreak;
+        return isDark ? [colorScheme.tertiary.withOpacity(0.8), colorScheme.tertiaryContainer.withOpacity(0.6)] : [const Color(0xFF8B5CF6), const Color(0xFFA78BFA)];
+      case PomodoroState.idle:
+        return isDark ? [colorScheme.surface.withOpacity(0.9), colorScheme.surfaceContainer.withOpacity(0.7)] : [const Color(0xFF6366F1), const Color(0xFF8B5CF6)];
       default:
-        return 'Ready';
+        return isDark ? [colorScheme.primary.withOpacity(0.8), colorScheme.primaryContainer.withOpacity(0.6)] : [const Color(0xFF6366F1), const Color(0xFF8B5CF6)];
     }
   }
 
-  Color _getGaugeColor(PomodoroState state, BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
-    switch (state) {
-      case PomodoroState.work:
-        return isDark ? Colors.red.shade300 : Colors.red.shade600;
-      case PomodoroState.shortBreak:
-        return isDark ? Colors.green.shade300 : Colors.green.shade600;
-      case PomodoroState.longBreak:
-        return isDark ? Colors.blue.shade300 : Colors.blue.shade600;
-      default:
-        return isDark ? theme.colorScheme.onSurface.withOpacity(0.6) : Colors.grey.shade600;
-    }
-  }
-
-  int _getTotalSecondsForState(PomodoroState state) {
-    switch (state) {
-      case PomodoroState.work:
-        return 25 * 60; // 25 minutes
-      case PomodoroState.shortBreak:
-        return 5 * 60; // 5 minutes
-      case PomodoroState.longBreak:
-        return 15 * 60; // 15 minutes
-      default:
-        return 25 * 60;
-    }
-  }
-}
-
-// ====================================================================
-// UI LOGIC CONCEPT 11: RESPONSIVE LAYOUT STRATEGY
-// ====================================================================
-class PomodoroLayoutSystem {
-  Widget buildResponsiveLayout({required BuildContext context, required List<Widget> children}) {
-    return Column(children: children);
-  }
-}
-
-// ====================================================================
-// UI LOGIC CONCEPT 12: THEME INTEGRATION
-// ====================================================================
-class PomodoroThemeSystem {
-  Widget buildModernHeader(BuildContext context, String title) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
-      ),
-    );
-  }
-
-  Widget buildModernControls(BuildContext context, PomodoroTimer timer) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildControlButton(context: context, icon: timer.isPaused ? Icons.play_arrow : Icons.pause, onTap: timer.isPaused ? timer.start : timer.pause, color: Theme.of(context).colorScheme.primary),
-          _buildControlButton(context: context, icon: Icons.skip_next, onTap: timer.skip, color: Theme.of(context).colorScheme.secondary),
-          _buildControlButton(context: context, icon: Icons.stop, onTap: timer.stop, color: Theme.of(context).colorScheme.error),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildControlButton({required BuildContext context, required IconData icon, required VoidCallback onTap, required Color color}) {
-    return Container(
-      width: 60,
-      height: 60,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: [BoxShadow(color: color.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4))],
-      ),
-      child: IconButton(
-        icon: Icon(icon, color: Colors.white, size: 28),
-        onPressed: onTap,
-      ),
-    );
-  }
-}
-
-// ====================================================================
-// UI LOGIC CONCEPT 13: DYNAMIC TIME ADJUSTMENT
-// ====================================================================
-class PomodoroTimeAdjustment {
-  final BuildContext? context;
-
-  PomodoroTimeAdjustment({this.context});
-
-  void addTime(PomodoroTimer timer, int minutes) {
-    if (timer.state == PomodoroState.idle) return;
-
-    timer.addTime(minutes);
-    HapticFeedback.lightImpact();
-    _showFeedbackMessage('$minutes minutes ${minutes > 0 ? "added" : "removed"}');
-  }
-
-  void stopTimer(PomodoroTimer timer) {
-    if (timer.state != PomodoroState.idle) {
-      timer.stop();
-      _showFeedbackMessage('Timer stopped');
-    }
-  }
-
-  void _showFeedbackMessage(String message) {
-    if (context != null) {
-      ScaffoldMessenger.of(context!).showSnackBar(SnackBar(content: Text(message), duration: const Duration(seconds: 2), behavior: SnackBarBehavior.floating));
-    }
-  }
-}
-
-// ====================================================================
-// UI LOGIC CONCEPT 14: CONTEXTUAL QUICK ACTIONS
-// ====================================================================
-class PomodoroQuickActions {
-  final BuildContext? context;
-
-  PomodoroQuickActions({this.context});
-
-  Widget buildQuickActions(BuildContext context, PomodoroTimer timer, PomodoroTimeAdjustment timeAdjustment) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
-      ),
-      child: Column(
-        children: [
-          _buildTimeAdjustmentRow(context, timer, timeAdjustment),
-          const SizedBox(height: 12),
-          Container(height: 1, color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
-          const SizedBox(height: 12),
-          _buildQuickActionRow(context, timer),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTimeAdjustmentRow(BuildContext context, PomodoroTimer timer, PomodoroTimeAdjustment timeAdjustment) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _buildTimeAdjustButton(context: context, icon: Icons.remove_circle_outline, label: '-5 min', onTap: () => timeAdjustment.addTime(timer, -5), color: Theme.of(context).colorScheme.error),
-        _buildTimeAdjustButton(context: context, icon: Icons.add_circle_outline, label: '+5 min', onTap: () => timeAdjustment.addTime(timer, 5), color: Theme.of(context).colorScheme.primary),
-      ],
-    );
-  }
-
-  Widget _buildQuickActionRow(BuildContext context, PomodoroTimer timer) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _buildQuickActionButton(
-          context: context,
-          icon: Icons.coffee,
-          label: 'Break',
-          onTap: () {
-            if (timer.state != PomodoroState.idle) {
-              timer.skip();
-              _showFeedbackMessage('Skipping to break');
-            }
-          },
-        ),
-        _buildQuickActionButton(
-          context: context,
-          icon: Icons.note_add,
-          label: 'Note',
-          onTap: () {
-            _showFeedbackMessage('Quick note feature coming soon!');
-          },
-        ),
-        _buildQuickActionButton(
-          context: context,
-          icon: Icons.refresh,
-          label: 'Reset',
-          onTap: () {
-            if (timer.state != PomodoroState.idle) {
-              timer.stop();
-              _showFeedbackMessage('Timer stopped');
-            }
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTimeAdjustButton({required BuildContext context, required IconData icon, required String label, required VoidCallback onTap, required Color color}) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.3), width: 1),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider.value(
+      value: _timer,
+      child: Scaffold(
+        body: Stack(
           children: [
-            Icon(icon, size: 20, color: color),
-            const SizedBox(width: 6),
+            // Background gradient
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: _getBackgroundColors(_timer.effectiveState)),
+              ),
+            ),
+
+            // Main content - restructured layout
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  children: [
+                    // Session type label
+                    const SizedBox(height: 20),
+                    _buildSessionTypeLabel(),
+
+                    const SizedBox(height: 40),
+
+                    // Timer with time adjustment buttons
+                    _buildTimerWithAdjustments(),
+
+                    const SizedBox(height: 40),
+
+                    // Primary action button
+                    _buildPrimaryActionButton(),
+
+                    const SizedBox(height: 24),
+
+                    // Secondary action buttons
+                    _buildSecondaryActionButtons(),
+
+                    const SizedBox(height: 20),
+
+                    // Progress bar (minimal)
+                    _buildMinimalProgressBar(),
+
+                    const SizedBox(height: 32),
+
+                    // Statistics section (compact)
+                    Expanded(child: _buildCompactStatistics()),
+
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            ),
+
+            // Session completion celebration overlay
+            if (_showCelebration)
+              Positioned.fill(
+                child: Container(
+                  color: Colors.black.withOpacity(0.3),
+                  child: _SessionCompletionCelebration(
+                    onDismiss: () {
+                      setState(() {
+                        _showCelebration = false;
+                      });
+                    },
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // New UI methods according to plan
+
+  Widget _buildSessionTypeLabel() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Text(
+      _getStateLabel(),
+      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: isDark ? colorScheme.onSurface.withOpacity(0.8) : Colors.white.withOpacity(0.8)),
+      textAlign: TextAlign.center,
+    );
+  }
+
+  Widget _buildTimerWithAdjustments() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        // -5 min button
+        _buildTimeAdjustmentButton(icon: Icons.remove, label: '-5 min', onTap: () => _adjustTime(-5)),
+
+        const SizedBox(width: 10),
+
+        // Timer (hero element) - slightly smaller to fit
+        _buildCircularTimer(),
+
+        const SizedBox(width: 10),
+
+        // +5 min button
+        _buildTimeAdjustmentButton(icon: Icons.add, label: '+5 min', onTap: () => _adjustTime(5)),
+      ],
+    );
+  }
+
+  Widget _buildPrimaryActionButton() {
+    final isRunning = _timer.isRunning;
+    final isIdle = _timer.state == PomodoroState.idle;
+    final actionLabel = isIdle ? AppLocalizations.of(context)!.resume : (isRunning ? AppLocalizations.of(context)!.pause : AppLocalizations.of(context)!.resume);
+    final semanticLabel = '$actionLabel ${_timer.effectiveState == PomodoroState.work ? AppLocalizations.of(context)!.work : AppLocalizations.of(context)!.shortBreak}';
+
+    return _AnimatedButton(
+      semanticLabel: semanticLabel,
+      onTap: () {
+        if (isIdle) {
+          _timer.start();
+        } else if (isRunning) {
+          _timer.pause();
+        } else {
+          _timer.start();
+        }
+      },
+      child: Container(
+        width: 70,
+        height: 70,
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.9),
+          shape: BoxShape.circle,
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 8, offset: const Offset(0, 4))],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(isIdle ? Icons.play_arrow : (isRunning ? Icons.pause : Icons.play_arrow), color: _getBackgroundColors(_timer.effectiveState).first, size: 28),
+            const SizedBox(height: 2),
             Text(
-              label,
-              style: TextStyle(color: color, fontWeight: FontWeight.w600, fontSize: 14),
+              actionLabel,
+              style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: _getBackgroundColors(_timer.effectiveState).first),
             ),
           ],
         ),
@@ -999,117 +614,208 @@ class PomodoroQuickActions {
     );
   }
 
-  Widget _buildQuickActionButton({required BuildContext context, required IconData icon, required String label, required VoidCallback onTap}) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 24, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
-            const SizedBox(height: 4),
-            Text(label, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7))),
-          ],
+  Widget _buildSecondaryActionButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        // Stop button
+        _AnimatedButton(
+          semanticLabel: '${AppLocalizations.of(context)!.stop} ${_timer.effectiveState == PomodoroState.work ? AppLocalizations.of(context)!.work : AppLocalizations.of(context)!.shortBreak}',
+          onTap: () {
+            _showStopConfirmation();
+          },
+          child: Container(
+            width: 45,
+            height: 45,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+            ),
+            child: Icon(Icons.stop, color: Colors.white.withOpacity(0.8), size: 20),
+          ),
         ),
-      ),
+
+        // Skip button
+        _AnimatedButton(
+          semanticLabel: '${AppLocalizations.of(context)!.skip} ${_timer.effectiveState == PomodoroState.work ? AppLocalizations.of(context)!.work : AppLocalizations.of(context)!.shortBreak}',
+          onTap: () {
+            _timer.skip();
+          },
+          child: Container(
+            width: 45,
+            height: 45,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+            ),
+            child: Icon(Icons.skip_next, color: Colors.white.withOpacity(0.8), size: 20),
+          ),
+        ),
+      ],
     );
   }
 
-  void _showFeedbackMessage(String message) {
-    if (context != null) {
-      ScaffoldMessenger.of(context!).showSnackBar(SnackBar(content: Text(message), duration: const Duration(seconds: 2), behavior: SnackBarBehavior.floating));
+  Widget _buildMinimalProgressBar() {
+    double progress = 0.0;
+    if (_timer.state != PomodoroState.idle) {
+      final totalSeconds = _currentTemplate.workDuration * 60;
+      final elapsedSeconds = totalSeconds - _timer.remainingSeconds;
+      progress = (elapsedSeconds / totalSeconds).clamp(0.0, 1.0);
+    } else {
+      progress = 1.0;
     }
-  }
-}
 
-// ====================================================================
-// SUPPORTING SYSTEMS
-// ====================================================================
-
-class PomodoroStateManager {
-  void initialize() {
-    // State management initialization
-  }
-}
-
-class PomodoroInitializer {
-  bool _isReady = false;
-
-  bool get isReady => _isReady;
-
-  void initializeAll({required VoidCallback onInitialized, required PomodoroAnimationSystem animationSystem, required PomodoroEffectsSystem effectsSystem}) {
-    // Initialize all systems
-    animationSystem.startEntranceAnimations();
-    effectsSystem.initialize();
-
-    _isReady = true;
-    onInitialized();
-  }
-}
-
-class PomodoroSafeUpdater {
-  void update(VoidCallback callback) {
-    // Safe update implementation
-  }
-}
-
-class PomodoroEffectsSystem {
-  late final ConfettiController confettiController;
-  late final FlutterTts flutterTts;
-
-  void initialize() {
-    confettiController = ConfettiController(duration: const Duration(seconds: 2));
-    flutterTts = FlutterTts();
-
-    flutterTts.setSpeechRate(0.5);
-    flutterTts.setVolume(1.0);
-    flutterTts.setPitch(1.0);
-  }
-
-  Widget buildConfettiOverlay() {
-    return Positioned.fill(
-      child: ConfettiWidget(
-        confettiController: confettiController,
-        blastDirectionality: BlastDirectionality.explosive,
-        particleDrag: 0.05,
-        emissionFrequency: 0.05,
-        numberOfParticles: 50,
-        gravity: 0.1,
-        shouldLoop: false,
-        colors: const [Colors.red, Colors.green, Colors.blue, Colors.yellow, Colors.purple],
+    return Container(
+      height: 8,
+      decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
+      child: Stack(
+        children: [
+          // Background track
+          Container(
+            decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
+          ),
+          // Progress fill
+          FractionallySizedBox(
+            alignment: Alignment.centerLeft,
+            widthFactor: progress,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [Colors.white.withOpacity(0.8), Colors.white.withOpacity(0.6)]),
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  void dispose() {
-    confettiController.dispose();
+  Widget _buildCompactStatistics() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? colorScheme.surface.withOpacity(0.2) : Colors.white.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: isDark ? colorScheme.outline.withOpacity(0.3) : Colors.white.withOpacity(0.2), width: 1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            AppLocalizations.of(context)!.todaysStatistics,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: isDark ? colorScheme.onSurface.withOpacity(0.9) : Colors.white.withOpacity(0.9)),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildCompactStatisticItem(icon: Icons.check_circle, value: '$_completedSessions'),
+              _buildCompactStatisticItem(icon: Icons.work, value: '$_workTimeMinutes min'),
+              _buildCompactStatisticItem(icon: Icons.coffee, value: '$_breakTimeMinutes min'),
+            ],
+          ),
+        ],
+      ),
+    );
   }
-}
 
-// ====================================================================
-// TEMPLATE SYSTEM
-// ====================================================================
+  Widget _buildCompactStatisticItem({required IconData icon, required String value}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
 
-class PomodoroTemplate {
-  final String id;
-  final String name;
-  final String description;
-  final int workDuration;
-  final int shortBreakDuration;
-  final int longBreakDuration;
-  final int sessionsUntilLongBreak;
-  final bool isRecommended;
+    return Column(
+      children: [
+        Icon(icon, color: isDark ? colorScheme.onSurface.withOpacity(0.8) : Colors.white.withOpacity(0.8), size: 20),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: isDark ? colorScheme.onSurface.withOpacity(0.8) : Colors.white.withOpacity(0.8)),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
 
-  PomodoroTemplate({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.workDuration,
-    required this.shortBreakDuration,
-    required this.longBreakDuration,
-    required this.sessionsUntilLongBreak,
-    this.isRecommended = false,
-  });
+  Widget _buildTimeAdjustmentButton({required IconData icon, required String label, required VoidCallback onTap}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Column(
+      children: [
+        _AnimatedButton(
+          semanticLabel: '$label ${_timer.effectiveState == PomodoroState.work ? AppLocalizations.of(context)!.work : AppLocalizations.of(context)!.shortBreak}',
+          onTap: onTap,
+          child: Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isDark ? colorScheme.surface.withOpacity(0.3) : Colors.white.withOpacity(0.2),
+              border: Border.all(color: isDark ? colorScheme.outline.withOpacity(0.5) : Colors.white.withOpacity(0.3), width: 1),
+            ),
+            child: Icon(icon, color: isDark ? colorScheme.onSurface : Colors.white, size: 20),
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          label,
+          style: TextStyle(color: isDark ? colorScheme.onSurface.withOpacity(0.7) : Colors.white70, fontSize: 10, fontWeight: FontWeight.w500),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCircularTimer() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      width: 200,
+      height: 200,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: isDark ? colorScheme.surface.withOpacity(0.3) : Colors.white.withOpacity(0.2),
+        border: Border.all(color: isDark ? colorScheme.outline.withOpacity(0.5) : Colors.white.withOpacity(0.3), width: 8),
+      ),
+      child: Stack(
+        children: [
+          // Progress indicator
+          Positioned.fill(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: CircularProgressIndicator(
+                value: _timer.state == PomodoroState.idle ? 1.0 : _timer.remainingSeconds / (_currentTemplate.workDuration * 60),
+                strokeWidth: 8,
+                backgroundColor: Colors.transparent,
+                valueColor: AlwaysStoppedAnimation<Color>(isDark ? colorScheme.onSurface.withOpacity(0.8) : Colors.white.withOpacity(0.8)),
+              ),
+            ),
+          ),
+
+          // Timer content (no play/pause button inside)
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  _formatDuration(_timer.remainingSeconds),
+                  style: TextStyle(fontSize: 44, fontWeight: FontWeight.bold, color: isDark ? colorScheme.onSurface : Colors.white),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  _getStateLabel(),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: isDark ? colorScheme.onSurface.withOpacity(0.7) : Colors.white70),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

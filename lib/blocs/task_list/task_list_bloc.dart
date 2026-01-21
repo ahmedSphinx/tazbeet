@@ -38,6 +38,11 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     on<RemoveRepeatRule>(_onRemoveRepeatRule);
     on<GenerateRecurringInstances>(_onGenerateRecurringInstances);
     on<ProcessCompletedRecurringTask>(_onProcessCompletedRecurringTask);
+    on<BulkDeleteTasks>(_onBulkDeleteTasks);
+    on<BulkToggleTaskCompletion>(_onBulkToggleTaskCompletion);
+    on<BulkUpdateTasksCategory>(_onBulkUpdateTasksCategory);
+    on<BulkUpdateTasksPriority>(_onBulkUpdateTasksPriority);
+    on<BulkUpdateTasksDueDate>(_onBulkUpdateTasksDueDate);
   }
 
   Future<void> _onLoadTasks(LoadTasks event, Emitter<TaskListState> emit) async {
@@ -287,5 +292,123 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
     // Reload tasks to reflect any new recurring instances
     final tasks = await taskRepository.getAllTasks();
     emit(TaskListLoaded(tasks));
+  }
+
+  Future<void> _onBulkDeleteTasks(BulkDeleteTasks event, Emitter<TaskListState> emit) async {
+    if (state is TaskListLoaded) {
+      await taskRepository.deleteTasks(event.taskIds);
+
+      final List<Task> updatedTasks = (state as TaskListLoaded).tasks.where((task) => !event.taskIds.contains(task.id)).toList();
+      emit(TaskListLoaded(updatedTasks));
+      await categoryRepository.updateCategoryTaskCounts(updatedTasks);
+
+      for (var id in event.taskIds) {
+        syncQueue.enqueueTaskDelete(id);
+      }
+    }
+  }
+
+  Future<void> _onBulkToggleTaskCompletion(BulkToggleTaskCompletion event, Emitter<TaskListState> emit) async {
+    if (state is TaskListLoaded) {
+      bool anyCompleted = false;
+      final List<Task> updatedTasks = (state as TaskListLoaded).tasks.map((task) {
+        if (event.taskIds.contains(task.id)) {
+          final updated = task.copyWith(isCompleted: !task.isCompleted, updatedAt: DateTime.now());
+          if (updated.isCompleted) anyCompleted = true;
+          return updated;
+        }
+        return task;
+      }).toList();
+
+      final tasksToUpdate = updatedTasks.where((t) => event.taskIds.contains(t.id)).toList();
+      await taskRepository.updateTasks(tasksToUpdate);
+      emit(TaskListLoaded(updatedTasks));
+
+      if (anyCompleted) {
+        await _taskSoundService.playTaskCompletionSound();
+      }
+
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        _dataSyncService.syncToFirestore(user.uid).catchError((e) {
+          AppLogging.logError('Failed to sync bulk task completion to Firestore: $e');
+        });
+      }
+    }
+  }
+
+  Future<void> _onBulkUpdateTasksCategory(BulkUpdateTasksCategory event, Emitter<TaskListState> emit) async {
+    if (state is TaskListLoaded) {
+      final List<Task> updatedTasks = (state as TaskListLoaded).tasks.map((task) {
+        if (event.taskIds.contains(task.id)) {
+          return task.copyWith(categoryId: event.categoryId, updatedAt: DateTime.now());
+        }
+        return task;
+      }).toList();
+
+      final tasksToUpdate = updatedTasks.where((t) => event.taskIds.contains(t.id)).toList();
+      await taskRepository.updateTasks(tasksToUpdate);
+      emit(TaskListLoaded(updatedTasks));
+      await categoryRepository.updateCategoryTaskCounts(updatedTasks);
+
+      for (var task in tasksToUpdate) {
+        syncQueue.enqueueTaskUpdate(task);
+      }
+    }
+  }
+
+  Future<void> _onBulkUpdateTasksPriority(BulkUpdateTasksPriority event, Emitter<TaskListState> emit) async {
+    if (state is TaskListLoaded) {
+      final List<Task> updatedTasks = (state as TaskListLoaded).tasks.map((task) {
+        if (event.taskIds.contains(task.id)) {
+          return task.copyWith(priority: event.priority, updatedAt: DateTime.now());
+        }
+        return task;
+      }).toList();
+
+      final tasksToUpdate = updatedTasks.where((t) => event.taskIds.contains(t.id)).toList();
+      await taskRepository.updateTasks(tasksToUpdate);
+      emit(TaskListLoaded(updatedTasks));
+
+      for (var task in tasksToUpdate) {
+        syncQueue.enqueueTaskUpdate(task);
+      }
+    }
+  }
+
+  Future<void> _onBulkUpdateTasksDueDate(BulkUpdateTasksDueDate event, Emitter<TaskListState> emit) async {
+    if (state is TaskListLoaded && event.dueDate != null) {
+      final targetDate = event.dueDate!;
+      final List<Task> updatedTasks = (state as TaskListLoaded).tasks.map((task) {
+        if (event.taskIds.contains(task.id)) {
+          DateTime newDueDate = targetDate;
+          // Preserve time if original had it
+          if (task.dueDate != null) {
+            newDueDate = DateTime(targetDate.year, targetDate.month, targetDate.day, task.dueDate!.hour, task.dueDate!.minute);
+          }
+
+          // Also adjust reminder if it exists
+          DateTime? newReminderDate = task.reminderDate;
+          if (task.reminderDate != null) {
+            newReminderDate = DateTime(targetDate.year, targetDate.month, targetDate.day, task.reminderDate!.hour, task.reminderDate!.minute);
+          }
+
+          return task.copyWith(dueDate: newDueDate, reminderDate: newReminderDate, updatedAt: DateTime.now());
+        }
+        return task;
+      }).toList();
+
+      final tasksToUpdate = updatedTasks.where((t) => event.taskIds.contains(t.id)).toList();
+      await taskRepository.updateTasks(tasksToUpdate);
+      emit(TaskListLoaded(updatedTasks));
+
+      // Reschedule notifications for updated tasks
+      for (var task in tasksToUpdate) {
+        if (task.reminderDate != null) {
+          notificationService.scheduleTaskReminder(task);
+        }
+        syncQueue.enqueueTaskUpdate(task);
+      }
+    }
   }
 }

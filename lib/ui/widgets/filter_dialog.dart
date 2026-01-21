@@ -9,14 +9,7 @@ class FilterDialog extends StatefulWidget {
   final Function(bool?) onCompletedChanged;
   final VoidCallback onClear;
 
-  const FilterDialog({
-    super.key,
-    this.initialPriority,
-    this.initialCompleted,
-    required this.onPriorityChanged,
-    required this.onCompletedChanged,
-    required this.onClear,
-  });
+  const FilterDialog({super.key, this.initialPriority, this.initialCompleted, required this.onPriorityChanged, required this.onCompletedChanged, required this.onClear});
 
   @override
   State<FilterDialog> createState() => _FilterDialogState();
@@ -39,22 +32,14 @@ class _FilterDialogState extends State<FilterDialog> {
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Wrap(
         children: [
-          ListTile(
-            title: Text(
-              AppLocalizations.of(context)!.filterTasksTitle,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ),
+          ListTile(title: Text(AppLocalizations.of(context)!.filterTasksTitle, style: Theme.of(context).textTheme.titleLarge)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  AppLocalizations.of(context)!.priorityLabel,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                Text(AppLocalizations.of(context)!.priority, style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
@@ -94,10 +79,7 @@ class _FilterDialogState extends State<FilterDialog> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                Text(
-                  AppLocalizations.of(context)!.statusLabel,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                Text(AppLocalizations.of(context)!.statusLabel, style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
@@ -134,10 +116,7 @@ class _FilterDialogState extends State<FilterDialog> {
           OverflowBar(
             alignment: MainAxisAlignment.end,
             children: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(AppLocalizations.of(context)!.cancelButton),
-              ),
+              TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancelButton)),
               TextButton(
                 onPressed: () {
                   widget.onClear();
@@ -148,10 +127,7 @@ class _FilterDialogState extends State<FilterDialog> {
                 },
                 child: Text(AppLocalizations.of(context)!.clearAllButton),
               ),
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(AppLocalizations.of(context)!.applyButton),
-              ),
+              ElevatedButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.applyButton)),
             ],
           ),
         ],

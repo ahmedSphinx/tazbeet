@@ -148,34 +148,34 @@ class OnboardingStep {
 class OnboardingSteps {
   static List<OnboardingStep> get steps => [
     OnboardingStep(
-      title: 'Welcome to Tazbeet',
-      description: 'Your intelligent task management companion with AI-powered features',
+      title: 'welcomeToTazbeet',
+      description: 'yourIntelligentTaskManagementCompanionWithAiPoweredFeatures',
       imagePath: 'assets/images/welcome.png',
-      highlights: ['Smart task sorting with AI recommendations', 'Adaptive Pomodoro timing', 'Mood and energy tracking', 'Productivity analytics'],
+      highlights: ['smartTaskSortingWithAiRecommendations', 'adaptivePomodoroTiming', 'moodAndEnergyTracking', 'productivityAnalytics'],
     ),
     OnboardingStep(
-      title: 'Smart Task Sorting',
-      description: 'Experience AI-powered task prioritization that adapts to your patterns',
+      title: 'smartTaskSorting',
+      description: 'experienceAiPoweredTaskPrioritizationThatAdaptsToYourPatterns',
       imagePath: 'assets/images/smart_sort.png',
-      highlights: ['Tasks sorted by priority and suitability', 'Time-based recommendations', 'Energy-aware scheduling', 'Visual indicators for AI suggestions'],
+      highlights: ['tasksSortedByPriorityAndSuitability', 'timeBasedRecommendations', 'energyAwareScheduling', 'visualIndicatorsForAiSuggestions'],
     ),
     OnboardingStep(
-      title: 'Pomodoro Integration',
-      description: 'Focus better with adaptive timing and smart breaks',
+      title: 'pomodoroIntegration',
+      description: 'focusBetterWithAdaptiveTimingAndSmartBreaks',
       imagePath: 'assets/images/pomodoro.png',
-      highlights: ['25-minute focus sessions', 'Adaptive break suggestions', 'Energy level tracking', 'Productivity insights'],
+      highlights: ['25MinuteFocusSessions', 'adaptiveBreakSuggestions', 'energyLevelTracking', 'productivityInsights'],
     ),
     OnboardingStep(
-      title: 'Mood & Energy Tracking',
-      description: 'Understand your patterns and optimize your productivity',
+      title: 'moodAndEnergyTracking',
+      description: 'understandYourPatternsAndOptimizeYourProductivity',
       imagePath: 'assets/images/mood.png',
-      highlights: ['Daily mood check-ins', 'Energy level monitoring', 'Achievement system', 'Wellness insights'],
+      highlights: ['dailyMoodCheckIns', 'energyLevelMonitoring', 'achievementSystem', 'wellnessInsights'],
     ),
     OnboardingStep(
-      title: 'Accessibility Features',
-      description: 'Customize the app to work best for you',
+      title: 'accessibilityFeatures',
+      description: 'customizeTheAppToWorkBestForYou',
       imagePath: 'assets/images/accessibility.png',
-      highlights: ['High contrast mode', 'Large text options', 'Reduced motion settings', 'Voice commands support'],
+      highlights: ['highContrastMode', 'largeTextOptions', 'reducedMotionSettings', 'voiceCommandsSupport'],
     ),
   ];
 }

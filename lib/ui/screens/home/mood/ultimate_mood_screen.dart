@@ -106,6 +106,9 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
   }
 
   Widget _buildAnimatedBackground() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AnimatedBuilder(
       animation: _backgroundAnimation,
       builder: (context, child) {
@@ -114,13 +117,18 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Colors.blue.shade50.withOpacity(0.3 + _backgroundAnimation.value * 0.2), Colors.purple.shade50.withOpacity(0.2 + _backgroundAnimation.value * 0.1), Colors.white],
+              colors: isDark
+                  ? [colorScheme.surface.withOpacity(0.3 + _backgroundAnimation.value * 0.2), colorScheme.surfaceContainer.withOpacity(0.2 + _backgroundAnimation.value * 0.1), colorScheme.surface]
+                  : [Colors.blue.shade50.withOpacity(0.3 + _backgroundAnimation.value * 0.2), Colors.purple.shade50.withOpacity(0.2 + _backgroundAnimation.value * 0.1), Colors.white],
             ),
           ),
           child: AnimatedBuilder(
             animation: _particleAnimation,
             builder: (context, child) {
-              return CustomPaint(painter: ParticlePainter(_particleAnimation.value), size: Size.infinite);
+              return CustomPaint(
+                painter: ParticlePainter(_particleAnimation.value, isDark: isDark),
+                size: Size.infinite,
+              );
             },
           ),
         );
@@ -361,15 +369,18 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
   }
 
   Widget _buildMoodOption(Map<String, dynamic> option, MoodLevel level) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: () => _selectMood(level),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? colorScheme.surface : Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey.shade200),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 15, offset: const Offset(0, 5))],
+          border: Border.all(color: isDark ? colorScheme.outline.withOpacity(0.3) : Colors.grey.shade200),
+          boxShadow: [BoxShadow(color: isDark ? Colors.black.withOpacity(0.3) : Colors.black.withOpacity(0.05), blurRadius: 15, offset: const Offset(0, 5))],
         ),
         child: Row(
           children: [
@@ -378,10 +389,10 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
             Expanded(
               child: Text(
                 option['text'] as String,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black87),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: isDark ? colorScheme.onSurface : Colors.black87),
               ),
             ),
-            Icon(Icons.arrow_forward_ios, color: Colors.grey.shade400, size: 16),
+            Icon(Icons.arrow_forward_ios, color: isDark ? colorScheme.onSurface.withOpacity(0.6) : Colors.grey.shade400, size: 16),
           ],
         ),
       ),
@@ -390,20 +401,23 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
 
   Widget _buildAlternativeOptions() {
     final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.blue.shade50,
+        color: isDark ? colorScheme.surfaceContainer : Colors.blue.shade50,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.blue.shade200),
+        border: Border.all(color: isDark ? colorScheme.outline.withOpacity(0.3) : Colors.blue.shade200),
       ),
       child: Column(
         children: [
           Text(
-            l10n.wantToShareMoreDetails,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.blue.shade800),
+            'Need more options?',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: isDark ? colorScheme.onSurface : Colors.black87),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           Row(
             children: [
               Expanded(
@@ -411,7 +425,10 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
                   onPressed: _openConversationalCheckIn,
                   icon: const Icon(Icons.chat),
                   label: Text(l10n.guidedCheckIn),
-                  style: OutlinedButton.styleFrom(side: BorderSide(color: Colors.blue.shade400)),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: isDark ? colorScheme.outline : Colors.blue.shade400),
+                    foregroundColor: isDark ? colorScheme.onSurface : Colors.blue.shade700,
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -420,7 +437,10 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
                   onPressed: _openDetailedMoodInput,
                   icon: const Icon(Icons.edit_note),
                   label: Text(l10n.detailedEntry),
-                  style: OutlinedButton.styleFrom(side: BorderSide(color: Colors.blue.shade400)),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: isDark ? colorScheme.outline : Colors.blue.shade400),
+                    foregroundColor: isDark ? colorScheme.onSurface : Colors.blue.shade700,
+                  ),
                 ),
               ),
             ],
@@ -431,14 +451,17 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
   }
 
   Widget _buildCompactMoodCard(Mood mood) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? colorScheme.surface : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 2))],
+        border: Border.all(color: isDark ? colorScheme.outline.withOpacity(0.3) : Colors.grey.shade200),
+        boxShadow: [BoxShadow(color: isDark ? Colors.black.withOpacity(0.2) : Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 2))],
       ),
       child: Row(
         children: [
@@ -450,13 +473,13 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
               children: [
                 Text(
                   _getMoodText(mood.level),
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black87),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: isDark ? colorScheme.onSurface : Colors.black87),
                 ),
-                Text(_formatTime(mood.date), style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                Text(_formatTime(mood.date), style: TextStyle(fontSize: 12, color: isDark ? colorScheme.onSurface.withOpacity(0.6) : Colors.grey.shade600)),
               ],
             ),
           ),
-          Icon(Icons.chevron_right, color: Colors.grey.shade400, size: 20),
+          Icon(Icons.chevron_right, color: isDark ? colorScheme.onSurface.withOpacity(0.6) : Colors.grey.shade400, size: 20),
         ],
       ),
     );
@@ -1061,13 +1084,16 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
 /// Custom painter for animated background particles
 class ParticlePainter extends CustomPainter {
   final double animation;
+  final bool isDark;
 
-  ParticlePainter(this.animation);
+  ParticlePainter(this.animation, {this.isDark = false});
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.blue.withOpacity(0.1)
+      ..color = isDark
+          ? Colors.white.withOpacity(0.05) // Subtle white particles for dark mode
+          : Colors.blue.withOpacity(0.1) // Blue particles for light mode
       ..style = PaintingStyle.fill;
 
     // Draw floating particles

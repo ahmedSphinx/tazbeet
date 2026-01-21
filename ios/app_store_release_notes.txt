@@ -1,0 +1,14 @@
+Version 1.4 - Production Release
+
+• Full Apple Sign-In integration with Firebase authentication
+• Enhanced task management with categories and priorities
+• Improved Pomodoro timer with better notifications
+• Advanced mood tracking with insights and analytics
+• Calendar integration for better planning
+• Performance optimizations and bug fixes
+• Enhanced data synchronization across devices
+• Improved user interface and user experience
+• Support for recurring tasks
+• Enhanced privacy and security features
+
+Thank you for using Tazbeet! Your feedback helps us improve the app.

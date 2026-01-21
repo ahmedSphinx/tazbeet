@@ -9,6 +9,14 @@
       "recommended_for": "normal"
     },
     {
+      "name": "15-3 Quick Start",
+      "work": 15,
+      "rest": 3,
+      "long_rest": 8,
+      "cycles": 4,
+      "recommended_for": "adhd"
+    },
+    {
       "name": "50-10 Deep Work",
       "work": 50,
       "rest": 10,
@@ -25,12 +33,13 @@
       "recommended_for": "normal"
     },
     {
-      "name": "15-3 Quick Start",
-      "work": 15,
-      "rest": 3,
-      "long_rest": 8,
+      "name": "Make my Custom",
+      "work": 25,
+      "rest": 5,
+      "long_rest": 15,
       "cycles": 4,
-      "recommended_for": "adhd"
+      "recommended_for": "custom",
+      "is_custom": true
     }
   ]
 }

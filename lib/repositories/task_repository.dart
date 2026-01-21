@@ -40,9 +40,20 @@ class TaskRepository with PerformanceMonitored {
     await box.put(task.id, task);
   }
 
+  Future<void> updateTasks(List<Task> tasks) async {
+    final box = await _getBox();
+    final Map<String, Task> taskMap = {for (var task in tasks) task.id: task};
+    await box.putAll(taskMap);
+  }
+
   Future<void> deleteTask(String id) async {
     final box = await _getBox();
     await box.delete(id);
+  }
+
+  Future<void> deleteTasks(List<String> ids) async {
+    final box = await _getBox();
+    await box.deleteAll(ids);
   }
 
   Future<List<Task>> getTasksByCategory(String categoryId) async {

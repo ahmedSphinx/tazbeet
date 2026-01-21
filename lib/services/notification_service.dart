@@ -4,6 +4,8 @@ import 'package:tazbeet/services/settings_service.dart';
 import 'package:tazbeet/services/error_notification_service.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
 
+import 'package:flutter/material.dart';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -73,13 +75,19 @@ class NotificationService {
     AppLogging.logInfo('Using device local timezone for notifications: ${tz.local}', name: 'NotificationService');
   }
 
-  Future<void> _requestPermissions() async {
+  Future<void> _requestPermissions({BuildContext? buildContext}) async {
     await Permission.notification.request();
     if (await Permission.notification.isGranted) {
       AppLogging.logInfo('Notification permission granted', name: 'NotificationService');
     } else {
       AppLogging.logWarning('Notification permission not granted', name: 'NotificationService');
-      ErrorNotificationService().showError('Notification permission denied. Reminders will not work.', isWarning: true);
+      final context = buildContext ?? NavigationService.navigatorKey.currentContext;
+      if (context == null) {
+        AppLogging.logError('No context available for localization', name: 'NotificationService');
+        return;
+      }
+      final l10n = AppLocalizations.of(context)!;
+      ErrorNotificationService().showError(l10n.notificationPermissionDenied, isWarning: true);
     }
 
     // Request to ignore battery optimizations for reliable notifications
@@ -104,31 +112,67 @@ class NotificationService {
     return status.isGranted;
   }
 
+  /// Generate unique notification ID for task
+  int _generateTaskNotificationId(String taskId, {String suffix = ''}) {
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final hash = taskId.hashCode.abs();
+    return int.parse('${timestamp.toString().substring(6)}${hash.toString().substring(0, 3)}$suffix');
+  }
+
+  /// Verify that a reminder was scheduled successfully
+  Future<void> _verifyReminderScheduled(String taskId, String taskTitle) async {
+    try {
+      // Wait a moment for the notification to be registered
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      final pendingNotifications = await getPendingNotifications();
+      final notificationId = _generateTaskNotificationId(taskId);
+      final isScheduled = pendingNotifications.any((notification) => notification.id == notificationId);
+
+      if (isScheduled) {
+        AppLogging.logInfo('✅ Reminder verified as scheduled: $taskTitle (ID: $notificationId)', name: 'NotificationService');
+      } else {
+        AppLogging.logWarning('⚠️ Reminder may not be scheduled: $taskTitle (ID: $notificationId)', name: 'NotificationService');
+      }
+    } catch (e) {
+      AppLogging.logError('Failed to verify reminder scheduling for $taskTitle: $e', name: 'NotificationService');
+    }
+  }
+
   Future<void> scheduleTaskReminder(Task task) async {
     if (task.reminderDate == null) return;
 
     final now = tz.TZDateTime.now(tz.local);
-    final offset = DateTime.now().timeZoneOffset;
-
-    // Convert task reminder date (assumed local) to UTC for scheduling
-    DateTime utcScheduled = task.reminderDate!.subtract(offset);
-    final scheduledTime = tz.TZDateTime.from(utcScheduled, tz.local);
+    final scheduledTime = tz.TZDateTime.from(task.reminderDate!, tz.local);
 
     if (scheduledTime.isBefore(now)) {
       AppLogging.logWarning('Cannot schedule reminder for past date: ${task.reminderDate}', name: 'NotificationService-${task.title}');
       // Only show error if not in bulk operation mode
       if (!_suppressErrors) {
-        ErrorNotificationService().showError('Cannot set reminder for past date: ${task.title}', isWarning: true);
+        final context = NavigationService.navigatorKey.currentContext;
+        if (context == null) {
+          AppLogging.logError('No context available for localization', name: 'NotificationService');
+          return;
+        }
+        final l10n = AppLocalizations.of(context)!;
+        ErrorNotificationService().showError('${l10n.cannotSetReminderForPastDate}: ${task.title}', isWarning: true);
       }
       return;
     }
 
+    final context = NavigationService.navigatorKey.currentContext; // Move context fetch up
+    if (context == null) {
+      AppLogging.logError('No context available for localization', name: 'NotificationService');
+      return;
+    }
+    final l10n = AppLocalizations.of(context)!;
+
     AppLogging.logInfo('Scheduling task reminder for task: ${task.id} - ${task.title} at ${task.reminderDate}', name: 'NotificationService');
 
-    const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+    final AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'task_reminders',
-      'Task Reminders',
-      channelDescription: 'Reminders for upcoming tasks',
+      l10n.taskRemindersChannelName, // Use localized name
+      channelDescription: l10n.taskRemindersChannelDesc,
       importance: Importance.max,
       priority: Priority.high,
       showWhen: true,
@@ -136,16 +180,19 @@ class NotificationService {
 
     const DarwinNotificationDetails iOSPlatformChannelSpecifics = DarwinNotificationDetails();
 
-    const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
 
     await _flutterLocalNotificationsPlugin.zonedSchedule(
-      task.id.hashCode.abs(),
-      'Task Reminder',
-      'Don\'t forget: ${task.title}',
+      _generateTaskNotificationId(task.id),
+      l10n.taskReminder,
+      '${l10n.dontForget}: ${task.title}',
       scheduledTime,
       platformChannelSpecifics,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
+
+    // Verify the reminder was scheduled successfully
+    await _verifyReminderScheduled(task.id, task.title);
   }
   /* 
   Future<void> scheduleMoodCheckInNotifications(List<String> times) async {
@@ -239,6 +286,12 @@ class NotificationService {
  */
 
   Future<void> scheduleMoodCheckInNotifications(List<String> times, {AppLocalizations? l10n}) async {
+    final context = NavigationService.navigatorKey.currentContext;
+    if (context == null) {
+      AppLogging.logError('No context available for localization', name: 'NotificationService');
+      return;
+    }
+    final localizations = l10n ?? AppLocalizations.of(context)!;
     try {
       AppLogging.logInfo('Preparing to schedule mood check-in notifications for ${times.length} times...', name: 'NotificationService');
 
@@ -288,10 +341,10 @@ class NotificationService {
 
         AppLogging.logInfo('Scheduling mood check-in notification ID $notificationId at $scheduledTime (repeats daily)', name: 'NotificationService');
 
-        const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+        final AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
           moodNotificationChannelId,
-          moodNotificationChannelName,
-          channelDescription: 'Notifications for mood check-ins',
+          localizations.moodCheckInsChannelName,
+          channelDescription: localizations.moodCheckInsChannelDesc,
           importance: Importance.max,
           priority: Priority.max,
           playSound: true,
@@ -300,10 +353,10 @@ class NotificationService {
 
         const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true);
 
-        const NotificationDetails platformDetails = NotificationDetails(android: androidDetails, iOS: iosDetails);
+        final NotificationDetails platformDetails = NotificationDetails(android: androidDetails, iOS: iosDetails);
 
         // Get time-based message
-        final messages = _getTimeBasedMoodMessages(hour);
+        final messages = _getTimeBasedMoodMessages(hour, localizations);
         final messageIndex = i % messages.length; // Rotate messages
         final message = messages[messageIndex];
 
@@ -341,16 +394,28 @@ class NotificationService {
   }
 
   Future<void> cancelTaskReminder(String taskId) async {
+    // Cancel with multiple possible ID patterns to ensure cleanup
     await _flutterLocalNotificationsPlugin.cancel(taskId.hashCode);
+    await _flutterLocalNotificationsPlugin.cancel(_generateTaskNotificationId(taskId));
+    // Also cancel task due and completion notifications
+    await _flutterLocalNotificationsPlugin.cancel(taskId.hashCode + 1000);
+    await _flutterLocalNotificationsPlugin.cancel(taskId.hashCode + 2000);
   }
 
   Future<void> showTaskDueNotification(Task task) async {
     AppLogging.logInfo('Showing task due notification for task: ${task.id} - ${task.title}', name: 'NotificationService');
 
-    const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+    final context = NavigationService.navigatorKey.currentContext;
+    if (context == null) {
+      AppLogging.logError('No context available for localization', name: 'NotificationService');
+      return;
+    }
+    final l10n = AppLocalizations.of(context)!;
+
+    final AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'task_due',
-      'Task Due',
-      channelDescription: 'Notifications for due tasks',
+      l10n.taskDueChannelName,
+      channelDescription: l10n.taskDueChannelDesc,
       importance: Importance.max,
       priority: Priority.high,
       showWhen: true,
@@ -358,12 +423,12 @@ class NotificationService {
 
     const DarwinNotificationDetails iOSPlatformChannelSpecifics = DarwinNotificationDetails();
 
-    const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
 
     await _flutterLocalNotificationsPlugin.show(
       task.id.hashCode + 1000, // Different ID for due notifications
-      'Task Due Today',
-      '${task.title} is due today!',
+      l10n.taskDueToday,
+      '${task.title} ${l10n.isDueToday}!',
       platformChannelSpecifics,
       payload: task.id,
     );
@@ -372,10 +437,17 @@ class NotificationService {
   Future<void> showTaskCompletedNotification(Task task) async {
     AppLogging.logInfo('Showing task completed notification for task: ${task.id} - ${task.title}', name: 'NotificationService');
 
-    const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+    final context = NavigationService.navigatorKey.currentContext;
+    if (context == null) {
+      AppLogging.logError('No context available for localization', name: 'NotificationService');
+      return;
+    }
+    final l10n = AppLocalizations.of(context)!;
+
+    final AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'task_completed',
-      'Task Completed',
-      channelDescription: 'Celebration notifications for completed tasks',
+      l10n.taskCompletedChannelName,
+      channelDescription: l10n.taskCompletedChannelDesc,
       importance: Importance.defaultImportance,
       priority: Priority.defaultPriority,
       showWhen: true,
@@ -383,12 +455,12 @@ class NotificationService {
 
     const DarwinNotificationDetails iOSPlatformChannelSpecifics = DarwinNotificationDetails();
 
-    const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
 
     await _flutterLocalNotificationsPlugin.show(
       task.id.hashCode + 2000, // Different ID for completion notifications
-      'Task Completed! 🎉',
-      'Great job completing: ${task.title}',
+      l10n.taskCompleted,
+      '${l10n.greatJobCompleting}: ${task.title}',
       platformChannelSpecifics,
       payload: task.id,
     );
@@ -436,15 +508,29 @@ class NotificationService {
         throw Exception('Notification permissions not granted');
       }
 
+      final context = NavigationService.navigatorKey.currentContext;
+      if (context == null) {
+        AppLogging.logError('No context available for localization', name: 'NotificationService');
+        return;
+      }
+      final l10n = AppLocalizations.of(context)!;
       // Schedule the notification
       await _flutterLocalNotificationsPlugin.zonedSchedule(
         notificationId,
-        'Test Reminder',
-        'This is a test notification to verify reminder functionality',
+        l10n.testReminder,
+        l10n.testNotificationDescription,
         testTime,
-        const NotificationDetails(
-          android: AndroidNotificationDetails('task_reminders', 'Task Reminders', channelDescription: 'Reminders for tasks', importance: Importance.max, priority: Priority.high, playSound: true, enableVibration: true),
-          iOS: DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            'task_reminders',
+            l10n.taskRemindersChannelName,
+            channelDescription: l10n.taskRemindersChannelDesc,
+            importance: Importance.max,
+            priority: Priority.high,
+            playSound: true,
+            enableVibration: true,
+          ),
+          iOS: const DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       );
@@ -460,13 +546,27 @@ class NotificationService {
     try {
       const notificationId = 1000; // Fixed ID for immediate test
 
+      final context = NavigationService.navigatorKey.currentContext;
+      if (context == null) {
+        AppLogging.logError('No context available for localization', name: 'NotificationService');
+        return;
+      }
+      final l10n = AppLocalizations.of(context)!;
       await _flutterLocalNotificationsPlugin.show(
         notificationId,
-        'Immediate Test Notification',
-        'This is an immediate notification to test if notifications work',
-        const NotificationDetails(
-          android: AndroidNotificationDetails('task_reminders', 'Task Reminders', channelDescription: 'Reminders for tasks', importance: Importance.max, priority: Priority.high, playSound: true, enableVibration: true),
-          iOS: DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
+        l10n.immediateTestNotification,
+        l10n.immediateTestNotificationDescription,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            'task_reminders',
+            l10n.taskRemindersChannelName,
+            channelDescription: l10n.taskRemindersChannelDesc,
+            importance: Importance.max,
+            priority: Priority.high,
+            playSound: true,
+            enableVibration: true,
+          ),
+          iOS: const DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
         ),
       );
 
@@ -481,10 +581,17 @@ class NotificationService {
     try {
       const notificationId = 9999; // Fixed ID for admin notifications
 
-      const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      final context = NavigationService.navigatorKey.currentContext;
+      if (context == null) {
+        AppLogging.logError('No context available for localization', name: 'NotificationService');
+        return;
+      }
+      final l10n = AppLocalizations.of(context)!;
+
+      final AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'admin_notifications',
-        'Admin Notifications',
-        channelDescription: 'Important notifications for administrators',
+        l10n.adminNotificationsChannelName,
+        channelDescription: l10n.adminNotificationsChannelDesc,
         importance: Importance.high,
         priority: Priority.high,
         playSound: true,
@@ -496,7 +603,7 @@ class NotificationService {
 
       const DarwinNotificationDetails iOSPlatformChannelSpecifics = DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true, sound: 'default');
 
-      const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
+      final NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
 
       await _flutterLocalNotificationsPlugin.show(notificationId, title, body, platformChannelSpecifics, payload: payload);
 
@@ -511,21 +618,25 @@ class NotificationService {
     try {
       const notificationId = 2000; // Fixed ID for mood test
 
+      // Ensure l10n is available (it's optional param but we might need to fetch it if null, though current caller logic suggests we usually pass it or can fetch it)
+      // Actually showTestMoodNotificationNow takes optional l10n. Use fallback or fetch.
+      final localizations = l10n ?? AppLocalizations.of(NavigationService.navigatorKey.currentContext!)!; // Force fetch if null
+
       await _flutterLocalNotificationsPlugin.show(
         notificationId,
-        l10n?.testMoodNotificationTitle ?? 'Test Mood Check-In',
-        l10n?.testMoodNotificationBody ?? 'This is a test mood check-in notification.',
-        const NotificationDetails(
+        localizations.testMoodNotificationTitle, // Use key
+        localizations.testMoodNotificationBody, // Use key
+        NotificationDetails(
           android: AndroidNotificationDetails(
             moodNotificationChannelId,
-            moodNotificationChannelName,
-            channelDescription: 'Notifications for mood check-ins',
+            localizations.moodCheckInsChannelName,
+            channelDescription: localizations.moodCheckInsChannelDesc,
             importance: Importance.max,
             priority: Priority.max,
             playSound: true,
             enableVibration: true,
           ),
-          iOS: DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
+          iOS: const DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
         ),
         payload: 'mood_check_in',
       );
@@ -543,22 +654,24 @@ class NotificationService {
 
       final testTime = tz.TZDateTime.now(tz.local).add(const Duration(minutes: 1));
 
+      final localizations = l10n ?? AppLocalizations.of(NavigationService.navigatorKey.currentContext!)!;
+
       await _flutterLocalNotificationsPlugin.zonedSchedule(
         notificationId,
-        l10n?.testMoodNotificationTitle ?? 'Test Mood Check-In',
-        l10n?.testMoodNotificationBody ?? 'This is a scheduled test mood check-in notification.',
+        localizations.testMoodNotificationTitle,
+        localizations.scheduledTestMoodNotificationBody,
         testTime,
-        const NotificationDetails(
+        NotificationDetails(
           android: AndroidNotificationDetails(
             moodNotificationChannelId,
-            moodNotificationChannelName,
-            channelDescription: 'Notifications for mood check-ins',
+            localizations.moodCheckInsChannelName,
+            channelDescription: localizations.moodCheckInsChannelDesc,
             importance: Importance.max,
             priority: Priority.max,
             playSound: true,
             enableVibration: true,
           ),
-          iOS: DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
+          iOS: const DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         payload: 'mood_check_in',
@@ -572,15 +685,31 @@ class NotificationService {
   }
 
   Future<void> rescheduleAllReminders(List<Task> tasks) async {
-    // Suppress error messages during bulk operation
+    // Suppress error messages during bulk operation but log them
     _suppressErrors = true;
+    int successCount = 0;
+    int errorCount = 0;
+    List<String> failedTasks = [];
+
     try {
       for (var task in tasks) {
         if (task.reminderDate != null && !task.isCompleted) {
-          await scheduleTaskReminder(task);
+          try {
+            await scheduleTaskReminder(task);
+            successCount++;
+          } catch (e) {
+            errorCount++;
+            failedTasks.add('${task.title} (${task.id}): $e');
+            AppLogging.logError('Failed to reschedule reminder for task ${task.id}: $e', name: 'NotificationService');
+          }
         }
       }
-      AppLogging.logInfo('Rescheduled all reminders for ${tasks.where((t) => t.reminderDate != null && !t.isCompleted).length} tasks', name: 'NotificationService');
+
+      AppLogging.logInfo('Reschedule Summary: $successCount successful, $errorCount failed out of ${tasks.length} tasks', name: 'NotificationService');
+
+      if (errorCount > 0) {
+        AppLogging.logWarning('Failed to reschedule reminders for: ${failedTasks.join("; ")}', name: 'NotificationService');
+      }
     } finally {
       _suppressErrors = false;
     }
@@ -675,38 +804,38 @@ class NotificationService {
   }
 
   /// Get time-based mood check-in messages
-  List<Map<String, String>> _getTimeBasedMoodMessages(int hour) {
+  List<Map<String, String>> _getTimeBasedMoodMessages(int hour, AppLocalizations l10n) {
     if (hour >= 5 && hour < 12) {
       // Morning (5am - 12pm)
       return [
-        {'title': 'Good morning! ☀️', 'body': 'How are you starting your day?'},
-        {'title': 'Rise and shine! 🌅', 'body': 'What\'s your energy like this morning?'},
-        {'title': 'New day, new vibes! 🌤️', 'body': 'How are you feeling today?'},
-        {'title': 'Morning check-in 💫', 'body': 'Take a moment to check in with yourself'},
+        {'title': l10n.goodMorning, 'body': l10n.howAreYouStartingYourDay},
+        {'title': l10n.riseAndShine, 'body': l10n.whatsYourEnergyLikeThisMorning},
+        {'title': l10n.newDayNewVibes, 'body': l10n.howAreYouFeelingToday},
+        {'title': l10n.morningCheckIn, 'body': l10n.takeAMomentToCheckInWithYourself},
       ];
     } else if (hour >= 12 && hour < 17) {
       // Afternoon (12pm - 5pm)
       return [
-        {'title': 'Checking in! 👋', 'body': 'How\'s your afternoon going?'},
-        {'title': 'Midday pause 🌤️', 'body': 'How\'s your focus right now?'},
-        {'title': 'Quick check! ⏰', 'body': 'How are you holding up?'},
-        {'title': 'Afternoon vibes 🌻', 'body': 'What\'s your mood like right now?'},
+        {'title': l10n.checkingIn, 'body': l10n.howsYourAfternoonGoing},
+        {'title': l10n.middayPause, 'body': l10n.howsYourFocusRightNow},
+        {'title': l10n.quickCheck, 'body': l10n.howAreYouHoldingUp},
+        {'title': l10n.afternoonVibes, 'body': l10n.whatsYourMoodLikeRightNow},
       ];
     } else if (hour >= 17 && hour < 21) {
       // Evening (5pm - 9pm)
       return [
-        {'title': 'Winding down? 🌆', 'body': 'How was your day?'},
-        {'title': 'Evening check-in! 🌙', 'body': 'How are you feeling tonight?'},
-        {'title': 'End of day vibes 🌇', 'body': 'How did today go for you?'},
-        {'title': 'Evening reflection 💭', 'body': 'Take a moment to check in'},
+        {'title': l10n.windingDown, 'body': l10n.howWasYourDay},
+        {'title': l10n.eveningCheckIn, 'body': l10n.howAreYouFeelingTonight},
+        {'title': l10n.endOfDayVibes, 'body': l10n.howDidTodayGoForYou},
+        {'title': l10n.eveningReflection, 'body': l10n.takeAMomentToCheckIn},
       ];
     } else {
       // Night (9pm - 5am)
       return [
-        {'title': 'Before bed 🌙', 'body': 'How are you feeling tonight?'},
-        {'title': 'Day\'s done! ✨', 'body': 'How did it go?'},
-        {'title': 'Goodnight check-in 💫', 'body': 'How are you ending your day?'},
-        {'title': 'Night reflection 🌟', 'body': 'Take a moment for yourself'},
+        {'title': l10n.beforeBed, 'body': l10n.howAreYouFeelingTonight},
+        {'title': l10n.daysDone, 'body': l10n.howDidItGo},
+        {'title': l10n.goodnightCheckIn, 'body': l10n.howAreYouEndingYourDay},
+        {'title': l10n.nightReflection, 'body': l10n.takeAMomentForYourself},
       ];
     }
   }

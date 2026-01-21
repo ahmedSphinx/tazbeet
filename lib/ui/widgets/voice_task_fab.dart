@@ -24,7 +24,6 @@ class _VoiceTaskFabState extends State<VoiceTaskFab> with TickerProviderStateMix
   late Animation<double> _rotationAnimation;
 
   final VoiceTaskService _voiceService = VoiceTaskService();
-  bool _isRecording = false;
   bool _showRecorder = false;
 
   @override

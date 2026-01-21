@@ -80,7 +80,7 @@ class _EditTaskDialogState extends State<EditTaskDialog> {
                 DropdownButtonFormField<TaskPriority>(
                   value: selectedPriority,
                   decoration: InputDecoration(
-                    labelText: AppLocalizations.of(context)!.priorityLabel,
+                    labelText: AppLocalizations.of(context)!.priority,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   items: TaskPriority.values.map((priority) {

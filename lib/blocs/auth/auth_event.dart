@@ -17,6 +17,8 @@ class AuthSignInRequested extends AuthEvent {}
 
 class AuthAppleSignInRequested extends AuthEvent {}
 
+class AuthGuestModeRequested extends AuthEvent {}
+
 // Facebook sign-in event removed
 
 class AuthEmailSignInRequested extends AuthEvent {

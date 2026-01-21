@@ -192,7 +192,7 @@ class AppQuickActions {
   }) {
     final actions = [
       logMood(context, onLogMood: onLogMood),
-      quickAddTask(context, onQuickAddTask: onQuickAddTask),
+      // quickAddTask(context, onQuickAddTask: onQuickAddTask),
       addDetailedTask(context, onAddDetailedTask: onAddDetailedTask),
       addCategory(context, onAddCategory: onAddCategory),
     ];

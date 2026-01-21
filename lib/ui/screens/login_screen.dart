@@ -102,6 +102,11 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const MainScreen()), (Route<dynamic> route) => false);
               }
 
+              // Handle guest mode authentication
+              if (state is AuthenticatedAsGuest) {
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const MainScreen()), (Route<dynamic> route) => false);
+              }
+
               if (state is AuthError) {
                 _showErrorSnackBar(context, state.message);
               }
@@ -264,7 +269,19 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   duration: const Duration(milliseconds: 800),
                   child: SlideAnimation(
                     verticalOffset: 30.0,
-                    child: FadeInAnimation(child: Column(children: [_buildDivider(context), const SizedBox(height: 16), _buildGoogleSignInButton(context), const SizedBox(height: 16), _buildAppleSignInButton(context)])),
+                    child: FadeInAnimation(
+                      child: Column(
+                        children: [
+                          _buildDivider(context),
+                          const SizedBox(height: 16),
+                          _buildGoogleSignInButton(context),
+                          const SizedBox(height: 16),
+                          _buildAppleSignInButton(context),
+                          const SizedBox(height: 16),
+                          _buildGuestModeButton(context),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
                 SizedBox(height: height * 0.05),
@@ -384,60 +401,47 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         ),
       ),
     );
-  } /* 
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.apple,
-                  color: Colors.white,
-                  size: 28,
-                ),
-                const SizedBox(width: 16),
-                Text(
-                  AppLocalizations.of(context)!.signInWithApple,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
+  }
+
+  Widget _buildGuestModeButton(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () async {
+          try {
+            HapticFeedback.mediumImpact();
+            AppLogging.logInfo('Guest mode button tapped', name: 'LoginScreen');
+            context.read<AuthBloc>().add(AuthGuestModeRequested());
+          } catch (e) {
+            AppLogging.logError('Error in guest mode button', name: 'LoginScreen', error: e);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.anErrorOccurredPleaseTryAgain), backgroundColor: Colors.red));
+          }
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.9,
+          height: 50,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3)),
+            boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.shadow.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.person_outline, color: Theme.of(context).colorScheme.onSurface, size: 28),
+              const SizedBox(width: 16),
+              Text(
+                'Continue as Guest',
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w500),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)),
-      ),
-
-      child: IconButton(
-        onPressed: () {
-          context.read<AuthBloc>().add(AuthAppleSignInRequested());
-        },
-        icon: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.apple, color: Colors.white),
-            const SizedBox(width: 16),
-            Text(AppLocalizations.of(context)!.signInWithA*pple, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white)),
-          ],
-        ),
-      ),
-    );
-  }
- */
-  // Facebook sign-in UI removed
 
   Widget _buildDivider(BuildContext context) {
     return Row(

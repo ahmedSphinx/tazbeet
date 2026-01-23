@@ -429,4 +429,71 @@ class SettingsService extends ChangeNotifier {
   }
 
   int get currentSessionsUntilLongBreak => _settings.sessionsUntilLongBreak;
+
+  // Focus Mode Settings
+  static Future<Map<String, dynamic>> getFocusModeSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    return {
+      'enabled': prefs.getBool('focus_mode_enabled') ?? false,
+      'blockNotifications': prefs.getBool('focus_block_notifications') ?? true,
+      'dimNonEssentialUI': prefs.getBool('focus_dim_non_essential_ui') ?? true,
+      'showOnlyTaskNotifications': prefs.getBool('focus_show_only_task_notifications') ?? true,
+      'enableDoNotDisturb': prefs.getBool('focus_enable_do_not_disturb') ?? false,
+      'blockSocialMedia': prefs.getBool('focus_block_social_media') ?? false,
+      'playFocusAudio': prefs.getBool('focus_play_audio') ?? true,
+      'audioType': prefs.getString('focus_audio_type') ?? 'ambient',
+      'audioVolume': prefs.getDouble('focus_audio_volume') ?? 0.3,
+      'enableHapticFeedback': prefs.getBool('focus_enable_haptic_feedback') ?? true,
+      'showMotivationalQuotes': prefs.getBool('focus_show_quotes') ?? true,
+      'enableEyeBreakReminders': prefs.getBool('focus_eye_break_reminders') ?? true,
+    };
+  }
+
+  static Future<void> saveFocusModeSettings(Map<String, dynamic> settings) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    for (final entry in settings.entries) {
+      if (entry.value is bool) {
+        await prefs.setBool('focus_${entry.key}', entry.value as bool);
+      } else if (entry.value is String) {
+        await prefs.setString('focus_${entry.key}', entry.value as String);
+      } else if (entry.value is double) {
+        await prefs.setDouble('focus_${entry.key}', entry.value as double);
+      } else if (entry.value is int) {
+        await prefs.setInt('focus_${entry.key}', entry.value as int);
+      }
+    }
+  }
+
+  static Future<Map<String, dynamic>> getFocusModeHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    final historyJson = prefs.getString('focus_mode_history') ?? '{}';
+
+    try {
+      return Map<String, dynamic>.from(json.decode(historyJson));
+    } catch (e) {
+      return {'sessions': <Map<String, dynamic>>[], 'lastUpdated': DateTime.now().toIso8601String()};
+    }
+  }
+
+  static Future<void> saveFocusModeHistory(Map<String, dynamic> history) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('focus_mode_history', json.encode(history));
+  }
+
+  static Future<Map<String, dynamic>> getFocusModeAchievements() async {
+    final prefs = await SharedPreferences.getInstance();
+    final achievementsJson = prefs.getString('focus_mode_achievements') ?? '{}';
+
+    try {
+      return Map<String, dynamic>.from(json.decode(achievementsJson));
+    } catch (e) {
+      return {'unlocked': <String, String>{}, 'progress': <String, dynamic>{}, 'daily': <String, dynamic>{}};
+    }
+  }
+
+  static Future<void> saveFocusModeAchievements(Map<String, dynamic> achievements) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('focus_mode_achievements', json.encode(achievements));
+  }
 }

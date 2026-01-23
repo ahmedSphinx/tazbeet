@@ -182,10 +182,22 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         final pickedDate = await showDatePicker(context: context, initialDate: selectedDueDate ?? DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 365)));
 
                         if (pickedDate != null && context.mounted) {
-                          final pickedTime = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(selectedDueDate ?? DateTime.now()));
+                          // For today, ensure time is at least 1 minute in the future
+                          final now = DateTime.now();
+                          final initialTime = (pickedDate.year == now.year && pickedDate.month == now.month && pickedDate.day == now.day)
+                              ? TimeOfDay.fromDateTime(now.add(const Duration(minutes: 1)))
+                              : TimeOfDay.fromDateTime(selectedDueDate ?? DateTime.now());
+
+                          final pickedTime = await showTimePicker(context: context, initialTime: initialTime);
 
                           if (pickedTime != null) {
-                            setState(() => selectedDueDate = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, pickedTime.hour, pickedTime.minute));
+                            final finalDateTime = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, pickedTime.hour, pickedTime.minute);
+                            // Ensure the final datetime is not in the past
+                            if (finalDateTime.isBefore(DateTime.now().subtract(const Duration(minutes: 1)))) {
+                              setState(() => selectedDueDate = DateTime.now().add(const Duration(minutes: 1)));
+                            } else {
+                              setState(() => selectedDueDate = finalDateTime);
+                            }
                           } else {
                             setState(() => selectedDueDate = DateTime(pickedDate.year, pickedDate.month, pickedDate.day));
                           }

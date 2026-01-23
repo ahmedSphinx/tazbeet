@@ -266,3 +266,19 @@ class SearchNotifications extends NotificationEvent {
   @override
   List<Object?> get props => [query];
 }
+
+/// Verify scheduled reminders
+class VerifyScheduledReminders extends NotificationEvent {
+  const VerifyScheduledReminders();
+}
+
+/// Snooze a task reminder
+class SnoozeTaskReminder extends NotificationEvent {
+  final String taskId;
+  final Duration duration;
+
+  const SnoozeTaskReminder(this.taskId, this.duration);
+
+  @override
+  List<Object?> get props => [taskId, duration];
+}

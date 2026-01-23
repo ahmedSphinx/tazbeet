@@ -52,9 +52,4 @@ class NavigationController extends ChangeNotifier {
         return l10n.moodTracking;
     }
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 }

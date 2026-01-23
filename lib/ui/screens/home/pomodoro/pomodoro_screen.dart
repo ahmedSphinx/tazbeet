@@ -6,7 +6,9 @@ import 'package:tazbeet/l10n/app_localizations.dart';
 import 'package:tazbeet/models/task.dart';
 import 'package:tazbeet/services/app_logging_service.dart';
 import 'package:tazbeet/services/pomodoro_service.dart';
+import 'package:tazbeet/services/focus_mode.dart';
 import 'package:tazbeet/models/pomodoro_template_model.dart';
+import '../../../widgets/focus_mode_widgets.dart';
 
 import '../../../../services/localization_service.dart';
 import '../../../../services/pomodoro_service_locator.dart';
@@ -190,6 +192,10 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
   int _workTimeMinutes = 0;
   int _breakTimeMinutes = 0;
 
+  // Focus mode state
+  bool _focusModeEnabled = false;
+  StreamSubscription<FocusModeEvent>? _focusModeSubscription;
+
   // Celebration state
   bool _showCelebration = false;
   PomodoroState _lastState = PomodoroState.idle;
@@ -212,7 +218,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
     }
 
     // Use provided template or default
-    _currentTemplate = widget.template ?? PomodoroTemplate(id: 'classic', name: AppLocalizations.of(context)!.classicPreset, workDuration: 25, restDuration: 5, longRestDuration: 15, cycles: 4, recommendedFor: 'normal');
+    _currentTemplate = widget.template ?? PomodoroTemplate(id: 'classic', name: 'Classic', workDuration: 25, restDuration: 5, longRestDuration: 15, cycles: 4, recommendedFor: 'normal');
 
     // Log template info for debugging
     if (widget.template != null) {
@@ -223,6 +229,22 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
 
     // Initialize timer with template (async)
     _initializeTimer();
+
+    // Initialize focus mode
+    _initializeFocusMode();
+  }
+
+  void _initializeFocusMode() async {
+    // Load focus mode settings
+    // For now, we'll enable focus mode by default
+    _focusModeEnabled = true;
+
+    // Listen to focus mode events
+    _focusModeSubscription = FocusMode.events.listen((event) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
   }
 
   @override
@@ -230,6 +252,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
     AppLogging.logInfo('PomodoroScreen: Disposing - saving state', name: 'PomodoroNavigation');
     _saveTimerState();
     WidgetsBinding.instance.removeObserver(this);
+    _focusModeSubscription?.cancel();
     _timer.dispose();
     super.dispose();
   }
@@ -470,71 +493,138 @@ class _PomodoroScreenState extends State<PomodoroScreen> with TickerProviderStat
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: _timer,
-      child: Scaffold(
-        body: Stack(
-          children: [
-            // Background gradient
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: _getBackgroundColors(_timer.effectiveState)),
-              ),
-            ),
-
-            // Main content - restructured layout
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Column(
-                  children: [
-                    // Session type label
-                    const SizedBox(height: 20),
-                    _buildSessionTypeLabel(),
-
-                    const SizedBox(height: 40),
-
-                    // Timer with time adjustment buttons
-                    _buildTimerWithAdjustments(),
-
-                    const SizedBox(height: 40),
-
-                    // Primary action button
-                    _buildPrimaryActionButton(),
-
-                    const SizedBox(height: 24),
-
-                    // Secondary action buttons
-                    _buildSecondaryActionButtons(),
-
-                    const SizedBox(height: 20),
-
-                    // Progress bar (minimal)
-                    _buildMinimalProgressBar(),
-
-                    const SizedBox(height: 32),
-
-                    // Statistics section (compact)
-                    Expanded(child: _buildCompactStatistics()),
-
-                    const SizedBox(height: 20),
-                  ],
+      child: FocusModeOverlay(
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(_getAppBarTitle()),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            foregroundColor: Colors.white,
+            actions: [
+              FocusModeIndicator(),
+              IconButton(icon: const Icon(Icons.settings), onPressed: () => _showSettings()),
+            ],
+          ),
+          body: Stack(
+            children: [
+              // Background gradient
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: _getBackgroundColors(_timer.effectiveState)),
                 ),
               ),
-            ),
 
-            // Session completion celebration overlay
-            if (_showCelebration)
-              Positioned.fill(
-                child: Container(
-                  color: Colors.black.withOpacity(0.3),
-                  child: _SessionCompletionCelebration(
-                    onDismiss: () {
-                      setState(() {
-                        _showCelebration = false;
-                      });
-                    },
+              // Main content - restructured layout
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Column(
+                    children: [
+                      // Session type label
+                      const SizedBox(height: 20),
+                      _buildSessionTypeLabel(),
+
+                      const SizedBox(height: 40),
+
+                      // Timer with time adjustment buttons
+                      _buildTimerWithAdjustments(),
+
+                      const SizedBox(height: 40),
+
+                      // Primary action button
+                      _buildPrimaryActionButton(),
+
+                      const SizedBox(height: 24),
+
+                      // Secondary action buttons
+                      _buildSecondaryActionButtons(),
+
+                      const SizedBox(height: 20),
+
+                      // Progress bar (minimal)
+                      _buildMinimalProgressBar(),
+
+                      const SizedBox(height: 32),
+
+                      // Statistics section (compact)
+                      Expanded(child: _buildCompactStatistics()),
+
+                      const SizedBox(height: 20),
+                    ],
                   ),
                 ),
               ),
+
+              // Session completion celebration overlay
+              if (_showCelebration)
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.black.withOpacity(0.3),
+                    child: _SessionCompletionCelebration(
+                      onDismiss: () {
+                        setState(() {
+                          _showCelebration = false;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _getAppBarTitle() {
+    switch (_timer.effectiveState) {
+      case PomodoroState.work:
+        return 'Focus Time';
+      case PomodoroState.shortBreak:
+        return 'Short Break';
+      case PomodoroState.longBreak:
+        return 'Long Break';
+      case PomodoroState.paused:
+        return 'Paused';
+      default:
+        return 'Pomodoro Timer';
+    }
+  }
+
+  void _showSettings() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Focus Mode Settings', style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 16),
+            SwitchListTile(
+              title: Text('Enable Focus Mode'),
+              subtitle: Text('Block distractions during work sessions'),
+              value: _focusModeEnabled,
+              onChanged: (value) {
+                setState(() {
+                  _focusModeEnabled = value;
+                });
+                _timer.setFocusMode(value);
+                Navigator.pop(context);
+              },
+            ),
+            if (FocusMode.isActive) ...[
+              const Divider(),
+              ListTile(
+                leading: Icon(Icons.stop, color: Colors.red),
+                title: Text('Stop Focus Mode'),
+                subtitle: Text('Disable focus mode immediately'),
+                onTap: () async {
+                  await FocusMode.disableFocusMode(reason: 'Manual stop');
+                  Navigator.pop(context);
+                },
+              ),
+            ],
           ],
         ),
       ),

@@ -15,7 +15,7 @@ class ErrorNotificationService {
   DateTime? _lastSyncErrorTime;
 
   /// Show error message to user
-  void showError(String message, {bool isWarning = false}) {
+  void showError(BuildContext context, String message, {bool isWarning = false}) {
     final messenger = scaffoldMessengerKey?.currentState;
     if (messenger == null) return;
 

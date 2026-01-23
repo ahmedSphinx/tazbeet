@@ -9,9 +9,6 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get aIPoweredAnalysis => 'Analyse Alimentée par l\'IA';
-
-  @override
   String get about => 'About';
 
   @override
@@ -22,6 +19,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get accentColor => 'Accent Color';
+
+  @override
+  String get acceptSuggestion => 'Accepter la Suggestion';
 
   @override
   String get accessDenied => 'Access Denied';
@@ -63,6 +63,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get activateEmergencyMode => 'Activate emergency mode to suspend all reminders and timers';
 
   @override
+  String get active => 'Active';
+
+  @override
   String get activeNotificationsMuted => 'Active - Notifications muted';
 
   @override
@@ -70,6 +73,30 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get activity => 'Activity';
+
+  @override
+  String get activityBreathing => 'Deep breathing exercises';
+
+  @override
+  String get activityEyeRest => '20-20-20 eye exercises';
+
+  @override
+  String get activityHydration => 'Drink water & walk around';
+
+  @override
+  String get activityMeditation => 'Mindful breathing (2-5 min)';
+
+  @override
+  String get activityMusic => 'Listen to calming music';
+
+  @override
+  String get activitySocial => 'Quick chat with colleague';
+
+  @override
+  String get activityStretching => 'Desk stretches (2-3 min)';
+
+  @override
+  String get activityWalking => 'Short walk (3-5 min)';
 
   @override
   String get adaptiveBreakSuggestions => 'Adaptive break suggestions';
@@ -102,6 +129,17 @@ class AppLocalizationsFr extends AppLocalizations {
   String get addCategory => 'Add Category';
 
   @override
+  String get addCustomReminderMessage => 'Add a custom reminder message';
+
+  @override
+  String get added => 'Added';
+
+  @override
+  String addedSuggestedCheckInTimesFromYourMoodHistory(Object count) {
+    return 'Added $count suggested check-in times from your mood history';
+  }
+
+  @override
   String get addFirstSubtask => 'Ajouter la Première Sous-tâche';
 
   @override
@@ -132,21 +170,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get addTaskButton => 'Ajouter une Tâche';
 
   @override
+  String get addTasksToCategory => 'Add tasks to this category';
+
+  @override
   String get addTaskTitle => 'Ajouter une Nouvelle Tâche';
 
   @override
   String get addTaskToGetStarted => 'Add a task to get started';
 
   @override
-  String get addTasksToCategory => 'Add tasks to this category';
-
-  @override
   String get addYourFirstTask => 'Add Your First Task';
-
-  @override
-  String addedSuggestedCheckInTimesFromYourMoodHistory(Object count) {
-    return 'Added $count suggested check-in times from your mood history';
-  }
 
   @override
   String get adjustTheseSettingsToMakeTheAppWorkBetterForYou => 'Adjust these settings to make the app work better for you';
@@ -157,10 +190,27 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get adminNotificationsChannelDesc => 'Important notifications for administrators';
+
+  @override
+  String get adminNotificationsChannelName => 'Admin Notifications';
+
+  @override
   String get adminPanel => 'Admin Panel';
 
   @override
+  String adminStatus(Object status) {
+    return 'Admin : $status';
+  }
+
+  @override
   String get adminTools => 'Outils d\'Administration';
+
+  @override
+  String get advancedDetails => 'Détails Avancés';
+
+  @override
+  String get advancedSection => 'Advanced Details';
 
   @override
   String get advancedSettings => 'Advanced Settings';
@@ -173,6 +223,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get afternoonVibes => 'Vibrations d\'après-midi 🌻';
+
+  @override
+  String get aIPoweredAnalysis => 'Analyse Alimentée par l\'IA';
 
   @override
   String get aiPoweredInsights => 'Perspectives alimentées par l\'IA';
@@ -199,10 +252,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get allNotificationsCleared => 'Toutes les notifications effacées !';
 
   @override
+  String get allowAllUsersToAccessApp => '• Allow all users to access the app';
+
+  @override
+  String get allowAllUsersToAccessTheApp => '• Allow all users to access the app';
+
+  @override
+  String get allowUrgentNotifications => 'Allow Urgent Notifications During DND';
+
+  @override
   String get allRecurringUpToDate => 'Toutes les tâches récurrentes sont à jour !';
 
   @override
   String get allRemindersSuspended => 'All reminders and timers are suspended';
+
+  @override
+  String get allSessions => 'All Sessions';
 
   @override
   String get allSessionsComplete => 'Toutes les sessions terminées';
@@ -217,16 +282,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get allTasksCategoriesMoodsLocalSettings => '• All tasks\n• All categories\n• All moods\n• All local settings';
 
   @override
+  String get allTasksCompleted => '🎉 All tasks completed!';
+
+  @override
   String get allTimeStats => 'All-Time Stats';
 
   @override
-  String get allowAllUsersToAccessApp => '• Allow all users to access the app';
+  String get almostThere => '🔥 Almost there! Keep going!';
 
   @override
-  String get allowAllUsersToAccessTheApp => '• Allow all users to access the app';
-
-  @override
-  String get allowUrgentNotifications => 'Allow Urgent Notifications During DND';
+  String get almostThereKeepItUp => '🌟 Almost there! Keep it up!';
 
   @override
   String get am => 'AM';
@@ -238,7 +303,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ambientSounds => 'Ambient Sounds';
 
   @override
-  String get anErrorOccurredPleaseTryAgain => 'An error occurred. Please try again.';
+  String get anAdmin => 'un administrateur';
 
   @override
   String get analytics => 'Analytics';
@@ -259,6 +324,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get analyticsEnabled => 'Analyses activées';
 
   @override
+  String get anErrorOccurredPleaseTryAgain => 'An error occurred. Please try again.';
+
+  @override
   String get animationOptimization => 'Animation Optimization';
 
   @override
@@ -274,10 +342,28 @@ class AppLocalizationsFr extends AppLocalizations {
   String get appDescription => 'A smart task management app with Pomodoro integration and AI-powered recommendations.';
 
   @override
+  String get appearance => 'Appearance';
+
+  @override
+  String get appearanceSection => 'Apparence';
+
+  @override
+  String get appearsIn10Seconds => 'Appears in 10 seconds';
+
+  @override
   String get appInformation => 'App Information';
 
   @override
   String get appInformationHelp => 'App Information & Help';
+
+  @override
+  String get applyButton => 'Appliquer';
+
+  @override
+  String get applyColors => 'Apply Colors';
+
+  @override
+  String get applySettings => 'Apply Settings';
 
   @override
   String get appSettings => 'App Settings';
@@ -292,24 +378,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get appVersion => 'App Version';
 
   @override
-  String get appearance => 'Appearance';
-
-  @override
-  String get appearanceSection => 'Apparence';
-
-  @override
-  String get appearsIn10Seconds => 'Appears in 10 seconds';
-
-  @override
-  String get applyButton => 'Appliquer';
-
-  @override
-  String get applyColors => 'Apply Colors';
-
-  @override
-  String get applySettings => 'Apply Settings';
-
-  @override
   String get areYouSureYouWantToClearAllNotificationHistory => 'Are you sure you want to clear all notification history?';
 
   @override
@@ -321,9 +389,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get areYouSureYouWantToDeleteSubtask => 'Are you sure you want to delete this subtask?';
 
   @override
-  String areYouSureYouWantToDeleteTask(Object taskTitle) {
+  String areYouSureYouWantToDeleteTask(Object taskTitle, Object title) {
     return 'Are you sure you want to delete \"$taskTitle\"?';
   }
+
+  @override
+  String get areYouSureYouWantToDeleteThisSubtask => 'Êtes-vous sûr de vouloir supprimer cette sous-tâche ?';
 
   @override
   String areYouSureYouWantToDeleteUser(Object userName) {
@@ -331,11 +402,17 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get areYouSureYouWantToExit => 'Are you sure you want to exit the app?';
+
+  @override
+  String get areYouSureYouWantToSignOut => 'Are you sure you want to sign out?';
+
+  @override
   String get areYouSureYouWantToStopTheCurrentSession => 'Are you sure you want to stop the current session? Your progress will be lost.';
 
   @override
   String areYouSureYouWantToToggleAdminRights(Object action, Object userName) {
-    return 'Are you sure you want to $action $userName?';
+    return 'Êtes-vous sûr de vouloir $action $userName ?';
   }
 
   @override
@@ -398,11 +475,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get averageStress => 'Average Stress';
 
   @override
-  String avgFocus(String score) {
-    return 'Avg Focus';
-  }
-
-  @override
   String get avgSession => 'Session Moyenne';
 
   @override
@@ -427,13 +499,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get bad => 'Mauvais';
 
   @override
-  String get badIntensity => 'Intensité Mauvaise';
-
-  @override
   String get badgeOnlyMode => 'Badge Only Mode';
 
   @override
   String get badgeOnlyModeSubtitle => 'Show badge without sound or popup';
+
+  @override
+  String get badIntensity => 'Intensité Mauvaise';
 
   @override
   String get balancedDayAhead => 'Journée Équilibrée à Venir';
@@ -456,6 +528,11 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String birthday(Object birthday) {
     return 'Birthday: $birthday';
+  }
+
+  @override
+  String birthdayDate(Object date) {
+    return 'Anniversaire : $date';
   }
 
   @override
@@ -483,14 +560,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get breakTimeDistribution => 'Break Time Distribution';
 
   @override
-  String bulkDeleteConfirmation(int count) {
-    return 'Êtes-vous sûr de vouloir supprimer $count tâches ?';
-  }
+  String get breakTitleLong => '🌿 Long Break';
 
   @override
-  String bulkGenerationComplete(String count) {
-    return 'Generated $count recurring instances';
-  }
+  String get breakTitleShort => '☕ Short Break';
+
+  @override
+  String get buildingMomentum => '🌟 Building momentum!';
 
   @override
   String get bySigningInYouAgree => 'By signing in, you agree to our Terms of Service and Privacy Policy';
@@ -512,6 +588,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get cancelButton => 'Annuler';
+
+  @override
+  String get cancelled => 'Cancelled';
 
   @override
   String get cannotSetReminderForPastDate => 'Impossible de définir un rappel pour une date passée';
@@ -541,8 +620,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get categoryDeleted => 'Catégorie supprimée';
 
   @override
-  String categoryDeletedSuccessfully(Object categoryName) {
-    return 'Category \"$categoryName\" deleted successfully';
+  String categoryDeletedSuccessfully(Object name) {
+    return 'Catégorie \"$name\" supprimée avec succès';
   }
 
   @override
@@ -574,7 +653,9 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get categoryUpdated => 'Category updated successfully';
+  String categoryUpdated(Object action, Object name) {
+    return '$action catégorie : $name';
+  }
 
   @override
   String get categoryUpdatedSuccessfully => 'Category updated successfully';
@@ -595,6 +676,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get checkHistoryAfterDelivery => '3. Check notification history after delivery';
 
   @override
+  String get checkingIn => 'Vérification! 👋';
+
+  @override
   String get checkPending => 'Check Pending';
 
   @override
@@ -604,16 +688,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get checkYourEnergyLevelsThroughoutTheDay => 'Check your energy levels throughout the day';
 
   @override
-  String get checkingIn => 'Vérification! 👋';
-
-  @override
   String get chooseBackgroundSound => 'Choose a background sound to help you concentrate or relax';
-
-  @override
-  String get priority => 'Priorité';
-
-  @override
-  String get prioritizeTasks => 'Prioriser les Tâches';
 
   @override
   String get chooseColor => 'Choose Color';
@@ -667,6 +742,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get clearHistory => 'Clear History';
 
   @override
+  String get clearingData => 'Clearing data...';
+
+  @override
   String get clearLogs => 'Clear Logs';
 
   @override
@@ -674,9 +752,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get clearQuality => 'Clear Quality';
-
-  @override
-  String get clearingData => 'Clearing data...';
 
   @override
   String get close => 'Fermer';
@@ -703,6 +778,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get color => 'Color:';
 
   @override
+  String get colorLabel => 'Couleur : ';
+
+  @override
   String get colorPicker => 'Color Picker';
 
   @override
@@ -718,7 +796,41 @@ class AppLocalizationsFr extends AppLocalizations {
   String get complete => 'Compléter';
 
   @override
+  String get completed => 'Complétée';
+
+  @override
+  String get completedAt => 'Completed at';
+
+  @override
+  String get completedLabel => 'Terminée';
+
+  @override
+  String get completedSessions => 'Completed Sessions';
+
+  @override
+  String get completedStat => 'Completed';
+
+  @override
+  String completedStatus(Object status) {
+    return 'Terminé : $status';
+  }
+
+  @override
+  String get completedTag => 'Completed';
+
+  @override
+  String get completedTasks => 'Tâches terminées';
+
+  @override
+  String completedTasksInCategory(Object count) {
+    return 'Completed: $count';
+  }
+
+  @override
   String get completeSubtasksFirst => 'Achevez les Sous-tâches D\'abord';
+
+  @override
+  String get completeTask => 'Complete Task';
 
   @override
   String get completeTaskButton => 'Achever la Tâche';
@@ -733,24 +845,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get completeTutorial => 'Complete Tutorial';
 
   @override
-  String get completed => 'Complétée';
-
-  @override
-  String get completedAt => 'Completed at';
-
-  @override
-  String get completedLabel => 'Terminée';
-
-  @override
-  String get completedSessions => 'Completed Sessions';
-
-  @override
-  String get completedTasks => 'Tâches terminées';
-
-  @override
-  String completedTasksInCategory(Object count) {
-    return 'Completed: $count';
-  }
+  String get completionProgress => 'Completion Progress';
 
   @override
   String get completionRate => 'Completion Rate';
@@ -771,23 +866,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get confirmDelete => 'Confirm Delete';
 
   @override
-  String confirmDeleteCategory(String categoryName) {
-    return 'Are you sure you want to delete \"$categoryName\"? This will remove the category from all associated tasks.';
-  }
-
-  @override
   String get confirmDeleteSubtask => 'Êtes-vous sûr de supprimer cette sous-tâche ?';
 
   @override
-  String confirmDeleteTask(String taskTitle) {
-    return 'Êtes-vous sûr de vouloir supprimer \"$taskTitle\" ?';
-  }
+  String get considerLighterTasks => '🌿 Consider lighter tasks or take a break';
 
   @override
   String get considerMoreFrequentBreaks => 'Envisagez des pauses plus fréquentes';
 
   @override
   String get considerPrioritizingSelfCareActivitiesTomorrow => 'Envisagez de prioriser les activités de soin de soi demain';
+
+  @override
+  String get contextualActions => 'Contextual Actions';
+
+  @override
+  String get continueFocus => 'Continue Focus';
 
   @override
   String get continueToApp => 'Continue to App';
@@ -820,6 +914,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get createCategory => 'Create Category';
 
   @override
+  String get created => 'Créé';
+
+  @override
+  String createdAt(Object date) {
+    return 'Créé : $date';
+  }
+
+  @override
   String get createTasksWithYourVoice => 'Create tasks with your voice';
 
   @override
@@ -835,31 +937,25 @@ class AppLocalizationsFr extends AppLocalizations {
   String get createYourPerfectPomodoroSetup => 'Create your perfect Pomodoro setup';
 
   @override
-  String get created => 'Créé';
-
-  @override
   String get currentStreak => 'Current Streak';
 
   @override
   String get currentVersion => 'Version Actuelle';
 
   @override
-  String get custom => 'Custom';
-
-  @override
-  String get customColorSettings => 'Custom Color Settings';
+  String get custom => 'Personnalisé';
 
   @override
   String get customColors => 'Custom Colors';
+
+  @override
+  String get customColorSettings => 'Custom Color Settings';
 
   @override
   String get customDurations => 'Custom Durations (minutes)';
 
   @override
   String get customDurationsMinutes => 'Custom Durations (minutes)';
-
-  @override
-  String get customRange => 'Custom Range';
 
   @override
   String get customizeEachNotificationType => 'Customize each notification type';
@@ -880,22 +976,31 @@ class AppLocalizationsFr extends AppLocalizations {
   String get customizeYourPomodoroSession => 'Customize your pomodoro session';
 
   @override
+  String get customMessageOptional => 'Custom message (optional)';
+
+  @override
+  String get customRange => 'Custom Range';
+
+  @override
+  String get customReminder => '';
+
+  @override
+  String get customTime => 'Custom Time';
+
+  @override
   String get cycles => 'Cycles';
 
   @override
   String get cycles10 => '1-10 cycles';
 
   @override
-  String get quickEdit => 'Modification Rapide';
-
-  @override
-  String get quickFilters => 'Filtres Rapides';
-
-  @override
   String get daily => 'Daily';
 
   @override
   String get dailyMoodCheckIns => 'Daily mood check-ins';
+
+  @override
+  String get dailySummary => '📊 Daily Summary';
 
   @override
   String get dark => 'Dark';
@@ -916,6 +1021,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dataBackupSection => 'Données et Sauvegarde';
 
   @override
+  String get databaseSize => 'Database Size';
+
+  @override
   String get dataExported => 'Données exportées avec succès';
 
   @override
@@ -931,9 +1039,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dataSyncedSuccessfullyFromFirebase => 'Data synced successfully from Firebase!';
 
   @override
-  String get databaseSize => 'Database Size';
-
-  @override
   String get dateFormat => 'Date Format';
 
   @override
@@ -943,17 +1048,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get day => 'Day';
 
   @override
-  String dayStreak(int count) {
-    return 'day streak';
-  }
-
-  @override
-  String days(int count) {
-    return '$count days';
-  }
-
-  @override
   String get daysDone => 'Journée terminée! ✨';
+
+  @override
+  String get daysLeft => 'Days Left';
 
   @override
   String get daysStreak => 'jours d\'affilée';
@@ -1023,11 +1121,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get deleteTaskButton => 'Supprimer la Tâche';
 
   @override
-  String deleteTaskConfirmation(String task, Object taskTitle) {
-    return 'Are you sure you want to delete \"$taskTitle\"?';
-  }
-
-  @override
   String get deleteTaskConfirmationTitle => 'Supprimer la Tâche';
 
   @override
@@ -1035,6 +1128,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get deleteUser => 'Delete User';
+
+  @override
+  String get delivered => 'Delivered';
 
   @override
   String get deliveryLabel => 'Delivery';
@@ -1048,13 +1144,18 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get details => 'Détails';
+  String descriptionNA(Object description) {
+    return 'Description : $description';
+  }
 
   @override
   String get descriptionOfActivity => 'Description of activity';
 
   @override
   String get detailedEntry => 'Entrée Détaillée';
+
+  @override
+  String get details => 'Détails';
 
   @override
   String get developerOptions => 'Developer Options';
@@ -1066,22 +1167,25 @@ class AppLocalizationsFr extends AppLocalizations {
   String get disable => 'Disable';
 
   @override
+  String get disabled => 'Disabled';
+
+  @override
   String get disableDebugMode => 'Disable Debug Mode';
 
   @override
   String get disableMaintenanceMode => 'Disable Maintenance Mode';
 
   @override
-  String get disabled => 'Disabled';
+  String get dismiss => '';
 
   @override
   String get dndInfo => 'Do Not Disturb mode silences all notifications except emergencies during specified hours.';
 
   @override
-  String get doNotDisturb => 'Do Not Disturb';
+  String get dominantMood => 'Humeur Dominante';
 
   @override
-  String get dominantMood => 'Humeur Dominante';
+  String get doNotDisturb => 'Do Not Disturb';
 
   @override
   String get dontForget => 'N\'oubliez pas';
@@ -1108,10 +1212,24 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dueDateMustBeInFuture => 'Due date must be in the future';
 
   @override
+  String dueDateNA(Object date) {
+    return 'Date d\'échéance : $date';
+  }
+
+  @override
+  String get dueDateReminder => 'Due date reminder';
+
+  @override
   String get dueDateTitle => 'Due Date';
 
   @override
+  String get dueIn => 'Due in';
+
+  @override
   String get dueInOneHour => 'Due in 1 hour - tap to view';
+
+  @override
+  String get dueSoon => 'Due soon';
 
   @override
   String get dueThisWeek => 'Dû Cette Semaine';
@@ -1176,6 +1294,11 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String emailNA(Object email) {
+    return 'Email : $email';
+  }
+
+  @override
   String get emailNotifications => 'Email Notifications';
 
   @override
@@ -1207,6 +1330,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get enableCustomColors => 'Enable Custom Colors';
+
+  @override
+  String get enabled => 'Enabled';
 
   @override
   String get enableDebugMode => 'Enable Debug Mode';
@@ -1242,9 +1368,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get enableVoiceTasks => 'Enable Voice Tasks';
 
   @override
-  String get enabled => 'Enabled';
-
-  @override
   String get endOfDayVibes => 'Vibrations de fin de journée 🌇';
 
   @override
@@ -1263,10 +1386,25 @@ class AppLocalizationsFr extends AppLocalizations {
   String get energyLevel => 'Niveau d\'Énergie';
 
   @override
+  String get energyLevelGood => '🔥 Good Energy';
+
+  @override
+  String get energyLevelHigh => '⚡ High Energy!';
+
+  @override
+  String get energyLevelLow => '🔋 Low Energy';
+
+  @override
+  String get energyLevelModerate => '⚖️ Moderate Energy';
+
+  @override
   String get energyLevelMonitoring => 'Energy level monitoring';
 
   @override
   String get energyLevelTracking => 'Energy level tracking';
+
+  @override
+  String get energyLevelVeryLow => '😴 Very Low Energy';
 
   @override
   String get energyPattern => 'Energy Pattern';
@@ -1284,6 +1422,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get enterMessageUsersWillSee => 'Enter the message users will see...';
 
   @override
+  String get enterMinutes => 'Enter minutes (e.g., 45)';
+
+  @override
   String get enterTaskDescription => 'Entrez la description de la tâche (optionnel)';
 
   @override
@@ -1291,11 +1432,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get enterTaskTitle => 'Entrez le titre de la tâche';
-
-  @override
-  String error(String message) {
-    return 'Error: $message';
-  }
 
   @override
   String errorApplyingSettings(Object error) {
@@ -1327,12 +1463,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String errorDeletingTask(Object error) {
-    return 'Error deleting task: $error';
+    return 'Erreur lors de la suppression de la tâche : $error';
   }
 
   @override
   String errorDeletingUser(Object error) {
-    return 'Error deleting user: $error';
+    return 'Erreur lors de la suppression de l\'utilisateur : $error';
   }
 
   @override
@@ -1375,13 +1511,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String errorUpdatingTask(Object error) {
-    return 'Error updating task: $error';
+    return 'Erreur lors de la mise à jour de la tâche : $error';
   }
 
   @override
   String errorUpdatingUser(Object error) {
-    return 'Error updating user: $error';
+    return 'Erreur lors de la mise à jour de l\'utilisateur : $error';
   }
+
+  @override
+  String get estimatedSessions => 'estimated sessions';
 
   @override
   String get eveningCheckIn => 'Vérification du soir! 🌙';
@@ -1399,19 +1538,28 @@ class AppLocalizationsFr extends AppLocalizations {
   String get excellentCompletionRate => 'Taux d\'achèvement excellent ! Continuez le excellent travail';
 
   @override
+  String get excellentFocus => '🌟 Excellent focus today!';
+
+  @override
   String get excellentPerformance => 'Excellent performance!';
+
+  @override
+  String get executionSection => 'Task Execution';
 
   @override
   String get expand => 'Développer';
 
   @override
-  String get experienceAIPoweredTaskPrioritizationThatAdaptsToYourPatterns => 'Experience AI-powered task prioritization that adapts to your patterns';
-
-  @override
   String get experienceAiPoweredTaskPrioritizationThatAdaptsToYourPatterns => 'Experience AI-powered task prioritization that adapts to your patterns';
 
   @override
+  String get experienceAIPoweredTaskPrioritizationThatAdaptsToYourPatterns => 'Experience AI-powered task prioritization that adapts to your patterns';
+
+  @override
   String get expertOptions => 'Expert options for power users';
+
+  @override
+  String get expired => 'Expired';
 
   @override
   String get exploreFeatures => 'Explore Features';
@@ -1438,10 +1586,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get exportYourTasksToExternalFormats => 'Export your tasks to external formats';
 
   @override
+  String get extendSession => '⏱️ Extend Session';
+
+  @override
   String get fadeIn => 'Fade In';
 
   @override
   String get fadeOut => 'Fade Out';
+
+  @override
+  String get failed => 'Failed';
 
   @override
   String get failedToAccessGallery => 'Failed to access gallery';
@@ -1483,6 +1637,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get failedToUploadImage => 'Failed to upload image';
 
   @override
+  String get failureReason => 'Failure reason';
+
+  @override
   String get features => 'Features:';
 
   @override
@@ -1498,16 +1655,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get filterByType => 'Filter by Type';
 
   @override
-  String get filterTasks => 'Filter tasks';
-
-  @override
-  String get filterTasksTitle => 'Filtrer les Tâches';
-
-  @override
   String get filters => 'Filters';
 
   @override
   String get filtersAppliedSuccessfully => 'Filters applied successfully';
+
+  @override
+  String get filterTasks => 'Filter tasks';
+
+  @override
+  String get filterTasksTitle => 'Filtrer les Tâches';
 
   @override
   String get findingBalance => 'Trouver l\'équilibre';
@@ -1525,25 +1682,21 @@ class AppLocalizationsFr extends AppLocalizations {
   String get focusBetterWithAdaptiveTimingAndSmartBreaks => 'Focus better with adaptive timing and smart breaks';
 
   @override
-  String focusDifficulty(Object score) {
-    return 'Difficulté de concentration : $score';
-  }
+  String get focusCompleted => 'completed';
 
   @override
-  String focusLevel(int score) {
-    return 'Niveau de Concentration';
+  String focusDifficulty(Object score) {
+    return 'Difficulté de concentration : $score';
   }
 
   @override
   String get focusMode => 'Mode Focus';
 
   @override
-  String focusModeFor(Object taskTitle) {
-    return 'Focus mode for $taskTitle';
-  }
+  String get focusPattern => 'Focus Pattern';
 
   @override
-  String get focusPattern => 'Focus Pattern';
+  String get focusProgress => 'Focus Progress';
 
   @override
   String get focusScore => 'Focus Score';
@@ -1585,10 +1738,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get fridayAbbrev => 'Ven';
 
   @override
+  String get fromNow => 'from now';
+
+  @override
   String get galleryPermissionIsRequiredToSelectProfileImage => 'Gallery permission is required to select profile image';
 
   @override
   String get galleryPermissionRequired => 'Gallery permission is required to select profile image';
+
+  @override
+  String get generalReminder => 'General reminder';
 
   @override
   String get generalSettings => 'General Settings';
@@ -1615,10 +1774,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get getSuggestionsFromHistory => 'Get Suggestions from History';
 
   @override
+  String get getTaskStatusDescription => '_getTaskStatusDescription(task, l10n)';
+
+  @override
+  String get goalAchieved => '🏆 Goal achieved! Amazing work!';
+
+  @override
   String get good => 'Bon';
 
   @override
   String get goodDays => 'Bons Jours';
+
+  @override
+  String get goodFocus => '👍 Good focus maintained!';
 
   @override
   String get goodIntensity => 'Intensité Bonne';
@@ -1651,16 +1819,28 @@ class AppLocalizationsFr extends AppLocalizations {
   String get greatJobCompleting => 'Excellent travail pour compléter';
 
   @override
+  String get greatJobFocused => '🔥 Great job staying focused!';
+
+  @override
   String get greatJobTakeABreak => 'Great job! Take a break.';
 
   @override
   String get greatProgress => 'Great progress!';
 
   @override
+  String get greatStart => '🚀 Great start!';
+
+  @override
   String get groupSimilarNotifications => 'Group Similar Notifications';
 
   @override
   String get guidedCheckIn => 'Check-in Guidé';
+
+  @override
+  String get halfwayDone => '💪 Halfway done!';
+
+  @override
+  String get halfwayThere => '💪 Halfway there!';
 
   @override
   String get helpAndSupport => 'Help & Support';
@@ -1673,9 +1853,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get helpUsUnderstandState => 'Help us understand your current state';
-
-  @override
-  String get hiThere => 'Salut !';
 
   @override
   String get high => 'Élevée';
@@ -1711,6 +1888,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get historyCleared => 'History cleared';
 
   @override
+  String get hiThere => 'Salut !';
+
+  @override
   String hiveBoxes(Object count) {
     return 'Hive Boxes: $count';
   }
@@ -1722,6 +1902,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get honorDeviceDoNotDisturbSettings => 'Honor device Do Not Disturb settings';
 
   @override
+  String get hour1 => '1h';
+
+  @override
   String get hourly => 'Hourly';
 
   @override
@@ -1729,6 +1912,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get hours => 'h';
+
+  @override
+  String get hours2 => '2h';
 
   @override
   String get howAreYou => 'Comment allez-vous ?';
@@ -1764,9 +1950,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get howIsYourDay => 'Comment va ta journée ?';
 
   @override
-  String get howWasYourDay => 'Comment était votre journée?';
-
-  @override
   String get howsYourAfternoonGoing => 'Comment va votre après-midi?';
 
   @override
@@ -1774,6 +1957,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get howsYourFocusRightNow => 'Comment est votre concentration maintenant?';
+
+  @override
+  String get howWasYourDay => 'Comment était votre journée?';
 
   @override
   String icon(Object icon) {
@@ -1820,13 +2006,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get inAppNotifications => 'In-App Notifications';
 
   @override
-  String get inProgress => 'In Progress';
-
-  @override
   String get includeSpecificTime => 'Include specific time';
 
   @override
   String get incompleteLabel => 'Incomplète';
+
+  @override
+  String get incompleteTag => 'Incomplete';
 
   @override
   String get increaseColorContrastForBetterVisibility => 'Increase color contrast for better visibility';
@@ -1839,6 +2025,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get info => 'Info';
+
+  @override
+  String get inProgress => 'In Progress';
 
   @override
   String get insightGenerallyPositive => 'Généralement positif 😊';
@@ -1856,10 +2045,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get insights => 'Insights';
 
   @override
-  String get installUpdate => 'Installer la Mise à Jour';
+  String get installingUpdate => 'Installation de la Mise à Jour...';
 
   @override
-  String get installingUpdate => 'Installation de la Mise à Jour...';
+  String get installUpdate => 'Installer la Mise à Jour';
 
   @override
   String get intelligentNotificationManagement => 'Intelligent Notification Management';
@@ -1871,8 +2060,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get isDueToday => 'est due aujourd\'hui';
 
   @override
-  String itemsSelected(int count) {
-    return '$count sélectionnés';
+  String isNowAdmin(Object status, Object userName) {
+    return '$userName est maintenant $status';
   }
 
   @override
@@ -1880,6 +2069,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get keepAppInBackground => '2. Keep app in background after scheduling';
+
+  @override
+  String get keepItGoing => '🔥 Keep it Going!';
+
+  @override
+  String get keepItGoingBody => '🚀 Keep it going!';
 
   @override
   String get keepShiningBright => 'Continue de briller fort !';
@@ -1921,6 +2116,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get last90Days => 'Last 90 Days';
 
   @override
+  String get lastAttempt => 'Last attempt';
+
+  @override
   String get lastModified => 'Dernière Modification';
 
   @override
@@ -1960,22 +2158,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get loadingPreferences => 'Loading preferences...';
 
   @override
+  String get loginSubtitle => 'Organisez vos tâches et boostez votre productivité';
+
+  @override
   String get logLevel => 'Log Level';
 
   @override
   String get logMood => 'Enregistrer Votre Humeur';
 
   @override
-  String get logReport => 'Log Report';
-
-  @override
-  String get logStats => 'Log Stats';
-
-  @override
-  String get loginSubtitle => 'Organisez vos tâches et boostez votre productivité';
-
-  @override
   String get logout => 'Logout';
+
+  @override
+  String get logReport => 'Log Report';
 
   @override
   String get logsCleared => 'Logs cleared successfully';
@@ -1985,6 +2180,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get logsImported => 'Logs imported successfully';
+
+  @override
+  String get logStats => 'Log Stats';
 
   @override
   String get longBreak => 'Pause Longue';
@@ -2060,6 +2258,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get markAsIncomplete => 'Marquer comme Incomplète';
 
   @override
+  String get markedIncomplete => 'marqué comme incomplet';
+
+  @override
   String get masterToggleForAllNotifications => 'Master toggle for all notifications';
 
   @override
@@ -2093,9 +2294,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get message => 'Message';
 
   @override
-  String metricValue(String label, int value) {
-    return '$label: $value/10';
-  }
+  String get metadata => 'Métadonnées';
 
   @override
   String get middayPause => 'Pause de midi 🌤️';
@@ -2113,10 +2312,31 @@ class AppLocalizationsFr extends AppLocalizations {
   String get min60 => '1-60 min';
 
   @override
+  String get minimizeAnimationsAndTransitions => 'Minimize animations and transitions';
+
+  @override
+  String get minimumMinutesBetweenSameType => 'Minimum Minutes Between Same Type';
+
+  @override
   String get minPerSession => 'min par session';
 
   @override
   String get minsTotal => 'min total';
+
+  @override
+  String get minutes => 'min';
+
+  @override
+  String get minutes15 => '15m';
+
+  @override
+  String get minutes30 => '30m';
+
+  @override
+  String get minutes5 => '5m';
+
+  @override
+  String get minutesFromNow => 'Minutes from now';
 
   @override
   String minWorkMinBreak(Object rest, Object work) {
@@ -2127,20 +2347,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String minWorkRest(Object rest, Object work) {
     return '$work min work • $rest min rest';
   }
-
-  @override
-  String get minimizeAnimationsAndTransitions => 'Minimize animations and transitions';
-
-  @override
-  String get minimumMinutesBetweenSameType => 'Minimum Minutes Between Same Type';
-
-  @override
-  String minuteFocusSessions(int minutes) {
-    return '$minutes-minute focus sessions';
-  }
-
-  @override
-  String get minutes => 'min';
 
   @override
   String get missingToday => 'Manquant Aujourd\'hui';
@@ -2164,9 +2370,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get month => 'Mois';
 
   @override
-  String get monthView => 'Month';
-
-  @override
   String get monthly => 'Monthly';
 
   @override
@@ -2174,6 +2377,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get monthlyStats => 'Monthly Stats';
+
+  @override
+  String get monthView => 'Month';
 
   @override
   String get mood => 'Mood';
@@ -2227,13 +2433,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get moodCheckInNotificationTitle => 'Check-in d\'Humeur';
 
   @override
+  String get moodCheckIns => 'Mood Check-ins';
+
+  @override
+  String get moodCheckInsChannelDesc => 'Mood check-in reminders';
+
+  @override
+  String get moodCheckInsChannelName => 'Mood Check-Ins';
+
+  @override
   String get moodCheckInTimes => 'Heures de Check-in';
 
   @override
   String get moodCheckInTitle => 'Check-in d\'Humeur';
-
-  @override
-  String get moodCheckIns => 'Mood Check-ins';
 
   @override
   String get moodEnergyLevel => 'Niveau d\'Énergie';
@@ -2289,13 +2501,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get moodSaveButton => 'Sauvegarder l\'Humeur';
 
   @override
-  String get moodSaveFailed => 'Échec de la sauvegarde de l\'humeur';
-
-  @override
   String get moodSaved => 'Mood saved';
 
   @override
   String get moodSavedSuccess => 'Humeur sauvegardée avec succès !';
+
+  @override
+  String get moodSaveFailed => 'Échec de la sauvegarde de l\'humeur';
 
   @override
   String get moodSelectLevel => 'Sélectionnez votre niveau d\'humeur';
@@ -2308,6 +2520,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get moodSettingsTitle => 'Paramètres d\'Humeur';
+
+  @override
+  String moodsForDate(Object date) {
+    return 'Humeurs pour $date';
+  }
 
   @override
   String get moodStressLevel => 'Niveau de Stress';
@@ -2334,12 +2551,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get moodVeryGood => 'Très Bon';
 
   @override
-  String moodsForDate(Object date) {
-    return 'Humeurs pour $date';
-  }
+  String get moreDataNeeded => 'Plus de Données Nécessaires';
 
   @override
-  String get moreDataNeeded => 'Plus de Données Nécessaires';
+  String get moreDetails => 'More details';
 
   @override
   String get morningCheckIn => 'Vérification matinale 💫';
@@ -2444,6 +2659,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noDueDate => 'Aucune date d\'échéance';
 
   @override
+  String get noDueDateSet => 'No due date set';
+
+  @override
   String get noInsightsYet => 'Pas encore d\'aperçus';
 
   @override
@@ -2462,13 +2680,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noMoodRecorded => 'Aucune humeur enregistrée';
 
   @override
+  String get none => 'None';
+
+  @override
   String get noNotes => 'No notes';
 
   @override
   String get noOverdueTasks => 'Aucune tâche en retard';
 
   @override
+  String get noPomodoroData => 'Aucune donnée Pomodoro';
+
+  @override
   String get noPomodoroSessionsFound => 'No Pomodoro sessions found';
+
+  @override
+  String get noPomodoroSessionsYet => 'Aucune session Pomodoro pour le moment';
 
   @override
   String get noProgressData => 'No progress data available';
@@ -2492,7 +2719,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noReminder => 'No Reminder';
 
   @override
+  String get noReminderHistory => 'Aucun historique de rappels';
+
+  @override
   String get noReminderSet => 'Aucun rappel défini';
+
+  @override
+  String get noSessionsYet => 'No sessions yet';
 
   @override
   String get noSpeechDetected => 'No speech detected';
@@ -2502,6 +2735,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get noSubtasksYet => 'Aucune sous-tâche pour le moment';
+
+  @override
+  String get noSuggestionsAvailable => 'Aucune suggestion disponible';
+
+  @override
+  String get notAnAdmin => 'pas un administrateur';
 
   @override
   String get noTasksForThisDay => 'No tasks for this day';
@@ -2521,25 +2760,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noTasksYet => 'No tasks yet';
 
   @override
-  String get noUpcomingTasksWithReminders => 'Aucune tâche à venir avec des rappels';
-
-  @override
-  String get noUpdatesAvailable => 'Aucune Mise à Jour Disponible';
-
-  @override
-  String get noUsersFound => 'No users found';
-
-  @override
-  String get none => 'None';
-
-  @override
-  String get notGreat => 'Pas terrible';
-
-  @override
   String get notes => 'Notes';
 
   @override
   String get notesOptional => 'Notes (optionnel)';
+
+  @override
+  String get notGreat => 'Pas terrible';
 
   @override
   String get notificationAnalyticsAction => 'Action Rate';
@@ -2596,10 +2823,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get notificationPreferencesInfoDetails => 'Configure how and when you receive notifications. Customize each notification type, set quiet hours, and control notification behavior.';
 
   @override
+  String get notifications => 'Notifications';
+
+  @override
   String get notificationScheduledFor10Seconds => '⏰ Notification scheduled for 10 seconds';
 
   @override
+  String get notificationsDisabled => 'Enabled: ❌';
+
+  @override
+  String get notificationsEnabled => 'Enabled: ✅';
+
+  @override
   String get notificationSounds => 'Notification Sounds';
+
+  @override
+  String get notificationsSection => 'Notifications';
 
   @override
   String get notificationStatusCancelled => 'Cancelled';
@@ -2632,16 +2871,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get notificationVerification => 'Notification Verification';
 
   @override
-  String get notifications => 'Notifications';
+  String get notYetCompleted => 'Not yet completed';
 
   @override
-  String get notificationsDisabled => 'Enabled: ❌';
+  String get noUpcomingTasksWithReminders => 'Aucune tâche à venir avec des rappels';
 
   @override
-  String get notificationsEnabled => 'Enabled: ✅';
+  String get noUpdatesAvailable => 'Aucune Mise à Jour Disponible';
 
   @override
-  String get notificationsSection => 'Notifications';
+  String get noUsersFound => 'No users found';
+
+  @override
+  String get now => 'Now';
 
   @override
   String get oceanWaves => 'Ocean Waves';
@@ -2653,10 +2895,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ok => 'OK';
 
   @override
-  String get okButton => 'OK';
+  String get okay => 'Correct';
 
   @override
-  String get okay => 'Correct';
+  String get okButton => 'OK';
 
   @override
   String onDays(Object days) {
@@ -2664,7 +2906,13 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get oneDayBeforeDue => '';
+
+  @override
   String get oneHour => '1 Hour';
+
+  @override
+  String get oneHourBeforeDue => '';
 
   @override
   String get oneHourPause => '1 Hour Pause';
@@ -2697,13 +2945,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get options => 'Options';
 
   @override
-  String get sortAndFilter => 'Trier et Filtrer';
-
-  @override
-  String get sortBy => 'Trier par';
+  String get or => 'ou';
 
   @override
   String get organizeManage => 'Organize & Manage';
+
+  @override
+  String get others => 'Others';
 
   @override
   String get overdue => 'En Retard';
@@ -2757,11 +3005,6 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String percent(int value) {
-    return '$value%';
-  }
-
-  @override
   String get performance => 'Performance';
 
   @override
@@ -2807,6 +3050,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get pickAColor => 'Pick a color';
 
   @override
+  String get pickUpPace => '🚀 Let\'s pick up the pace!';
+
+  @override
   String get playSoundForNotifications => 'Jouer un son pour les notifications';
 
   @override
@@ -2817,6 +3063,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get pleaseEnterSubtaskTitle => 'Veuillez saisir un titre de sous-tâche';
+
+  @override
+  String get pleaseEnterValidNumberOfMinutes => 'Please enter a valid number of minutes';
 
   @override
   String get pleaseFillAllRequiredFields => 'Please fill all required fields';
@@ -2915,12 +3164,18 @@ class AppLocalizationsFr extends AppLocalizations {
   String get primaryColor => 'Primary Color';
 
   @override
-  String priorityLabel(String priority) {
-    return 'Priorité :';
-  }
+  String get prioritizeTasks => 'Prioriser les Tâches';
+
+  @override
+  String get priority => 'Priorité';
 
   @override
   String get priorityLevels => '2. Priority Levels';
+
+  @override
+  String priorityName(Object priority) {
+    return 'Priorité : $priority';
+  }
 
   @override
   String get priorityNotifications => 'Priority Notifications';
@@ -2989,6 +3244,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get progressSaved => 'Progrès enregistré';
 
   @override
+  String get progressUpdate => '📈 Progress Update';
+
+  @override
   String get pullToRefresh => 'Pull down to refresh when connected';
 
   @override
@@ -3004,6 +3262,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get qualityScore => 'Quality Score: ';
 
   @override
+  String get queueComplete => '🎉 Queue Complete!';
+
+  @override
   String get quickActions => 'Actions Rapides';
 
   @override
@@ -3013,10 +3274,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get quickControls => 'Quick Controls';
 
   @override
+  String get quickEdit => 'Modification Rapide';
+
+  @override
   String get quickEditButton => 'Quick Edit';
 
   @override
   String get quickEmergencyAccess => 'Accès d\'urgence rapide';
+
+  @override
+  String get quickFilters => 'Filtres Rapides';
 
   @override
   String get quickInsights => 'Aperçus Rapides';
@@ -3025,10 +3292,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get quickMoodCheckIn => 'Check-in d\'Humeur Rapide';
 
   @override
-  String get quickTestGuide => '🎯 Quick Test Guide';
+  String get quickRefresh => '🧘 Quick refresh';
+
+  @override
+  String get quickReminders => 'Rappels Rapides';
+
+  @override
+  String get quickSet => 'Quick Set';
 
   @override
   String get quickstart => 'Quick Start';
+
+  @override
+  String get quickTestGuide => '🎯 Quick Test Guide';
 
   @override
   String get quietHours => 'Quiet Hours';
@@ -3041,6 +3317,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get rain => 'Rain';
+
+  @override
+  String get readyToFocus => 'Ready to focus?';
+
+  @override
+  String get readyToStartWorking => 'Prêt à commencer à travailler';
 
   @override
   String get reallyStruggling => 'Vraiment difficile';
@@ -3067,6 +3349,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get recentMoods => 'Humeurs Récentes';
 
   @override
+  String get recentPomodoroSessions => 'Sessions Pomodoro Récentes';
+
+  @override
   String get recentTasks => 'Recent Tasks';
 
   @override
@@ -3085,6 +3370,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get recommendedForAdhders => 'Recommended for ADHDers';
 
   @override
+  String get recommendedTasks => '📋 Recommended tasks:';
+
+  @override
   String get recordingInProgress => 'Recording in progress';
 
   @override
@@ -3094,17 +3382,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get recurringTaskAutomation => '• Recurring task automation';
 
   @override
-  String recurringTaskError(String error) {
-    return 'Error in recurring task: $error';
-  }
-
-  @override
   String get recurringTaskGenerationFailed => 'Failed to generate recurring task';
-
-  @override
-  String recurringTaskNotification(String title) {
-    return 'New recurring task created: $title';
-  }
 
   @override
   String get recurringTaskRetry => 'Retry';
@@ -3146,17 +3424,28 @@ class AppLocalizationsFr extends AppLocalizations {
   String get registrationIsDisabled => 'Registration is disabled';
 
   @override
+  String get remaining => 'Remaining';
+
+  @override
   String get rememberMe => 'Remember me';
 
   @override
-  String reminder(String date) {
-    return 'Rappel : $date';
-  }
+  String get reminderActiveAndReady => 'Reminder is active and ready';
 
   @override
-  String reminderCancelledFor(String taskTitle) {
-    return 'Rappel annulé pour : $taskTitle';
-  }
+  String get reminderCancelled => 'Reminder cancelled';
+
+  @override
+  String get reminderExpired => 'Reminder has expired';
+
+  @override
+  String get reminderHistory => 'Historique des Rappels';
+
+  @override
+  String get reminderRetryScheduled => 'Reminder retry scheduled';
+
+  @override
+  String get reminders => 'Rappels';
 
   @override
   String reminderSetFor(Object date) {
@@ -3164,10 +3453,13 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get reminders => 'Rappels';
+  String get reminderSetSuccessfully => 'Rappel défini avec succès';
 
   @override
   String get remindersSuspended => 'Reminders Suspended';
+
+  @override
+  String get reminderStatus => 'Reminder Status';
 
   @override
   String get removeAdminRightsFrom => 'remove admin rights from';
@@ -3190,6 +3482,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get repeatForever => '(forever)';
 
   @override
+  String get repeats => 'Repeats';
+
+  @override
   String get repeatSameTimeEachDay => 'Repeat at same time each day';
 
   @override
@@ -3204,16 +3499,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get required => 'Required';
 
   @override
-  String get rescheduleTask => 'Reprogrammer la tâche';
-
-  @override
   String get reschedule => 'Reprogrammer';
 
   @override
-  String get reset => 'Réinitialiser';
+  String get rescheduleSelectedTasks => 'Reprogrammer les tâches sélectionnées';
 
   @override
-  String get rescheduleSelectedTasks => 'Reprogrammer les tâches sélectionnées';
+  String get rescheduleTask => 'Reprogrammer la tâche';
+
+  @override
+  String get reset => 'Réinitialiser';
 
   @override
   String get resetAllThemeSettingsToDefaultValues => 'Reset all theme settings to default values';
@@ -3258,7 +3553,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get retry => 'Réessayer';
 
   @override
+  String get retryAttempts => 'Retry attempts';
+
+  @override
   String get retryButton => 'Retry';
+
+  @override
+  String get retryNow => 'Retry Now';
 
   @override
   String get returnToNormalOperation => '• Return to normal operation';
@@ -3294,10 +3595,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get saveTask => 'Save Task';
 
   @override
+  String get scheduled => 'Scheduled';
+
+  @override
+  String get scheduledFor => 'Scheduled for';
+
+  @override
   String get scheduleDnd => 'Schedule DND';
 
   @override
   String get scheduledQuietHours => 'Scheduled Quiet Hours';
+
+  @override
+  String get scheduledTestMoodNotificationBody => 'This is a scheduled test mood check-in notification.';
 
   @override
   String get screenReader => 'Screen Reader';
@@ -3307,9 +3617,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get screenReaderEnabled => 'Lecteur d\'écran activé';
-
-  @override
-  String get searchTasks => 'Rechercher des tâches';
 
   @override
   String get search => 'Rechercher';
@@ -3333,6 +3640,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get searchSettingsHint => 'Search...';
 
   @override
+  String get searchTasks => 'Rechercher des tâches';
+
+  @override
   String get security => 'Security';
 
   @override
@@ -3342,13 +3652,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get select => 'Select';
 
   @override
+  String get selectAccentColor => 'Select Accent Color';
+
+  @override
   String get selectATemplateOrCustomizeYourSession => 'Select a template or customize your session';
 
   @override
   String get selectATemplateThatFitsYourWorkStyle => 'Select a template that fits your work style';
-
-  @override
-  String get selectAccentColor => 'Select Accent Color';
 
   @override
   String get selectBackgroundColor => 'Select Background Color';
@@ -3369,6 +3679,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get selectDueDate => 'Sélectionner la date d\'échéance';
 
   @override
+  String get selectedColor => 'Selected Color';
+
+  @override
   String get selectIcon => 'Select Icon';
 
   @override
@@ -3384,9 +3697,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get selectTime => 'Select Time';
 
   @override
-  String get selectedColor => 'Selected Color';
-
-  @override
   String get selfCareRecommended => 'Soin de Soi Recommandé';
 
   @override
@@ -3396,10 +3706,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get sendCrashReportsToHelpFixIssues => 'Send crash reports to help fix issues';
 
   @override
+  String get sendingYouStrength => 'Je t\'envoie de la force';
+
+  @override
   String get sendTestNotification => 'Send Test Notification';
 
   @override
-  String get sendingYouStrength => 'Je t\'envoie de la force';
+  String get session => 'Session';
 
   @override
   String get sessionComplete => 'Session terminée';
@@ -3414,13 +3727,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get sessionHistory => 'Session History';
 
   @override
+  String get sessionOptimization => '⚙️ Session Optimization';
+
+  @override
   String get sessionPatternAnalysis => 'Session Pattern Analysis';
 
   @override
-  String get sessionProgress => 'Progrès de la Session';
+  String get sessionPaused => '⏸️ Session Paused';
 
   @override
-  String get sessionTimingAdjustsBasedOnYourFocusPatterns => 'Session timing adjusts based on your focus patterns';
+  String get sessionProgress => 'Progrès de la Session';
 
   @override
   String get sessions => 'sessions';
@@ -3432,7 +3748,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get sessionsUntilLongBreak => 'Sessions until Long Break';
 
   @override
+  String get sessionTimingAdjustsBasedOnYourFocusPatterns => 'Session timing adjusts based on your focus patterns';
+
+  @override
   String get setAutomaticQuietHours => 'Set automatic quiet hours';
+
+  @override
+  String get setCustomReminderTime => 'Set a custom reminder time';
 
   @override
   String get setDueDate => 'Set Due Date';
@@ -3444,10 +3766,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get setRealisticSessionGoals => 'Fixez des objectifs de session réalistes';
 
   @override
-  String get setReminder => 'Set Reminder';
+  String get setReminder => 'Définir un Rappel';
 
   @override
   String get setReminderButton => 'Définir un Rappel';
+
+  @override
+  String get setReminderToStayOnTrack => 'Set a reminder to stay on track';
+
+  @override
+  String get setSmartReminder => 'Set Smart Reminder';
 
   @override
   String get settings => 'Settings';
@@ -3480,6 +3808,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get shortBreakMin => 'Short Break (min)';
 
   @override
+  String get shortenSession => '⏰ Shorten Session';
+
+  @override
   String get shortPreset => 'Short (15/3/10)';
 
   @override
@@ -3501,6 +3832,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get signIn => 'Sign In';
 
   @override
+  String get signingIn => 'Signing you in..';
+
+  @override
   String get signInWithApple => 'Se connecter avec Apple';
 
   @override
@@ -3508,12 +3842,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get signOut => 'Sign Out';
-
-  @override
-  String get areYouSureYouWantToSignOut => 'Êtes-vous sûr de vouloir vous déconnecter ?';
-
-  @override
-  String get signingIn => 'Signing you in..';
 
   @override
   String get silentNotification10Seconds => 'Silent notification - 10 seconds';
@@ -3539,6 +3867,18 @@ class AppLocalizationsFr extends AppLocalizations {
   String get smartNotificationsDescription => 'Automatically adjust notification timing based on your activity patterns';
 
   @override
+  String get smartReminder => 'Smart Reminder';
+
+  @override
+  String get smartReminders => 'Smart Reminders';
+
+  @override
+  String get smartReminderSet => 'Smart reminder set';
+
+  @override
+  String get smartReminderSuggestion => 'Smart Reminder Suggestion';
+
+  @override
   String get smartScheduling => 'Smart Scheduling';
 
   @override
@@ -3557,6 +3897,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get smartView => 'Intelligent';
 
   @override
+  String get snooze15min => 'Reporter 15min';
+
+  @override
   String get someSyncOperationsFailed => 'Some sync operations failed';
 
   @override
@@ -3564,6 +3907,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get sometimesNeutralIsExactlyWhereWeNeedToBe => 'Parfois neutre est exactement là où nous devons être';
+
+  @override
+  String get sortAndFilter => 'Trier et Filtrer';
+
+  @override
+  String get sortBy => 'Trier par';
 
   @override
   String get sound => 'Sound';
@@ -3602,6 +3951,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get startAPomodoroSessionToSeeAdaptiveTiming => 'Start a Pomodoro session to see adaptive timing';
 
   @override
+  String get startFocus => 'Start Focus';
+
+  @override
   String get startFocusMode => 'Start Focus Mode';
 
   @override
@@ -3611,7 +3963,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get startLoggingMoods => 'Commencez à enregistrer vos humeurs pour voir votre historique';
 
   @override
-  String get startPomodoroSession => 'Démarrer une Session Pomodoro';
+  String get startPomodoro => 'Start Pomodoro';
+
+  @override
+  String get startPomodoroSessionsToSeeInsights => 'Commencez les sessions Pomodoro pour voir les statistiques';
 
   @override
   String get startRecording => 'Start Recording';
@@ -3624,6 +3979,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get startTrackingYourMood => 'Start tracking your mood to see insights';
+
+  @override
+  String get startWorking => 'Start working';
 
   @override
   String get startYourFirstPomodoroSession => 'Start your first Pomodoro session to boost productivity';
@@ -3663,12 +4021,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get streakDays => 'Streak Days';
-
-  @override
-  String get or => 'ou';
-
-  @override
-  String get others => 'Others';
 
   @override
   String get stress => 'Stress';
@@ -3713,6 +4065,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get subtaskDuplicated => 'Sous-tâche dupliquée avec succès';
 
   @override
+  String get subtasks => 'Sous-tâches';
+
+  @override
   String get subtaskTitle => 'Titre de la Sous-tâche';
 
   @override
@@ -3722,21 +4077,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get subtaskUpdated => 'Sous-tâche mise à jour avec succès';
 
   @override
-  String get subtasks => 'Sous-tâches';
-
-  @override
-  String subtasksCount(int count) {
-    return '$count subtasks';
-  }
-
-  @override
-  String get suggestTimes => 'Suggérer des heures';
-
-  @override
   String get suggestedPlan => 'Plan suggéré :';
 
   @override
   String get suggestedTimes => 'Suggested Times';
+
+  @override
+  String get suggestTimes => 'Suggérer des heures';
 
   @override
   String get sun => 'Dim';
@@ -3765,6 +4112,9 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get syncingFromFirebase => 'Syncing from Firebase...';
+
+  @override
   String get syncStatus => 'Sync Status';
 
   @override
@@ -3778,9 +4128,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get syncStatusSyncing => 'Syncing';
-
-  @override
-  String get syncingFromFirebase => 'Syncing from Firebase...';
 
   @override
   String get system => 'System';
@@ -3819,6 +4166,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get tapToLogMood => 'Tap the + button to log your mood';
 
   @override
+  String get tapToSetInstantly => 'Tap to set instantly';
+
+  @override
   String get tapToStartRecording => 'Tap to start recording';
 
   @override
@@ -3831,320 +4181,29 @@ class AppLocalizationsFr extends AppLocalizations {
   String get taskAttachments => 'Attachments';
 
   @override
-  String get taskCompleteReport => '📋 Task: Complete Report';
-
-  @override
-  String get taskCompleted => 'Tâche Terminée! 🎉';
-
-  @override
-  String get taskCompletionSounds => 'Sons de Fin de Tâche';
-
-  @override
-  String get moodCheckInsChannelName => 'Mood Check-Ins';
-
-  @override
-  String get moodCheckInsChannelDesc => 'Mood check-in reminders';
-
-  @override
-  String get taskRemindersChannelName => 'Task Reminders';
-
-  @override
-  String get taskRemindersChannelDesc => 'Reminders for tasks';
-
-  @override
-  String get taskDueChannelName => 'Task Due';
-
-  @override
-  String get taskDueChannelDesc => 'Notifications for due tasks';
-
-  @override
-  String get taskCompletedChannelName => 'Task Completed';
+  String taskCompleted(Object status, Object title) {
+    return '$title $status';
+  }
 
   @override
   String get taskCompletedChannelDesc => 'Celebration notifications for completed tasks';
 
   @override
-  String get adminNotificationsChannelName => 'Admin Notifications';
+  String get taskCompletedChannelName => 'Task Completed';
 
   @override
-  String get adminNotificationsChannelDesc => 'Important notifications for administrators';
+  String get taskCompletedSuccessfully => 'Task completed successfully';
 
   @override
-  String get testMoodNotificationTitle => 'Notification de Test d\'Humeur';
+  String get taskCompleteReport => '📋 Task: Complete Report';
 
   @override
-  String get testMoodNotificationBody => 'Ceci est une notification de test pour le check-in d\'humeur.';
+  String get taskCompletionSounds => 'Sons de Fin de Tâche';
 
   @override
-  String get scheduledTestMoodNotificationBody => 'This is a scheduled test mood check-in notification.';
-
-  @override
-  String get testReminder => 'Rappel de Test';
-
-  @override
-  String get testNotificationDescription => 'Ceci est une notification de test pour vérifier la fonctionnalité des rappels';
-
-  @override
-  String startingTask(String taskTitle) {
-    return '🍅 Starting: $taskTitle';
+  String taskCount(Object count, Object plural) {
+    return '$count tâche$plural';
   }
-
-  @override
-  String get sessionPaused => '⏸️ Session Paused';
-
-  @override
-  String get progressUpdate => '📈 Progress Update';
-
-  @override
-  String get breakTitleShort => '☕ Short Break';
-
-  @override
-  String get breakTitleLong => '🌿 Long Break';
-
-  @override
-  String get queueComplete => '🎉 Queue Complete!';
-
-  @override
-  String get dailySummary => '📊 Daily Summary';
-
-  @override
-  String get keepItGoing => '🔥 Keep it Going!';
-
-  @override
-  String get weeklyGoalProgress => 'Weekly Goal Progress';
-
-  @override
-  String get extendSession => '⏱️ Extend Session';
-
-  @override
-  String get shortenSession => '⏰ Shorten Session';
-
-  @override
-  String get sessionOptimization => '⚙️ Session Optimization';
-
-  @override
-  String get energyLevelHigh => '⚡ High Energy!';
-
-  @override
-  String get energyLevelGood => '🔥 Good Energy';
-
-  @override
-  String get energyLevelModerate => '⚖️ Moderate Energy';
-
-  @override
-  String get energyLevelLow => '🔋 Low Energy';
-
-  @override
-  String get energyLevelVeryLow => '😴 Very Low Energy';
-
-  @override
-  String sessionsPlanned(int count) {
-    return '📋 $count sessions planned';
-  }
-
-  @override
-  String minutesPerSession(int minutes) {
-    return '⏱️ $minutes min per session';
-  }
-
-  @override
-  String focusArea(String area) {
-    return '🎯 Focus: $area';
-  }
-
-  @override
-  String sessionNofM(int current, int total) {
-    return 'Session $current of $total';
-  }
-
-  @override
-  String focusRating(int rating) {
-    return 'Focus rating: $rating/10';
-  }
-
-  @override
-  String completedTaskNotification(String taskTitle) {
-    return 'Completed: $taskTitle';
-  }
-
-  @override
-  String nextTask(String taskTitle) {
-    return 'Next: $taskTitle';
-  }
-
-  @override
-  String get allTasksCompleted => '🎉 All tasks completed!';
-
-  @override
-  String progressPercent(int percent) {
-    return 'Progress: $percent%';
-  }
-
-  @override
-  String sessionsProgress(int completed, int total) {
-    return 'Sessions: $completed/$total';
-  }
-
-  @override
-  String get almostThere => '🔥 Almost there! Keep going!';
-
-  @override
-  String get halfwayDone => '💪 Halfway done!';
-
-  @override
-  String get greatStart => '🚀 Great start!';
-
-  @override
-  String minuteBreak(int minutes, String breakType) {
-    return '⏰ $minutes minute $breakType';
-  }
-
-  @override
-  String suggestedActivity(String activity) {
-    return '💡 Suggested activity: $activity';
-  }
-
-  @override
-  String get timeToRecharge => '🌿 Time to recharge!';
-
-  @override
-  String get quickRefresh => '🧘 Quick refresh';
-
-  @override
-  String allTasksCompletedCount(int count) {
-    return '🎉 All $count tasks completed!';
-  }
-
-  @override
-  String totalTime(String time) {
-    return '⏱️ Total time: $time';
-  }
-
-  @override
-  String get greatJobFocused => '🔥 Great job staying focused!';
-
-  @override
-  String get todaysPerformance => '📊 Today\'s Performance:';
-
-  @override
-  String sessionsCount(int count) {
-    return '⏱️ $count sessions';
-  }
-
-  @override
-  String tasksCompletedCount(int count) {
-    return '✅ $count tasks completed';
-  }
-
-  @override
-  String get excellentFocus => '🌟 Excellent focus today!';
-
-  @override
-  String get goodFocus => '👍 Good focus maintained!';
-
-  @override
-  String get tomorrowsNewDay => '💪 Tomorrow\'s a new day!';
-
-  @override
-  String currentStreakDays(int count) {
-    return '🔥 Current streak: $count days';
-  }
-
-  @override
-  String goalAchievedNewTarget(int count) {
-    return '🏆 Goal achieved! New target: $count days';
-  }
-
-  @override
-  String targetDays(int count) {
-    return '🎯 Target: $count days';
-  }
-
-  @override
-  String daysToGo(int count) {
-    return '📈 $count days to go!';
-  }
-
-  @override
-  String get youreOnFire => '💪 You\'re on fire!';
-
-  @override
-  String get buildingMomentum => '🌟 Building momentum!';
-
-  @override
-  String get keepItGoingBody => '🚀 Keep it going!';
-
-  @override
-  String suggestedDuration(int minutes) {
-    return '⏱️ Suggested: $minutes min';
-  }
-
-  @override
-  String reason(String reason) {
-    return '💭 Reason: $reason';
-  }
-
-  @override
-  String currentEnergyLevel(String level) {
-    return '⚡ Current energy: $level';
-  }
-
-  @override
-  String get recommendedTasks => '📋 Recommended tasks:';
-
-  @override
-  String get considerLighterTasks => '🌿 Consider lighter tasks or take a break';
-
-  @override
-  String weeklyGoalSessions(int count) {
-    return '🎯 Weekly Goal: $count sessions';
-  }
-
-  @override
-  String weeklyProgressStatus(int current, int total) {
-    return '✅ Progress: $current/$total';
-  }
-
-  @override
-  String daysRemaining(int count) {
-    return '📅 Days remaining: $count';
-  }
-
-  @override
-  String get goalAchieved => '🏆 Goal achieved! Amazing work!';
-
-  @override
-  String get almostThereKeepItUp => '🌟 Almost there! Keep it up!';
-
-  @override
-  String get halfwayThere => '💪 Halfway there!';
-
-  @override
-  String get pickUpPace => '🚀 Let\'s pick up the pace!';
-
-  @override
-  String get activityMeditation => 'Mindful breathing (2-5 min)';
-
-  @override
-  String get activityStretching => 'Desk stretches (2-3 min)';
-
-  @override
-  String get activityHydration => 'Drink water & walk around';
-
-  @override
-  String get activityEyeRest => '20-20-20 eye exercises';
-
-  @override
-  String get activityWalking => 'Short walk (3-5 min)';
-
-  @override
-  String get activityBreathing => 'Deep breathing exercises';
-
-  @override
-  String get activityMusic => 'Listen to calming music';
-
-  @override
-  String get activitySocial => 'Quick chat with colleague';
 
   @override
   String get taskCreatedSuccessfully => 'Tâche créée avec succès';
@@ -4153,8 +4212,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get taskDeleted => 'Tâche supprimée';
 
   @override
-  String taskDeletedSuccessfully(Object taskTitle) {
-    return '$taskTitle supprimée avec succès';
+  String taskDeletedSuccessfully(Object taskTitle, Object title) {
+    return '$title supprimé avec succès';
   }
 
   @override
@@ -4170,10 +4229,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get taskDue => 'Tâche Due';
 
   @override
+  String get taskDueChannelDesc => 'Notifications for due tasks';
+
+  @override
+  String get taskDueChannelName => 'Task Due';
+
+  @override
   String get taskDueToday => 'Tâche Due Aujourd\'hui';
 
   @override
   String get taskDuplicatedSuccessfully => 'Tâche dupliquée avec succès';
+
+  @override
+  String get taskEssentials => 'Task Essentials';
 
   @override
   String get taskHistory => 'Historique des Tâches';
@@ -4182,10 +4250,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get taskInformation => 'Task Information';
 
   @override
+  String get taskIsDueSoon => 'Task is due soon';
+
+  @override
+  String get taskIsInProgress => 'Task is in progress';
+
+  @override
+  String get taskIsOverdue => 'Task is overdue';
+
+  @override
   String get taskNotes => 'Task Notes';
 
   @override
   String get taskNotificationIn15Seconds => '⏰ Task notification in 15 seconds (has action buttons!)';
+
+  @override
+  String get taskOverdue => 'Overdue';
 
   @override
   String get taskPath => 'Chemin de la Tâche';
@@ -4206,13 +4286,40 @@ class AppLocalizationsFr extends AppLocalizations {
   String get taskReminders => 'Task Reminders';
 
   @override
+  String get taskRemindersChannelDesc => 'Reminders for tasks';
+
+  @override
+  String get taskRemindersChannelName => 'Task Reminders';
+
+  @override
   String get taskRescheduled => 'Task rescheduled';
+
+  @override
+  String get tasks => 'Tasks';
+
+  @override
+  String get tasksCompleted => 'Tasks Completed';
+
+  @override
+  String get tasksCompletedThisWeek => 'Tasks Completed This Week';
+
+  @override
+  String get tasksCreatedSuccessfully => 'Tasks created successfully!';
+
+  @override
+  String get tasksNeedingInstances => 'Tâches Nécessitant de Nouvelles Instances';
 
   @override
   String get taskSounds => 'Task Sounds';
 
   @override
+  String get tasksSortedByPriorityAndSuitability => 'Tasks sorted by priority and suitability';
+
+  @override
   String get taskStatistics => 'Task Statistics';
+
+  @override
+  String get taskTimeline => 'Task Timeline';
 
   @override
   String get taskTitle => 'Titre de la Tâche';
@@ -4231,39 +4338,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get taskValidationFailed => 'Task validation failed';
-
-  @override
-  String get tasks => 'Tasks';
-
-  @override
-  String get tasksCompleted => 'Tasks Completed';
-
-  @override
-  String get tasksCompletedThisWeek => 'Tasks Completed This Week';
-
-  @override
-  String tasksCount(int count) {
-    return '$count tâches';
-  }
-
-  @override
-  String get tasksCreatedSuccessfully => 'Tasks created successfully!';
-
-  @override
-  String tasksDue(int count) {
-    return '$count tasks due';
-  }
-
-  @override
-  String tasksForDate(String date) {
-    return 'Tasks for $date';
-  }
-
-  @override
-  String get tasksNeedingInstances => 'Tâches Nécessitant de Nouvelles Instances';
-
-  @override
-  String get tasksSortedByPriorityAndSuitability => 'Tasks sorted by priority and suitability';
 
   @override
   String get tellUsAboutYourself => 'Tell us about yourself';
@@ -4287,10 +4361,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get testIn20Seconds => '20 seconds';
 
   @override
+  String get testingTips => 'Testing Tips';
+
+  @override
   String get testLowPriority => 'Test: Low Priority';
 
   @override
   String get testMoodCheckIn => 'Test: Mood Check-in';
+
+  @override
+  String get testMoodNotificationBody => 'Ceci est une notification de test pour le check-in d\'humeur.';
 
   @override
   String get testMoodNotificationScheduledFor1MinuteFromNow => 'Test mood notification scheduled for 1 minute from now!';
@@ -4299,10 +4379,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get testMoodNotificationSent => 'Test mood notification sent!';
 
   @override
+  String get testMoodNotificationTitle => 'Notification de Test d\'Humeur';
+
+  @override
   String get testNotification => 'Notification de Test';
 
   @override
   String get testNotificationBody => 'The new notification system works!';
+
+  @override
+  String get testNotificationDescription => 'Ceci est une notification de test pour vérifier la fonctionnalité des rappels';
+
+  @override
+  String get testNotifications => 'Test Notifications';
 
   @override
   String get testNotificationSent => 'Notification de test envoyée !';
@@ -4311,7 +4400,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get testNotificationTitle => '✅ Test Notification';
 
   @override
-  String get testNotifications => 'Test Notifications';
+  String get testReminder => 'Rappel de Test';
 
   @override
   String get testReminderIn10Seconds => 'Test de Rappel dans 10 Secondes';
@@ -4330,9 +4419,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get testTaskReminder => 'Test: Task Reminder';
-
-  @override
-  String get testingTips => 'Testing Tips';
 
   @override
   String get textColor => 'Text Color';
@@ -4354,6 +4440,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get themeSettingsResetToDefaults => 'Theme settings reset to defaults';
+
+  @override
+  String get thirtySeconds => '30 seconds';
 
   @override
   String get thisActionCannotBeUndone => 'This action cannot be undone!';
@@ -4395,24 +4484,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get timeFormat => 'Time Format';
 
   @override
-  String get timeRange => 'Time Range:';
+  String get timeline => 'Chronologie';
 
   @override
-  String timeRemaining(String time) {
-    return 'Time remaining: $time';
-  }
+  String get timelineView => 'Chronologie';
+
+  @override
+  String get timeRange => 'Time Range:';
 
   @override
   String get timeSpent => 'Temps Passé';
 
   @override
+  String get timeToRecharge => '🌿 Time to recharge!';
+
+  @override
   String get timeTracking => 'Time Tracking';
-
-  @override
-  String get timeline => 'Chronologie';
-
-  @override
-  String get timelineView => 'Chronologie';
 
   @override
   String get today => 'Today';
@@ -4421,13 +4508,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get todayI => 'Today I';
 
   @override
+  String get todaysPerformance => '📊 Today\'s Performance:';
+
+  @override
+  String get todaysStatistics => 'Today\'s Statistics';
+
+  @override
   String get todayTasks => 'Tâches à accomplir aujourd\'hui';
 
   @override
   String get todayYoureFeeling => 'Aujourd\'hui tu te sens';
-
-  @override
-  String get todaysStatistics => 'Today\'s Statistics';
 
   @override
   String get toggleAdminStatus => 'Toggle Admin Status';
@@ -4437,6 +4527,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get tomorrowShouldBeATypicalDayForYou => 'Demain devrait être une journée typique pour vous';
+
+  @override
+  String get tomorrowsNewDay => '💪 Tomorrow\'s a new day!';
 
   @override
   String get tomorrowTasks => 'Tâches de demain';
@@ -4459,15 +4552,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get totalHours => 'Total Hours';
 
   @override
-  String totalNotifications(int count) {
-    return 'Total Notifications: $count';
-  }
-
-  @override
   String get totalRecurringInstances => 'Total des Instances Récurrentes';
 
   @override
   String get totalSessions => 'Total Sessions';
+
+  @override
+  String get totalStat => 'Total';
+
+  @override
+  String get totaltasks => 'Tâches Totales';
 
   @override
   String get totalTasks => 'Total Tasks';
@@ -4478,7 +4572,9 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get totaltasks => 'Tâches Totales';
+  String trackedOperations(Object count) {
+    return 'Tracked Operations: $count';
+  }
 
   @override
   String get trackFocusPatternsAndSessionPerformance => 'Track focus patterns and session performance';
@@ -4494,11 +4590,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get trackYourMoodForAWeekToGetAIPredictions => 'Suivez votre humeur pendant une semaine pour obtenir des prédictions IA';
-
-  @override
-  String trackedOperations(Object count) {
-    return 'Tracked Operations: $count';
-  }
 
   @override
   String get trends => 'Trends';
@@ -4546,13 +4637,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get twelveHour => '12h';
 
   @override
+  String get twentyFiveMinuteSession => 'Session de 25 minutes';
+
+  @override
   String get twentyFourHour => '24h';
+
+  @override
+  String get twoDaysBeforeDue => '';
 
   @override
   String get typeToFilterSettingsSections => 'Type to filter settings sections';
 
   @override
   String get unableToLoadProgressData => 'Unable to load progress data';
+
+  @override
+  String get uncompleteTask => 'Uncomplete Task';
 
   @override
   String get uncompleteTaskButton => 'Annuler l\'Achèvement de la Tâche';
@@ -4567,6 +4667,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get undo => 'Undo';
 
   @override
+  String get unknown => 'Unknown';
+
+  @override
   String get upcoming => 'À venir';
 
   @override
@@ -4574,6 +4677,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get updateButton => 'Mettre à Jour';
+
+  @override
+  String updated(Object date) {
+    return 'Updated: $date';
+  }
+
+  @override
+  String updatedAt(Object date) {
+    return 'Mis à jour : $date';
+  }
 
   @override
   String get updateDownloaded => 'Mise à Jour Téléchargée';
@@ -4585,15 +4698,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get updatePersonalInfo => 'Mettre à Jour les Informations Personnelles';
 
   @override
-  String get updateTodaysEntryInstead => 'You can update today\'s entry instead';
-
-  @override
-  String updated(Object date) {
-    return 'Updated: $date';
-  }
-
-  @override
   String get updates => 'Updates';
+
+  @override
+  String get updateTodaysEntryInstead => 'You can update today\'s entry instead';
 
   @override
   String get urgent => 'Urgent';
@@ -4622,8 +4730,18 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String userDeletedSuccessfully(Object userName) {
+    return '$userName et toutes les données associées supprimées avec succès';
+  }
+
+  @override
   String userId(Object userId) {
     return 'User ID: $userId';
+  }
+
+  @override
+  String userIdNA(Object userId) {
+    return 'ID utilisateur : $userId';
   }
 
   @override
@@ -4640,11 +4758,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get verifyAllTasks => 'Verify All Tasks';
-
-  @override
-  String version(String version) {
-    return 'Version $version';
-  }
 
   @override
   String get veryBad => 'Très Mauvais';
@@ -4749,7 +4862,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get warning => 'Warning';
 
   @override
-  String get weRecommendTheseSettings => 'We recommend these settings based on your preferences';
+  String get wasScheduledFor => 'Was scheduled for:';
 
   @override
   String get wed => 'Mer';
@@ -4764,13 +4877,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get week => 'Semaine';
 
   @override
-  String get weekView => 'Week';
-
-  @override
   String get weekly => 'Weekly';
 
   @override
   String get weeklyFocusTrend => 'Weekly Focus Trend';
+
+  @override
+  String get weeklyGoalProgress => 'Weekly Goal Progress';
 
   @override
   String get weeklyProgress => 'Progrès Hebdomadaire';
@@ -4787,6 +4900,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get weeklyStats => 'Weekly Stats';
 
   @override
+  String get weekView => 'Week';
+
+  @override
   String get welcomeToTazbeet => 'Welcome to Tazbeet';
 
   @override
@@ -4794,6 +4910,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get wellnessInsights => 'Wellness insights';
+
+  @override
+  String get weRecommendTheseSettings => 'We recommend these settings based on your preferences';
 
   @override
   String get whatMadeTodayGreat => 'What made today great?';
@@ -4880,10 +4999,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get youMightBenefitFromAdditionalSupport => 'Pourriez bénéficier d\'un soutien supplémentaire';
 
   @override
-  String get yourIntelligentTaskManagementCompanionWithAIPoweredFeatures => 'Your intelligent task management companion with AI-powered features';
+  String get youreDoingGreat => 'Tu le fais très bien !';
+
+  @override
+  String get youreOnFire => '💪 You\'re on fire!';
 
   @override
   String get yourIntelligentTaskManagementCompanionWithAiPoweredFeatures => 'Your intelligent task management companion with AI-powered features';
+
+  @override
+  String get yourIntelligentTaskManagementCompanionWithAIPoweredFeatures => 'Your intelligent task management companion with AI-powered features';
 
   @override
   String get yourJoyIsContagious => 'Ta joie est contagieuse !';
@@ -4907,10 +5032,305 @@ class AppLocalizationsFr extends AppLocalizations {
   String get yourPersonalTaskManager => 'Your Personal Task Manager';
 
   @override
-  String get youreDoingGreat => 'Tu le fais très bien !';
+  String get yourProgress => 'Your progress';
 
   @override
   String youveBeenTrackingYourMoodForDays(Object days) {
     return 'Vous suivez votre humeur depuis $days jours';
+  }
+
+  @override
+  String allTasksCompletedCount(int count) {
+    return '🎉 All $count tasks completed!';
+  }
+
+  @override
+  String avgFocus(String score) {
+    return 'Avg Focus';
+  }
+
+  @override
+  String bulkDeleteConfirmation(int count) {
+    return 'Êtes-vous sûr de vouloir supprimer $count tâches ?';
+  }
+
+  @override
+  String bulkGenerationComplete(String count) {
+    return 'Generated $count recurring instances';
+  }
+
+  @override
+  String completedTaskNotification(String taskTitle) {
+    return 'Completed: $taskTitle';
+  }
+
+  @override
+  String confirmDeleteCategory(String categoryName) {
+    return 'Are you sure you want to delete \"$categoryName\"? This will remove the category from all associated tasks.';
+  }
+
+  @override
+  String confirmDeleteTask(Object taskTitle) {
+    return 'Êtes-vous sûr de vouloir supprimer \"$taskTitle\" ?';
+  }
+
+  @override
+  String currentEnergyLevel(String level) {
+    return '⚡ Current energy: $level';
+  }
+
+  @override
+  String currentStreakDays(int count) {
+    return '🔥 Current streak: $count days';
+  }
+
+  @override
+  String days(int count) {
+    return '$count days';
+  }
+
+  @override
+  String daysRemaining(int count) {
+    return '📅 Days remaining: $count';
+  }
+
+  @override
+  String daysToGo(int count) {
+    return '📈 $count days to go!';
+  }
+
+  @override
+  String dayStreak(int count) {
+    return 'day streak';
+  }
+
+  @override
+  String deleteTaskConfirmation(String task, Object taskTitle) {
+    return 'Are you sure you want to delete \"$taskTitle\"?';
+  }
+
+  @override
+  String error(String message) {
+    return 'Error: $message';
+  }
+
+  @override
+  String focusArea(String area) {
+    return '🎯 Focus: $area';
+  }
+
+  @override
+  String focusLevel(int score) {
+    return 'Niveau de Concentration';
+  }
+
+  @override
+  String focusModeFor(Object taskTitle) {
+    return 'Focus mode for $taskTitle';
+  }
+
+  @override
+  String focusRating(int rating) {
+    return 'Focus rating: $rating/10';
+  }
+
+  @override
+  String goalAchievedNewTarget(int count) {
+    return '🏆 Goal achieved! New target: $count days';
+  }
+
+  @override
+  String inHours(Object count) {
+    return 'In $count hours';
+  }
+
+  @override
+  String inMinutes(Object count) {
+    return 'In $count minutes';
+  }
+
+  @override
+  String itemsSelected(int count) {
+    return '$count sélectionnés';
+  }
+
+  @override
+  String metricValue(String label, int value) {
+    return '$label: $value/10';
+  }
+
+  @override
+  String minuteBreak(int minutes, String breakType) {
+    return '⏰ $minutes minute $breakType';
+  }
+
+  @override
+  String minuteFocusSessions(int minutes) {
+    return '$minutes-minute focus sessions';
+  }
+
+  @override
+  String minuteSession(Object duration) {
+    return '$duration minute session';
+  }
+
+  @override
+  String minutesPerSession(int minutes) {
+    return '⏱️ $minutes min per session';
+  }
+
+  @override
+  String nextTask(String taskTitle) {
+    return 'Next: $taskTitle';
+  }
+
+  @override
+  String percent(int value) {
+    return '$value%';
+  }
+
+  @override
+  String priorityLabel(String priority) {
+    return 'Priorité :';
+  }
+
+  @override
+  String progressPercent(int percent) {
+    return 'Progress: $percent%';
+  }
+
+  @override
+  String reason(String reason) {
+    return '💭 Reason: $reason';
+  }
+
+  @override
+  String recurringTaskError(String error) {
+    return 'Error in recurring task: $error';
+  }
+
+  @override
+  String recurringTaskNotification(String title) {
+    return 'New recurring task created: $title';
+  }
+
+  @override
+  String reminder(String date) {
+    return 'Rappel : $date';
+  }
+
+  @override
+  String reminderCancelledFor(String taskTitle) {
+    return 'Rappel annulé pour : $taskTitle';
+  }
+
+  @override
+  String sessionNofM(int current, int total) {
+    return 'Session $current of $total';
+  }
+
+  @override
+  String sessionsCount(int count) {
+    return '⏱️ $count sessions';
+  }
+
+  @override
+  String sessionsPlanned(int count) {
+    return '📋 $count sessions planned';
+  }
+
+  @override
+  String sessionsProgress(int completed, int total) {
+    return 'Sessions: $completed/$total';
+  }
+
+  @override
+  String startingTask(String taskTitle) {
+    return '🍅 Starting: $taskTitle';
+  }
+
+  @override
+  String subtasksCount(int count) {
+    return '$count subtasks';
+  }
+
+  @override
+  String suggestedActivity(String activity) {
+    return '💡 Suggested activity: $activity';
+  }
+
+  @override
+  String suggestedDuration(int minutes) {
+    return '⏱️ Suggested: $minutes min';
+  }
+
+  @override
+  String targetDays(int count) {
+    return '🎯 Target: $count days';
+  }
+
+  @override
+  String tasksCompletedCount(int count) {
+    return '✅ $count tasks completed';
+  }
+
+  @override
+  String tasksCount(int count) {
+    return '$count';
+  }
+
+  @override
+  String tasksDue(int count) {
+    return '$count tasks due';
+  }
+
+  @override
+  String tasksForDate(String date) {
+    return 'Tasks for $date';
+  }
+
+  @override
+  String timeRemaining(String time) {
+    return 'Time remaining: $time';
+  }
+
+  @override
+  String todayAt(Object time) {
+    return 'Today at $time';
+  }
+
+  @override
+  String totalNotifications(int count) {
+    return 'Total Notifications: $count';
+  }
+
+  @override
+  String totalTime(String time) {
+    return '⏱️ Total time: $time';
+  }
+
+  @override
+  String version(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String viewAll(Object count) {
+    return 'View All ($count)';
+  }
+
+  @override
+  String weeklyGoalSessions(int count) {
+    return '🎯 Weekly Goal: $count sessions';
+  }
+
+  @override
+  String weeklyProgressStatus(int current, int total) {
+    return '✅ Progress: $current/$total';
+  }
+
+  @override
+  String yesterdayAt(Object time) {
+    return 'Yesterday at $time';
   }
 }

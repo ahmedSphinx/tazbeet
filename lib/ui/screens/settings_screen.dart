@@ -26,6 +26,7 @@ import 'profile_screen.dart';
 import 'mood_settings_screen.dart';
 import 'developer_tools_screen.dart';
 import 'splash_screen.dart';
+import 'focus_mode_settings_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -245,6 +246,55 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(l10n.moodSettingsSubtitle, style: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface.withValues(alpha: 0.7))),
+                    ],
+                  ),
+                ),
+                Icon(Icons.arrow_forward_ios, color: colorScheme.onSurface.withValues(alpha: 0.5), size: 16),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFocusModeSection() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Material(
+        elevation: 2,
+        borderRadius: BorderRadius.circular(16),
+        color: theme.cardColor,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const FocusModeSettingsScreen()));
+          },
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(color: Colors.green.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+                  child: Icon(Icons.center_focus_strong, color: Colors.green, size: 24),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Focus Mode', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+                      const SizedBox(height: 4),
+                      Text('Configure distraction-free work sessions', style: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface.withValues(alpha: 0.7))),
                     ],
                   ),
                 ),
@@ -1022,6 +1072,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final allSections = [
       {'title': l10n.profile, 'widget': _buildProfileSection()},
       {'title': l10n.mood, 'widget': _buildMoodSection()},
+      {'title': 'Focus Mode', 'widget': _buildFocusModeSection()},
       {'title': l10n.appearance, 'widget': _buildAppearanceSection(settingsService, colorService)},
       {'title': l10n.notifications, 'widget': _buildNotificationsSection(settingsService)},
       {'title': l10n.taskSounds, 'widget': _buildTaskSoundsSection()},

@@ -92,13 +92,12 @@ abstract class AppLocalizations {
   ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[Locale('ar'), Locale('en'), Locale('es'), Locale('fr')];
-
-  /// No description provided for @aIPoweredAnalysis.
-  ///
-  /// In en, this message translates to:
-  /// **'AI-Powered Analysis'**
-  String get aIPoweredAnalysis;
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('ar'),
+    Locale('en'),
+    Locale('es'),
+    Locale('fr')
+  ];
 
   /// No description provided for @about.
   ///
@@ -123,6 +122,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Accent Color'**
   String get accentColor;
+
+  /// No description provided for @acceptSuggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept Suggestion'**
+  String get acceptSuggestion;
 
   /// No description provided for @accessDenied.
   ///
@@ -202,6 +207,12 @@ abstract class AppLocalizations {
   /// **'Activate emergency mode to suspend all reminders and timers'**
   String get activateEmergencyMode;
 
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
   /// No description provided for @activeNotificationsMuted.
   ///
   /// In en, this message translates to:
@@ -219,6 +230,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Activity'**
   String get activity;
+
+  /// No description provided for @activityBreathing.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep breathing exercises'**
+  String get activityBreathing;
+
+  /// No description provided for @activityEyeRest.
+  ///
+  /// In en, this message translates to:
+  /// **'20-20-20 eye exercises'**
+  String get activityEyeRest;
+
+  /// No description provided for @activityHydration.
+  ///
+  /// In en, this message translates to:
+  /// **'Drink water & walk around'**
+  String get activityHydration;
+
+  /// No description provided for @activityMeditation.
+  ///
+  /// In en, this message translates to:
+  /// **'Mindful breathing (2-5 min)'**
+  String get activityMeditation;
+
+  /// No description provided for @activityMusic.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen to calming music'**
+  String get activityMusic;
+
+  /// No description provided for @activitySocial.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick chat with colleague'**
+  String get activitySocial;
+
+  /// No description provided for @activityStretching.
+  ///
+  /// In en, this message translates to:
+  /// **'Desk stretches (2-3 min)'**
+  String get activityStretching;
+
+  /// No description provided for @activityWalking.
+  ///
+  /// In en, this message translates to:
+  /// **'Short walk (3-5 min)'**
+  String get activityWalking;
 
   /// No description provided for @adaptiveBreakSuggestions.
   ///
@@ -280,6 +339,24 @@ abstract class AppLocalizations {
   /// **'Add Category'**
   String get addCategory;
 
+  /// No description provided for @addCustomReminderMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a custom reminder message'**
+  String get addCustomReminderMessage;
+
+  /// No description provided for @added.
+  ///
+  /// In en, this message translates to:
+  /// **'Added'**
+  String get added;
+
+  /// No description provided for @addedSuggestedCheckInTimesFromYourMoodHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Added {count} suggested check-in times from your mood history'**
+  String addedSuggestedCheckInTimesFromYourMoodHistory(Object count);
+
   /// No description provided for @addFirstSubtask.
   ///
   /// In en, this message translates to:
@@ -340,6 +417,12 @@ abstract class AppLocalizations {
   /// **'Add Task'**
   String get addTaskButton;
 
+  /// No description provided for @addTasksToCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Add tasks to this category'**
+  String get addTasksToCategory;
+
   /// No description provided for @addTaskTitle.
   ///
   /// In en, this message translates to:
@@ -352,23 +435,11 @@ abstract class AppLocalizations {
   /// **'Add a task to get started'**
   String get addTaskToGetStarted;
 
-  /// No description provided for @addTasksToCategory.
-  ///
-  /// In en, this message translates to:
-  /// **'Add tasks to this category'**
-  String get addTasksToCategory;
-
   /// No description provided for @addYourFirstTask.
   ///
   /// In en, this message translates to:
   /// **'Add Your First Task'**
   String get addYourFirstTask;
-
-  /// No description provided for @addedSuggestedCheckInTimesFromYourMoodHistory.
-  ///
-  /// In en, this message translates to:
-  /// **'Added {count} suggested check-in times from your mood history'**
-  String addedSuggestedCheckInTimesFromYourMoodHistory(Object count);
 
   /// No description provided for @adjustTheseSettingsToMakeTheAppWorkBetterForYou.
   ///
@@ -382,17 +453,47 @@ abstract class AppLocalizations {
   /// **'Admin: {isAdmin}'**
   String admin(Object isAdmin);
 
+  /// No description provided for @adminNotificationsChannelDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Important notifications for administrators'**
+  String get adminNotificationsChannelDesc;
+
+  /// No description provided for @adminNotificationsChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Notifications'**
+  String get adminNotificationsChannelName;
+
   /// No description provided for @adminPanel.
   ///
   /// In en, this message translates to:
   /// **'Admin Panel'**
   String get adminPanel;
 
+  /// No description provided for @adminStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin: {status}'**
+  String adminStatus(Object status);
+
   /// No description provided for @adminTools.
   ///
   /// In en, this message translates to:
   /// **'Admin Tools'**
   String get adminTools;
+
+  /// No description provided for @advancedDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Details'**
+  String get advancedDetails;
+
+  /// No description provided for @advancedSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Details'**
+  String get advancedSection;
 
   /// No description provided for @advancedSettings.
   ///
@@ -417,6 +518,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Afternoon vibes 🌻'**
   String get afternoonVibes;
+
+  /// No description provided for @aIPoweredAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'AI-Powered Analysis'**
+  String get aIPoweredAnalysis;
 
   /// No description provided for @aiPoweredInsights.
   ///
@@ -466,6 +573,24 @@ abstract class AppLocalizations {
   /// **'All notifications cleared!'**
   String get allNotificationsCleared;
 
+  /// No description provided for @allowAllUsersToAccessApp.
+  ///
+  /// In en, this message translates to:
+  /// **'• Allow all users to access the app'**
+  String get allowAllUsersToAccessApp;
+
+  /// No description provided for @allowAllUsersToAccessTheApp.
+  ///
+  /// In en, this message translates to:
+  /// **'• Allow all users to access the app'**
+  String get allowAllUsersToAccessTheApp;
+
+  /// No description provided for @allowUrgentNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow Urgent Notifications During DND'**
+  String get allowUrgentNotifications;
+
   /// No description provided for @allRecurringUpToDate.
   ///
   /// In en, this message translates to:
@@ -477,6 +602,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All reminders and timers are suspended'**
   String get allRemindersSuspended;
+
+  /// No description provided for @allSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'All Sessions'**
+  String get allSessions;
 
   /// No description provided for @allSessionsComplete.
   ///
@@ -502,29 +633,29 @@ abstract class AppLocalizations {
   /// **'• All tasks\n• All categories\n• All moods\n• All local settings'**
   String get allTasksCategoriesMoodsLocalSettings;
 
+  /// No description provided for @allTasksCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'🎉 All tasks completed!'**
+  String get allTasksCompleted;
+
   /// No description provided for @allTimeStats.
   ///
   /// In en, this message translates to:
   /// **'All-Time Stats'**
   String get allTimeStats;
 
-  /// No description provided for @allowAllUsersToAccessApp.
+  /// No description provided for @almostThere.
   ///
   /// In en, this message translates to:
-  /// **'• Allow all users to access the app'**
-  String get allowAllUsersToAccessApp;
+  /// **'🔥 Almost there! Keep going!'**
+  String get almostThere;
 
-  /// No description provided for @allowAllUsersToAccessTheApp.
+  /// No description provided for @almostThereKeepItUp.
   ///
   /// In en, this message translates to:
-  /// **'• Allow all users to access the app'**
-  String get allowAllUsersToAccessTheApp;
-
-  /// No description provided for @allowUrgentNotifications.
-  ///
-  /// In en, this message translates to:
-  /// **'Allow Urgent Notifications During DND'**
-  String get allowUrgentNotifications;
+  /// **'🌟 Almost there! Keep it up!'**
+  String get almostThereKeepItUp;
 
   /// No description provided for @am.
   ///
@@ -544,11 +675,11 @@ abstract class AppLocalizations {
   /// **'Ambient Sounds'**
   String get ambientSounds;
 
-  /// No description provided for @anErrorOccurredPleaseTryAgain.
+  /// No description provided for @anAdmin.
   ///
   /// In en, this message translates to:
-  /// **'An error occurred. Please try again.'**
-  String get anErrorOccurredPleaseTryAgain;
+  /// **'an admin'**
+  String get anAdmin;
 
   /// No description provided for @analytics.
   ///
@@ -586,6 +717,12 @@ abstract class AppLocalizations {
   /// **'Analytics enabled'**
   String get analyticsEnabled;
 
+  /// No description provided for @anErrorOccurredPleaseTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred. Please try again.'**
+  String get anErrorOccurredPleaseTryAgain;
+
   /// No description provided for @animationOptimization.
   ///
   /// In en, this message translates to:
@@ -616,6 +753,24 @@ abstract class AppLocalizations {
   /// **'A smart task management app with Pomodoro integration and AI-powered recommendations.'**
   String get appDescription;
 
+  /// No description provided for @appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// No description provided for @appearanceSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearanceSection;
+
+  /// No description provided for @appearsIn10Seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Appears in 10 seconds'**
+  String get appearsIn10Seconds;
+
   /// No description provided for @appInformation.
   ///
   /// In en, this message translates to:
@@ -627,6 +782,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'App Information & Help'**
   String get appInformationHelp;
+
+  /// No description provided for @applyButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get applyButton;
+
+  /// No description provided for @applyColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Colors'**
+  String get applyColors;
+
+  /// No description provided for @applySettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Settings'**
+  String get applySettings;
 
   /// No description provided for @appSettings.
   ///
@@ -652,42 +825,6 @@ abstract class AppLocalizations {
   /// **'App Version'**
   String get appVersion;
 
-  /// No description provided for @appearance.
-  ///
-  /// In en, this message translates to:
-  /// **'Appearance'**
-  String get appearance;
-
-  /// No description provided for @appearanceSection.
-  ///
-  /// In en, this message translates to:
-  /// **'Appearance'**
-  String get appearanceSection;
-
-  /// No description provided for @appearsIn10Seconds.
-  ///
-  /// In en, this message translates to:
-  /// **'Appears in 10 seconds'**
-  String get appearsIn10Seconds;
-
-  /// No description provided for @applyButton.
-  ///
-  /// In en, this message translates to:
-  /// **'Apply'**
-  String get applyButton;
-
-  /// No description provided for @applyColors.
-  ///
-  /// In en, this message translates to:
-  /// **'Apply Colors'**
-  String get applyColors;
-
-  /// No description provided for @applySettings.
-  ///
-  /// In en, this message translates to:
-  /// **'Apply Settings'**
-  String get applySettings;
-
   /// No description provided for @areYouSureYouWantToClearAllNotificationHistory.
   ///
   /// In en, this message translates to:
@@ -709,14 +846,32 @@ abstract class AppLocalizations {
   /// No description provided for @areYouSureYouWantToDeleteTask.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to delete \"{taskTitle}\"?'**
-  String areYouSureYouWantToDeleteTask(Object taskTitle);
+  /// **'Are you sure you want to delete \"{title}\"?'**
+  String areYouSureYouWantToDeleteTask(Object taskTitle, Object title);
+
+  /// No description provided for @areYouSureYouWantToDeleteThisSubtask.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this subtask?'**
+  String get areYouSureYouWantToDeleteThisSubtask;
 
   /// No description provided for @areYouSureYouWantToDeleteUser.
   ///
   /// In en, this message translates to:
   /// **'Are you sure you want to delete {userName}?\n\nThis will permanently delete:\n• User account\n• All tasks\n• All categories\n• All moods\n\nThis action cannot be undone.'**
   String areYouSureYouWantToDeleteUser(Object userName);
+
+  /// No description provided for @areYouSureYouWantToExit.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to exit the app?'**
+  String get areYouSureYouWantToExit;
+
+  /// No description provided for @areYouSureYouWantToSignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to sign out?'**
+  String get areYouSureYouWantToSignOut;
 
   /// No description provided for @areYouSureYouWantToStopTheCurrentSession.
   ///
@@ -844,12 +999,6 @@ abstract class AppLocalizations {
   /// **'Average Stress'**
   String get averageStress;
 
-  /// No description provided for @avgFocus.
-  ///
-  /// In en, this message translates to:
-  /// **'🎯 Avg focus: {score}/10'**
-  String avgFocus(String score);
-
   /// No description provided for @avgSession.
   ///
   /// In en, this message translates to:
@@ -898,12 +1047,6 @@ abstract class AppLocalizations {
   /// **'Bad'**
   String get bad;
 
-  /// No description provided for @badIntensity.
-  ///
-  /// In en, this message translates to:
-  /// **'Bad Intensity'**
-  String get badIntensity;
-
   /// No description provided for @badgeOnlyMode.
   ///
   /// In en, this message translates to:
@@ -915,6 +1058,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show badge without sound or popup'**
   String get badgeOnlyModeSubtitle;
+
+  /// No description provided for @badIntensity.
+  ///
+  /// In en, this message translates to:
+  /// **'Bad Intensity'**
+  String get badIntensity;
 
   /// No description provided for @balancedDayAhead.
   ///
@@ -957,6 +1106,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Birthday: {birthday}'**
   String birthday(Object birthday);
+
+  /// No description provided for @birthdayDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday: {date}'**
+  String birthdayDate(Object date);
 
   /// No description provided for @birthdayLabel.
   ///
@@ -1006,17 +1161,23 @@ abstract class AppLocalizations {
   /// **'Break Time Distribution'**
   String get breakTimeDistribution;
 
-  /// No description provided for @bulkDeleteConfirmation.
+  /// No description provided for @breakTitleLong.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to delete {count} tasks?'**
-  String bulkDeleteConfirmation(int count);
+  /// **'🌿 Long Break'**
+  String get breakTitleLong;
 
-  /// No description provided for @bulkGenerationComplete.
+  /// No description provided for @breakTitleShort.
   ///
   /// In en, this message translates to:
-  /// **'Generated {count} recurring instances'**
-  String bulkGenerationComplete(String count);
+  /// **'☕ Short Break'**
+  String get breakTitleShort;
+
+  /// No description provided for @buildingMomentum.
+  ///
+  /// In en, this message translates to:
+  /// **'🌟 Building momentum!'**
+  String get buildingMomentum;
 
   /// No description provided for @bySigningInYouAgree.
   ///
@@ -1060,6 +1221,12 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get cancelButton;
 
+  /// No description provided for @cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get cancelled;
+
   /// No description provided for @cannotSetReminderForPastDate.
   ///
   /// In en, this message translates to:
@@ -1069,7 +1236,7 @@ abstract class AppLocalizations {
   /// No description provided for @cannotSetReminderWithoutPermission.
   ///
   /// In en, this message translates to:
-  /// **'Cannot set reminder without notification permission'**
+  /// **'Cannot set reminder without permission'**
   String get cannotSetReminderWithoutPermission;
 
   /// No description provided for @categories.
@@ -1117,8 +1284,8 @@ abstract class AppLocalizations {
   /// No description provided for @categoryDeletedSuccessfully.
   ///
   /// In en, this message translates to:
-  /// **'Category \"{categoryName}\" deleted successfully'**
-  String categoryDeletedSuccessfully(Object categoryName);
+  /// **'Category \"{name}\" deleted successfully'**
+  String categoryDeletedSuccessfully(Object name);
 
   /// No description provided for @categoryEfficiency.
   ///
@@ -1171,8 +1338,8 @@ abstract class AppLocalizations {
   /// No description provided for @categoryUpdated.
   ///
   /// In en, this message translates to:
-  /// **'Category updated successfully'**
-  String get categoryUpdated;
+  /// **'{action} category: {name}'**
+  String categoryUpdated(Object action, Object name);
 
   /// No description provided for @categoryUpdatedSuccessfully.
   ///
@@ -1210,6 +1377,12 @@ abstract class AppLocalizations {
   /// **'3. Check notification history after delivery'**
   String get checkHistoryAfterDelivery;
 
+  /// No description provided for @checkingIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking in! 👋'**
+  String get checkingIn;
+
   /// No description provided for @checkPending.
   ///
   /// In en, this message translates to:
@@ -1228,29 +1401,11 @@ abstract class AppLocalizations {
   /// **'Check your energy levels throughout the day'**
   String get checkYourEnergyLevelsThroughoutTheDay;
 
-  /// No description provided for @checkingIn.
-  ///
-  /// In en, this message translates to:
-  /// **'Checking in! 👋'**
-  String get checkingIn;
-
   /// No description provided for @chooseBackgroundSound.
   ///
   /// In en, this message translates to:
   /// **'Choose a background sound to help you concentrate or relax'**
   String get chooseBackgroundSound;
-
-  /// No description provided for @priority.
-  ///
-  /// In en, this message translates to:
-  /// **'Priority'**
-  String get priority;
-
-  /// No description provided for @prioritizeTasks.
-  ///
-  /// In en, this message translates to:
-  /// **'Prioritize Tasks'**
-  String get prioritizeTasks;
 
   /// No description provided for @chooseColor.
   ///
@@ -1354,6 +1509,12 @@ abstract class AppLocalizations {
   /// **'Clear History'**
   String get clearHistory;
 
+  /// No description provided for @clearingData.
+  ///
+  /// In en, this message translates to:
+  /// **'Clearing data...'**
+  String get clearingData;
+
   /// No description provided for @clearLogs.
   ///
   /// In en, this message translates to:
@@ -1371,12 +1532,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Clear Quality'**
   String get clearQuality;
-
-  /// No description provided for @clearingData.
-  ///
-  /// In en, this message translates to:
-  /// **'Clearing data...'**
-  String get clearingData;
 
   /// No description provided for @close.
   ///
@@ -1426,6 +1581,12 @@ abstract class AppLocalizations {
   /// **'Color'**
   String get color;
 
+  /// No description provided for @colorLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Color: '**
+  String get colorLabel;
+
   /// No description provided for @colorPicker.
   ///
   /// In en, this message translates to:
@@ -1456,11 +1617,71 @@ abstract class AppLocalizations {
   /// **'Complete'**
   String get complete;
 
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'completed'**
+  String get completed;
+
+  /// No description provided for @completedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed at'**
+  String get completedAt;
+
+  /// No description provided for @completedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completedLabel;
+
+  /// No description provided for @completedSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed Sessions'**
+  String get completedSessions;
+
+  /// No description provided for @completedStat.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completedStat;
+
+  /// No description provided for @completedStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed: {status}'**
+  String completedStatus(Object status);
+
+  /// No description provided for @completedTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completedTag;
+
+  /// No description provided for @completedTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed tasks'**
+  String get completedTasks;
+
+  /// No description provided for @completedTasksInCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed: {count}'**
+  String completedTasksInCategory(Object count);
+
   /// No description provided for @completeSubtasksFirst.
   ///
   /// In en, this message translates to:
   /// **'Complete Subtasks First'**
   String get completeSubtasksFirst;
+
+  /// No description provided for @completeTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Task'**
+  String get completeTask;
 
   /// No description provided for @completeTaskButton.
   ///
@@ -1486,41 +1707,11 @@ abstract class AppLocalizations {
   /// **'Complete Tutorial'**
   String get completeTutorial;
 
-  /// No description provided for @completed.
+  /// No description provided for @completionProgress.
   ///
   /// In en, this message translates to:
-  /// **'Completed'**
-  String get completed;
-
-  /// No description provided for @completedAt.
-  ///
-  /// In en, this message translates to:
-  /// **'Completed at'**
-  String get completedAt;
-
-  /// No description provided for @completedLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Completed'**
-  String get completedLabel;
-
-  /// No description provided for @completedSessions.
-  ///
-  /// In en, this message translates to:
-  /// **'Completed Sessions'**
-  String get completedSessions;
-
-  /// No description provided for @completedTasks.
-  ///
-  /// In en, this message translates to:
-  /// **'Completed tasks'**
-  String get completedTasks;
-
-  /// No description provided for @completedTasksInCategory.
-  ///
-  /// In en, this message translates to:
-  /// **'Completed: {count}'**
-  String completedTasksInCategory(Object count);
+  /// **'Completion Progress'**
+  String get completionProgress;
 
   /// No description provided for @completionRate.
   ///
@@ -1558,23 +1749,17 @@ abstract class AppLocalizations {
   /// **'Confirm Delete'**
   String get confirmDelete;
 
-  /// No description provided for @confirmDeleteCategory.
-  ///
-  /// In en, this message translates to:
-  /// **'Are you sure you want to delete \"{categoryName}\"? This will remove the category from all associated tasks.'**
-  String confirmDeleteCategory(String categoryName);
-
   /// No description provided for @confirmDeleteSubtask.
   ///
   /// In en, this message translates to:
   /// **'Are you sure you want to delete this subtask?'**
   String get confirmDeleteSubtask;
 
-  /// No description provided for @confirmDeleteTask.
+  /// No description provided for @considerLighterTasks.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to delete \"{taskTitle}\"?'**
-  String confirmDeleteTask(String taskTitle);
+  /// **'🌿 Consider lighter tasks or take a break'**
+  String get considerLighterTasks;
 
   /// No description provided for @considerMoreFrequentBreaks.
   ///
@@ -1587,6 +1772,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Consider prioritizing self-care activities tomorrow'**
   String get considerPrioritizingSelfCareActivitiesTomorrow;
+
+  /// No description provided for @contextualActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Contextual Actions'**
+  String get contextualActions;
+
+  /// No description provided for @continueFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Focus'**
+  String get continueFocus;
 
   /// No description provided for @continueToApp.
   ///
@@ -1648,6 +1845,18 @@ abstract class AppLocalizations {
   /// **'Create Category'**
   String get createCategory;
 
+  /// No description provided for @created.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get created;
+
+  /// No description provided for @createdAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Created: {date}'**
+  String createdAt(Object date);
+
   /// No description provided for @createTasksWithYourVoice.
   ///
   /// In en, this message translates to:
@@ -1678,12 +1887,6 @@ abstract class AppLocalizations {
   /// **'Create your perfect Pomodoro setup'**
   String get createYourPerfectPomodoroSetup;
 
-  /// No description provided for @created.
-  ///
-  /// In en, this message translates to:
-  /// **'Created'**
-  String get created;
-
   /// No description provided for @currentStreak.
   ///
   /// In en, this message translates to:
@@ -1699,20 +1902,20 @@ abstract class AppLocalizations {
   /// No description provided for @custom.
   ///
   /// In en, this message translates to:
-  /// **'CUSTOM'**
+  /// **'Custom'**
   String get custom;
-
-  /// No description provided for @customColorSettings.
-  ///
-  /// In en, this message translates to:
-  /// **'Custom Color Settings'**
-  String get customColorSettings;
 
   /// No description provided for @customColors.
   ///
   /// In en, this message translates to:
   /// **'Custom Colors'**
   String get customColors;
+
+  /// No description provided for @customColorSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Color Settings'**
+  String get customColorSettings;
 
   /// No description provided for @customDurations.
   ///
@@ -1725,12 +1928,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Custom Durations (minutes)'**
   String get customDurationsMinutes;
-
-  /// No description provided for @customRange.
-  ///
-  /// In en, this message translates to:
-  /// **'Custom Range'**
-  String get customRange;
 
   /// No description provided for @customizeEachNotificationType.
   ///
@@ -1768,6 +1965,30 @@ abstract class AppLocalizations {
   /// **'Customize your pomodoro session'**
   String get customizeYourPomodoroSession;
 
+  /// No description provided for @customMessageOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom message (optional)'**
+  String get customMessageOptional;
+
+  /// No description provided for @customRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Range'**
+  String get customRange;
+
+  /// No description provided for @customReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Reminder'**
+  String get customReminder;
+
+  /// No description provided for @customTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Time'**
+  String get customTime;
+
   /// No description provided for @cycles.
   ///
   /// In en, this message translates to:
@@ -1780,18 +2001,6 @@ abstract class AppLocalizations {
   /// **'1-10 cycles'**
   String get cycles10;
 
-  /// No description provided for @quickEdit.
-  ///
-  /// In en, this message translates to:
-  /// **'Quick Edit'**
-  String get quickEdit;
-
-  /// No description provided for @quickFilters.
-  ///
-  /// In en, this message translates to:
-  /// **'Quick Filters'**
-  String get quickFilters;
-
   /// No description provided for @daily.
   ///
   /// In en, this message translates to:
@@ -1803,6 +2012,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Daily mood check-ins'**
   String get dailyMoodCheckIns;
+
+  /// No description provided for @dailySummary.
+  ///
+  /// In en, this message translates to:
+  /// **'📊 Daily Summary'**
+  String get dailySummary;
 
   /// No description provided for @dark.
   ///
@@ -1840,6 +2055,12 @@ abstract class AppLocalizations {
   /// **'Data & Backup'**
   String get dataBackupSection;
 
+  /// No description provided for @databaseSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Database Size'**
+  String get databaseSize;
+
   /// No description provided for @dataExported.
   ///
   /// In en, this message translates to:
@@ -1870,12 +2091,6 @@ abstract class AppLocalizations {
   /// **'Data synced successfully from Firebase!'**
   String get dataSyncedSuccessfullyFromFirebase;
 
-  /// No description provided for @databaseSize.
-  ///
-  /// In en, this message translates to:
-  /// **'Database Size'**
-  String get databaseSize;
-
   /// No description provided for @dateFormat.
   ///
   /// In en, this message translates to:
@@ -1894,23 +2109,17 @@ abstract class AppLocalizations {
   /// **'Day'**
   String get day;
 
-  /// No description provided for @dayStreak.
-  ///
-  /// In en, this message translates to:
-  /// **'🔥 {count} day streak'**
-  String dayStreak(int count);
-
-  /// No description provided for @days.
-  ///
-  /// In en, this message translates to:
-  /// **'days'**
-  String days(int count);
-
   /// No description provided for @daysDone.
   ///
   /// In en, this message translates to:
   /// **'Day\'s done! ✨'**
   String get daysDone;
+
+  /// No description provided for @daysLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Days Left'**
+  String get daysLeft;
 
   /// No description provided for @daysStreak.
   ///
@@ -2038,12 +2247,6 @@ abstract class AppLocalizations {
   /// **'Delete Task'**
   String get deleteTaskButton;
 
-  /// No description provided for @deleteTaskConfirmation.
-  ///
-  /// In en, this message translates to:
-  /// **'Are you sure you want to delete \"{taskTitle}\"?'**
-  String deleteTaskConfirmation(String task, Object taskTitle);
-
   /// No description provided for @deleteTaskConfirmationTitle.
   ///
   /// In en, this message translates to:
@@ -2062,6 +2265,12 @@ abstract class AppLocalizations {
   /// **'Delete User'**
   String get deleteUser;
 
+  /// No description provided for @delivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get delivered;
+
   /// No description provided for @deliveryLabel.
   ///
   /// In en, this message translates to:
@@ -2077,14 +2286,14 @@ abstract class AppLocalizations {
   /// No description provided for @description.
   ///
   /// In en, this message translates to:
-  /// **'Description: {description}'**
+  /// **'Description'**
   String description(Object description);
 
-  /// No description provided for @details.
+  /// No description provided for @descriptionNA.
   ///
   /// In en, this message translates to:
-  /// **'Details'**
-  String get details;
+  /// **'Description: {description}'**
+  String descriptionNA(Object description);
 
   /// No description provided for @descriptionOfActivity.
   ///
@@ -2097,6 +2306,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Detailed Entry'**
   String get detailedEntry;
+
+  /// No description provided for @details.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get details;
 
   /// No description provided for @developerOptions.
   ///
@@ -2116,6 +2331,12 @@ abstract class AppLocalizations {
   /// **'Disable'**
   String get disable;
 
+  /// No description provided for @disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get disabled;
+
   /// No description provided for @disableDebugMode.
   ///
   /// In en, this message translates to:
@@ -2128,11 +2349,11 @@ abstract class AppLocalizations {
   /// **'Disable Maintenance Mode'**
   String get disableMaintenanceMode;
 
-  /// No description provided for @disabled.
+  /// No description provided for @dismiss.
   ///
   /// In en, this message translates to:
-  /// **'Disabled'**
-  String get disabled;
+  /// **'Dismiss'**
+  String get dismiss;
 
   /// No description provided for @dndInfo.
   ///
@@ -2140,17 +2361,17 @@ abstract class AppLocalizations {
   /// **'Do Not Disturb mode silences all notifications except emergencies during specified hours.'**
   String get dndInfo;
 
-  /// No description provided for @doNotDisturb.
-  ///
-  /// In en, this message translates to:
-  /// **'Do Not Disturb'**
-  String get doNotDisturb;
-
   /// No description provided for @dominantMood.
   ///
   /// In en, this message translates to:
   /// **'Dominant Mood'**
   String get dominantMood;
+
+  /// No description provided for @doNotDisturb.
+  ///
+  /// In en, this message translates to:
+  /// **'Do Not Disturb'**
+  String get doNotDisturb;
 
   /// No description provided for @dontForget.
   ///
@@ -2200,17 +2421,41 @@ abstract class AppLocalizations {
   /// **'Due date must be in the future'**
   String get dueDateMustBeInFuture;
 
+  /// No description provided for @dueDateNA.
+  ///
+  /// In en, this message translates to:
+  /// **'Due Date: {date}'**
+  String dueDateNA(Object date);
+
+  /// No description provided for @dueDateReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Due date reminder'**
+  String get dueDateReminder;
+
   /// No description provided for @dueDateTitle.
   ///
   /// In en, this message translates to:
   /// **'Due Date'**
   String get dueDateTitle;
 
+  /// No description provided for @dueIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Due in'**
+  String get dueIn;
+
   /// No description provided for @dueInOneHour.
   ///
   /// In en, this message translates to:
   /// **'Due in 1 hour - tap to view'**
   String get dueInOneHour;
+
+  /// No description provided for @dueSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Due soon'**
+  String get dueSoon;
 
   /// No description provided for @dueThisWeek.
   ///
@@ -2332,6 +2577,12 @@ abstract class AppLocalizations {
   /// **'Email: {email}'**
   String email(Object email);
 
+  /// No description provided for @emailNA.
+  ///
+  /// In en, this message translates to:
+  /// **'Email: {email}'**
+  String emailNA(Object email);
+
   /// No description provided for @emailNotifications.
   ///
   /// In en, this message translates to:
@@ -2397,6 +2648,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enable Custom Colors'**
   String get enableCustomColors;
+
+  /// No description provided for @enabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get enabled;
 
   /// No description provided for @enableDebugMode.
   ///
@@ -2464,12 +2721,6 @@ abstract class AppLocalizations {
   /// **'Enable Voice Tasks'**
   String get enableVoiceTasks;
 
-  /// No description provided for @enabled.
-  ///
-  /// In en, this message translates to:
-  /// **'Enabled'**
-  String get enabled;
-
   /// No description provided for @endOfDayVibes.
   ///
   /// In en, this message translates to:
@@ -2506,6 +2757,30 @@ abstract class AppLocalizations {
   /// **'Energy Level'**
   String get energyLevel;
 
+  /// No description provided for @energyLevelGood.
+  ///
+  /// In en, this message translates to:
+  /// **'🔥 Good Energy'**
+  String get energyLevelGood;
+
+  /// No description provided for @energyLevelHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'⚡ High Energy!'**
+  String get energyLevelHigh;
+
+  /// No description provided for @energyLevelLow.
+  ///
+  /// In en, this message translates to:
+  /// **'🔋 Low Energy'**
+  String get energyLevelLow;
+
+  /// No description provided for @energyLevelModerate.
+  ///
+  /// In en, this message translates to:
+  /// **'⚖️ Moderate Energy'**
+  String get energyLevelModerate;
+
   /// No description provided for @energyLevelMonitoring.
   ///
   /// In en, this message translates to:
@@ -2517,6 +2792,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Energy level tracking'**
   String get energyLevelTracking;
+
+  /// No description provided for @energyLevelVeryLow.
+  ///
+  /// In en, this message translates to:
+  /// **'😴 Very Low Energy'**
+  String get energyLevelVeryLow;
 
   /// No description provided for @energyPattern.
   ///
@@ -2548,6 +2829,12 @@ abstract class AppLocalizations {
   /// **'Enter the message users will see...'**
   String get enterMessageUsersWillSee;
 
+  /// No description provided for @enterMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter minutes (e.g., 45)'**
+  String get enterMinutes;
+
   /// No description provided for @enterTaskDescription.
   ///
   /// In en, this message translates to:
@@ -2565,12 +2852,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter task title'**
   String get enterTaskTitle;
-
-  /// No description provided for @error.
-  ///
-  /// In en, this message translates to:
-  /// **'Error'**
-  String error(String message);
 
   /// No description provided for @errorApplyingSettings.
   ///
@@ -2716,6 +2997,12 @@ abstract class AppLocalizations {
   /// **'Error updating user: {error}'**
   String errorUpdatingUser(Object error);
 
+  /// No description provided for @estimatedSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'estimated sessions'**
+  String get estimatedSessions;
+
   /// No description provided for @eveningCheckIn.
   ///
   /// In en, this message translates to:
@@ -2746,11 +3033,23 @@ abstract class AppLocalizations {
   /// **'Excellent completion rate! Keep up the great work'**
   String get excellentCompletionRate;
 
+  /// No description provided for @excellentFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'🌟 Excellent focus today!'**
+  String get excellentFocus;
+
   /// No description provided for @excellentPerformance.
   ///
   /// In en, this message translates to:
   /// **'Excellent performance!'**
   String get excellentPerformance;
+
+  /// No description provided for @executionSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Execution'**
+  String get executionSection;
 
   /// No description provided for @expand.
   ///
@@ -2758,23 +3057,29 @@ abstract class AppLocalizations {
   /// **'Expand'**
   String get expand;
 
-  /// No description provided for @experienceAIPoweredTaskPrioritizationThatAdaptsToYourPatterns.
-  ///
-  /// In en, this message translates to:
-  /// **'Experience AI-powered task prioritization that adapts to your patterns'**
-  String get experienceAIPoweredTaskPrioritizationThatAdaptsToYourPatterns;
-
   /// No description provided for @experienceAiPoweredTaskPrioritizationThatAdaptsToYourPatterns.
   ///
   /// In en, this message translates to:
   /// **'Experience AI-powered task prioritization that adapts to your patterns'**
   String get experienceAiPoweredTaskPrioritizationThatAdaptsToYourPatterns;
 
+  /// No description provided for @experienceAIPoweredTaskPrioritizationThatAdaptsToYourPatterns.
+  ///
+  /// In en, this message translates to:
+  /// **'Experience AI-powered task prioritization that adapts to your patterns'**
+  String get experienceAIPoweredTaskPrioritizationThatAdaptsToYourPatterns;
+
   /// No description provided for @expertOptions.
   ///
   /// In en, this message translates to:
   /// **'Expert options for power users'**
   String get expertOptions;
+
+  /// No description provided for @expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get expired;
 
   /// No description provided for @exploreFeatures.
   ///
@@ -2824,6 +3129,12 @@ abstract class AppLocalizations {
   /// **'Export your tasks to external formats'**
   String get exportYourTasksToExternalFormats;
 
+  /// No description provided for @extendSession.
+  ///
+  /// In en, this message translates to:
+  /// **'⏱️ Extend Session'**
+  String get extendSession;
+
   /// No description provided for @fadeIn.
   ///
   /// In en, this message translates to:
@@ -2835,6 +3146,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fade Out'**
   String get fadeOut;
+
+  /// No description provided for @failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get failed;
 
   /// No description provided for @failedToAccessGallery.
   ///
@@ -2890,6 +3207,12 @@ abstract class AppLocalizations {
   /// **'Failed to upload image'**
   String get failedToUploadImage;
 
+  /// No description provided for @failureReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Failure reason'**
+  String get failureReason;
+
   /// No description provided for @features.
   ///
   /// In en, this message translates to:
@@ -2920,18 +3243,6 @@ abstract class AppLocalizations {
   /// **'Filter by Type'**
   String get filterByType;
 
-  /// No description provided for @filterTasks.
-  ///
-  /// In en, this message translates to:
-  /// **'Filter tasks'**
-  String get filterTasks;
-
-  /// No description provided for @filterTasksTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Filter Tasks'**
-  String get filterTasksTitle;
-
   /// No description provided for @filters.
   ///
   /// In en, this message translates to:
@@ -2943,6 +3254,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Filters applied successfully'**
   String get filtersAppliedSuccessfully;
+
+  /// No description provided for @filterTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter tasks'**
+  String get filterTasks;
+
+  /// No description provided for @filterTasksTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter Tasks'**
+  String get filterTasksTitle;
 
   /// No description provided for @findingBalance.
   ///
@@ -2959,7 +3282,7 @@ abstract class AppLocalizations {
   /// No description provided for @focus.
   ///
   /// In en, this message translates to:
-  /// **'focus'**
+  /// **'Focus'**
   String get focus;
 
   /// No description provided for @focusAndRelaxation.
@@ -2974,17 +3297,17 @@ abstract class AppLocalizations {
   /// **'Focus better with adaptive timing and smart breaks'**
   String get focusBetterWithAdaptiveTimingAndSmartBreaks;
 
+  /// No description provided for @focusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'completed'**
+  String get focusCompleted;
+
   /// No description provided for @focusDifficulty.
   ///
   /// In en, this message translates to:
   /// **'Focus Difficulty: {score}'**
   String focusDifficulty(Object score);
-
-  /// No description provided for @focusLevel.
-  ///
-  /// In en, this message translates to:
-  /// **'🎯 Focus level: {score}/10'**
-  String focusLevel(int score);
 
   /// No description provided for @focusMode.
   ///
@@ -2992,17 +3315,17 @@ abstract class AppLocalizations {
   /// **'Focus Mode'**
   String get focusMode;
 
-  /// No description provided for @focusModeFor.
-  ///
-  /// In en, this message translates to:
-  /// **'Focus mode for {taskTitle}'**
-  String focusModeFor(Object taskTitle);
-
   /// No description provided for @focusPattern.
   ///
   /// In en, this message translates to:
   /// **'Focus Pattern'**
   String get focusPattern;
+
+  /// No description provided for @focusProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus Progress'**
+  String get focusProgress;
 
   /// No description provided for @focusScore.
   ///
@@ -3082,6 +3405,12 @@ abstract class AppLocalizations {
   /// **'Fri'**
   String get fridayAbbrev;
 
+  /// No description provided for @fromNow.
+  ///
+  /// In en, this message translates to:
+  /// **'from now'**
+  String get fromNow;
+
   /// No description provided for @galleryPermissionIsRequiredToSelectProfileImage.
   ///
   /// In en, this message translates to:
@@ -3093,6 +3422,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Gallery permission is required to select profile image'**
   String get galleryPermissionRequired;
+
+  /// No description provided for @generalReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'General reminder'**
+  String get generalReminder;
 
   /// No description provided for @generalSettings.
   ///
@@ -3142,6 +3477,18 @@ abstract class AppLocalizations {
   /// **'Get Suggestions from History'**
   String get getSuggestionsFromHistory;
 
+  /// No description provided for @getTaskStatusDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'_getTaskStatusDescription(task, l10n)'**
+  String get getTaskStatusDescription;
+
+  /// No description provided for @goalAchieved.
+  ///
+  /// In en, this message translates to:
+  /// **'🏆 Goal achieved! Amazing work!'**
+  String get goalAchieved;
+
   /// No description provided for @good.
   ///
   /// In en, this message translates to:
@@ -3153,6 +3500,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Good Days'**
   String get goodDays;
+
+  /// No description provided for @goodFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'👍 Good focus maintained!'**
+  String get goodFocus;
 
   /// No description provided for @goodIntensity.
   ///
@@ -3214,6 +3567,12 @@ abstract class AppLocalizations {
   /// **'Great job completing'**
   String get greatJobCompleting;
 
+  /// No description provided for @greatJobFocused.
+  ///
+  /// In en, this message translates to:
+  /// **'🔥 Great job staying focused!'**
+  String get greatJobFocused;
+
   /// No description provided for @greatJobTakeABreak.
   ///
   /// In en, this message translates to:
@@ -3226,6 +3585,12 @@ abstract class AppLocalizations {
   /// **'Great progress!'**
   String get greatProgress;
 
+  /// No description provided for @greatStart.
+  ///
+  /// In en, this message translates to:
+  /// **'🚀 Great start!'**
+  String get greatStart;
+
   /// No description provided for @groupSimilarNotifications.
   ///
   /// In en, this message translates to:
@@ -3237,6 +3602,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Guided Check-in'**
   String get guidedCheckIn;
+
+  /// No description provided for @halfwayDone.
+  ///
+  /// In en, this message translates to:
+  /// **'💪 Halfway done!'**
+  String get halfwayDone;
+
+  /// No description provided for @halfwayThere.
+  ///
+  /// In en, this message translates to:
+  /// **'💪 Halfway there!'**
+  String get halfwayThere;
 
   /// No description provided for @helpAndSupport.
   ///
@@ -3261,12 +3638,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Help us understand your current state'**
   String get helpUsUnderstandState;
-
-  /// No description provided for @hiThere.
-  ///
-  /// In en, this message translates to:
-  /// **'Hi there!'**
-  String get hiThere;
 
   /// No description provided for @high.
   ///
@@ -3334,6 +3705,12 @@ abstract class AppLocalizations {
   /// **'History cleared'**
   String get historyCleared;
 
+  /// No description provided for @hiThere.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi there!'**
+  String get hiThere;
+
   /// No description provided for @hiveBoxes.
   ///
   /// In en, this message translates to:
@@ -3352,6 +3729,12 @@ abstract class AppLocalizations {
   /// **'Honor device Do Not Disturb settings'**
   String get honorDeviceDoNotDisturbSettings;
 
+  /// No description provided for @hour1.
+  ///
+  /// In en, this message translates to:
+  /// **'1h'**
+  String get hour1;
+
   /// No description provided for @hourly.
   ///
   /// In en, this message translates to:
@@ -3369,6 +3752,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'h'**
   String get hours;
+
+  /// No description provided for @hours2.
+  ///
+  /// In en, this message translates to:
+  /// **'2h'**
+  String get hours2;
 
   /// No description provided for @howAreYou.
   ///
@@ -3436,12 +3825,6 @@ abstract class AppLocalizations {
   /// **'How is your day?'**
   String get howIsYourDay;
 
-  /// No description provided for @howWasYourDay.
-  ///
-  /// In en, this message translates to:
-  /// **'How was your day?'**
-  String get howWasYourDay;
-
   /// No description provided for @howsYourAfternoonGoing.
   ///
   /// In en, this message translates to:
@@ -3459,6 +3842,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'How\'s your focus right now?'**
   String get howsYourFocusRightNow;
+
+  /// No description provided for @howWasYourDay.
+  ///
+  /// In en, this message translates to:
+  /// **'How was your day?'**
+  String get howWasYourDay;
 
   /// No description provided for @icon.
   ///
@@ -3544,12 +3933,6 @@ abstract class AppLocalizations {
   /// **'In-App Notifications'**
   String get inAppNotifications;
 
-  /// No description provided for @inProgress.
-  ///
-  /// In en, this message translates to:
-  /// **'In Progress'**
-  String get inProgress;
-
   /// No description provided for @includeSpecificTime.
   ///
   /// In en, this message translates to:
@@ -3561,6 +3944,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Incomplete'**
   String get incompleteLabel;
+
+  /// No description provided for @incompleteTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Incomplete'**
+  String get incompleteTag;
 
   /// No description provided for @increaseColorContrastForBetterVisibility.
   ///
@@ -3585,6 +3974,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Info'**
   String get info;
+
+  /// No description provided for @inProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get inProgress;
 
   /// No description provided for @insightGenerallyPositive.
   ///
@@ -3616,17 +4011,17 @@ abstract class AppLocalizations {
   /// **'Insights'**
   String get insights;
 
-  /// No description provided for @installUpdate.
-  ///
-  /// In en, this message translates to:
-  /// **'Install Update'**
-  String get installUpdate;
-
   /// No description provided for @installingUpdate.
   ///
   /// In en, this message translates to:
   /// **'Installing Update...'**
   String get installingUpdate;
+
+  /// No description provided for @installUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Install Update'**
+  String get installUpdate;
 
   /// No description provided for @intelligentNotificationManagement.
   ///
@@ -3646,11 +4041,11 @@ abstract class AppLocalizations {
   /// **'is due today'**
   String get isDueToday;
 
-  /// No description provided for @itemsSelected.
+  /// No description provided for @isNowAdmin.
   ///
   /// In en, this message translates to:
-  /// **'{count} selected'**
-  String itemsSelected(int count);
+  /// **'{userName} is now {status}'**
+  String isNowAdmin(Object status, Object userName);
 
   /// No description provided for @itsOkayToHaveToughDays.
   ///
@@ -3663,6 +4058,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'2. Keep app in background after scheduling'**
   String get keepAppInBackground;
+
+  /// No description provided for @keepItGoing.
+  ///
+  /// In en, this message translates to:
+  /// **'🔥 Keep it Going!'**
+  String get keepItGoing;
+
+  /// No description provided for @keepItGoingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'🚀 Keep it going!'**
+  String get keepItGoingBody;
 
   /// No description provided for @keepShiningBright.
   ///
@@ -3742,6 +4149,12 @@ abstract class AppLocalizations {
   /// **'Last 90 Days'**
   String get last90Days;
 
+  /// No description provided for @lastAttempt.
+  ///
+  /// In en, this message translates to:
+  /// **'Last attempt'**
+  String get lastAttempt;
+
   /// No description provided for @lastModified.
   ///
   /// In en, this message translates to:
@@ -3820,6 +4233,12 @@ abstract class AppLocalizations {
   /// **'Loading preferences...'**
   String get loadingPreferences;
 
+  /// No description provided for @loginSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Organize your tasks and boost productivity'**
+  String get loginSubtitle;
+
   /// No description provided for @logLevel.
   ///
   /// In en, this message translates to:
@@ -3832,29 +4251,17 @@ abstract class AppLocalizations {
   /// **'Log Your Mood'**
   String get logMood;
 
-  /// No description provided for @logReport.
-  ///
-  /// In en, this message translates to:
-  /// **'Log Report'**
-  String get logReport;
-
-  /// No description provided for @logStats.
-  ///
-  /// In en, this message translates to:
-  /// **'Log Stats'**
-  String get logStats;
-
-  /// No description provided for @loginSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Organize your tasks and boost productivity'**
-  String get loginSubtitle;
-
   /// No description provided for @logout.
   ///
   /// In en, this message translates to:
   /// **'Logout'**
   String get logout;
+
+  /// No description provided for @logReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Report'**
+  String get logReport;
 
   /// No description provided for @logsCleared.
   ///
@@ -3873,6 +4280,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Logs imported successfully'**
   String get logsImported;
+
+  /// No description provided for @logStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Stats'**
+  String get logStats;
 
   /// No description provided for @longBreak.
   ///
@@ -4012,6 +4425,12 @@ abstract class AppLocalizations {
   /// **'Mark as Incomplete'**
   String get markAsIncomplete;
 
+  /// No description provided for @markedIncomplete.
+  ///
+  /// In en, this message translates to:
+  /// **'marked incomplete'**
+  String get markedIncomplete;
+
   /// No description provided for @masterToggleForAllNotifications.
   ///
   /// In en, this message translates to:
@@ -4078,11 +4497,11 @@ abstract class AppLocalizations {
   /// **'Message'**
   String get message;
 
-  /// No description provided for @metricValue.
+  /// No description provided for @metadata.
   ///
   /// In en, this message translates to:
-  /// **'{label}: {value}/10'**
-  String metricValue(String label, int value);
+  /// **'Metadata'**
+  String get metadata;
 
   /// No description provided for @middayPause.
   ///
@@ -4114,30 +4533,6 @@ abstract class AppLocalizations {
   /// **'1-60 min'**
   String get min60;
 
-  /// No description provided for @minPerSession.
-  ///
-  /// In en, this message translates to:
-  /// **'min per session'**
-  String get minPerSession;
-
-  /// No description provided for @minsTotal.
-  ///
-  /// In en, this message translates to:
-  /// **'mins total'**
-  String get minsTotal;
-
-  /// No description provided for @minWorkMinBreak.
-  ///
-  /// In en, this message translates to:
-  /// **'{work}min work → {rest}min break'**
-  String minWorkMinBreak(Object rest, Object work);
-
-  /// No description provided for @minWorkRest.
-  ///
-  /// In en, this message translates to:
-  /// **'{work} min work • {rest} min rest'**
-  String minWorkRest(Object rest, Object work);
-
   /// No description provided for @minimizeAnimationsAndTransitions.
   ///
   /// In en, this message translates to:
@@ -4150,17 +4545,59 @@ abstract class AppLocalizations {
   /// **'Minimum Minutes Between Same Type'**
   String get minimumMinutesBetweenSameType;
 
-  /// No description provided for @minuteFocusSessions.
+  /// No description provided for @minPerSession.
   ///
   /// In en, this message translates to:
-  /// **'{minutes}-minute focus sessions'**
-  String minuteFocusSessions(int minutes);
+  /// **'min per session'**
+  String get minPerSession;
+
+  /// No description provided for @minsTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'mins total'**
+  String get minsTotal;
 
   /// No description provided for @minutes.
   ///
   /// In en, this message translates to:
   /// **'minutes'**
   String get minutes;
+
+  /// No description provided for @minutes15.
+  ///
+  /// In en, this message translates to:
+  /// **'15m'**
+  String get minutes15;
+
+  /// No description provided for @minutes30.
+  ///
+  /// In en, this message translates to:
+  /// **'30m'**
+  String get minutes30;
+
+  /// No description provided for @minutes5.
+  ///
+  /// In en, this message translates to:
+  /// **'5m'**
+  String get minutes5;
+
+  /// No description provided for @minutesFromNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes from now'**
+  String get minutesFromNow;
+
+  /// No description provided for @minWorkMinBreak.
+  ///
+  /// In en, this message translates to:
+  /// **'{work}min work → {rest}min break'**
+  String minWorkMinBreak(Object rest, Object work);
+
+  /// No description provided for @minWorkRest.
+  ///
+  /// In en, this message translates to:
+  /// **'{work} min work • {rest} min rest'**
+  String minWorkRest(Object rest, Object work);
 
   /// No description provided for @missingToday.
   ///
@@ -4204,12 +4641,6 @@ abstract class AppLocalizations {
   /// **'Month'**
   String get month;
 
-  /// No description provided for @monthView.
-  ///
-  /// In en, this message translates to:
-  /// **'Month'**
-  String get monthView;
-
   /// No description provided for @monthly.
   ///
   /// In en, this message translates to:
@@ -4227,6 +4658,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Monthly Stats'**
   String get monthlyStats;
+
+  /// No description provided for @monthView.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get monthView;
 
   /// No description provided for @mood.
   ///
@@ -4330,6 +4767,24 @@ abstract class AppLocalizations {
   /// **'Mood Check-In'**
   String get moodCheckInNotificationTitle;
 
+  /// No description provided for @moodCheckIns.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood Check-ins'**
+  String get moodCheckIns;
+
+  /// No description provided for @moodCheckInsChannelDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood check-in reminders'**
+  String get moodCheckInsChannelDesc;
+
+  /// No description provided for @moodCheckInsChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood Check-Ins'**
+  String get moodCheckInsChannelName;
+
   /// No description provided for @moodCheckInTimes.
   ///
   /// In en, this message translates to:
@@ -4341,12 +4796,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Mood Check-In'**
   String get moodCheckInTitle;
-
-  /// No description provided for @moodCheckIns.
-  ///
-  /// In en, this message translates to:
-  /// **'Mood Check-ins'**
-  String get moodCheckIns;
 
   /// No description provided for @moodEnergyLevel.
   ///
@@ -4450,12 +4899,6 @@ abstract class AppLocalizations {
   /// **'Save Mood'**
   String get moodSaveButton;
 
-  /// No description provided for @moodSaveFailed.
-  ///
-  /// In en, this message translates to:
-  /// **'Failed to save mood'**
-  String get moodSaveFailed;
-
   /// No description provided for @moodSaved.
   ///
   /// In en, this message translates to:
@@ -4467,6 +4910,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Mood saved successfully!'**
   String get moodSavedSuccess;
+
+  /// No description provided for @moodSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save mood'**
+  String get moodSaveFailed;
 
   /// No description provided for @moodSelectLevel.
   ///
@@ -4491,6 +4940,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Mood Settings'**
   String get moodSettingsTitle;
+
+  /// No description provided for @moodsForDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moods for {date}'**
+  String moodsForDate(Object date);
 
   /// No description provided for @moodStressLevel.
   ///
@@ -4540,17 +4995,17 @@ abstract class AppLocalizations {
   /// **'Great'**
   String get moodVeryGood;
 
-  /// No description provided for @moodsForDate.
-  ///
-  /// In en, this message translates to:
-  /// **'Moods for {date}'**
-  String moodsForDate(Object date);
-
   /// No description provided for @moreDataNeeded.
   ///
   /// In en, this message translates to:
   /// **'More Data Needed'**
   String get moreDataNeeded;
+
+  /// No description provided for @moreDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'More details'**
+  String get moreDetails;
 
   /// No description provided for @morningCheckIn.
   ///
@@ -4756,6 +5211,12 @@ abstract class AppLocalizations {
   /// **'No Due Date'**
   String get noDueDate;
 
+  /// No description provided for @noDueDateSet.
+  ///
+  /// In en, this message translates to:
+  /// **'No due date set'**
+  String get noDueDateSet;
+
   /// No description provided for @noInsightsYet.
   ///
   /// In en, this message translates to:
@@ -4792,6 +5253,12 @@ abstract class AppLocalizations {
   /// **'No mood recorded'**
   String get noMoodRecorded;
 
+  /// No description provided for @none.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get none;
+
   /// No description provided for @noNotes.
   ///
   /// In en, this message translates to:
@@ -4804,11 +5271,23 @@ abstract class AppLocalizations {
   /// **'No overdue tasks'**
   String get noOverdueTasks;
 
+  /// No description provided for @noPomodoroData.
+  ///
+  /// In en, this message translates to:
+  /// **'No Pomodoro data'**
+  String get noPomodoroData;
+
   /// No description provided for @noPomodoroSessionsFound.
   ///
   /// In en, this message translates to:
   /// **'No Pomodoro sessions found'**
   String get noPomodoroSessionsFound;
+
+  /// No description provided for @noPomodoroSessionsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No Pomodoro sessions yet'**
+  String get noPomodoroSessionsYet;
 
   /// No description provided for @noProgressData.
   ///
@@ -4852,11 +5331,23 @@ abstract class AppLocalizations {
   /// **'No Reminder'**
   String get noReminder;
 
+  /// No description provided for @noReminderHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'No reminder history'**
+  String get noReminderHistory;
+
   /// No description provided for @noReminderSet.
   ///
   /// In en, this message translates to:
   /// **'No reminder set'**
   String get noReminderSet;
+
+  /// No description provided for @noSessionsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No sessions yet'**
+  String get noSessionsYet;
 
   /// No description provided for @noSpeechDetected.
   ///
@@ -4875,6 +5366,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No subtasks yet'**
   String get noSubtasksYet;
+
+  /// No description provided for @noSuggestionsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No suggestions available'**
+  String get noSuggestionsAvailable;
+
+  /// No description provided for @notAnAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'not an admin'**
+  String get notAnAdmin;
 
   /// No description provided for @noTasksForThisDay.
   ///
@@ -4906,36 +5409,6 @@ abstract class AppLocalizations {
   /// **'No tasks yet'**
   String get noTasksYet;
 
-  /// No description provided for @noUpcomingTasksWithReminders.
-  ///
-  /// In en, this message translates to:
-  /// **'No upcoming tasks with reminders'**
-  String get noUpcomingTasksWithReminders;
-
-  /// No description provided for @noUpdatesAvailable.
-  ///
-  /// In en, this message translates to:
-  /// **'No Updates Available'**
-  String get noUpdatesAvailable;
-
-  /// No description provided for @noUsersFound.
-  ///
-  /// In en, this message translates to:
-  /// **'No users found'**
-  String get noUsersFound;
-
-  /// No description provided for @none.
-  ///
-  /// In en, this message translates to:
-  /// **'None'**
-  String get none;
-
-  /// No description provided for @notGreat.
-  ///
-  /// In en, this message translates to:
-  /// **'Not great'**
-  String get notGreat;
-
   /// No description provided for @notes.
   ///
   /// In en, this message translates to:
@@ -4947,6 +5420,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Notes (optional)'**
   String get notesOptional;
+
+  /// No description provided for @notGreat.
+  ///
+  /// In en, this message translates to:
+  /// **'Not great'**
+  String get notGreat;
 
   /// No description provided for @notificationAnalyticsAction.
   ///
@@ -5056,17 +5535,41 @@ abstract class AppLocalizations {
   /// **'Configure how and when you receive notifications. Customize each notification type, set quiet hours, and control notification behavior.'**
   String get notificationPreferencesInfoDetails;
 
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
   /// No description provided for @notificationScheduledFor10Seconds.
   ///
   /// In en, this message translates to:
   /// **'⏰ Notification scheduled for 10 seconds'**
   String get notificationScheduledFor10Seconds;
 
+  /// No description provided for @notificationsDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled: ❌'**
+  String get notificationsDisabled;
+
+  /// No description provided for @notificationsEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled: ✅'**
+  String get notificationsEnabled;
+
   /// No description provided for @notificationSounds.
   ///
   /// In en, this message translates to:
   /// **'Notification Sounds'**
   String get notificationSounds;
+
+  /// No description provided for @notificationsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsSection;
 
   /// No description provided for @notificationStatusCancelled.
   ///
@@ -5128,29 +5631,35 @@ abstract class AppLocalizations {
   /// **'Notification Verification'**
   String get notificationVerification;
 
-  /// No description provided for @notifications.
+  /// No description provided for @notYetCompleted.
   ///
   /// In en, this message translates to:
-  /// **'Notifications'**
-  String get notifications;
+  /// **'Not yet completed'**
+  String get notYetCompleted;
 
-  /// No description provided for @notificationsDisabled.
+  /// No description provided for @noUpcomingTasksWithReminders.
   ///
   /// In en, this message translates to:
-  /// **'Enabled: ❌'**
-  String get notificationsDisabled;
+  /// **'No upcoming tasks with reminders'**
+  String get noUpcomingTasksWithReminders;
 
-  /// No description provided for @notificationsEnabled.
+  /// No description provided for @noUpdatesAvailable.
   ///
   /// In en, this message translates to:
-  /// **'Enabled: ✅'**
-  String get notificationsEnabled;
+  /// **'No Updates Available'**
+  String get noUpdatesAvailable;
 
-  /// No description provided for @notificationsSection.
+  /// No description provided for @noUsersFound.
   ///
   /// In en, this message translates to:
-  /// **'Notifications'**
-  String get notificationsSection;
+  /// **'No users found'**
+  String get noUsersFound;
+
+  /// No description provided for @now.
+  ///
+  /// In en, this message translates to:
+  /// **'Now'**
+  String get now;
 
   /// No description provided for @oceanWaves.
   ///
@@ -5170,17 +5679,17 @@ abstract class AppLocalizations {
   /// **'OK'**
   String get ok;
 
-  /// No description provided for @okButton.
-  ///
-  /// In en, this message translates to:
-  /// **'OK'**
-  String get okButton;
-
   /// No description provided for @okay.
   ///
   /// In en, this message translates to:
   /// **'Okay'**
   String get okay;
+
+  /// No description provided for @okButton.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get okButton;
 
   /// No description provided for @onDays.
   ///
@@ -5188,11 +5697,23 @@ abstract class AppLocalizations {
   /// **'on {days}'**
   String onDays(Object days);
 
+  /// No description provided for @oneDayBeforeDue.
+  ///
+  /// In en, this message translates to:
+  /// **''**
+  String get oneDayBeforeDue;
+
   /// No description provided for @oneHour.
   ///
   /// In en, this message translates to:
   /// **'1 Hour'**
   String get oneHour;
+
+  /// No description provided for @oneHourBeforeDue.
+  ///
+  /// In en, this message translates to:
+  /// **''**
+  String get oneHourBeforeDue;
 
   /// No description provided for @oneHourPause.
   ///
@@ -5254,23 +5775,23 @@ abstract class AppLocalizations {
   /// **'Options'**
   String get options;
 
-  /// No description provided for @sortAndFilter.
+  /// No description provided for @or.
   ///
   /// In en, this message translates to:
-  /// **'Sort & Filter'**
-  String get sortAndFilter;
-
-  /// No description provided for @sortBy.
-  ///
-  /// In en, this message translates to:
-  /// **'Sort by'**
-  String get sortBy;
+  /// **'or'**
+  String get or;
 
   /// No description provided for @organizeManage.
   ///
   /// In en, this message translates to:
   /// **'Organize & Manage'**
   String get organizeManage;
+
+  /// No description provided for @others.
+  ///
+  /// In en, this message translates to:
+  /// **'Others'**
+  String get others;
 
   /// No description provided for @overdue.
   ///
@@ -5362,12 +5883,6 @@ abstract class AppLocalizations {
   /// **'Pending: {count}'**
   String pendingTasksInCategory(Object count);
 
-  /// No description provided for @percent.
-  ///
-  /// In en, this message translates to:
-  /// **'{value}%'**
-  String percent(int value);
-
   /// No description provided for @performance.
   ///
   /// In en, this message translates to:
@@ -5458,6 +5973,12 @@ abstract class AppLocalizations {
   /// **'Pick a color'**
   String get pickAColor;
 
+  /// No description provided for @pickUpPace.
+  ///
+  /// In en, this message translates to:
+  /// **'🚀 Let\'s pick up the pace!'**
+  String get pickUpPace;
+
   /// No description provided for @playSoundForNotifications.
   ///
   /// In en, this message translates to:
@@ -5481,6 +6002,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter a subtask title'**
   String get pleaseEnterSubtaskTitle;
+
+  /// No description provided for @pleaseEnterValidNumberOfMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid number of minutes'**
+  String get pleaseEnterValidNumberOfMinutes;
 
   /// No description provided for @pleaseFillAllRequiredFields.
   ///
@@ -5674,17 +6201,29 @@ abstract class AppLocalizations {
   /// **'Primary Color'**
   String get primaryColor;
 
-  /// No description provided for @priorityLabel.
+  /// No description provided for @prioritizeTasks.
   ///
   /// In en, this message translates to:
-  /// **'Priority: {priority}'**
-  String priorityLabel(String priority);
+  /// **'Prioritize Tasks'**
+  String get prioritizeTasks;
+
+  /// No description provided for @priority.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority'**
+  String get priority;
 
   /// No description provided for @priorityLevels.
   ///
   /// In en, this message translates to:
   /// **'2. Priority Levels'**
   String get priorityLevels;
+
+  /// No description provided for @priorityName.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority: {priority}'**
+  String priorityName(Object priority);
 
   /// No description provided for @priorityNotifications.
   ///
@@ -5818,6 +6357,12 @@ abstract class AppLocalizations {
   /// **'Progress saved'**
   String get progressSaved;
 
+  /// No description provided for @progressUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'📈 Progress Update'**
+  String get progressUpdate;
+
   /// No description provided for @pullToRefresh.
   ///
   /// In en, this message translates to:
@@ -5848,6 +6393,12 @@ abstract class AppLocalizations {
   /// **'Quality Score: '**
   String get qualityScore;
 
+  /// No description provided for @queueComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'🎉 Queue Complete!'**
+  String get queueComplete;
+
   /// No description provided for @quickActions.
   ///
   /// In en, this message translates to:
@@ -5866,6 +6417,12 @@ abstract class AppLocalizations {
   /// **'Quick Controls'**
   String get quickControls;
 
+  /// No description provided for @quickEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Edit'**
+  String get quickEdit;
+
   /// No description provided for @quickEditButton.
   ///
   /// In en, this message translates to:
@@ -5877,6 +6434,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Quick emergency access'**
   String get quickEmergencyAccess;
+
+  /// No description provided for @quickFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Filters'**
+  String get quickFilters;
 
   /// No description provided for @quickInsights.
   ///
@@ -5890,17 +6453,35 @@ abstract class AppLocalizations {
   /// **'Quick Mood Check-In'**
   String get quickMoodCheckIn;
 
-  /// No description provided for @quickTestGuide.
+  /// No description provided for @quickRefresh.
   ///
   /// In en, this message translates to:
-  /// **'🎯 Quick Test Guide'**
-  String get quickTestGuide;
+  /// **'🧘 Quick refresh'**
+  String get quickRefresh;
+
+  /// No description provided for @quickReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Reminders'**
+  String get quickReminders;
+
+  /// No description provided for @quickSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Set'**
+  String get quickSet;
 
   /// No description provided for @quickstart.
   ///
   /// In en, this message translates to:
   /// **'Quick Start'**
   String get quickstart;
+
+  /// No description provided for @quickTestGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'🎯 Quick Test Guide'**
+  String get quickTestGuide;
 
   /// No description provided for @quietHours.
   ///
@@ -5925,6 +6506,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rain'**
   String get rain;
+
+  /// No description provided for @readyToFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to focus?'**
+  String get readyToFocus;
+
+  /// No description provided for @readyToStartWorking.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to start working'**
+  String get readyToStartWorking;
 
   /// No description provided for @reallyStruggling.
   ///
@@ -5974,6 +6567,12 @@ abstract class AppLocalizations {
   /// **'Recent Moods'**
   String get recentMoods;
 
+  /// No description provided for @recentPomodoroSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Pomodoro Sessions'**
+  String get recentPomodoroSessions;
+
   /// No description provided for @recentTasks.
   ///
   /// In en, this message translates to:
@@ -6010,6 +6609,12 @@ abstract class AppLocalizations {
   /// **'Recommended for ADHDers'**
   String get recommendedForAdhders;
 
+  /// No description provided for @recommendedTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'📋 Recommended tasks:'**
+  String get recommendedTasks;
+
   /// No description provided for @recordingInProgress.
   ///
   /// In en, this message translates to:
@@ -6028,23 +6633,11 @@ abstract class AppLocalizations {
   /// **'• Recurring task automation'**
   String get recurringTaskAutomation;
 
-  /// No description provided for @recurringTaskError.
-  ///
-  /// In en, this message translates to:
-  /// **'Error in recurring task: {error}'**
-  String recurringTaskError(String error);
-
   /// No description provided for @recurringTaskGenerationFailed.
   ///
   /// In en, this message translates to:
   /// **'Failed to generate recurring task'**
   String get recurringTaskGenerationFailed;
-
-  /// No description provided for @recurringTaskNotification.
-  ///
-  /// In en, this message translates to:
-  /// **'New recurring task created: {title}'**
-  String recurringTaskNotification(String title);
 
   /// No description provided for @recurringTaskRetry.
   ///
@@ -6124,29 +6717,47 @@ abstract class AppLocalizations {
   /// **'Registration is disabled'**
   String get registrationIsDisabled;
 
+  /// No description provided for @remaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining'**
+  String get remaining;
+
   /// No description provided for @rememberMe.
   ///
   /// In en, this message translates to:
   /// **'Remember me'**
   String get rememberMe;
 
-  /// No description provided for @reminder.
+  /// No description provided for @reminderActiveAndReady.
   ///
   /// In en, this message translates to:
-  /// **'Reminder: {date}'**
-  String reminder(String date);
+  /// **'Reminder is active and ready'**
+  String get reminderActiveAndReady;
 
-  /// No description provided for @reminderCancelledFor.
+  /// No description provided for @reminderCancelled.
   ///
   /// In en, this message translates to:
-  /// **'Reminder cancelled for: {taskTitle}'**
-  String reminderCancelledFor(String taskTitle);
+  /// **'Reminder cancelled'**
+  String get reminderCancelled;
 
-  /// No description provided for @reminderSetFor.
+  /// No description provided for @reminderExpired.
   ///
   /// In en, this message translates to:
-  /// **'Reminder set for {date}'**
-  String reminderSetFor(Object date);
+  /// **'Reminder has expired'**
+  String get reminderExpired;
+
+  /// No description provided for @reminderHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder History'**
+  String get reminderHistory;
+
+  /// No description provided for @reminderRetryScheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder retry scheduled'**
+  String get reminderRetryScheduled;
 
   /// No description provided for @reminders.
   ///
@@ -6154,11 +6765,29 @@ abstract class AppLocalizations {
   /// **'Reminders'**
   String get reminders;
 
+  /// No description provided for @reminderSetFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder set for'**
+  String reminderSetFor(Object date);
+
+  /// No description provided for @reminderSetSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder set successfully'**
+  String get reminderSetSuccessfully;
+
   /// No description provided for @remindersSuspended.
   ///
   /// In en, this message translates to:
-  /// **'Reminders Suspended'**
+  /// **'Reminders suspended'**
   String get remindersSuspended;
+
+  /// No description provided for @reminderStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder Status'**
+  String get reminderStatus;
 
   /// No description provided for @removeAdminRightsFrom.
   ///
@@ -6196,6 +6825,12 @@ abstract class AppLocalizations {
   /// **'(forever)'**
   String get repeatForever;
 
+  /// No description provided for @repeats.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeats'**
+  String get repeats;
+
   /// No description provided for @repeatSameTimeEachDay.
   ///
   /// In en, this message translates to:
@@ -6220,29 +6855,29 @@ abstract class AppLocalizations {
   /// **'Required'**
   String get required;
 
-  /// No description provided for @rescheduleTask.
-  ///
-  /// In en, this message translates to:
-  /// **'Reschedule task'**
-  String get rescheduleTask;
-
   /// No description provided for @reschedule.
   ///
   /// In en, this message translates to:
   /// **'Reschedule'**
   String get reschedule;
 
-  /// No description provided for @reset.
-  ///
-  /// In en, this message translates to:
-  /// **'Reset'**
-  String get reset;
-
   /// No description provided for @rescheduleSelectedTasks.
   ///
   /// In en, this message translates to:
   /// **'Reschedule selected tasks'**
   String get rescheduleSelectedTasks;
+
+  /// No description provided for @rescheduleTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Reschedule task'**
+  String get rescheduleTask;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
 
   /// No description provided for @resetAllThemeSettingsToDefaultValues.
   ///
@@ -6328,11 +6963,23 @@ abstract class AppLocalizations {
   /// **'Retry'**
   String get retry;
 
+  /// No description provided for @retryAttempts.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry attempts'**
+  String get retryAttempts;
+
   /// No description provided for @retryButton.
   ///
   /// In en, this message translates to:
   /// **'Retry'**
   String get retryButton;
+
+  /// No description provided for @retryNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry Now'**
+  String get retryNow;
 
   /// No description provided for @returnToNormalOperation.
   ///
@@ -6400,6 +7047,18 @@ abstract class AppLocalizations {
   /// **'Save Task'**
   String get saveTask;
 
+  /// No description provided for @scheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled'**
+  String get scheduled;
+
+  /// No description provided for @scheduledFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled for:'**
+  String get scheduledFor;
+
   /// No description provided for @scheduleDnd.
   ///
   /// In en, this message translates to:
@@ -6411,6 +7070,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scheduled Quiet Hours'**
   String get scheduledQuietHours;
+
+  /// No description provided for @scheduledTestMoodNotificationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a scheduled test mood check-in notification.'**
+  String get scheduledTestMoodNotificationBody;
 
   /// No description provided for @screenReader.
   ///
@@ -6429,12 +7094,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Screen reader enabled'**
   String get screenReaderEnabled;
-
-  /// No description provided for @searchTasks.
-  ///
-  /// In en, this message translates to:
-  /// **'Search tasks...'**
-  String get searchTasks;
 
   /// No description provided for @search.
   ///
@@ -6478,6 +7137,12 @@ abstract class AppLocalizations {
   /// **'Search...'**
   String get searchSettingsHint;
 
+  /// No description provided for @searchTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Search tasks...'**
+  String get searchTasks;
+
   /// No description provided for @security.
   ///
   /// In en, this message translates to:
@@ -6496,6 +7161,12 @@ abstract class AppLocalizations {
   /// **'Select'**
   String get select;
 
+  /// No description provided for @selectAccentColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Accent Color'**
+  String get selectAccentColor;
+
   /// No description provided for @selectATemplateOrCustomizeYourSession.
   ///
   /// In en, this message translates to:
@@ -6507,12 +7178,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select a template that fits your work style'**
   String get selectATemplateThatFitsYourWorkStyle;
-
-  /// No description provided for @selectAccentColor.
-  ///
-  /// In en, this message translates to:
-  /// **'Select Accent Color'**
-  String get selectAccentColor;
 
   /// No description provided for @selectBackgroundColor.
   ///
@@ -6550,6 +7215,12 @@ abstract class AppLocalizations {
   /// **'Select due date'**
   String get selectDueDate;
 
+  /// No description provided for @selectedColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected Color'**
+  String get selectedColor;
+
   /// No description provided for @selectIcon.
   ///
   /// In en, this message translates to:
@@ -6580,12 +7251,6 @@ abstract class AppLocalizations {
   /// **'Select Time'**
   String get selectTime;
 
-  /// No description provided for @selectedColor.
-  ///
-  /// In en, this message translates to:
-  /// **'Selected Color'**
-  String get selectedColor;
-
   /// No description provided for @selfCareRecommended.
   ///
   /// In en, this message translates to:
@@ -6604,17 +7269,23 @@ abstract class AppLocalizations {
   /// **'Send crash reports to help fix issues'**
   String get sendCrashReportsToHelpFixIssues;
 
+  /// No description provided for @sendingYouStrength.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending you strength'**
+  String get sendingYouStrength;
+
   /// No description provided for @sendTestNotification.
   ///
   /// In en, this message translates to:
   /// **'Send Test Notification'**
   String get sendTestNotification;
 
-  /// No description provided for @sendingYouStrength.
+  /// No description provided for @session.
   ///
   /// In en, this message translates to:
-  /// **'Sending you strength'**
-  String get sendingYouStrength;
+  /// **'Session'**
+  String get session;
 
   /// No description provided for @sessionComplete.
   ///
@@ -6640,23 +7311,29 @@ abstract class AppLocalizations {
   /// **'Session History'**
   String get sessionHistory;
 
+  /// No description provided for @sessionOptimization.
+  ///
+  /// In en, this message translates to:
+  /// **'⚙️ Session Optimization'**
+  String get sessionOptimization;
+
   /// No description provided for @sessionPatternAnalysis.
   ///
   /// In en, this message translates to:
   /// **'Session Pattern Analysis'**
   String get sessionPatternAnalysis;
 
+  /// No description provided for @sessionPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'⏸️ Session Paused'**
+  String get sessionPaused;
+
   /// No description provided for @sessionProgress.
   ///
   /// In en, this message translates to:
   /// **'Session Progress'**
   String get sessionProgress;
-
-  /// No description provided for @sessionTimingAdjustsBasedOnYourFocusPatterns.
-  ///
-  /// In en, this message translates to:
-  /// **'Session timing adjusts based on your focus patterns'**
-  String get sessionTimingAdjustsBasedOnYourFocusPatterns;
 
   /// No description provided for @sessions.
   ///
@@ -6676,11 +7353,23 @@ abstract class AppLocalizations {
   /// **'Sessions until Long Break'**
   String get sessionsUntilLongBreak;
 
+  /// No description provided for @sessionTimingAdjustsBasedOnYourFocusPatterns.
+  ///
+  /// In en, this message translates to:
+  /// **'Session timing adjusts based on your focus patterns'**
+  String get sessionTimingAdjustsBasedOnYourFocusPatterns;
+
   /// No description provided for @setAutomaticQuietHours.
   ///
   /// In en, this message translates to:
   /// **'Set automatic quiet hours'**
   String get setAutomaticQuietHours;
+
+  /// No description provided for @setCustomReminderTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a custom reminder time'**
+  String get setCustomReminderTime;
 
   /// No description provided for @setDueDate.
   ///
@@ -6711,6 +7400,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Set Reminder'**
   String get setReminderButton;
+
+  /// No description provided for @setReminderToStayOnTrack.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a reminder to stay on track'**
+  String get setReminderToStayOnTrack;
+
+  /// No description provided for @setSmartReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Smart Reminder'**
+  String get setSmartReminder;
 
   /// No description provided for @settings.
   ///
@@ -6772,6 +7473,12 @@ abstract class AppLocalizations {
   /// **'Short Break (min)'**
   String get shortBreakMin;
 
+  /// No description provided for @shortenSession.
+  ///
+  /// In en, this message translates to:
+  /// **'⏰ Shorten Session'**
+  String get shortenSession;
+
   /// No description provided for @shortPreset.
   ///
   /// In en, this message translates to:
@@ -6814,6 +7521,12 @@ abstract class AppLocalizations {
   /// **'Sign In'**
   String get signIn;
 
+  /// No description provided for @signingIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Signing you in..'**
+  String get signingIn;
+
   /// No description provided for @signInWithApple.
   ///
   /// In en, this message translates to:
@@ -6831,18 +7544,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sign Out'**
   String get signOut;
-
-  /// No description provided for @areYouSureYouWantToSignOut.
-  ///
-  /// In en, this message translates to:
-  /// **'Are you sure you want to sign out?'**
-  String get areYouSureYouWantToSignOut;
-
-  /// No description provided for @signingIn.
-  ///
-  /// In en, this message translates to:
-  /// **'Signing you in..'**
-  String get signingIn;
 
   /// No description provided for @silentNotification10Seconds.
   ///
@@ -6886,6 +7587,30 @@ abstract class AppLocalizations {
   /// **'Automatically adjust notification timing based on your activity patterns'**
   String get smartNotificationsDescription;
 
+  /// No description provided for @smartReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Reminder'**
+  String get smartReminder;
+
+  /// No description provided for @smartReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Reminders'**
+  String get smartReminders;
+
+  /// No description provided for @smartReminderSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart reminder set'**
+  String get smartReminderSet;
+
+  /// No description provided for @smartReminderSuggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Reminder Suggestion'**
+  String get smartReminderSuggestion;
+
   /// No description provided for @smartScheduling.
   ///
   /// In en, this message translates to:
@@ -6922,6 +7647,12 @@ abstract class AppLocalizations {
   /// **'Smart'**
   String get smartView;
 
+  /// No description provided for @snooze15min.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze 15min'**
+  String get snooze15min;
+
   /// No description provided for @someSyncOperationsFailed.
   ///
   /// In en, this message translates to:
@@ -6939,6 +7670,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sometimes neutral is exactly where we need to be'**
   String get sometimesNeutralIsExactlyWhereWeNeedToBe;
+
+  /// No description provided for @sortAndFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort & Filter'**
+  String get sortAndFilter;
+
+  /// No description provided for @sortBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by'**
+  String get sortBy;
 
   /// No description provided for @sound.
   ///
@@ -7012,6 +7755,12 @@ abstract class AppLocalizations {
   /// **'Start a Pomodoro session to see adaptive timing'**
   String get startAPomodoroSessionToSeeAdaptiveTiming;
 
+  /// No description provided for @startFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Focus'**
+  String get startFocus;
+
   /// No description provided for @startFocusMode.
   ///
   /// In en, this message translates to:
@@ -7030,11 +7779,17 @@ abstract class AppLocalizations {
   /// **'Start logging your moods to see your history'**
   String get startLoggingMoods;
 
-  /// No description provided for @startPomodoroSession.
+  /// No description provided for @startPomodoro.
   ///
   /// In en, this message translates to:
-  /// **'Start Pomodoro Session'**
-  String get startPomodoroSession;
+  /// **'Start Pomodoro'**
+  String get startPomodoro;
+
+  /// No description provided for @startPomodoroSessionsToSeeInsights.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Pomodoro sessions to see insights'**
+  String get startPomodoroSessionsToSeeInsights;
 
   /// No description provided for @startRecording.
   ///
@@ -7059,6 +7814,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start tracking your mood to see insights'**
   String get startTrackingYourMood;
+
+  /// No description provided for @startWorking.
+  ///
+  /// In en, this message translates to:
+  /// **'Start working'**
+  String get startWorking;
 
   /// No description provided for @startYourFirstPomodoroSession.
   ///
@@ -7137,18 +7898,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Streak Days'**
   String get streakDays;
-
-  /// No description provided for @or.
-  ///
-  /// In en, this message translates to:
-  /// **'or'**
-  String get or;
-
-  /// No description provided for @others.
-  ///
-  /// In en, this message translates to:
-  /// **'Others'**
-  String get others;
 
   /// No description provided for @stress.
   ///
@@ -7234,6 +7983,12 @@ abstract class AppLocalizations {
   /// **'Subtask duplicated successfully'**
   String get subtaskDuplicated;
 
+  /// No description provided for @subtasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtasks'**
+  String get subtasks;
+
   /// No description provided for @subtaskTitle.
   ///
   /// In en, this message translates to:
@@ -7252,24 +8007,6 @@ abstract class AppLocalizations {
   /// **'Subtask updated successfully'**
   String get subtaskUpdated;
 
-  /// No description provided for @subtasks.
-  ///
-  /// In en, this message translates to:
-  /// **'Subtasks'**
-  String get subtasks;
-
-  /// No description provided for @subtasksCount.
-  ///
-  /// In en, this message translates to:
-  /// **'{count} subtasks'**
-  String subtasksCount(int count);
-
-  /// No description provided for @suggestTimes.
-  ///
-  /// In en, this message translates to:
-  /// **'Suggest Times'**
-  String get suggestTimes;
-
   /// No description provided for @suggestedPlan.
   ///
   /// In en, this message translates to:
@@ -7281,6 +8018,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Suggested Times'**
   String get suggestedTimes;
+
+  /// No description provided for @suggestTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest Times'**
+  String get suggestTimes;
 
   /// No description provided for @sun.
   ///
@@ -7330,6 +8073,12 @@ abstract class AppLocalizations {
   /// **'Sync error: {error}'**
   String syncError(Object error);
 
+  /// No description provided for @syncingFromFirebase.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing from Firebase...'**
+  String get syncingFromFirebase;
+
   /// No description provided for @syncStatus.
   ///
   /// In en, this message translates to:
@@ -7359,12 +8108,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Syncing'**
   String get syncStatusSyncing;
-
-  /// No description provided for @syncingFromFirebase.
-  ///
-  /// In en, this message translates to:
-  /// **'Syncing from Firebase...'**
-  String get syncingFromFirebase;
 
   /// No description provided for @system.
   ///
@@ -7438,6 +8181,12 @@ abstract class AppLocalizations {
   /// **'Tap to log your mood'**
   String get tapToLogMood;
 
+  /// No description provided for @tapToSetInstantly.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to set instantly'**
+  String get tapToSetInstantly;
+
   /// No description provided for @tapToStartRecording.
   ///
   /// In en, this message translates to:
@@ -7462,65 +8211,11 @@ abstract class AppLocalizations {
   /// **'Attachments'**
   String get taskAttachments;
 
-  /// No description provided for @taskCompleteReport.
-  ///
-  /// In en, this message translates to:
-  /// **'📋 Task: Complete Report'**
-  String get taskCompleteReport;
-
   /// No description provided for @taskCompleted.
   ///
   /// In en, this message translates to:
-  /// **'Task completed successfully'**
-  String get taskCompleted;
-
-  /// No description provided for @taskCompletionSounds.
-  ///
-  /// In en, this message translates to:
-  /// **'Task Completion Sounds'**
-  String get taskCompletionSounds;
-
-  /// No description provided for @moodCheckInsChannelName.
-  ///
-  /// In en, this message translates to:
-  /// **'Mood Check-Ins'**
-  String get moodCheckInsChannelName;
-
-  /// No description provided for @moodCheckInsChannelDesc.
-  ///
-  /// In en, this message translates to:
-  /// **'Mood check-in reminders'**
-  String get moodCheckInsChannelDesc;
-
-  /// No description provided for @taskRemindersChannelName.
-  ///
-  /// In en, this message translates to:
-  /// **'Task Reminders'**
-  String get taskRemindersChannelName;
-
-  /// No description provided for @taskRemindersChannelDesc.
-  ///
-  /// In en, this message translates to:
-  /// **'Reminders for tasks'**
-  String get taskRemindersChannelDesc;
-
-  /// No description provided for @taskDueChannelName.
-  ///
-  /// In en, this message translates to:
-  /// **'Task Due'**
-  String get taskDueChannelName;
-
-  /// No description provided for @taskDueChannelDesc.
-  ///
-  /// In en, this message translates to:
-  /// **'Notifications for due tasks'**
-  String get taskDueChannelDesc;
-
-  /// No description provided for @taskCompletedChannelName.
-  ///
-  /// In en, this message translates to:
-  /// **'Task Completed'**
-  String get taskCompletedChannelName;
+  /// **'{title} {status}'**
+  String taskCompleted(Object status, Object title);
 
   /// No description provided for @taskCompletedChannelDesc.
   ///
@@ -7528,467 +8223,35 @@ abstract class AppLocalizations {
   /// **'Celebration notifications for completed tasks'**
   String get taskCompletedChannelDesc;
 
-  /// No description provided for @adminNotificationsChannelName.
+  /// No description provided for @taskCompletedChannelName.
   ///
   /// In en, this message translates to:
-  /// **'Admin Notifications'**
-  String get adminNotificationsChannelName;
+  /// **'Task Completed'**
+  String get taskCompletedChannelName;
 
-  /// No description provided for @adminNotificationsChannelDesc.
+  /// No description provided for @taskCompletedSuccessfully.
   ///
   /// In en, this message translates to:
-  /// **'Important notifications for administrators'**
-  String get adminNotificationsChannelDesc;
+  /// **'Task completed successfully'**
+  String get taskCompletedSuccessfully;
 
-  /// No description provided for @testMoodNotificationTitle.
+  /// No description provided for @taskCompleteReport.
   ///
   /// In en, this message translates to:
-  /// **'Test Mood Notification'**
-  String get testMoodNotificationTitle;
+  /// **'📋 Task: Complete Report'**
+  String get taskCompleteReport;
 
-  /// No description provided for @testMoodNotificationBody.
+  /// No description provided for @taskCompletionSounds.
   ///
   /// In en, this message translates to:
-  /// **'This is a test mood check-in notification.'**
-  String get testMoodNotificationBody;
+  /// **'Task Completion Sounds'**
+  String get taskCompletionSounds;
 
-  /// No description provided for @scheduledTestMoodNotificationBody.
+  /// No description provided for @taskCount.
   ///
   /// In en, this message translates to:
-  /// **'This is a scheduled test mood check-in notification.'**
-  String get scheduledTestMoodNotificationBody;
-
-  /// No description provided for @testReminder.
-  ///
-  /// In en, this message translates to:
-  /// **'Test Reminder'**
-  String get testReminder;
-
-  /// No description provided for @testNotificationDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'This is a test notification to verify reminder functionality'**
-  String get testNotificationDescription;
-
-  /// No description provided for @startingTask.
-  ///
-  /// In en, this message translates to:
-  /// **'🍅 Starting: {taskTitle}'**
-  String startingTask(String taskTitle);
-
-  /// No description provided for @sessionPaused.
-  ///
-  /// In en, this message translates to:
-  /// **'⏸️ Session Paused'**
-  String get sessionPaused;
-
-  /// No description provided for @progressUpdate.
-  ///
-  /// In en, this message translates to:
-  /// **'📈 Progress Update'**
-  String get progressUpdate;
-
-  /// No description provided for @breakTitleShort.
-  ///
-  /// In en, this message translates to:
-  /// **'☕ Short Break'**
-  String get breakTitleShort;
-
-  /// No description provided for @breakTitleLong.
-  ///
-  /// In en, this message translates to:
-  /// **'🌿 Long Break'**
-  String get breakTitleLong;
-
-  /// No description provided for @queueComplete.
-  ///
-  /// In en, this message translates to:
-  /// **'🎉 Queue Complete!'**
-  String get queueComplete;
-
-  /// No description provided for @dailySummary.
-  ///
-  /// In en, this message translates to:
-  /// **'📊 Daily Summary'**
-  String get dailySummary;
-
-  /// No description provided for @keepItGoing.
-  ///
-  /// In en, this message translates to:
-  /// **'🔥 Keep it Going!'**
-  String get keepItGoing;
-
-  /// No description provided for @weeklyGoalProgress.
-  ///
-  /// In en, this message translates to:
-  /// **'Weekly Goal Progress'**
-  String get weeklyGoalProgress;
-
-  /// No description provided for @extendSession.
-  ///
-  /// In en, this message translates to:
-  /// **'⏱️ Extend Session'**
-  String get extendSession;
-
-  /// No description provided for @shortenSession.
-  ///
-  /// In en, this message translates to:
-  /// **'⏰ Shorten Session'**
-  String get shortenSession;
-
-  /// No description provided for @sessionOptimization.
-  ///
-  /// In en, this message translates to:
-  /// **'⚙️ Session Optimization'**
-  String get sessionOptimization;
-
-  /// No description provided for @energyLevelHigh.
-  ///
-  /// In en, this message translates to:
-  /// **'⚡ High Energy!'**
-  String get energyLevelHigh;
-
-  /// No description provided for @energyLevelGood.
-  ///
-  /// In en, this message translates to:
-  /// **'🔥 Good Energy'**
-  String get energyLevelGood;
-
-  /// No description provided for @energyLevelModerate.
-  ///
-  /// In en, this message translates to:
-  /// **'⚖️ Moderate Energy'**
-  String get energyLevelModerate;
-
-  /// No description provided for @energyLevelLow.
-  ///
-  /// In en, this message translates to:
-  /// **'🔋 Low Energy'**
-  String get energyLevelLow;
-
-  /// No description provided for @energyLevelVeryLow.
-  ///
-  /// In en, this message translates to:
-  /// **'😴 Very Low Energy'**
-  String get energyLevelVeryLow;
-
-  /// No description provided for @sessionsPlanned.
-  ///
-  /// In en, this message translates to:
-  /// **'📋 {count} sessions planned'**
-  String sessionsPlanned(int count);
-
-  /// No description provided for @minutesPerSession.
-  ///
-  /// In en, this message translates to:
-  /// **'⏱️ {minutes} min per session'**
-  String minutesPerSession(int minutes);
-
-  /// No description provided for @focusArea.
-  ///
-  /// In en, this message translates to:
-  /// **'🎯 Focus: {area}'**
-  String focusArea(String area);
-
-  /// No description provided for @sessionNofM.
-  ///
-  /// In en, this message translates to:
-  /// **'Session {current} of {total}'**
-  String sessionNofM(int current, int total);
-
-  /// No description provided for @focusRating.
-  ///
-  /// In en, this message translates to:
-  /// **'Focus rating: {rating}/10'**
-  String focusRating(int rating);
-
-  /// No description provided for @completedTaskNotification.
-  ///
-  /// In en, this message translates to:
-  /// **'Completed: {taskTitle}'**
-  String completedTaskNotification(String taskTitle);
-
-  /// No description provided for @nextTask.
-  ///
-  /// In en, this message translates to:
-  /// **'Next: {taskTitle}'**
-  String nextTask(String taskTitle);
-
-  /// No description provided for @allTasksCompleted.
-  ///
-  /// In en, this message translates to:
-  /// **'🎉 All tasks completed!'**
-  String get allTasksCompleted;
-
-  /// No description provided for @progressPercent.
-  ///
-  /// In en, this message translates to:
-  /// **'Progress: {percent}%'**
-  String progressPercent(int percent);
-
-  /// No description provided for @sessionsProgress.
-  ///
-  /// In en, this message translates to:
-  /// **'Sessions: {completed}/{total}'**
-  String sessionsProgress(int completed, int total);
-
-  /// No description provided for @almostThere.
-  ///
-  /// In en, this message translates to:
-  /// **'🔥 Almost there! Keep going!'**
-  String get almostThere;
-
-  /// No description provided for @halfwayDone.
-  ///
-  /// In en, this message translates to:
-  /// **'💪 Halfway done!'**
-  String get halfwayDone;
-
-  /// No description provided for @greatStart.
-  ///
-  /// In en, this message translates to:
-  /// **'🚀 Great start!'**
-  String get greatStart;
-
-  /// No description provided for @minuteBreak.
-  ///
-  /// In en, this message translates to:
-  /// **'⏰ {minutes} minute {breakType}'**
-  String minuteBreak(int minutes, String breakType);
-
-  /// No description provided for @suggestedActivity.
-  ///
-  /// In en, this message translates to:
-  /// **'💡 Suggested activity: {activity}'**
-  String suggestedActivity(String activity);
-
-  /// No description provided for @timeToRecharge.
-  ///
-  /// In en, this message translates to:
-  /// **'🌿 Time to recharge!'**
-  String get timeToRecharge;
-
-  /// No description provided for @quickRefresh.
-  ///
-  /// In en, this message translates to:
-  /// **'🧘 Quick refresh'**
-  String get quickRefresh;
-
-  /// No description provided for @allTasksCompletedCount.
-  ///
-  /// In en, this message translates to:
-  /// **'🎉 All {count} tasks completed!'**
-  String allTasksCompletedCount(int count);
-
-  /// No description provided for @totalTime.
-  ///
-  /// In en, this message translates to:
-  /// **'⏱️ Total time: {time}'**
-  String totalTime(String time);
-
-  /// No description provided for @greatJobFocused.
-  ///
-  /// In en, this message translates to:
-  /// **'🔥 Great job staying focused!'**
-  String get greatJobFocused;
-
-  /// No description provided for @todaysPerformance.
-  ///
-  /// In en, this message translates to:
-  /// **'📊 Today\'s Performance:'**
-  String get todaysPerformance;
-
-  /// No description provided for @sessionsCount.
-  ///
-  /// In en, this message translates to:
-  /// **'⏱️ {count} sessions'**
-  String sessionsCount(int count);
-
-  /// No description provided for @tasksCompletedCount.
-  ///
-  /// In en, this message translates to:
-  /// **'✅ {count} tasks completed'**
-  String tasksCompletedCount(int count);
-
-  /// No description provided for @excellentFocus.
-  ///
-  /// In en, this message translates to:
-  /// **'🌟 Excellent focus today!'**
-  String get excellentFocus;
-
-  /// No description provided for @goodFocus.
-  ///
-  /// In en, this message translates to:
-  /// **'👍 Good focus maintained!'**
-  String get goodFocus;
-
-  /// No description provided for @tomorrowsNewDay.
-  ///
-  /// In en, this message translates to:
-  /// **'💪 Tomorrow\'s a new day!'**
-  String get tomorrowsNewDay;
-
-  /// No description provided for @currentStreakDays.
-  ///
-  /// In en, this message translates to:
-  /// **'🔥 Current streak: {count} days'**
-  String currentStreakDays(int count);
-
-  /// No description provided for @goalAchievedNewTarget.
-  ///
-  /// In en, this message translates to:
-  /// **'🏆 Goal achieved! New target: {count} days'**
-  String goalAchievedNewTarget(int count);
-
-  /// No description provided for @targetDays.
-  ///
-  /// In en, this message translates to:
-  /// **'🎯 Target: {count} days'**
-  String targetDays(int count);
-
-  /// No description provided for @daysToGo.
-  ///
-  /// In en, this message translates to:
-  /// **'📈 {count} days to go!'**
-  String daysToGo(int count);
-
-  /// No description provided for @youreOnFire.
-  ///
-  /// In en, this message translates to:
-  /// **'💪 You\'re on fire!'**
-  String get youreOnFire;
-
-  /// No description provided for @buildingMomentum.
-  ///
-  /// In en, this message translates to:
-  /// **'🌟 Building momentum!'**
-  String get buildingMomentum;
-
-  /// No description provided for @keepItGoingBody.
-  ///
-  /// In en, this message translates to:
-  /// **'🚀 Keep it going!'**
-  String get keepItGoingBody;
-
-  /// No description provided for @suggestedDuration.
-  ///
-  /// In en, this message translates to:
-  /// **'⏱️ Suggested: {minutes} min'**
-  String suggestedDuration(int minutes);
-
-  /// No description provided for @reason.
-  ///
-  /// In en, this message translates to:
-  /// **'💭 Reason: {reason}'**
-  String reason(String reason);
-
-  /// No description provided for @currentEnergyLevel.
-  ///
-  /// In en, this message translates to:
-  /// **'⚡ Current energy: {level}'**
-  String currentEnergyLevel(String level);
-
-  /// No description provided for @recommendedTasks.
-  ///
-  /// In en, this message translates to:
-  /// **'📋 Recommended tasks:'**
-  String get recommendedTasks;
-
-  /// No description provided for @considerLighterTasks.
-  ///
-  /// In en, this message translates to:
-  /// **'🌿 Consider lighter tasks or take a break'**
-  String get considerLighterTasks;
-
-  /// No description provided for @weeklyGoalSessions.
-  ///
-  /// In en, this message translates to:
-  /// **'🎯 Weekly Goal: {count} sessions'**
-  String weeklyGoalSessions(int count);
-
-  /// No description provided for @weeklyProgressStatus.
-  ///
-  /// In en, this message translates to:
-  /// **'✅ Progress: {current}/{total}'**
-  String weeklyProgressStatus(int current, int total);
-
-  /// No description provided for @daysRemaining.
-  ///
-  /// In en, this message translates to:
-  /// **'📅 Days remaining: {count}'**
-  String daysRemaining(int count);
-
-  /// No description provided for @goalAchieved.
-  ///
-  /// In en, this message translates to:
-  /// **'🏆 Goal achieved! Amazing work!'**
-  String get goalAchieved;
-
-  /// No description provided for @almostThereKeepItUp.
-  ///
-  /// In en, this message translates to:
-  /// **'🌟 Almost there! Keep it up!'**
-  String get almostThereKeepItUp;
-
-  /// No description provided for @halfwayThere.
-  ///
-  /// In en, this message translates to:
-  /// **'💪 Halfway there!'**
-  String get halfwayThere;
-
-  /// No description provided for @pickUpPace.
-  ///
-  /// In en, this message translates to:
-  /// **'🚀 Let\'s pick up the pace!'**
-  String get pickUpPace;
-
-  /// No description provided for @activityMeditation.
-  ///
-  /// In en, this message translates to:
-  /// **'Mindful breathing (2-5 min)'**
-  String get activityMeditation;
-
-  /// No description provided for @activityStretching.
-  ///
-  /// In en, this message translates to:
-  /// **'Desk stretches (2-3 min)'**
-  String get activityStretching;
-
-  /// No description provided for @activityHydration.
-  ///
-  /// In en, this message translates to:
-  /// **'Drink water & walk around'**
-  String get activityHydration;
-
-  /// No description provided for @activityEyeRest.
-  ///
-  /// In en, this message translates to:
-  /// **'20-20-20 eye exercises'**
-  String get activityEyeRest;
-
-  /// No description provided for @activityWalking.
-  ///
-  /// In en, this message translates to:
-  /// **'Short walk (3-5 min)'**
-  String get activityWalking;
-
-  /// No description provided for @activityBreathing.
-  ///
-  /// In en, this message translates to:
-  /// **'Deep breathing exercises'**
-  String get activityBreathing;
-
-  /// No description provided for @activityMusic.
-  ///
-  /// In en, this message translates to:
-  /// **'Listen to calming music'**
-  String get activityMusic;
-
-  /// No description provided for @activitySocial.
-  ///
-  /// In en, this message translates to:
-  /// **'Quick chat with colleague'**
-  String get activitySocial;
+  /// **'{count} task{plural}'**
+  String taskCount(Object count, Object plural);
 
   /// No description provided for @taskCreatedSuccessfully.
   ///
@@ -8005,8 +8268,8 @@ abstract class AppLocalizations {
   /// No description provided for @taskDeletedSuccessfully.
   ///
   /// In en, this message translates to:
-  /// **'{taskTitle} deleted successfully'**
-  String taskDeletedSuccessfully(Object taskTitle);
+  /// **'{title} deleted successfully'**
+  String taskDeletedSuccessfully(Object taskTitle, Object title);
 
   /// No description provided for @taskDescription.
   ///
@@ -8032,6 +8295,18 @@ abstract class AppLocalizations {
   /// **'Task Due'**
   String get taskDue;
 
+  /// No description provided for @taskDueChannelDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications for due tasks'**
+  String get taskDueChannelDesc;
+
+  /// No description provided for @taskDueChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Due'**
+  String get taskDueChannelName;
+
   /// No description provided for @taskDueToday.
   ///
   /// In en, this message translates to:
@@ -8043,6 +8318,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Task duplicated successfully'**
   String get taskDuplicatedSuccessfully;
+
+  /// No description provided for @taskEssentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Essentials'**
+  String get taskEssentials;
 
   /// No description provided for @taskHistory.
   ///
@@ -8056,6 +8337,24 @@ abstract class AppLocalizations {
   /// **'Task Information'**
   String get taskInformation;
 
+  /// No description provided for @taskIsDueSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Task is due soon'**
+  String get taskIsDueSoon;
+
+  /// No description provided for @taskIsInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Task is in progress'**
+  String get taskIsInProgress;
+
+  /// No description provided for @taskIsOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Task is overdue'**
+  String get taskIsOverdue;
+
   /// No description provided for @taskNotes.
   ///
   /// In en, this message translates to:
@@ -8067,6 +8366,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'⏰ Task notification in 15 seconds (has action buttons!)'**
   String get taskNotificationIn15Seconds;
+
+  /// No description provided for @taskOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get taskOverdue;
 
   /// No description provided for @taskPath.
   ///
@@ -8104,11 +8409,53 @@ abstract class AppLocalizations {
   /// **'Task Reminders'**
   String get taskReminders;
 
+  /// No description provided for @taskRemindersChannelDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders for tasks'**
+  String get taskRemindersChannelDesc;
+
+  /// No description provided for @taskRemindersChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Reminders'**
+  String get taskRemindersChannelName;
+
   /// No description provided for @taskRescheduled.
   ///
   /// In en, this message translates to:
   /// **'Task rescheduled'**
   String get taskRescheduled;
+
+  /// No description provided for @tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks'**
+  String get tasks;
+
+  /// No description provided for @tasksCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks Completed'**
+  String get tasksCompleted;
+
+  /// No description provided for @tasksCompletedThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks Completed This Week'**
+  String get tasksCompletedThisWeek;
+
+  /// No description provided for @tasksCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks created successfully!'**
+  String get tasksCreatedSuccessfully;
+
+  /// No description provided for @tasksNeedingInstances.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks Needing Instances'**
+  String get tasksNeedingInstances;
 
   /// No description provided for @taskSounds.
   ///
@@ -8116,11 +8463,23 @@ abstract class AppLocalizations {
   /// **'Task Sounds'**
   String get taskSounds;
 
+  /// No description provided for @tasksSortedByPriorityAndSuitability.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks sorted by priority and suitability'**
+  String get tasksSortedByPriorityAndSuitability;
+
   /// No description provided for @taskStatistics.
   ///
   /// In en, this message translates to:
   /// **'Task Statistics'**
   String get taskStatistics;
+
+  /// No description provided for @taskTimeline.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Timeline'**
+  String get taskTimeline;
 
   /// No description provided for @taskTitle.
   ///
@@ -8157,60 +8516,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Task validation failed'**
   String get taskValidationFailed;
-
-  /// No description provided for @tasks.
-  ///
-  /// In en, this message translates to:
-  /// **'Tasks'**
-  String get tasks;
-
-  /// No description provided for @tasksCompleted.
-  ///
-  /// In en, this message translates to:
-  /// **'Tasks Completed'**
-  String get tasksCompleted;
-
-  /// No description provided for @tasksCompletedThisWeek.
-  ///
-  /// In en, this message translates to:
-  /// **'Tasks Completed This Week'**
-  String get tasksCompletedThisWeek;
-
-  /// No description provided for @tasksCount.
-  ///
-  /// In en, this message translates to:
-  /// **'Tasks Count'**
-  String tasksCount(int count);
-
-  /// No description provided for @tasksCreatedSuccessfully.
-  ///
-  /// In en, this message translates to:
-  /// **'Tasks created successfully!'**
-  String get tasksCreatedSuccessfully;
-
-  /// No description provided for @tasksDue.
-  ///
-  /// In en, this message translates to:
-  /// **'{count} tasks due'**
-  String tasksDue(int count);
-
-  /// No description provided for @tasksForDate.
-  ///
-  /// In en, this message translates to:
-  /// **'Tasks for {date}'**
-  String tasksForDate(String date);
-
-  /// No description provided for @tasksNeedingInstances.
-  ///
-  /// In en, this message translates to:
-  /// **'Tasks Needing Instances'**
-  String get tasksNeedingInstances;
-
-  /// No description provided for @tasksSortedByPriorityAndSuitability.
-  ///
-  /// In en, this message translates to:
-  /// **'Tasks sorted by priority and suitability'**
-  String get tasksSortedByPriorityAndSuitability;
 
   /// No description provided for @tellUsAboutYourself.
   ///
@@ -8254,6 +8559,12 @@ abstract class AppLocalizations {
   /// **'20 seconds'**
   String get testIn20Seconds;
 
+  /// No description provided for @testingTips.
+  ///
+  /// In en, this message translates to:
+  /// **'Testing Tips'**
+  String get testingTips;
+
   /// No description provided for @testLowPriority.
   ///
   /// In en, this message translates to:
@@ -8265,6 +8576,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Test: Mood Check-in'**
   String get testMoodCheckIn;
+
+  /// No description provided for @testMoodNotificationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a test mood check-in notification.'**
+  String get testMoodNotificationBody;
 
   /// No description provided for @testMoodNotificationScheduledFor1MinuteFromNow.
   ///
@@ -8278,6 +8595,12 @@ abstract class AppLocalizations {
   /// **'Test mood notification sent!'**
   String get testMoodNotificationSent;
 
+  /// No description provided for @testMoodNotificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Mood Notification'**
+  String get testMoodNotificationTitle;
+
   /// No description provided for @testNotification.
   ///
   /// In en, this message translates to:
@@ -8289,6 +8612,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The new notification system works!'**
   String get testNotificationBody;
+
+  /// No description provided for @testNotificationDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a test notification to verify reminder functionality'**
+  String get testNotificationDescription;
+
+  /// No description provided for @testNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Notifications'**
+  String get testNotifications;
 
   /// No description provided for @testNotificationSent.
   ///
@@ -8302,11 +8637,11 @@ abstract class AppLocalizations {
   /// **'✅ Test Notification'**
   String get testNotificationTitle;
 
-  /// No description provided for @testNotifications.
+  /// No description provided for @testReminder.
   ///
   /// In en, this message translates to:
-  /// **'Test Notifications'**
-  String get testNotifications;
+  /// **'Test Reminder'**
+  String get testReminder;
 
   /// No description provided for @testReminderIn10Seconds.
   ///
@@ -8343,12 +8678,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Test: Task Reminder'**
   String get testTaskReminder;
-
-  /// No description provided for @testingTips.
-  ///
-  /// In en, this message translates to:
-  /// **'Testing Tips'**
-  String get testingTips;
 
   /// No description provided for @textColor.
   ///
@@ -8391,6 +8720,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Theme settings reset to defaults'**
   String get themeSettingsResetToDefaults;
+
+  /// No description provided for @thirtySeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'30 seconds'**
+  String get thirtySeconds;
 
   /// No description provided for @thisActionCannotBeUndone.
   ///
@@ -8470,30 +8805,6 @@ abstract class AppLocalizations {
   /// **'Time Format'**
   String get timeFormat;
 
-  /// No description provided for @timeRange.
-  ///
-  /// In en, this message translates to:
-  /// **'Time Range:'**
-  String get timeRange;
-
-  /// No description provided for @timeRemaining.
-  ///
-  /// In en, this message translates to:
-  /// **'Time remaining: {time}'**
-  String timeRemaining(String time);
-
-  /// No description provided for @timeSpent.
-  ///
-  /// In en, this message translates to:
-  /// **'Time Spent'**
-  String get timeSpent;
-
-  /// No description provided for @timeTracking.
-  ///
-  /// In en, this message translates to:
-  /// **'Time Tracking'**
-  String get timeTracking;
-
   /// No description provided for @timeline.
   ///
   /// In en, this message translates to:
@@ -8505,6 +8816,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Timeline'**
   String get timelineView;
+
+  /// No description provided for @timeRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Range:'**
+  String get timeRange;
+
+  /// No description provided for @timeSpent.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Spent'**
+  String get timeSpent;
+
+  /// No description provided for @timeToRecharge.
+  ///
+  /// In en, this message translates to:
+  /// **'🌿 Time to recharge!'**
+  String get timeToRecharge;
+
+  /// No description provided for @timeTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Tracking'**
+  String get timeTracking;
 
   /// No description provided for @today.
   ///
@@ -8518,6 +8853,18 @@ abstract class AppLocalizations {
   /// **'Today I'**
   String get todayI;
 
+  /// No description provided for @todaysPerformance.
+  ///
+  /// In en, this message translates to:
+  /// **'📊 Today\'s Performance:'**
+  String get todaysPerformance;
+
+  /// No description provided for @todaysStatistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Statistics'**
+  String get todaysStatistics;
+
   /// No description provided for @todayTasks.
   ///
   /// In en, this message translates to:
@@ -8529,12 +8876,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Today you\'re feeling'**
   String get todayYoureFeeling;
-
-  /// No description provided for @todaysStatistics.
-  ///
-  /// In en, this message translates to:
-  /// **'Today\'s Statistics'**
-  String get todaysStatistics;
 
   /// No description provided for @toggleAdminStatus.
   ///
@@ -8553,6 +8894,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tomorrow should be a typical day for you'**
   String get tomorrowShouldBeATypicalDayForYou;
+
+  /// No description provided for @tomorrowsNewDay.
+  ///
+  /// In en, this message translates to:
+  /// **'💪 Tomorrow\'s a new day!'**
+  String get tomorrowsNewDay;
 
   /// No description provided for @tomorrowTasks.
   ///
@@ -8590,12 +8937,6 @@ abstract class AppLocalizations {
   /// **'Total Hours'**
   String get totalHours;
 
-  /// No description provided for @totalNotifications.
-  ///
-  /// In en, this message translates to:
-  /// **'Total Notifications: {count}'**
-  String totalNotifications(int count);
-
   /// No description provided for @totalRecurringInstances.
   ///
   /// In en, this message translates to:
@@ -8607,6 +8948,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Total Sessions'**
   String get totalSessions;
+
+  /// No description provided for @totalStat.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get totalStat;
+
+  /// No description provided for @totaltasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Tasks'**
+  String get totaltasks;
 
   /// No description provided for @totalTasks.
   ///
@@ -8620,11 +8973,11 @@ abstract class AppLocalizations {
   /// **'Total tasks: {count}'**
   String totalTasksInCategory(Object count);
 
-  /// No description provided for @totaltasks.
+  /// No description provided for @trackedOperations.
   ///
   /// In en, this message translates to:
-  /// **'Total Tasks'**
-  String get totaltasks;
+  /// **'Tracked Operations: {count}'**
+  String trackedOperations(Object count);
 
   /// No description provided for @trackFocusPatternsAndSessionPerformance.
   ///
@@ -8655,12 +9008,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Track your mood for a week to get AI predictions'**
   String get trackYourMoodForAWeekToGetAIPredictions;
-
-  /// No description provided for @trackedOperations.
-  ///
-  /// In en, this message translates to:
-  /// **'Tracked Operations: {count}'**
-  String trackedOperations(Object count);
 
   /// No description provided for @trends.
   ///
@@ -8752,11 +9099,23 @@ abstract class AppLocalizations {
   /// **'12h'**
   String get twelveHour;
 
+  /// No description provided for @twentyFiveMinuteSession.
+  ///
+  /// In en, this message translates to:
+  /// **'25 minute session'**
+  String get twentyFiveMinuteSession;
+
   /// No description provided for @twentyFourHour.
   ///
   /// In en, this message translates to:
   /// **'24h'**
   String get twentyFourHour;
+
+  /// No description provided for @twoDaysBeforeDue.
+  ///
+  /// In en, this message translates to:
+  /// **''**
+  String get twoDaysBeforeDue;
 
   /// No description provided for @typeToFilterSettingsSections.
   ///
@@ -8769,6 +9128,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unable to load progress data'**
   String get unableToLoadProgressData;
+
+  /// No description provided for @uncompleteTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Uncomplete Task'**
+  String get uncompleteTask;
 
   /// No description provided for @uncompleteTaskButton.
   ///
@@ -8794,6 +9159,12 @@ abstract class AppLocalizations {
   /// **'Undo'**
   String get undo;
 
+  /// No description provided for @unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get unknown;
+
   /// No description provided for @upcoming.
   ///
   /// In en, this message translates to:
@@ -8811,6 +9182,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Update'**
   String get updateButton;
+
+  /// No description provided for @updated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String updated(Object date);
+
+  /// No description provided for @updatedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated: {date}'**
+  String updatedAt(Object date);
 
   /// No description provided for @updateDownloaded.
   ///
@@ -8830,23 +9213,17 @@ abstract class AppLocalizations {
   /// **'Update your personal information'**
   String get updatePersonalInfo;
 
-  /// No description provided for @updateTodaysEntryInstead.
-  ///
-  /// In en, this message translates to:
-  /// **'You can update today\'s entry instead'**
-  String get updateTodaysEntryInstead;
-
-  /// No description provided for @updated.
-  ///
-  /// In en, this message translates to:
-  /// **'Updated: {date}'**
-  String updated(Object date);
-
   /// No description provided for @updates.
   ///
   /// In en, this message translates to:
   /// **'Updates'**
   String get updates;
+
+  /// No description provided for @updateTodaysEntryInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'You can update today\'s entry instead'**
+  String get updateTodaysEntryInstead;
 
   /// No description provided for @urgent.
   ///
@@ -8896,11 +9273,23 @@ abstract class AppLocalizations {
   /// **'{userName} and all associated data deleted successfully'**
   String userAndAllAssociatedDataDeletedSuccessfully(Object userName);
 
+  /// No description provided for @userDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'{userName} and all associated data deleted successfully'**
+  String userDeletedSuccessfully(Object userName);
+
   /// No description provided for @userId.
   ///
   /// In en, this message translates to:
   /// **'User ID: {userId}'**
   String userId(Object userId);
+
+  /// No description provided for @userIdNA.
+  ///
+  /// In en, this message translates to:
+  /// **'User ID: {userId}'**
+  String userIdNA(Object userId);
 
   /// No description provided for @userNotAuthenticated.
   ///
@@ -8931,12 +9320,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Verify All Tasks'**
   String get verifyAllTasks;
-
-  /// No description provided for @version.
-  ///
-  /// In en, this message translates to:
-  /// **'Version: {version}'**
-  String version(String version);
 
   /// No description provided for @veryBad.
   ///
@@ -9142,11 +9525,11 @@ abstract class AppLocalizations {
   /// **'Warning'**
   String get warning;
 
-  /// No description provided for @weRecommendTheseSettings.
+  /// No description provided for @wasScheduledFor.
   ///
   /// In en, this message translates to:
-  /// **'We recommend these settings based on your preferences'**
-  String get weRecommendTheseSettings;
+  /// **'Was scheduled for:'**
+  String get wasScheduledFor;
 
   /// No description provided for @wed.
   ///
@@ -9172,12 +9555,6 @@ abstract class AppLocalizations {
   /// **'Week'**
   String get week;
 
-  /// No description provided for @weekView.
-  ///
-  /// In en, this message translates to:
-  /// **'Week'**
-  String get weekView;
-
   /// No description provided for @weekly.
   ///
   /// In en, this message translates to:
@@ -9189,6 +9566,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Weekly Focus Trend'**
   String get weeklyFocusTrend;
+
+  /// No description provided for @weeklyGoalProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Goal Progress'**
+  String get weeklyGoalProgress;
 
   /// No description provided for @weeklyProgress.
   ///
@@ -9214,6 +9597,12 @@ abstract class AppLocalizations {
   /// **'Weekly Stats'**
   String get weeklyStats;
 
+  /// No description provided for @weekView.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get weekView;
+
   /// No description provided for @welcomeToTazbeet.
   ///
   /// In en, this message translates to:
@@ -9231,6 +9620,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Wellness insights'**
   String get wellnessInsights;
+
+  /// No description provided for @weRecommendTheseSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'We recommend these settings based on your preferences'**
+  String get weRecommendTheseSettings;
 
   /// No description provided for @whatMadeTodayGreat.
   ///
@@ -9400,17 +9795,29 @@ abstract class AppLocalizations {
   /// **'You might benefit from additional support'**
   String get youMightBenefitFromAdditionalSupport;
 
-  /// No description provided for @yourIntelligentTaskManagementCompanionWithAIPoweredFeatures.
+  /// No description provided for @youreDoingGreat.
   ///
   /// In en, this message translates to:
-  /// **'Your intelligent task management companion with AI-powered features'**
-  String get yourIntelligentTaskManagementCompanionWithAIPoweredFeatures;
+  /// **'You\'re doing great!'**
+  String get youreDoingGreat;
+
+  /// No description provided for @youreOnFire.
+  ///
+  /// In en, this message translates to:
+  /// **'💪 You\'re on fire!'**
+  String get youreOnFire;
 
   /// No description provided for @yourIntelligentTaskManagementCompanionWithAiPoweredFeatures.
   ///
   /// In en, this message translates to:
   /// **'Your intelligent task management companion with AI-powered features'**
   String get yourIntelligentTaskManagementCompanionWithAiPoweredFeatures;
+
+  /// No description provided for @yourIntelligentTaskManagementCompanionWithAIPoweredFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'Your intelligent task management companion with AI-powered features'**
+  String get yourIntelligentTaskManagementCompanionWithAIPoweredFeatures;
 
   /// No description provided for @yourJoyIsContagious.
   ///
@@ -9454,17 +9861,371 @@ abstract class AppLocalizations {
   /// **'Your Personal Task Manager'**
   String get yourPersonalTaskManager;
 
-  /// No description provided for @youreDoingGreat.
+  /// No description provided for @yourProgress.
   ///
   /// In en, this message translates to:
-  /// **'You\'re doing great!'**
-  String get youreDoingGreat;
+  /// **'Your progress'**
+  String get yourProgress;
 
   /// No description provided for @youveBeenTrackingYourMoodForDays.
   ///
   /// In en, this message translates to:
   /// **'You\'ve been tracking your mood for {days} days'**
   String youveBeenTrackingYourMoodForDays(Object days);
+
+  /// No description provided for @allTasksCompletedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'🎉 All {count} tasks completed!'**
+  String allTasksCompletedCount(int count);
+
+  /// No description provided for @avgFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'🎯 Avg focus: {score}/10'**
+  String avgFocus(String score);
+
+  /// No description provided for @bulkDeleteConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete {count} tasks?'**
+  String bulkDeleteConfirmation(int count);
+
+  /// No description provided for @bulkGenerationComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Generated {count} recurring instances'**
+  String bulkGenerationComplete(String count);
+
+  /// No description provided for @completedTaskNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed: {taskTitle}'**
+  String completedTaskNotification(String taskTitle);
+
+  /// No description provided for @confirmDeleteCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{categoryName}\"? This will remove the category from all associated tasks.'**
+  String confirmDeleteCategory(String categoryName);
+
+  /// No description provided for @confirmDeleteTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm delete task {taskTitle}'**
+  String confirmDeleteTask(Object taskTitle);
+
+  /// No description provided for @currentEnergyLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'⚡ Current energy: {level}'**
+  String currentEnergyLevel(String level);
+
+  /// No description provided for @currentStreakDays.
+  ///
+  /// In en, this message translates to:
+  /// **'🔥 Current streak: {count} days'**
+  String currentStreakDays(int count);
+
+  /// No description provided for @days.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String days(int count);
+
+  /// No description provided for @daysRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'📅 Days remaining: {count}'**
+  String daysRemaining(int count);
+
+  /// No description provided for @daysToGo.
+  ///
+  /// In en, this message translates to:
+  /// **'📈 {count} days to go!'**
+  String daysToGo(int count);
+
+  /// No description provided for @dayStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'🔥 {count} day streak'**
+  String dayStreak(int count);
+
+  /// No description provided for @deleteTaskConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Task Confirmation'**
+  String deleteTaskConfirmation(String task, Object taskTitle);
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String error(String message);
+
+  /// No description provided for @focusArea.
+  ///
+  /// In en, this message translates to:
+  /// **'🎯 Focus: {area}'**
+  String focusArea(String area);
+
+  /// No description provided for @focusLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'🎯 Focus level: {score}/10'**
+  String focusLevel(int score);
+
+  /// No description provided for @focusModeFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus mode for {taskTitle}'**
+  String focusModeFor(Object taskTitle);
+
+  /// No description provided for @focusRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus rating: {rating}/10'**
+  String focusRating(int rating);
+
+  /// No description provided for @goalAchievedNewTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'🏆 Goal achieved! New target: {count} days'**
+  String goalAchievedNewTarget(int count);
+
+  /// No description provided for @inHours.
+  ///
+  /// In en, this message translates to:
+  /// **'In {count} hours'**
+  String inHours(Object count);
+
+  /// No description provided for @inMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'In {count} minutes'**
+  String inMinutes(Object count);
+
+  /// No description provided for @itemsSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} selected'**
+  String itemsSelected(int count);
+
+  /// No description provided for @metricValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{label}: {value}/10'**
+  String metricValue(String label, int value);
+
+  /// No description provided for @minuteBreak.
+  ///
+  /// In en, this message translates to:
+  /// **'⏰ {minutes} minute {breakType}'**
+  String minuteBreak(int minutes, String breakType);
+
+  /// No description provided for @minuteFocusSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes}-minute focus sessions'**
+  String minuteFocusSessions(int minutes);
+
+  /// No description provided for @minuteSession.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} minute session'**
+  String minuteSession(Object duration);
+
+  /// No description provided for @minutesPerSession.
+  ///
+  /// In en, this message translates to:
+  /// **'⏱️ {minutes} min per session'**
+  String minutesPerSession(int minutes);
+
+  /// No description provided for @nextTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Next: {taskTitle}'**
+  String nextTask(String taskTitle);
+
+  /// No description provided for @percent.
+  ///
+  /// In en, this message translates to:
+  /// **'{value}%'**
+  String percent(int value);
+
+  /// No description provided for @priorityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority: {priority}'**
+  String priorityLabel(String priority);
+
+  /// No description provided for @progressPercent.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress: {percent}%'**
+  String progressPercent(int percent);
+
+  /// No description provided for @reason.
+  ///
+  /// In en, this message translates to:
+  /// **'💭 Reason: {reason}'**
+  String reason(String reason);
+
+  /// No description provided for @recurringTaskError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error in recurring task: {error}'**
+  String recurringTaskError(String error);
+
+  /// No description provided for @recurringTaskNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'New recurring task created: {title}'**
+  String recurringTaskNotification(String title);
+
+  /// No description provided for @reminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder: {date}'**
+  String reminder(String date);
+
+  /// No description provided for @reminderCancelledFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder cancelled for: {taskTitle}'**
+  String reminderCancelledFor(String taskTitle);
+
+  /// No description provided for @sessionNofM.
+  ///
+  /// In en, this message translates to:
+  /// **'Session {current} of {total}'**
+  String sessionNofM(int current, int total);
+
+  /// No description provided for @sessionsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'⏱️ {count} sessions'**
+  String sessionsCount(int count);
+
+  /// No description provided for @sessionsPlanned.
+  ///
+  /// In en, this message translates to:
+  /// **'📋 {count} sessions planned'**
+  String sessionsPlanned(int count);
+
+  /// No description provided for @sessionsProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions: {completed}/{total}'**
+  String sessionsProgress(int completed, int total);
+
+  /// No description provided for @startingTask.
+  ///
+  /// In en, this message translates to:
+  /// **'🍅 Starting: {taskTitle}'**
+  String startingTask(String taskTitle);
+
+  /// No description provided for @subtasksCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} subtasks'**
+  String subtasksCount(int count);
+
+  /// No description provided for @suggestedActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'💡 Suggested activity: {activity}'**
+  String suggestedActivity(String activity);
+
+  /// No description provided for @suggestedDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'⏱️ Suggested: {minutes} min'**
+  String suggestedDuration(int minutes);
+
+  /// No description provided for @targetDays.
+  ///
+  /// In en, this message translates to:
+  /// **'🎯 Target: {count} days'**
+  String targetDays(int count);
+
+  /// No description provided for @tasksCompletedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'✅ {count} tasks completed'**
+  String tasksCompletedCount(int count);
+
+  /// No description provided for @tasksCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}'**
+  String tasksCount(int count);
+
+  /// No description provided for @tasksDue.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} tasks due'**
+  String tasksDue(int count);
+
+  /// No description provided for @tasksForDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks for {date}'**
+  String tasksForDate(String date);
+
+  /// No description provided for @timeRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Time remaining: {time}'**
+  String timeRemaining(String time);
+
+  /// No description provided for @todayAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Today at {time}'**
+  String todayAt(Object time);
+
+  /// No description provided for @totalNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Notifications: {count}'**
+  String totalNotifications(int count);
+
+  /// No description provided for @totalTime.
+  ///
+  /// In en, this message translates to:
+  /// **'⏱️ Total time: {time}'**
+  String totalTime(String time);
+
+  /// No description provided for @version.
+  ///
+  /// In en, this message translates to:
+  /// **'Version: {version}'**
+  String version(String version);
+
+  /// No description provided for @viewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View All ({count})'**
+  String viewAll(Object count);
+
+  /// No description provided for @weeklyGoalSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'🎯 Weekly Goal: {count} sessions'**
+  String weeklyGoalSessions(int count);
+
+  /// No description provided for @weeklyProgressStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Progress: {current}/{total}'**
+  String weeklyProgressStatus(int current, int total);
+
+  /// No description provided for @yesterdayAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday at {time}'**
+  String yesterdayAt(Object time);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
@@ -9483,22 +10244,20 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'ar':
-      return AppLocalizationsAr();
-    case 'en':
-      return AppLocalizationsEn();
-    case 'es':
-      return AppLocalizationsEs();
-    case 'fr':
-      return AppLocalizationsFr();
+    case 'ar': return AppLocalizationsAr();
+    case 'en': return AppLocalizationsEn();
+    case 'es': return AppLocalizationsEs();
+    case 'fr': return AppLocalizationsFr();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
+    'that was used.'
   );
 }

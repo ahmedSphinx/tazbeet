@@ -102,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         final date = await showDatePicker(
                           context: context,
                           initialDate: now,
-                          firstDate: now.subtract(const Duration(days: 365)),
+                          firstDate: now,
                           lastDate: now.add(const Duration(days: 365 * 5)),
                           helpText: AppLocalizations.of(context)!.rescheduleSelectedTasks,
                         );
@@ -388,7 +388,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         context: context,
                         builder: (context) => AlertDialog(
                           title: Text(AppLocalizations.of(context)!.deleteTask),
-                          content: Text(AppLocalizations.of(context)!.deleteTaskConfirmation(task.title, task.title)),
+                          content: Text(AppLocalizations.of(context)!.deleteTaskConfirmation(task.title,'')),
                           actions: [
                             TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancelButton)),
                             TextButton(
@@ -417,6 +417,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: DSTaskCard(
                   task: task,
                   isSelected: isSelected,
+                  l10n: AppLocalizations.of(context)!,
                   onTap: () async {
                     if (isSelectionMode) {
                       // In selection mode, tap toggles selection
@@ -1207,6 +1208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         opacity: 0.7,
                         child: DSTaskCard(
                           task: task,
+                          l10n: AppLocalizations.of(context)!,
                           onTap: () => _navigateToTaskDetails(context, task),
                           onToggle: () => context.read<TaskListBloc>().add(ToggleTaskCompletion(task.id)),
                           onDelete: () => context.read<TaskListBloc>().add(DeleteTask(task.id)),
@@ -1333,7 +1335,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Text(AppLocalizations.of(context)!.deleteTask),
           ],
         ),
-        content: Text(AppLocalizations.of(context)!.deleteTaskConfirmation(task.title, task.title)),
+        content: Text(AppLocalizations.of(context)!.deleteTaskConfirmation(task.title,'')),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancelButton)),
           ElevatedButton(
@@ -1403,7 +1405,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 final date = await showDatePicker(
                   context: context,
                   initialDate: task.dueDate ?? now,
-                  firstDate: now.subtract(const Duration(days: 365)),
+                  firstDate: now,
                   lastDate: now.add(const Duration(days: 365 * 5)),
                   helpText: AppLocalizations.of(context)!.rescheduleTask,
                 );
@@ -2198,6 +2200,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> with SingleTickerPr
                       padding: const EdgeInsets.only(bottom: DSSpacing.sm),
                       child: DSTaskCard(
                         task: task,
+                        l10n: AppLocalizations.of(context)!,
                         onTap: () async {
                           await Navigator.push(context, MaterialPageRoute(builder: (context) => TaskDetailsScreen(taskId: task.id)));
                           context.read<TaskListBloc>().add(LoadTasks());
@@ -2234,7 +2237,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> with SingleTickerPr
             Text(AppLocalizations.of(context)!.deleteTask),
           ],
         ),
-        content: Text(AppLocalizations.of(context)!.deleteTaskConfirmation(task.title, task.title)),
+        content: Text(AppLocalizations.of(context)!.deleteTaskConfirmation(task.title,'')),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancelButton)),
           ElevatedButton(

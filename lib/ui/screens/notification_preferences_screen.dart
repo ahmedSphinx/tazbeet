@@ -577,7 +577,7 @@ class _NotificationPreferencesScreenState extends State<NotificationPreferencesS
         return l10n.taskDue;
 
       case NotificationType.taskCompleted:
-        return l10n.taskCompleted;
+        return l10n.taskCompletedChannelName;
       case NotificationType.moodCheckIn:
         return l10n.moodCheckIn;
       case NotificationType.pomodoroWork:

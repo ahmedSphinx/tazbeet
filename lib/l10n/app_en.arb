@@ -1,167 +1,9 @@
 {
-  "@@locale": "en",
-  "@bulkGenerationComplete": {
-    "placeholders": {
-      "count": {
-        "type": "String"
-      }
-    }
-  },
-  "@bulkDeleteConfirmation": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@itemsSelected": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@confirmDeleteCategory": {
-    "placeholders": {
-      "categoryName": {
-        "type": "String"
-      }
-    }
-  },
-  "@confirmDeleteTask": {
-    "placeholders": {
-      "taskTitle": {
-        "type": "String"
-      }
-    }
-  },
-  "@days": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@deleteTaskConfirmation": {
-    "placeholders": {
-      "task": {
-        "type": "String"
-      }
-    }
-  },
-  "@error": {
-    "placeholders": {
-      "message": {
-        "type": "String"
-      }
-    }
-  },
-  "@metricValue": {
-    "placeholders": {
-      "label": {
-        "type": "String"
-      },
-      "value": {
-        "type": "int"
-      }
-    }
-  },
-  "@minuteFocusSessions": {
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
-  "@percent": {
-    "placeholders": {
-      "value": {
-        "type": "int"
-      }
-    }
-  },
-  "@recurringTaskError": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "@recurringTaskNotification": {
-    "placeholders": {
-      "title": {
-        "type": "String"
-      }
-    }
-  },
-  "@reminder": {
-    "placeholders": {
-      "date": {
-        "type": "String"
-      }
-    }
-  },
-  "@reminderCancelledFor": {
-    "placeholders": {
-      "taskTitle": {
-        "type": "String"
-      }
-    }
-  },
-  "@subtasksCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@tasksCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@tasksDue": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@tasksForDate": {
-    "placeholders": {
-      "date": {
-        "type": "String"
-      }
-    }
-  },
-  "@timeRemaining": {
-    "placeholders": {
-      "time": {
-        "type": "String"
-      }
-    }
-  },
-  "@totalNotifications": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@version": {
-    "placeholders": {
-      "version": {
-        "type": "String"
-      }
-    }
-  },
-  "aIPoweredAnalysis": "AI-Powered Analysis",
   "about": "About",
   "aboutTazbeet": "About Tazbeet",
   "absolutelyAmazing": "Absolutely amazing!",
   "accentColor": "Accent Color",
+  "acceptSuggestion": "Accept Suggestion",
   "accessDenied": "Access Denied",
   "accessibilityCompleted": "Accessibility setup completed",
   "accessibilityFeatures": "Accessibility Features",
@@ -175,9 +17,18 @@
   "actionLabel": "Action",
   "actions": "Actions",
   "activateEmergencyMode": "Activate emergency mode to suspend all reminders and timers",
+  "active": "Active",
   "activeNotificationsMuted": "Active - Notifications muted",
   "activeRecurringTasks": "Active Recurring Tasks",
   "activity": "Activity",
+  "activityBreathing": "Deep breathing exercises",
+  "activityEyeRest": "20-20-20 eye exercises",
+  "activityHydration": "Drink water & walk around",
+  "activityMeditation": "Mindful breathing (2-5 min)",
+  "activityMusic": "Listen to calming music",
+  "activitySocial": "Quick chat with colleague",
+  "activityStretching": "Desk stretches (2-3 min)",
+  "activityWalking": "Short walk (3-5 min)",
   "adaptiveBreakSuggestions": "Adaptive break suggestions",
   "adaptivePomodoro": "Adaptive Pomodoro",
   "adaptivePomodoroDescription": "Focus sessions that adapt to your performance",
@@ -188,6 +39,9 @@
   "addAttachment": "Add Attachment",
   "addButton": "Add",
   "addCategory": "Add Category",
+  "addCustomReminderMessage": "Add a custom reminder message",
+  "added": "Added",
+  "addedSuggestedCheckInTimesFromYourMoodHistory": "Added {count} suggested check-in times from your mood history",
   "addFirstSubtask": "Add First Subtask",
   "addLevelThreeSubtask": "Add Level-3 Subtask",
   "addNote": "Add Note",
@@ -198,19 +52,24 @@
   "addSubtasks": "Add Subtasks",
   "addTask": "Add Task",
   "addTaskButton": "Add Task",
+  "addTasksToCategory": "Add tasks to this category",
   "addTaskTitle": "Add New Task",
   "addTaskToGetStarted": "Add a task to get started",
-  "addTasksToCategory": "Add tasks to this category",
   "addYourFirstTask": "Add Your First Task",
-  "addedSuggestedCheckInTimesFromYourMoodHistory": "Added {count} suggested check-in times from your mood history",
   "adjustTheseSettingsToMakeTheAppWorkBetterForYou": "Adjust these settings to make the app work better for you",
   "admin": "Admin: {isAdmin}",
+  "adminNotificationsChannelDesc": "Important notifications for administrators",
+  "adminNotificationsChannelName": "Admin Notifications",
   "adminPanel": "Admin Panel",
+  "adminStatus": "Admin: {status}",
   "adminTools": "Admin Tools",
+  "advancedDetails": "Advanced Details",
+  "advancedSection": "Advanced Details",
   "advancedSettings": "Advanced Settings",
   "afterDeletionTheAppWillResyncAllDataFromFirebase": "After deletion, the app will resync all data from Firebase.",
   "afternoonSteadyGoodForRoutineWork": "Afternoon steady: Good for routine work",
   "afternoonVibes": "Afternoon vibes 🌻",
+  "aIPoweredAnalysis": "AI-Powered Analysis",
   "aiPoweredInsights": "AI-powered insights & trends",
   "aiPredictions": "AI Predictions",
   "all": "All",
@@ -219,48 +78,56 @@
   "allLabel": "All",
   "allNotificationsCancelled": "All notifications cancelled",
   "allNotificationsCleared": "All notifications cleared!",
+  "allowAllUsersToAccessApp": "• Allow all users to access the app",
+  "allowAllUsersToAccessTheApp": "• Allow all users to access the app",
+  "allowUrgentNotifications": "Allow Urgent Notifications During DND",
   "allRecurringUpToDate": "All recurring up to date",
   "allRemindersSuspended": "All reminders and timers are suspended",
+  "allSessions": "All Sessions",
   "allSessionsComplete": "All sessions complete",
   "allSuggestedTimesAreAlreadyInYourList": "All suggested times are already in your list",
   "allTasks": "All Tasks",
   "allTasksCategoriesMoodsLocalSettings": "• All tasks\n• All categories\n• All moods\n• All local settings",
+  "allTasksCompleted": "🎉 All tasks completed!",
   "allTimeStats": "All-Time Stats",
-  "allowAllUsersToAccessApp": "• Allow all users to access the app",
-  "allowAllUsersToAccessTheApp": "• Allow all users to access the app",
-  "allowUrgentNotifications": "Allow Urgent Notifications During DND",
+  "almostThere": "🔥 Almost there! Keep going!",
+  "almostThereKeepItUp": "🌟 Almost there! Keep it up!",
   "am": "AM",
   "ambientMode": "Ambient Mode",
   "ambientSounds": "Ambient Sounds",
-  "anErrorOccurredPleaseTryAgain": "An error occurred. Please try again.",
+  "anAdmin": "an admin",
   "analytics": "Analytics",
   "analyticsAndProductivityInsights": "• Analytics and productivity insights",
   "analyticsDashboard": "Analytics Dashboard",
   "analyticsDashboardDescription": "Deep insights into your productivity",
   "analyticsDisabled": "Analytics disabled",
   "analyticsEnabled": "Analytics enabled",
+  "anErrorOccurredPleaseTryAgain": "An error occurred. Please try again.",
   "animationOptimization": "Animation Optimization",
   "animationOptimizer": "Animation Optimizer",
   "animationStatsLoggedToConsole": "Animation stats logged to console",
   "anyUnsyncedLocalChangesWillBeLost": "Any unsynced local changes will be lost!",
   "appDescription": "A smart task management app with Pomodoro integration and AI-powered recommendations.",
+  "appearance": "Appearance",
+  "appearanceSection": "Appearance",
+  "appearsIn10Seconds": "Appears in 10 seconds",
   "appInformation": "App Information",
   "appInformationHelp": "App Information & Help",
+  "applyButton": "Apply",
+  "applyColors": "Apply Colors",
+  "applySettings": "Apply Settings",
   "appSettings": "App Settings",
   "appTitle": "Tazbeet",
   "appUpdates": "App Updates",
   "appVersion": "App Version",
-  "appearance": "Appearance",
-  "appearanceSection": "Appearance",
-  "appearsIn10Seconds": "Appears in 10 seconds",
-  "applyButton": "Apply",
-  "applyColors": "Apply Colors",
-  "applySettings": "Apply Settings",
   "areYouSureYouWantToClearAllNotificationHistory": "Are you sure you want to clear all notification history?",
   "areYouSureYouWantToDeleteCategory": "Are you sure you want to delete \"{categoryName}\"?\n\nNote: If this category is being used by any tasks, deletion will fail. Please reassign those tasks first.",
   "areYouSureYouWantToDeleteSubtask": "Are you sure you want to delete this subtask?",
-  "areYouSureYouWantToDeleteTask": "Are you sure you want to delete \"{taskTitle}\"?",
+  "areYouSureYouWantToDeleteTask": "Are you sure you want to delete \"{title}\"?",
+  "areYouSureYouWantToDeleteThisSubtask": "Are you sure you want to delete this subtask?",
   "areYouSureYouWantToDeleteUser": "Are you sure you want to delete {userName}?\n\nThis will permanently delete:\n• User account\n• All tasks\n• All categories\n• All moods\n\nThis action cannot be undone.",
+  "areYouSureYouWantToExit": "Are you sure you want to exit the app?",
+  "areYouSureYouWantToSignOut": "Are you sure you want to sign out?",
   "areYouSureYouWantToStopTheCurrentSession": "Are you sure you want to stop the current session? Your progress will be lost.",
   "areYouSureYouWantToToggleAdminRights": "Are you sure you want to {action} {userName}?",
   "attachments": "Attachments",
@@ -282,7 +149,6 @@
   "averageSessionDuration": "Average Session Duration",
   "averageSessionLength": "Average Session Length",
   "averageStress": "Average Stress",
-  "avgFocus": "Avg Focus",
   "avgSession": "Avg Session",
   "backgroundColor": "Background Color",
   "backup": "Backup",
@@ -291,9 +157,9 @@
   "backupFrequency": "Backup Frequency",
   "backupRestored": "Backup restored",
   "bad": "Bad",
-  "badIntensity": "Bad Intensity",
   "badgeOnlyMode": "Badge Only Mode",
   "badgeOnlyModeSubtitle": "Show badge without sound or popup",
+  "badIntensity": "Bad Intensity",
   "balancedDayAhead": "Balanced Day Ahead",
   "basedOnRecentPatternsTomorrowLooksPromising": "Based on recent patterns, tomorrow looks promising",
   "basicNotifications": "1. Basic Notifications",
@@ -301,6 +167,7 @@
   "bestPerformanceDay": "Best Performance Day",
   "bio": "Bio",
   "birthday": "Birthday: {birthday}",
+  "birthdayDate": "Birthday: {date}",
   "birthdayLabel": "Birthday",
   "birthdayRequiredForProfile": "Birthday is required for profile",
   "biweekly": "Bi-weekly",
@@ -309,8 +176,9 @@
   "breakSuggestionsMatchYourCurrentEnergyLevel": "Break suggestions match your current energy level",
   "breakTime": "Break time!",
   "breakTimeDistribution": "Break Time Distribution",
-  "bulkDeleteConfirmation": "Are you sure you want to delete {count} tasks?",
-  "bulkGenerationComplete": "Generated {count} recurring instances",
+  "breakTitleLong": "🌿 Long Break",
+  "breakTitleShort": "☕ Short Break",
+  "buildingMomentum": "🌟 Building momentum!",
   "bySigningInYouAgree": "By signing in, you agree to our Terms of Service and Privacy Policy",
   "cacheSize": "Cache Size",
   "calendar": "Calendar",
@@ -318,8 +186,9 @@
   "cancel": "Cancel",
   "cancelAllNotifications": "Cancel All",
   "cancelButton": "Cancel",
+  "cancelled": "Cancelled",
   "cannotSetReminderForPastDate": "Cannot set reminder for past date",
-  "cannotSetReminderWithoutPermission": "Cannot set reminder without notification permission",
+  "cannotSetReminderWithoutPermission": "Cannot set reminder without permission",
   "categories": "Categories",
   "category": "Category",
   "categoryBreakdown": "Category Breakdown",
@@ -327,7 +196,7 @@
   "categoryCreated": "Category created successfully",
   "categoryCreatedSuccessfully": "Category created successfully",
   "categoryDeleted": "Category deleted successfully",
-  "categoryDeletedSuccessfully": "Category \"{categoryName}\" deleted successfully",
+  "categoryDeletedSuccessfully": "Category \"{name}\" deleted successfully",
   "categoryEfficiency": "Efficiency: {score}%",
   "categoryIcon": "Category Icon",
   "categoryLabel": "Category (Optional)",
@@ -336,20 +205,18 @@
   "categoryProgress": "Category Progress",
   "categoryStatistics": "Category Statistics",
   "categoryTasksCount": "Tasks: {count}",
-  "categoryUpdated": "Category updated successfully",
+  "categoryUpdated": "{action} category: {name}",
   "categoryUpdatedSuccessfully": "Category updated successfully",
   "challengingDays": "Challenging Days",
   "challengingPeriod": "Challenging Period",
   "changeProfilePicture": "Change Profile Picture",
   "checkForUpdates": "Check for Updates",
   "checkHistoryAfterDelivery": "3. Check notification history after delivery",
+  "checkingIn": "Checking in! 👋",
   "checkPending": "Check Pending",
   "checkPendingNotifications": "Check Pending",
   "checkYourEnergyLevelsThroughoutTheDay": "Check your energy levels throughout the day",
-  "checkingIn": "Checking in! 👋",
   "chooseBackgroundSound": "Choose a background sound to help you concentrate or relax",
-  "priority": "Priority",
-  "prioritizeTasks": "Prioritize Tasks",
   "chooseColor": "Choose Color",
   "chooseEmojiFeeling": "Choose an emoji that represents how you're feeling",
   "chooseFromGallery": "Choose from Gallery",
@@ -367,10 +234,10 @@
   "clearDateFilter": "Clear date filter",
   "clearFailedButton": "Clear Failed",
   "clearHistory": "Clear History",
+  "clearingData": "Clearing data...",
   "clearLogs": "Clear Logs",
   "clearPerformance": "Clear Performance",
   "clearQuality": "Clear Quality",
-  "clearingData": "Clearing data...",
   "close": "Close",
   "closeButton": "Close",
   "closeSearch": "Close search",
@@ -379,33 +246,40 @@
   "coffeeShop": "Coffee Shop",
   "collapse": "Collapse",
   "color": "Color",
+  "colorLabel": "Color: ",
   "colorPicker": "Color Picker",
   "colorSettingsSaved": "Color settings saved successfully",
   "colorTheme": "Color Theme",
   "combineNotificationsOfTheSameType": "Combine notifications of the same type into groups",
   "complete": "Complete",
+  "completed": "completed",
+  "completedAt": "Completed at",
+  "completedLabel": "Completed",
+  "completedSessions": "Completed Sessions",
+  "completedStat": "Completed",
+  "completedStatus": "Completed: {status}",
+  "completedTag": "Completed",
+  "completedTasks": "Completed tasks",
+  "completedTasksInCategory": "Completed: {count}",
   "completeSubtasksFirst": "Complete Subtasks First",
+  "completeTask": "Complete Task",
   "completeTaskButton": "Complete Task",
   "completeTasksToSeeProgress": "Complete tasks to see your progress",
   "completeTasksToSeeYourProgress": "Complete tasks to see your progress",
   "completeTutorial": "Complete Tutorial",
-  "completed": "Completed",
-  "completedAt": "Completed at",
-  "completedLabel": "Completed",
-  "completedSessions": "Completed Sessions",
-  "completedTasks": "Completed tasks",
-  "completedTasksInCategory": "Completed: {count}",
+  "completionProgress": "Completion Progress",
   "completionRate": "Completion Rate",
   "completionTime": "Completion Time",
   "configureNotificationSettings": "Configure notification settings",
   "configureQuietHours": "Configure quiet hours",
   "confirm": "Confirm",
   "confirmDelete": "Confirm Delete",
-  "confirmDeleteCategory": "Are you sure you want to delete \"{categoryName}\"? This will remove the category from all associated tasks.",
   "confirmDeleteSubtask": "Are you sure you want to delete this subtask?",
-  "confirmDeleteTask": "Are you sure you want to delete \"{taskTitle}\"?",
+  "considerLighterTasks": "🌿 Consider lighter tasks or take a break",
   "considerMoreFrequentBreaks": "Consider taking more frequent breaks",
   "considerPrioritizingSelfCareActivitiesTomorrow": "Consider prioritizing self-care activities tomorrow",
+  "contextualActions": "Contextual Actions",
+  "continueFocus": "Continue Focus",
   "continueToApp": "Continue to App",
   "controlTheAppWithYourVoice": "Control the app with your voice",
   "copySuffix": "(Copy)",
@@ -416,50 +290,52 @@
   "createBackup": "Create Backup",
   "createCategoriesToOrganize": "Create categories to organize your tasks",
   "createCategory": "Create Category",
+  "created": "Created",
+  "createdAt": "Created: {date}",
   "createTasksWithYourVoice": "Create tasks with your voice",
   "createTemplate": "Create Template",
   "createYourFirstCategory": "Create your first category to organize tasks",
   "createYourFirstTaskToGetStarted": "Create your first task to get started",
   "createYourPerfectPomodoroSetup": "Create your perfect Pomodoro setup",
-  "created": "Created",
   "currentStreak": "Current Streak",
   "currentVersion": "Current Version",
-  "custom": "CUSTOM",
-  "customColorSettings": "Custom Color Settings",
+  "custom": "Custom",
   "customColors": "Custom Colors",
+  "customColorSettings": "Custom Color Settings",
   "customDurations": "Custom Durations (minutes)",
   "customDurationsMinutes": "Custom Durations (minutes)",
-  "customRange": "Custom Range",
   "customizeEachNotificationType": "Customize each notification type",
   "customizeNotificationBehavior": "Customize notification behavior",
   "customizePomodoroSession": "Customize Pomodoro Session",
   "customizeTheAppToWorkBestForYou": "Customize the app to work best for you",
   "customizeYourExperience": "Customize your experience",
   "customizeYourPomodoroSession": "Customize your pomodoro session",
+  "customMessageOptional": "Custom message (optional)",
+  "customRange": "Custom Range",
+  "customReminder": "Custom Reminder",
+  "customTime": "Custom Time",
   "cycles": "Cycles",
   "cycles10": "1-10 cycles",
-  "quickEdit": "Quick Edit",
-  "quickFilters": "Quick Filters",
   "daily": "Daily",
   "dailyMoodCheckIns": "Daily mood check-ins",
+  "dailySummary": "📊 Daily Summary",
   "dark": "Dark",
   "darkMode": "Dark Mode",
   "darkTheme": "Dark",
   "dashboard": "Dashboard",
   "dashboardOverview": "Dashboard Overview",
   "dataBackupSection": "Data & Backup",
+  "databaseSize": "Database Size",
   "dataExported": "Data exported successfully",
   "dataImported": "Data imported successfully",
   "dataManagement": "Data Management",
   "dataSync": "Data Sync",
   "dataSyncedSuccessfullyFromFirebase": "Data synced successfully from Firebase!",
-  "databaseSize": "Database Size",
   "dateFormat": "Date Format",
   "dateRange": "Date Range",
   "day": "Day",
-  "dayStreak": "day streak",
-  "days": "days",
   "daysDone": "Day's done! ✨",
+  "daysLeft": "Days Left",
   "daysStreak": "days streak",
   "debug": "Debug",
   "debugMode": "Debug Mode",
@@ -481,25 +357,27 @@
   "deleteSubtaskConfirmation": "Are you sure you want to delete \"@taskName\"? This action cannot be undone.",
   "deleteTask": "Delete Task",
   "deleteTaskButton": "Delete Task",
-  "deleteTaskConfirmation": "Are you sure you want to delete \"{taskTitle}\"?",
   "deleteTaskConfirmationTitle": "Delete Task",
   "deleteTaskTitle": "Delete Task",
   "deleteUser": "Delete User",
+  "delivered": "Delivered",
   "deliveryLabel": "Delivery",
   "deliveryTracking": "Delivery Tracking",
-  "description": "Description: {description}",
-  "details": "Details",
+  "description": "Description",
+  "descriptionNA": "Description: {description}",
   "descriptionOfActivity": "Description of activity",
   "detailedEntry": "Detailed Entry",
+  "details": "Details",
   "developerOptions": "Developer Options",
   "developerTools": "Developer Tools",
   "disable": "Disable",
+  "disabled": "Disabled",
   "disableDebugMode": "Disable Debug Mode",
   "disableMaintenanceMode": "Disable Maintenance Mode",
-  "disabled": "Disabled",
+  "dismiss": "Dismiss",
   "dndInfo": "Do Not Disturb mode silences all notifications except emergencies during specified hours.",
-  "doNotDisturb": "Do Not Disturb",
   "dominantMood": "Dominant Mood",
+  "doNotDisturb": "Do Not Disturb",
   "dontForget": "Don't forget",
   "dontHaveAccount": "Don't have an account?",
   "down": "Down",
@@ -508,8 +386,12 @@
   "dueDate": "Due Date",
   "dueDateLabel": "Due Date (Optional)",
   "dueDateMustBeInFuture": "Due date must be in the future",
+  "dueDateNA": "Due Date: {date}",
+  "dueDateReminder": "Due date reminder",
   "dueDateTitle": "Due Date",
+  "dueIn": "Due in",
   "dueInOneHour": "Due in 1 hour - tap to view",
+  "dueSoon": "Due soon",
   "dueThisWeek": "Due This Week",
   "duplicateSubSubtask": "Duplicate Subtask",
   "duplicateSubtask": "Duplicate Subtask",
@@ -530,6 +412,7 @@
   "editTaskTitle": "Edit Task",
   "egMyFocusPower": "e.g., My Focus Power",
   "email": "Email: {email}",
+  "emailNA": "Email: {email}",
   "emailNotifications": "Email Notifications",
   "emergency": "Emergency",
   "emergencyAlertsWillBypassQuietHours": "Emergency alerts will bypass quiet hours",
@@ -541,6 +424,7 @@
   "enable": "Enable",
   "enableActions": "Enable Actions",
   "enableCustomColors": "Enable Custom Colors",
+  "enabled": "Enabled",
   "enableDebugMode": "Enable Debug Mode",
   "enableMaintenanceMode": "Enable Maintenance Mode",
   "enableMoodNotifications": "Enable Mood Notifications",
@@ -552,24 +436,28 @@
   "enableTaskCompletionSound": "Enable Task Completion Sound",
   "enableVoiceCommands": "Enable Voice Commands",
   "enableVoiceTasks": "Enable Voice Tasks",
-  "enabled": "Enabled",
   "endOfDayVibes": "End of day vibes 🌇",
   "energy": "Energy",
   "energyAwarePlanning": "Energy-Aware Planning",
   "energyAwarePlanningDescription": "Schedule tasks based on your energy patterns",
   "energyAwareScheduling": "Energy-aware scheduling",
   "energyLevel": "Energy Level",
+  "energyLevelGood": "🔥 Good Energy",
+  "energyLevelHigh": "⚡ High Energy!",
+  "energyLevelLow": "🔋 Low Energy",
+  "energyLevelModerate": "⚖️ Moderate Energy",
   "energyLevelMonitoring": "Energy level monitoring",
   "energyLevelTracking": "Energy level tracking",
+  "energyLevelVeryLow": "😴 Very Low Energy",
   "energyPattern": "Energy Pattern",
   "energyTrackingHelpsIdentifyYourPatterns": "Energy tracking helps identify your patterns",
   "enterCategoryName": "Enter category name",
   "enterMaintenanceMessage": "Enter maintenance message",
   "enterMessageUsersWillSee": "Enter the message users will see...",
+  "enterMinutes": "Enter minutes (e.g., 45)",
   "enterTaskDescription": "Enter task description (optional)",
   "enterTaskManually": "Enter Task Manually",
   "enterTaskTitle": "Enter task title",
-  "error": "Error",
   "errorApplyingSettings": "Error applying settings: {error}",
   "errorClearingLogs": "Error clearing logs",
   "errorCompletingOnboarding": "Error completing onboarding",
@@ -594,16 +482,20 @@
   "errorUpdatingProfilePicture": "Error updating profile picture",
   "errorUpdatingTask": "Error updating task: {error}",
   "errorUpdatingUser": "Error updating user: {error}",
+  "estimatedSessions": "estimated sessions",
   "eveningCheckIn": "Evening check-in! 🌙",
   "eveningDeclineLightTasksAndPlanning": "Evening decline: Light tasks and planning",
   "eveningReflection": "Evening reflection 💭",
   "everyDayIsANewOpportunity": "Every day is a new opportunity",
   "excellentCompletionRate": "Excellent completion rate! Keep up the great work",
+  "excellentFocus": "🌟 Excellent focus today!",
   "excellentPerformance": "Excellent performance!",
+  "executionSection": "Task Execution",
   "expand": "Expand",
-  "experienceAIPoweredTaskPrioritizationThatAdaptsToYourPatterns": "Experience AI-powered task prioritization that adapts to your patterns",
   "experienceAiPoweredTaskPrioritizationThatAdaptsToYourPatterns": "Experience AI-powered task prioritization that adapts to your patterns",
+  "experienceAIPoweredTaskPrioritizationThatAdaptsToYourPatterns": "Experience AI-powered task prioritization that adapts to your patterns",
   "expertOptions": "Expert options for power users",
+  "expired": "Expired",
   "exploreFeatures": "Explore Features",
   "exploreYourAnalyticsDashboard": "Explore your analytics dashboard",
   "exportCSV": "Export CSV",
@@ -612,8 +504,10 @@
   "exportJSON": "Export JSON",
   "exportLogs": "Export Logs",
   "exportYourTasksToExternalFormats": "Export your tasks to external formats",
+  "extendSession": "⏱️ Extend Session",
   "fadeIn": "Fade In",
   "fadeOut": "Fade Out",
+  "failed": "Failed",
   "failedToAccessGallery": "Failed to access gallery",
   "failedToAddSubtask": "Failed to add subtask: {error}",
   "failedToCancelNotifications": "Failed to cancel notifications: {error}",
@@ -623,25 +517,26 @@
   "failedToScheduleTestNotification": "Failed to schedule test notification: {error}",
   "failedToSendTestNotification": "Failed to send test notification: {error}",
   "failedToUploadImage": "Failed to upload image",
+  "failureReason": "Failure reason",
   "features": "Features:",
   "fifteenMinPause": "15 Min Pause",
   "filter": "Filter",
   "filterByStatus": "Filter by Status",
   "filterByType": "Filter by Type",
-  "filterTasks": "Filter tasks",
-  "filterTasksTitle": "Filter Tasks",
   "filters": "Filters",
   "filtersAppliedSuccessfully": "Filters applied successfully",
+  "filterTasks": "Filter tasks",
+  "filterTasksTitle": "Filter Tasks",
   "findingBalance": "Finding balance",
   "fireplace": "Fireplace",
-  "focus": "focus",
+  "focus": "Focus",
   "focusAndRelaxation": "Focus & Relaxation",
   "focusBetterWithAdaptiveTimingAndSmartBreaks": "Focus better with adaptive timing and smart breaks",
+  "focusCompleted": "completed",
   "focusDifficulty": "Focus Difficulty: {score}",
-  "focusLevel": "Focus Level",
   "focusMode": "Focus Mode",
-  "focusModeFor": "Focus mode for {taskTitle}",
   "focusPattern": "Focus Pattern",
+  "focusProgress": "Focus Progress",
   "focusScore": "Focus Score",
   "focusScoreDistribution": "Focus Score Distribution",
   "focusTimeDistribution": "Focus Time Distribution",
@@ -655,8 +550,10 @@
   "fri": "Fri",
   "friday": "Fri",
   "fridayAbbrev": "Fri",
+  "fromNow": "from now",
   "galleryPermissionIsRequiredToSelectProfileImage": "Gallery permission is required to select profile image",
   "galleryPermissionRequired": "Gallery permission is required to select profile image",
+  "generalReminder": "General reminder",
   "generalSettings": "General Settings",
   "generateAllInstances": "Generate All Instances",
   "generateNextInstance": "Generate Next Instance",
@@ -665,8 +562,11 @@
   "getPersonalizedProductivityTips": "Get personalized productivity tips",
   "getStarted": "Get Started",
   "getSuggestionsFromHistory": "Get Suggestions from History",
+  "getTaskStatusDescription": "_getTaskStatusDescription(task, l10n)",
+  "goalAchieved": "🏆 Goal achieved! Amazing work!",
   "good": "Good",
   "goodDays": "Good Days",
+  "goodFocus": "👍 Good focus maintained!",
   "goodIntensity": "Good Intensity",
   "goodMorning": "Good Morning!",
   "goodnightCheckIn": "Goodnight check-in 💫",
@@ -677,15 +577,18 @@
   "greatConsistency": "Great Consistency",
   "greatFocusExtendSessions": "Great focus! Consider extending sessions to 30-35 min",
   "greatJobCompleting": "Great job completing",
+  "greatJobFocused": "🔥 Great job staying focused!",
   "greatJobTakeABreak": "Great job! Take a break.",
   "greatProgress": "Great progress!",
+  "greatStart": "🚀 Great start!",
   "groupSimilarNotifications": "Group Similar Notifications",
   "guidedCheckIn": "Guided Check-in",
+  "halfwayDone": "💪 Halfway done!",
+  "halfwayThere": "💪 Halfway there!",
   "helpAndSupport": "Help & Support",
   "helpImproveApp": "Help improve the app with usage data",
   "helpImproveTheAppWithUsageData": "Help improve the app with usage data",
   "helpUsUnderstandState": "Help us understand your current state",
-  "hiThere": "Hi there!",
   "high": "High",
   "highContrast": "High Contrast",
   "highContrastDisabled": "High contrast disabled",
@@ -697,12 +600,15 @@
   "highPriorityNotificationIn10Seconds": "⏰ High priority notification in 10 seconds",
   "history": "History",
   "historyCleared": "History cleared",
+  "hiThere": "Hi there!",
   "hiveBoxes": "Hive Boxes: {count}",
   "homeScreenTitle": "Home",
   "honorDeviceDoNotDisturbSettings": "Honor device Do Not Disturb settings",
+  "hour1": "1h",
   "hourly": "Hourly",
   "hourlyProductivity": "Hourly Productivity",
   "hours": "h",
+  "hours2": "2h",
   "howAreYou": "How are you?",
   "howAreYouEndingYourDay": "How are you ending your day?",
   "howAreYouFeeling": "😊 How are you feeling?",
@@ -714,10 +620,10 @@
   "howDidItGo": "How did it go?",
   "howDidTodayGoForYou": "How did today go for you?",
   "howIsYourDay": "How is your day?",
-  "howWasYourDay": "How was your day?",
   "howsYourAfternoonGoing": "How's your afternoon going?",
   "howsYourDayGoing": "How's your day going?",
   "howsYourFocusRightNow": "How's your focus right now?",
+  "howWasYourDay": "How was your day?",
   "icon": "Icon: {icon}",
   "identifyYourMostProductiveTimes": "Identify your most productive times",
   "idle": "Idle",
@@ -726,32 +632,35 @@
   "imHereForYou": "I'm here for you!",
   "immediate": "Immediate",
   "immediateTestNotification": "Immediate Test Notification",
-  "immediateTestNotificationDescription": "This is an immediate notification to test if notifications work",
+  "immediateTestNotificationDescription": "This is an immediate test notification.",
   "importData": "Import Data",
   "importFromFile": "Import from File",
   "importLogs": "Import Logs",
   "importTasksFromExternalFiles": "Import tasks from external files",
   "inAppNotifications": "In-App Notifications",
-  "inProgress": "In Progress",
   "includeSpecificTime": "Include specific time",
   "incompleteLabel": "Incomplete",
+  "incompleteTag": "Incomplete",
   "increaseColorContrastForBetterVisibility": "Increase color contrast for better visibility",
   "increaseContrast": "Increase contrast for better visibility",
   "increaseContrastForBetterVisibility": "Increase contrast for better visibility",
   "info": "Info",
+  "inProgress": "In Progress",
   "insightGenerallyPositive": "Generally positive 😊",
   "insightGreatConsistency": "Great consistency! 🔥",
   "insightMissingToday": "Missing today 📝",
   "insightNeedsSupport": "Needs support 🤗",
   "insights": "Insights",
-  "installUpdate": "Install Update",
   "installingUpdate": "Installing Update...",
+  "installUpdate": "Install Update",
   "intelligentNotificationManagement": "Intelligent Notification Management",
   "invalidDueDate": "Invalid due date",
   "isDueToday": "is due today",
-  "itemsSelected": "{count} selected",
+  "isNowAdmin": "{userName} is now {status}",
   "itsOkayToHaveToughDays": "It's okay to have tough days",
   "keepAppInBackground": "2. Keep app in background after scheduling",
+  "keepItGoing": "🔥 Keep it Going!",
+  "keepItGoingBody": "🚀 Keep it going!",
   "keepShiningBright": "Keep shining bright!",
   "keepUpTheGoodWork": "Keep up the good work",
   "keyInsights": "Key Insights",
@@ -765,6 +674,7 @@
   "last30Days": "Last 30 Days",
   "last7Days": "Last 7 Days",
   "last90Days": "Last 90 Days",
+  "lastAttempt": "Last attempt",
   "lastModified": "Last Modified",
   "lastUpdated": "Last Updated",
   "laterTasks": "Later tasks",
@@ -778,15 +688,15 @@
   "listening": "Listening...",
   "loading": "Loading...",
   "loadingPreferences": "Loading preferences...",
+  "loginSubtitle": "Organize your tasks and boost productivity",
   "logLevel": "Log Level",
   "logMood": "Log Your Mood",
-  "logReport": "Log Report",
-  "logStats": "Log Stats",
-  "loginSubtitle": "Organize your tasks and boost productivity",
   "logout": "Logout",
+  "logReport": "Log Report",
   "logsCleared": "Logs cleared successfully",
   "logsExported": "Logs exported successfully",
   "logsImported": "Logs imported successfully",
+  "logStats": "Log Stats",
   "longBreak": "Long Break",
   "longBreakAfterCycles": "Long break: {longBreak}min after {cycles} cycles",
   "longBreakDuration": "Long Break Duration",
@@ -810,6 +720,7 @@
   "markAsComplete": "Mark as Complete",
   "markAsCompleted": "Mark as Completed",
   "markAsIncomplete": "Mark as Incomplete",
+  "markedIncomplete": "marked incomplete",
   "masterToggleForAllNotifications": "Master toggle for all notifications",
   "maxNotificationsPerHour": "Max Notifications Per Hour",
   "medium": "Medium",
@@ -821,20 +732,23 @@
   "memoryStatsLoggedToConsole": "Memory stats logged to console",
   "memoryUsage": "Memory Usage",
   "message": "Message",
-  "metricValue": "{label}: {value}/10",
+  "metadata": "Metadata",
   "middayPause": "Midday pause 🌤️",
   "min": "min",
   "min120": "1-120 min",
   "min30": "1-30 min",
   "min60": "1-60 min",
-  "minPerSession": "min per session",
-  "minsTotal": "mins total",
-  "minWorkMinBreak": "{work}min work → {rest}min break",
-  "minWorkRest": "{work} min work • {rest} min rest",
   "minimizeAnimationsAndTransitions": "Minimize animations and transitions",
   "minimumMinutesBetweenSameType": "Minimum Minutes Between Same Type",
-  "minuteFocusSessions": "{minutes}-minute focus sessions",
+  "minPerSession": "min per session",
+  "minsTotal": "mins total",
   "minutes": "minutes",
+  "minutes15": "15m",
+  "minutes30": "30m",
+  "minutes5": "5m",
+  "minutesFromNow": "Minutes from now",
+  "minWorkMinBreak": "{work}min work → {rest}min break",
+  "minWorkRest": "{work} min work • {rest} min rest",
   "missingToday": "Missing Today",
   "modified": "Modified",
   "mon": "Mon",
@@ -842,10 +756,10 @@
   "mondayAbbrev": "Mon",
   "monitorMoodAndEnergyCorrelations": "Monitor mood and energy correlations",
   "month": "Month",
-  "monthView": "Month",
   "monthly": "Monthly",
   "monthlyProgress": "Monthly Progress",
   "monthlyStats": "Monthly Stats",
+  "monthView": "Month",
   "mood": "Mood",
   "moodAdded": "Mood added",
   "moodAlreadyLoggedToday": "You have already logged your mood today",
@@ -863,9 +777,11 @@
   "moodCheckIn": "Mood Check-in",
   "moodCheckInNotificationBody": "How are you feeling right now? Tap to record your mood.",
   "moodCheckInNotificationTitle": "Mood Check-In",
+  "moodCheckIns": "Mood Check-ins",
+  "moodCheckInsChannelDesc": "Mood check-in reminders",
+  "moodCheckInsChannelName": "Mood Check-Ins",
   "moodCheckInTimes": "Check-in Times",
   "moodCheckInTitle": "Mood Check-In",
-  "moodCheckIns": "Mood Check-ins",
   "moodEnergyLevel": "Energy Level",
   "moodEnergyTracking": "Mood & Energy Tracking",
   "moodFocusLevel": "Focus Level",
@@ -883,13 +799,14 @@
   "moodPatternsSubtitle": "Discover trends in your emotional well-being",
   "moodPatternsTitle": "Your Mood Patterns",
   "moodSaveButton": "Save Mood",
-  "moodSaveFailed": "Failed to save mood",
   "moodSaved": "Mood saved",
   "moodSavedSuccess": "Mood saved successfully!",
+  "moodSaveFailed": "Failed to save mood",
   "moodSelectLevel": "Select your mood level",
   "moodSettings": "Mood Settings",
   "moodSettingsSubtitle": "Configure mood check-in notifications",
   "moodSettingsTitle": "Mood Settings",
+  "moodsForDate": "Moods for {date}",
   "moodStressLevel": "Stress Level",
   "moodSuggestionsSubtitle": "AI-powered recommendations based on your mood",
   "moodSuggestionsTitle": "Personalized Suggestions",
@@ -898,8 +815,8 @@
   "moodUpdated": "Mood updated",
   "moodVeryBad": "Really struggling",
   "moodVeryGood": "Great",
-  "moodsForDate": "Moods for {date}",
   "moreDataNeeded": "More Data Needed",
+  "moreDetails": "More details",
   "morningCheckIn": "Morning check-in 💫",
   "morningPeakBestForComplexTasks": "Morning peak: Best for complex tasks",
   "mostCommonMood": "Most Common Mood",
@@ -934,15 +851,19 @@
   "noDataAvailable": "No data available",
   "noDateTasks": "Tasks without a specific date",
   "noDueDate": "No Due Date",
+  "noDueDateSet": "No due date set",
   "noInsightsYet": "No insights yet",
   "noInternetConnection": "No Internet Connection",
   "noMoodEntriesFound": "No mood entries found",
   "noMoodEntriesYet": "No mood entries yet",
   "noMoodHistoryAvailableForSuggestions": "No mood history available for suggestions",
   "noMoodRecorded": "No mood recorded",
+  "none": "None",
   "noNotes": "No notes",
   "noOverdueTasks": "No overdue tasks",
+  "noPomodoroData": "No Pomodoro data",
   "noPomodoroSessionsFound": "No Pomodoro sessions found",
+  "noPomodoroSessionsYet": "No Pomodoro sessions yet",
   "noProgressData": "No progress data available",
   "noProgressDataAvailable": "No progress data available",
   "noRecentTasks": "No recent tasks found.",
@@ -950,22 +871,22 @@
   "noRecommendationsAvailableAtThisTime": "No recommendations available at this time.",
   "noRecurringTasksFound": "",
   "noReminder": "No Reminder",
+  "noReminderHistory": "No reminder history",
   "noReminderSet": "No reminder set",
+  "noSessionsYet": "No sessions yet",
   "noSpeechDetected": "No speech detected",
   "noSubtasks": "No subtasks",
   "noSubtasksYet": "No subtasks yet",
+  "noSuggestionsAvailable": "No suggestions available",
+  "notAnAdmin": "not an admin",
   "noTasksForThisDay": "No tasks for this day",
   "noTasksFound": "No tasks found",
   "noTasksFoundForSearch": "No tasks found for \"{searchQuery}\"",
   "noTasksInCategory": "No tasks in this category",
   "noTasksYet": "No tasks yet",
-  "noUpcomingTasksWithReminders": "No upcoming tasks with reminders",
-  "noUpdatesAvailable": "No Updates Available",
-  "noUsersFound": "No users found",
-  "none": "None",
-  "notGreat": "Not great",
   "notes": "Notes",
   "notesOptional": "Notes (optional)",
+  "notGreat": "Not great",
   "notificationAnalyticsAction": "Action Rate",
   "notificationAnalyticsDelivered": "Delivered",
   "notificationAnalyticsLast7Days": "Analytics (Last 7 Days)",
@@ -984,8 +905,12 @@
   "notificationPreferences": "Notification Preferences",
   "notificationPreferencesInfo": "Notification Preferences Info",
   "notificationPreferencesInfoDetails": "Configure how and when you receive notifications. Customize each notification type, set quiet hours, and control notification behavior.",
+  "notifications": "Notifications",
   "notificationScheduledFor10Seconds": "⏰ Notification scheduled for 10 seconds",
+  "notificationsDisabled": "Enabled: ❌",
+  "notificationsEnabled": "Enabled: ✅",
   "notificationSounds": "Notification Sounds",
+  "notificationsSection": "Notifications",
   "notificationStatusCancelled": "Cancelled",
   "notificationStatusDelivered": "Delivered",
   "notificationStatusExpired": "Expired",
@@ -996,17 +921,20 @@
   "notificationTools": "Notification Tools",
   "notificationTypes": "Notification Types",
   "notificationVerification": "Notification Verification",
-  "notifications": "Notifications",
-  "notificationsDisabled": "Enabled: ❌",
-  "notificationsEnabled": "Enabled: ✅",
-  "notificationsSection": "Notifications",
+  "notYetCompleted": "Not yet completed",
+  "noUpcomingTasksWithReminders": "No upcoming tasks with reminders",
+  "noUpdatesAvailable": "No Updates Available",
+  "noUsersFound": "No users found",
+  "now": "Now",
   "oceanWaves": "Ocean Waves",
   "offf": "of",
   "ok": "OK",
-  "okButton": "OK",
   "okay": "Okay",
+  "okButton": "OK",
   "onDays": "on {days}",
+  "oneDayBeforeDue": "",
   "oneHour": "1 Hour",
+  "oneHourBeforeDue": "",
   "oneHourPause": "1 Hour Pause",
   "onlyAdminsCanAccessApp": "• Only admins can access the app",
   "onlyAdminsCanAccessTheApp": "• Only admins can access the app",
@@ -1017,9 +945,9 @@
   "optionalAddContext": "Optional: Add context",
   "optionalWriteNote": "Optional: Write a note",
   "options": "Options",
-  "sortAndFilter": "Sort & Filter",
-  "sortBy": "Sort By",
+  "or": "or",
   "organizeManage": "Organize & Manage",
+  "others": "Others",
   "overdue": "Overdue",
   "overdueTasks": "Overdue Tasks",
   "overdueTasksInCategory": "Overdue: {count}",
@@ -1035,7 +963,6 @@
   "pendingOperations": "Pending operations",
   "pendingTasks": "Pending Tasks",
   "pendingTasksInCategory": "Pending: {count}",
-  "percent": "{value}%",
   "performance": "Performance",
   "performanceMemoryAndQualityMonitoring": "Performance, memory, and quality monitoring",
   "performanceMetrics": "Performance Metrics",
@@ -1051,10 +978,12 @@
   "personalizedInsights": "Personalized Insights",
   "phone": "Phone",
   "pickAColor": "Pick a color",
+  "pickUpPace": "🚀 Let's pick up the pace!",
   "playSoundForNotifications": "Play sound for notifications",
   "playSoundWhenTasksAreCompleted": "Play sound when tasks are completed",
   "pleaseEnterATemplateName": "Please enter a template name",
   "pleaseEnterSubtaskTitle": "Please enter a subtask title",
+  "pleaseEnterValidNumberOfMinutes": "Please enter a valid number of minutes",
   "pleaseFillAllRequiredFields": "Please fill all required fields",
   "pleaseFixErrors": "Please fix the errors above",
   "pleaseTryAgain": "Please try again",
@@ -1087,9 +1016,10 @@
   "preview": "Preview",
   "previous": "Previous",
   "primaryColor": "Primary Color",
+  "prioritizeTasks": "Prioritize Tasks",
   "priority": "Priority",
-  "priorityLabel": "Priority:",
   "priorityLevels": "2. Priority Levels",
+  "priorityName": "Priority: {priority}",
   "priorityNotifications": "Priority Notifications",
   "priorityNotificationsDescription": "Only show high-priority notifications during focus time",
   "priorityTitle": "Priority",
@@ -1112,25 +1042,33 @@
   "progress": "Progress",
   "progressOverview": "Progress Overview",
   "progressSaved": "Progress saved",
+  "progressUpdate": "📈 Progress Update",
   "pullToRefresh": "Pull down to refresh when connected",
   "pushNotifications": "Push Notifications",
   "qualityMetricsCleared": "Quality metrics cleared",
   "qualityReportLoggedToConsole": "Quality report logged to console",
   "qualityScore": "Quality Score: ",
+  "queueComplete": "🎉 Queue Complete!",
   "quickActions": "Quick Actions",
   "quickCheck": "Quick check! ⏰",
   "quickControls": "Quick Controls",
   "quickEdit": "Quick Edit",
   "quickEditButton": "Quick Edit",
   "quickEmergencyAccess": "Quick emergency access",
+  "quickFilters": "Quick Filters",
   "quickInsights": "Quick Insights",
   "quickMoodCheckIn": "Quick Mood Check-In",
-  "quickTestGuide": "🎯 Quick Test Guide",
+  "quickRefresh": "🧘 Quick refresh",
+  "quickReminders": "Quick Reminders",
+  "quickSet": "Quick Set",
   "quickstart": "Quick Start",
+  "quickTestGuide": "🎯 Quick Test Guide",
   "quietHours": "Quiet Hours",
   "quietHoursDescription": "Temporarily silence all notifications",
   "quietNotificationMessage": "This is a quiet notification",
   "rain": "Rain",
+  "readyToFocus": "Ready to focus?",
+  "readyToStartWorking": "Ready to start working",
   "reallyStruggling": "Really struggling",
   "receiveNotificationsForTasksAndReminders": "Receive notifications for tasks and reminders",
   "receivePeriodicMoodCheckInReminders": "Receive periodic mood check-in reminders",
@@ -1139,18 +1077,18 @@
   "recentEntriesSuggestAChallengingTime": "Recent entries suggest a challenging time",
   "recentImprovement": "Recent Improvement",
   "recentMoods": "Recent Moods",
+  "recentPomodoroSessions": "Recent Pomodoro Sessions",
   "recentTasks": "Recent Tasks",
   "recentTasksComingSoon": "Recent tasks coming soon!",
   "recommendations": "Recommendations",
   "recommendedAdjustments": "Recommended Adjustments:",
   "recommendedForAdhd": "Recommended for ADHD",
   "recommendedForAdhders": "Recommended for ADHDers",
+  "recommendedTasks": "📋 Recommended tasks:",
   "recordingInProgress": "Recording in progress",
   "recurringInstancesGenerated": "Recurring instances generated",
   "recurringTaskAutomation": "• Recurring task automation",
-  "recurringTaskError": "Error in recurring task: {error}",
   "recurringTaskGenerationFailed": "Failed to generate recurring task",
-  "recurringTaskNotification": "New recurring task created: {title}",
   "recurringTaskRetry": "Retry",
   "recurringTaskRetryLater": "Retry Later",
   "recurringTasksManager": "Recurring Tasks Manager",
@@ -1164,27 +1102,33 @@
   "regionalSection": "Regional",
   "register": "Register",
   "registrationIsDisabled": "Registration is disabled",
+  "remaining": "Remaining",
   "rememberMe": "Remember me",
-  "reminder": "Reminder: {date}",
-  "reminderCancelledFor": "Reminder cancelled for: {taskTitle}",
-  "reminderSetFor": "Reminder set for {date}",
+  "reminderActiveAndReady": "Reminder is active and ready",
+  "reminderCancelled": "Reminder cancelled",
+  "reminderExpired": "Reminder has expired",
+  "reminderHistory": "Reminder History",
+  "reminderRetryScheduled": "Reminder retry scheduled",
   "reminders": "Reminders",
-  "remindersSuspended": "Reminders Suspended",
+  "reminderSetFor": "Reminder set for",
+  "reminderSetSuccessfully": "Reminder set successfully",
+  "remindersSuspended": "Reminders suspended",
+  "reminderStatus": "Reminder Status",
   "removeAdminRightsFrom": "remove admin rights from",
   "removePhoto": "Remove Photo",
   "removeThisCheckInTime": "Remove this check-in time?",
   "repeat": "Repeat",
   "repeatCount": "({count} times)",
   "repeatForever": "(forever)",
+  "repeats": "Repeats",
   "repeatSameTimeEachDay": "Repeat at same time each day",
   "repeatSettings": "Repeat Settings",
   "repeatUntil": "until {date}",
   "required": "Required",
-  "rescheduleTask": "Reschedule Task",
   "reschedule": "Reschedule",
-  "reset": "Reset",
   "rescheduleSelectedTasks": "Reschedule selected tasks",
   "rescheduleTask": "Reschedule task",
+  "reset": "Reset",
   "resetAllThemeSettingsToDefaultValues": "Reset all theme settings to default values",
   "resetButton": "Reset",
   "resetColors": "Reset Colors",
@@ -1199,7 +1143,9 @@
   "resumeAll": "Resume All",
   "resumeNow": "Resume Now",
   "retry": "Retry",
+  "retryAttempts": "Retry attempts",
   "retryButton": "Retry",
+  "retryNow": "Retry Now",
   "returnToNormalOperation": "• Return to normal operation",
   "reviewCompletedSessionsWeekly": "Review your completed sessions weekly to identify patterns",
   "riseAndShine": "Rise and shine! 🌅",
@@ -1211,12 +1157,14 @@
   "saveMaintenanceSettings": "Save Maintenance Settings",
   "saveMood": "Save Mood",
   "saveTask": "Save Task",
+  "scheduled": "Scheduled",
+  "scheduledFor": "Scheduled for:",
   "scheduleDnd": "Schedule DND",
   "scheduledQuietHours": "Scheduled Quiet Hours",
+  "scheduledTestMoodNotificationBody": "This is a scheduled test mood check-in notification.",
   "screenReader": "Screen Reader",
   "screenReaderDisabled": "Screen reader disabled",
   "screenReaderEnabled": "Screen reader enabled",
-  "searchTasks": "Search Tasks",
   "search": "Search",
   "searchButton": "Search",
   "searchCategories": "Search categories...",
@@ -1228,42 +1176,48 @@
   "security": "Security",
   "seeAllPastNotifications": "See all past notifications",
   "select": "Select",
+  "selectAccentColor": "Select Accent Color",
   "selectATemplateOrCustomizeYourSession": "Select a template or customize your session",
   "selectATemplateThatFitsYourWorkStyle": "Select a template that fits your work style",
-  "selectAccentColor": "Select Accent Color",
   "selectBackgroundColor": "Select Background Color",
   "selectBirthday": "Select birthday",
   "selectButton": "Select",
   "selectCategory": "Select Category",
   "selectColor": "Select Color",
   "selectDueDate": "Select due date",
+  "selectedColor": "Selected Color",
   "selectIcon": "Select Icon",
   "selectPrimaryColor": "Select Primary Color",
   "selectSurfaceColor": "Select Surface Color",
   "selectTextColor": "Select Text Color",
   "selectTime": "Select Time",
-  "selectedColor": "Selected Color",
   "selfCareRecommended": "Self-Care Recommended",
   "sendCrashReports": "Send crash reports to help fix issues",
   "sendCrashReportsToHelpFixIssues": "Send crash reports to help fix issues",
-  "sendTestNotification": "Send Test Notification",
   "sendingYouStrength": "Sending you strength",
-  "sessionComplete": "Session Complete!",
+  "sendTestNotification": "Send Test Notification",
+  "session": "Session",
+  "sessionComplete": "✅ Session Complete!",
   "sessionCompletionRate": "Session Completion Rate",
   "sessionDurationTrend": "Session Duration Trend",
   "sessionHistory": "Session History",
+  "sessionOptimization": "⚙️ Session Optimization",
   "sessionPatternAnalysis": "Session Pattern Analysis",
+  "sessionPaused": "⏸️ Session Paused",
   "sessionProgress": "Session Progress",
-  "sessionTimingAdjustsBasedOnYourFocusPatterns": "Session timing adjusts based on your focus patterns",
   "sessions": "sessions",
   "sessionsToLongBreak": "Sessions to Long Break",
   "sessionsUntilLongBreak": "Sessions until Long Break",
+  "sessionTimingAdjustsBasedOnYourFocusPatterns": "Session timing adjusts based on your focus patterns",
   "setAutomaticQuietHours": "Set automatic quiet hours",
+  "setCustomReminderTime": "Set a custom reminder time",
   "setDueDate": "Set Due Date",
   "setPriority": "Set Priority",
   "setRealisticSessionGoals": "Set more realistic session goals",
   "setReminder": "Set Reminder",
   "setReminderButton": "Set Reminder",
+  "setReminderToStayOnTrack": "Set a reminder to stay on track",
+  "setSmartReminder": "Set Smart Reminder",
   "settings": "Settings",
   "settingsButton": "Settings",
   "settingsSaved": "Settings saved",
@@ -1274,6 +1228,7 @@
   "shortBreakDuration": "Short Break Duration",
   "shortBreakLabel": "Short Break",
   "shortBreakMin": "Short Break (min)",
+  "shortenSession": "⏰ Shorten Session",
   "shortPreset": "Short (15/3/10)",
   "showActionButtons": "Show action buttons",
   "showBadge": "Show Badge",
@@ -1281,10 +1236,10 @@
   "showMaintenanceScreenToUsers": "• Show maintenance screen to users",
   "showTasks": "Show tasks",
   "signIn": "Sign In",
+  "signingIn": "Signing you in..",
   "signInWithApple": "Sign in with Apple",
   "signInWithGoogle": "Sign in with Google",
   "signOut": "Sign Out",
-  "signingIn": "Signing you in..",
   "silentNotification10Seconds": "Silent notification - 10 seconds",
   "skip": "Skip",
   "skipForNow": "Skip for Now",
@@ -1292,15 +1247,21 @@
   "smartFeatures": "Smart Features",
   "smartFeaturesTutorial": "Smart Features Tutorial",
   "smartNotificationsDescription": "Automatically adjust notification timing based on your activity patterns",
+  "smartReminder": "Smart Reminder",
+  "smartReminders": "Smart Reminders",
+  "smartReminderSet": "Smart reminder set",
+  "smartReminderSuggestion": "Smart Reminder Suggestion",
   "smartScheduling": "Smart Scheduling",
   "smartSchedulingInfo": "Smart scheduling learns from your usage patterns to deliver notifications at optimal times.",
   "smartSortingConsidersTimeOfDayEnergyLevelsAndPatterns": "Smart sorting considers time of day, energy levels, and patterns",
   "smartTaskSorting": "Smart Task Sorting",
   "smartTaskSortingWithAiRecommendations": "• Smart task sorting with AI recommendations",
   "smartView": "Smart",
+  "snooze15min": "Snooze 15min",
   "someSyncOperationsFailed": "Some sync operations failed",
   "somethingWentWrong": "Something went wrong",
   "sometimesNeutralIsExactlyWhereWeNeedToBe": "Sometimes neutral is exactly where we need to be",
+  "sortAndFilter": "Sort & Filter",
   "sortBy": "Sort by",
   "sound": "Sound",
   "soundDisabled": "Sound disabled",
@@ -1314,14 +1275,17 @@
   "start": "Start",
   "startAFocusedWorkSession": "Start a focused work session",
   "startAPomodoroSessionToSeeAdaptiveTiming": "Start a Pomodoro session to see adaptive timing",
+  "startFocus": "Start Focus",
   "startFocusMode": "Start Focus Mode",
   "startFocusSession": "Start Focus Session",
   "startLoggingMoods": "Start logging your moods to see your history",
-  "startPomodoroSession": "Start Pomodoro Session",
+  "startPomodoro": "Start Pomodoro",
+  "startPomodoroSessionsToSeeInsights": "Start Pomodoro sessions to see insights",
   "startRecording": "Start Recording",
   "startSession": "Start Session",
   "startTracking": "Start tracking your mood journey",
   "startTrackingYourMood": "Start tracking your mood to see insights",
+  "startWorking": "Start working",
   "startYourFirstPomodoroSession": "Start your first Pomodoro session to boost productivity",
   "statistics": "Statistics",
   "statisticsAnalytics": "Statistics & Analytics",
@@ -1335,8 +1299,6 @@
   "stopSession": "Stop Session",
   "streak": "Streak",
   "streakDays": "Streak Days",
-  "or": "or",
-  "others": "Others",
   "stress": "Stress",
   "stressLevel": "Stress Level",
   "struggling": "Struggling",
@@ -1351,14 +1313,13 @@
   "subtaskDescription": "Description (optional)",
   "subtaskDetails": "Subtask Details",
   "subtaskDuplicated": "Subtask duplicated successfully",
+  "subtasks": "Subtasks",
   "subtaskTitle": "Subtask Title",
   "subtaskUncompleted": "Subtask marked as incomplete",
   "subtaskUpdated": "Subtask updated successfully",
-  "subtasks": "Subtasks",
-  "subtasksCount": "{count} subtasks",
-  "suggestTimes": "Suggest Times",
   "suggestedPlan": "Suggested Plan:",
   "suggestedTimes": "Suggested Times",
+  "suggestTimes": "Suggest Times",
   "sun": "Sun",
   "sunday": "Sun",
   "sundayAbbrev": "Sun",
@@ -1367,12 +1328,12 @@
   "surfaceColor": "Surface Color",
   "suspendRemindersTimers": "Suspend all reminders and timers immediately",
   "syncError": "Sync error: {error}",
+  "syncingFromFirebase": "Syncing from Firebase...",
   "syncStatus": "Sync Status",
   "syncStatusFailed": "Failed",
   "syncStatusIdle": "Idle",
   "syncStatusSuccess": "Success",
   "syncStatusSyncing": "Syncing",
-  "syncingFromFirebase": "Syncing from Firebase...",
   "system": "System",
   "systemAdministration": "System administration",
   "systemMode": "System Mode",
@@ -1385,176 +1346,62 @@
   "tapOptionBestDescribesMood": "Tap the option that best describes your mood",
   "tapToAddFirstTask": "Tap the + button to add your first task",
   "tapToLogMood": "Tap to log your mood",
+  "tapToSetInstantly": "Tap to set instantly",
   "tapToStartRecording": "Tap to start recording",
   "taskActions": "Task Actions",
   "taskAddedSuccessfully": "Task added successfully!",
   "taskAttachments": "Attachments",
-  "taskCompleteReport": "📋 Task: Complete Report",
-  "taskCompleted": "Task completed successfully",
-  "taskCompletionSounds": "Task Completion Sounds",
-  "moodCheckInsChannelName": "Mood Check-Ins",
-  "moodCheckInsChannelDesc": "Mood check-in reminders",
-  "taskRemindersChannelName": "Task Reminders",
-  "taskRemindersChannelDesc": "Reminders for tasks",
-  "taskDueChannelName": "Task Due",
-  "taskDueChannelDesc": "Notifications for due tasks",
-  "taskCompletedChannelName": "Task Completed",
+  "taskCompleted": "{title} {status}",
   "taskCompletedChannelDesc": "Celebration notifications for completed tasks",
-  "adminNotificationsChannelName": "Admin Notifications",
-  "adminNotificationsChannelDesc": "Important notifications for administrators",
-
-  "testMoodNotificationTitle": "Test Mood Check-In",
-  "testMoodNotificationBody": "This is a test mood check-in notification.",
-  "scheduledTestMoodNotificationBody": "This is a scheduled test mood check-in notification.",
-  "immediateTestNotification": "Immediate Test Notification",
-  "immediateTestNotificationDescription": "This is an immediate test notification.",
-  "testReminder": "Test Reminder",
-  "testNotificationDescription": "This is a test notification.",
-
-  "startingTask": "🍅 Starting: {taskTitle}",
-  "@startingTask": { "placeholders": { "taskTitle": { "type": "String" } } },
-  "sessionComplete": "✅ Session Complete!",
-  "sessionPaused": "⏸️ Session Paused",
-  "progressUpdate": "📈 Progress Update",
-  "breakTitleShort": "☕ Short Break",
-  "breakTitleLong": "🌿 Long Break",
-  "queueComplete": "🎉 Queue Complete!",
-  "dailySummary": "📊 Daily Summary",
-  "keepItGoing": "🔥 Keep it Going!",
-  "weeklyGoalProgress": "🎯 Weekly Goal Progress",
-  "extendSession": "⏱️ Extend Session",
-  "shortenSession": "⏰ Shorten Session",
-  "sessionOptimization": "⚙️ Session Optimization",
-  "energyLevelHigh": "⚡ High Energy!",
-  "energyLevelGood": "🔥 Good Energy",
-  "energyLevelModerate": "⚖️ Moderate Energy",
-  "energyLevelLow": "🔋 Low Energy",
-  "energyLevelVeryLow": "😴 Very Low Energy",
-
-  "sessionsPlanned": "📋 {count} sessions planned",
-  "@sessionsPlanned": { "placeholders": { "count": { "type": "int" } } },
-  "minutesPerSession": "⏱️ {minutes} min per session",
-  "@minutesPerSession": { "placeholders": { "minutes": { "type": "int" } } },
-  "focusLevel": "🎯 Focus level: {score}/10",
-  "@focusLevel": { "placeholders": { "score": { "type": "int" } } },
-  "focusArea": "🎯 Focus: {area}",
-  "@focusArea": { "placeholders": { "area": { "type": "String" } } },
-  "sessionNofM": "Session {current} of {total}",
-  "@sessionNofM": { "placeholders": { "current": { "type": "int" }, "total": { "type": "int" } } },
-  "focusRating": "Focus rating: {rating}/10",
-  "@focusRating": { "placeholders": { "rating": { "type": "int" } } },
-  "completedTaskNotification": "Completed: {taskTitle}",
-  "@completedTaskNotification": { "placeholders": { "taskTitle": { "type": "String" } } },
-  "nextTask": "Next: {taskTitle}",
-  "@nextTask": { "placeholders": { "taskTitle": { "type": "String" } } },
-  "priorityLabel": "Priority: {priority}",
-  "@priorityLabel": { "placeholders": { "priority": { "type": "String" } } },
-  "allTasksCompleted": "🎉 All tasks completed!",
-  "progressPercent": "Progress: {percent}%",
-  "@progressPercent": { "placeholders": { "percent": { "type": "int" } } },
-  "sessionsProgress": "Sessions: {completed}/{total}",
-  "@sessionsProgress": { "placeholders": { "completed": { "type": "int" }, "total": { "type": "int" } } },
-  "almostThere": "🔥 Almost there! Keep going!",
-  "halfwayDone": "💪 Halfway done!",
-  "greatStart": "🚀 Great start!",
-  "minuteBreak": "⏰ {minutes} minute {breakType}",
-  "@minuteBreak": { "placeholders": { "minutes": { "type": "int" }, "breakType": { "type": "String" } } },
-  "suggestedActivity": "💡 Suggested activity: {activity}",
-  "@suggestedActivity": { "placeholders": { "activity": { "type": "String" } } },
-  "timeToRecharge": "🌿 Time to recharge!",
-  "quickRefresh": "🧘 Quick refresh",
-  "allTasksCompletedCount": "🎉 All {count} tasks completed!",
-  "@allTasksCompletedCount": { "placeholders": { "count": { "type": "int" } } },
-  "totalTime": "⏱️ Total time: {time}",
-  "@totalTime": { "placeholders": { "time": { "type": "String" } } },
-  "greatJobFocused": "🔥 Great job staying focused!",
-  "todaysPerformance": "📊 Today's Performance:",
-  "sessionsCount": "⏱️ {count} sessions",
-  "@sessionsCount": { "placeholders": { "count": { "type": "int" } } },
-  "avgFocus": "🎯 Avg focus: {score}/10",
-  "@avgFocus": { "placeholders": { "score": { "type": "String" } } },
-  "tasksCompletedCount": "✅ {count} tasks completed",
-  "@tasksCompletedCount": { "placeholders": { "count": { "type": "int" } } },
-  "dayStreak": "🔥 {count} day streak",
-  "@dayStreak": { "placeholders": { "count": { "type": "int" } } },
-  "excellentFocus": "🌟 Excellent focus today!",
-  "goodFocus": "👍 Good focus maintained!",
-  "tomorrowsNewDay": "💪 Tomorrow's a new day!",
-  "currentStreakDays": "🔥 Current streak: {count} days",
-  "@currentStreakDays": { "placeholders": { "count": { "type": "int" } } },
-  "goalAchievedNewTarget": "🏆 Goal achieved! New target: {count} days",
-  "@goalAchievedNewTarget": { "placeholders": { "count": { "type": "int" } } },
-  "targetDays": "🎯 Target: {count} days",
-  "@targetDays": { "placeholders": { "count": { "type": "int" } } },
-  "daysToGo": "📈 {count} days to go!",
-  "@daysToGo": { "placeholders": { "count": { "type": "int" } } },
-  "youreOnFire": "💪 You're on fire!",
-  "buildingMomentum": "🌟 Building momentum!",
-  "keepItGoingBody": "🚀 Keep it going!",
-  "suggestedDuration": "⏱️ Suggested: {minutes} min",
-  "@suggestedDuration": { "placeholders": { "minutes": { "type": "int" } } },
-  "reason": "💭 Reason: {reason}",
-  "@reason": { "placeholders": { "reason": { "type": "String" } } },
-  "currentEnergyLevel": "⚡ Current energy: {level}",
-  "@currentEnergyLevel": { "placeholders": { "level": { "type": "String" } } },
-  "recommendedTasks": "📋 Recommended tasks:",
-  "considerLighterTasks": "🌿 Consider lighter tasks or take a break",
-  "weeklyGoalSessions": "🎯 Weekly Goal: {count} sessions",
-  "@weeklyGoalSessions": { "placeholders": { "count": { "type": "int" } } },
-  "weeklyProgressStatus": "✅ Progress: {current}/{total}",
-  "@weeklyProgressStatus": { "placeholders": { "current": { "type": "int" }, "total": { "type": "int" } } },
-  "daysRemaining": "📅 Days remaining: {count}",
-  "@daysRemaining": { "placeholders": { "count": { "type": "int" } } },
-  "goalAchieved": "🏆 Goal achieved! Amazing work!",
-  "almostThereKeepItUp": "🌟 Almost there! Keep it up!",
-  "halfwayThere": "💪 Halfway there!",
-  "pickUpPace": "🚀 Let's pick up the pace!",
-
-  "activityMeditation": "Mindful breathing (2-5 min)",
-  "activityStretching": "Desk stretches (2-3 min)",
-  "activityHydration": "Drink water & walk around",
-  "activityEyeRest": "20-20-20 eye exercises",
-  "activityWalking": "Short walk (3-5 min)",
-  "activityBreathing": "Deep breathing exercises",
-  "activityMusic": "Listen to calming music",
-  "activitySocial": "Quick chat with colleague",
+  "taskCompletedChannelName": "Task Completed",
+  "taskCompletedSuccessfully": "Task completed successfully",
+  "taskCompleteReport": "📋 Task: Complete Report",
+  "taskCompletionSounds": "Task Completion Sounds",
+  "taskCount": "{count} task{plural}",
   "taskCreatedSuccessfully": "Task created successfully",
   "taskDeleted": "Task deleted successfully",
-  "taskDeletedSuccessfully": "{taskTitle} deleted successfully",
+  "taskDeletedSuccessfully": "{title} deleted successfully",
   "taskDescription": "Task Description",
   "taskDescriptionLabel": "Description (Optional)",
   "taskDetails": "Task Details",
   "taskDue": "Task Due",
+  "taskDueChannelDesc": "Notifications for due tasks",
+  "taskDueChannelName": "Task Due",
   "taskDueToday": "Task Due Today",
   "taskDuplicatedSuccessfully": "Task duplicated successfully",
+  "taskEssentials": "Task Essentials",
   "taskHistory": "Task History",
   "taskInformation": "Task Information",
+  "taskIsDueSoon": "Task is due soon",
+  "taskIsInProgress": "Task is in progress",
+  "taskIsOverdue": "Task is overdue",
   "taskNotes": "Task Notes",
   "taskNotificationIn15Seconds": "⏰ Task notification in 15 seconds (has action buttons!)",
+  "taskOverdue": "Overdue",
   "taskPath": "Task Path",
   "taskPriorityDistribution": "Task Priority Distribution",
   "taskProgress": "Task Progress",
   "taskRecommendations": "Task Recommendations",
   "taskReminder": "Task Reminder",
   "taskReminders": "Task Reminders",
+  "taskRemindersChannelDesc": "Reminders for tasks",
+  "taskRemindersChannelName": "Task Reminders",
   "taskRescheduled": "Task rescheduled",
+  "tasks": "Tasks",
+  "tasksCompleted": "Tasks Completed",
+  "tasksCompletedThisWeek": "Tasks Completed This Week",
+  "tasksCreatedSuccessfully": "Tasks created successfully!",
+  "tasksNeedingInstances": "Tasks Needing Instances",
   "taskSounds": "Task Sounds",
+  "tasksSortedByPriorityAndSuitability": "Tasks sorted by priority and suitability",
   "taskStatistics": "Task Statistics",
+  "taskTimeline": "Task Timeline",
   "taskTitle": "Task Title",
   "taskTitleLabel": "Task Title",
   "taskTitleRequired": "Task title is required",
   "taskUncompleted": "Task marked as incomplete",
   "taskUpdated": "Task updated successfully",
   "taskValidationFailed": "Task validation failed",
-  "tasks": "Tasks",
-  "tasksCompleted": "Tasks Completed",
-  "tasksCompletedThisWeek": "Tasks Completed This Week",
-  "tasksCount": "Tasks Count",
-  "tasksCreatedSuccessfully": "Tasks created successfully!",
-  "tasksDue": "{count} tasks due",
-  "tasksForDate": "Tasks for {date}",
-  "tasksNeedingInstances": "Tasks Needing Instances",
-  "tasksSortedByPriorityAndSuitability": "Tasks sorted by priority and suitability",
   "tellUsAboutYourself": "Tell us about yourself",
   "templateName": "Template Name",
   "termsAndPrivacy": "By signing in, you agree to our Terms of Service and Privacy Policy",
@@ -1562,6 +1409,7 @@
   "testDNDMode": "5. Test DND mode in preferences",
   "testHighPriority": "Test: High Priority",
   "testIn20Seconds": "20 seconds",
+  "testingTips": "Testing Tips",
   "testLowPriority": "Test: Low Priority",
   "testMoodCheckIn": "Test: Mood Check-in",
   "testMoodNotificationBody": "This is a test mood check-in notification.",
@@ -1571,9 +1419,9 @@
   "testNotification": "Test Notification",
   "testNotificationBody": "The new notification system works!",
   "testNotificationDescription": "This is a test notification to verify reminder functionality",
+  "testNotifications": "Test Notifications",
   "testNotificationSent": "Test notification sent",
   "testNotificationTitle": "✅ Test Notification",
-  "testNotifications": "Test Notifications",
   "testReminder": "Test Reminder",
   "testReminderIn10Seconds": "Test Reminder in 10s",
   "testReminderScheduled": "Test reminder scheduled for 10 seconds from now",
@@ -1581,7 +1429,6 @@
   "testSimpleNotification": "Test: Simple Notification",
   "testSound": "Test Sound",
   "testTaskReminder": "Test: Task Reminder",
-  "testingTips": "Testing Tips",
   "textColor": "Text Color",
   "textInputComingSoon": "Text input coming soon!",
   "thankYouForYourPatience": "Thank you for your patience 💙",
@@ -1589,6 +1436,7 @@
   "themeLabel": "Theme",
   "themeSettings": "Theme Settings",
   "themeSettingsResetToDefaults": "Theme settings reset to defaults",
+  "thirtySeconds": "30 seconds",
   "thisActionCannotBeUndone": "This action cannot be undone!",
   "thisWeek": "This Week",
   "thisWeekTasks": "Tasks for this week",
@@ -1602,38 +1450,40 @@
   "thursdayAbbrev": "Thu",
   "timeBasedRecommendations": "Time-based recommendations",
   "timeFormat": "Time Format",
-  "timeRange": "Time Range:",
-  "timeRemaining": "Time remaining: {time}",
-  "timeSpent": "Time Spent",
-  "timeTracking": "Time Tracking",
   "timeline": "Timeline",
   "timelineView": "Timeline",
+  "timeRange": "Time Range:",
+  "timeSpent": "Time Spent",
+  "timeToRecharge": "🌿 Time to recharge!",
+  "timeTracking": "Time Tracking",
   "today": "Today",
   "todayI": "Today I",
+  "todaysPerformance": "📊 Today's Performance:",
+  "todaysStatistics": "Today's Statistics",
   "todayTasks": "Today's tasks",
   "todayYoureFeeling": "Today you're feeling",
-  "todaysStatistics": "Today's Statistics",
   "toggleAdminStatus": "Toggle Admin Status",
   "tomorrow": "Tomorrow",
   "tomorrowShouldBeATypicalDayForYou": "Tomorrow should be a typical day for you",
+  "tomorrowsNewDay": "💪 Tomorrow's a new day!",
   "tomorrowTasks": "Tomorrow's tasks",
   "toolsAndSettings": "Tools & Settings",
   "totalEntries": "Total Entries",
   "totalEstimatedTime": "Total estimated time: {minutes} min",
   "totalFocusTime": "Total Focus Time",
   "totalHours": "Total Hours",
-  "totalNotifications": "Total Notifications: {count}",
   "totalRecurringInstances": "Total Recurring Instances",
   "totalSessions": "Total Sessions",
+  "totalStat": "Total",
+  "totaltasks": "Total Tasks",
   "totalTasks": "Total Tasks",
   "totalTasksInCategory": "Total tasks: {count}",
-  "totaltasks": "Total Tasks",
+  "trackedOperations": "Tracked Operations: {count}",
   "trackFocusPatternsAndSessionPerformance": "Track focus patterns and session performance",
   "trackNotificationInteractionStatistics": "Track notification interaction statistics",
   "trackWhenNotificationsAreDelivered": "Track when notifications are delivered and opened",
   "trackYourMoodForAWeek": "Track your mood for a week to see insights",
   "trackYourMoodForAWeekToGetAIPredictions": "Track your mood for a week to get AI predictions",
-  "trackedOperations": "Tracked Operations: {count}",
   "trends": "Trends",
   "tryActionButtons": "4. Try action buttons on task notifications",
   "tryAdjustingYourSearchTerms": "Try adjusting your search terms",
@@ -1649,22 +1499,27 @@
   "tuesdayAbbrev": "Tue",
   "tutorialCompletedYoureAllSetToUseSmartFeatures": "Tutorial completed! You're all set to use smart features.",
   "twelveHour": "12h",
+  "twentyFiveMinuteSession": "25 minute session",
   "twentyFourHour": "24h",
+  "twoDaysBeforeDue": "",
   "typeToFilterSettingsSections": "Type to filter settings sections",
   "unableToLoadProgressData": "Unable to load progress data",
+  "uncompleteTask": "Uncomplete Task",
   "uncompleteTaskButton": "Uncomplete Task",
   "undatedTasks": "Tasks without dates",
   "understandYourPatternsAndOptimizeYourProductivity": "Understand your patterns and optimize your productivity",
   "undo": "Undo",
+  "unknown": "Unknown",
   "upcoming": "Upcoming",
   "updateAvailable": "Update Available",
   "updateButton": "Update",
+  "updated": "Updated",
+  "updatedAt": "Updated: {date}",
   "updateDownloaded": "Update Downloaded",
   "updateError": "Update Error",
   "updatePersonalInfo": "Update your personal information",
-  "updateTodaysEntryInstead": "You can update today's entry instead",
-  "updated": "Updated: {date}",
   "updates": "Updates",
+  "updateTodaysEntryInstead": "You can update today's entry instead",
   "urgent": "Urgent",
   "urgentNotification10Seconds": "Urgent notification - 10 seconds",
   "urgentNotificationMessage": "This is an urgent notification!",
@@ -1673,13 +1528,14 @@
   "useLargerFontSizes": "Use larger font sizes",
   "useLightTheme": "Use light theme",
   "userAndAllAssociatedDataDeletedSuccessfully": "{userName} and all associated data deleted successfully",
+  "userDeletedSuccessfully": "{userName} and all associated data deleted successfully",
   "userId": "User ID: {userId}",
+  "userIdNA": "User ID: {userId}",
   "userNotAuthenticated": "User not authenticated",
   "userRegistration": "User Registration",
   "verbose": "Verbose",
   "verificationReportLoggedToConsole": "Verification report logged to console",
   "verifyAllTasks": "Verify All Tasks",
-  "version": "Version: {version}",
   "veryBad": "Very Bad",
   "veryBadIntensity": "Very Bad Intensity",
   "veryGood": "Very Good",
@@ -1714,12 +1570,11 @@
   "wantToShareMore": "Want to share more?",
   "wantToShareMoreDetails": "Want to share more details?",
   "warning": "Warning",
-  "weRecommendTheseSettings": "We recommend these settings based on your preferences",
+  "wasScheduledFor": "Was scheduled for:",
   "wed": "Wed",
   "wednesday": "Wed",
   "wednesdayAbbrev": "Wed",
   "week": "Week",
-  "weekView": "Week",
   "weekly": "Weekly",
   "weeklyFocusTrend": "Weekly Focus Trend",
   "weeklyGoalProgress": "Weekly Goal Progress",
@@ -1727,9 +1582,11 @@
   "weeklyProgressOf": "{progress} of {goal} sessions",
   "weeklySessionCount": "Weekly Session Count",
   "weeklyStats": "Weekly Stats",
+  "weekView": "Week",
   "welcomeToTazbeet": "Welcome to Tazbeet",
   "wellnessEmotions": "Wellness & Emotions",
   "wellnessInsights": "Wellness insights",
+  "weRecommendTheseSettings": "We recommend these settings based on your preferences",
   "whatMadeTodayGreat": "What made today great?",
   "whatsGoingWell": "What's going well?",
   "whatsHappeningRightNow": "What's happening right now?",
@@ -1758,8 +1615,10 @@
   "youDoNotHaveAdminPrivileges": "You do not have admin privileges.",
   "youHaventLoggedYourMoodTodayYet": "You haven't logged your mood today yet",
   "youMightBenefitFromAdditionalSupport": "You might benefit from additional support",
-  "yourIntelligentTaskManagementCompanionWithAIPoweredFeatures": "Your intelligent task management companion with AI-powered features",
+  "youreDoingGreat": "You're doing great!",
+  "youreOnFire": "💪 You're on fire!",
   "yourIntelligentTaskManagementCompanionWithAiPoweredFeatures": "Your intelligent task management companion with AI-powered features",
+  "yourIntelligentTaskManagementCompanionWithAIPoweredFeatures": "Your intelligent task management companion with AI-powered features",
   "yourJoyIsContagious": "Your joy is contagious!",
   "yourMood": "Your mood",
   "yourMoodHasBeenImprovingLately": "Your mood has been improving lately",
@@ -1767,6 +1626,494 @@
   "yourMoodJourney": "Your Mood Journey",
   "yourOverallMoodIsGenerallyPositive": "Your overall mood is generally positive",
   "yourPersonalTaskManager": "Your Personal Task Manager",
-  "youreDoingGreat": "You're doing great!",
-  "youveBeenTrackingYourMoodForDays": "You've been tracking your mood for {days} days"
+  "yourProgress": "Your progress",
+  "youveBeenTrackingYourMoodForDays": "You've been tracking your mood for {days} days",
+  "@@locale": "en",
+  "allTasksCompletedCount": "🎉 All {count} tasks completed!",
+  "@allTasksCompletedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "avgFocus": "🎯 Avg focus: {score}/10",
+  "@avgFocus": {
+    "placeholders": {
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "bulkDeleteConfirmation": "Are you sure you want to delete {count} tasks?",
+  "@bulkDeleteConfirmation": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkGenerationComplete": "Generated {count} recurring instances",
+  "@bulkGenerationComplete": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "completedTaskNotification": "Completed: {taskTitle}",
+  "@completedTaskNotification": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteCategory": "Are you sure you want to delete \"{categoryName}\"? This will remove the category from all associated tasks.",
+  "@confirmDeleteCategory": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteTask": "Confirm delete task {taskTitle}",
+  "@confirmDeleteTask": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "Object"
+      }
+    }
+  },
+  "currentEnergyLevel": "⚡ Current energy: {level}",
+  "@currentEnergyLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "currentStreakDays": "🔥 Current streak: {count} days",
+  "@currentStreakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "days": "days",
+  "@days": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "daysRemaining": "📅 Days remaining: {count}",
+  "@daysRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "daysToGo": "📈 {count} days to go!",
+  "@daysToGo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dayStreak": "🔥 {count} day streak",
+  "@dayStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteTaskConfirmation": "Delete Task Confirmation",
+  "@deleteTaskConfirmation": {
+    "placeholders": {
+      "task": {
+        "type": "String"
+      }
+    }
+  },
+  "error": "Error",
+  "@error": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "focusArea": "🎯 Focus: {area}",
+  "@focusArea": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
+  "focusLevel": "🎯 Focus level: {score}/10",
+  "@focusLevel": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "focusModeFor": "Focus mode for {taskTitle}",
+  "@focusModeFor": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "Object"
+      }
+    }
+  },
+  "focusRating": "Focus rating: {rating}/10",
+  "@focusRating": {
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "goalAchievedNewTarget": "🏆 Goal achieved! New target: {count} days",
+  "@goalAchievedNewTarget": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inHours": "In {count} hours",
+  "@inHours": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "inMinutes": "In {count} minutes",
+  "@inMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "itemsSelected": "{count} selected",
+  "@itemsSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "metricValue": "{label}: {value}/10",
+  "@metricValue": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "minuteBreak": "⏰ {minutes} minute {breakType}",
+  "@minuteBreak": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "breakType": {
+        "type": "String"
+      }
+    }
+  },
+  "minuteFocusSessions": "{minutes}-minute focus sessions",
+  "@minuteFocusSessions": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "minuteSession": "{duration} minute session",
+  "@minuteSession": {
+    "placeholders": {
+      "duration": {
+        "type": "Object"
+      }
+    }
+  },
+  "minutesPerSession": "⏱️ {minutes} min per session",
+  "@minutesPerSession": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "nextTask": "Next: {taskTitle}",
+  "@nextTask": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "percent": "{value}%",
+  "@percent": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "priorityLabel": "Priority: {priority}",
+  "@priorityLabel": {
+    "placeholders": {
+      "priority": {
+        "type": "String"
+      }
+    }
+  },
+  "progressPercent": "Progress: {percent}%",
+  "@progressPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "reason": "💭 Reason: {reason}",
+  "@reason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "recurringTaskError": "Error in recurring task: {error}",
+  "@recurringTaskError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "recurringTaskNotification": "New recurring task created: {title}",
+  "@recurringTaskNotification": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "reminder": "Reminder: {date}",
+  "@reminder": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderCancelledFor": "Reminder cancelled for: {taskTitle}",
+  "@reminderCancelledFor": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionNofM": "Session {current} of {total}",
+  "@sessionNofM": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "sessionsCount": "⏱️ {count} sessions",
+  "@sessionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sessionsPlanned": "📋 {count} sessions planned",
+  "@sessionsPlanned": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sessionsProgress": "Sessions: {completed}/{total}",
+  "@sessionsProgress": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "startingTask": "🍅 Starting: {taskTitle}",
+  "@startingTask": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "subtasksCount": "{count} subtasks",
+  "@subtasksCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "suggestedActivity": "💡 Suggested activity: {activity}",
+  "@suggestedActivity": {
+    "placeholders": {
+      "activity": {
+        "type": "String"
+      }
+    }
+  },
+  "suggestedDuration": "⏱️ Suggested: {minutes} min",
+  "@suggestedDuration": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "targetDays": "🎯 Target: {count} days",
+  "@targetDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksCompletedCount": "✅ {count} tasks completed",
+  "@tasksCompletedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksCount": "{count}",
+  "@tasksCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksDue": "{count} tasks due",
+  "@tasksDue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksForDate": "Tasks for {date}",
+  "@tasksForDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "timeRemaining": "Time remaining: {time}",
+  "@timeRemaining": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "todayAt": "Today at {time}",
+  "@todayAt": {
+    "placeholders": {
+      "time": {
+        "type": "Object"
+      }
+    }
+  },
+  "totalNotifications": "Total Notifications: {count}",
+  "@totalNotifications": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalTime": "⏱️ Total time: {time}",
+  "@totalTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "version": "Version: {version}",
+  "@version": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "viewAll": "View All ({count})",
+  "@viewAll": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "weeklyGoalSessions": "🎯 Weekly Goal: {count} sessions",
+  "@weeklyGoalSessions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyProgressStatus": "✅ Progress: {current}/{total}",
+  "@weeklyProgressStatus": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "yesterdayAt": "Yesterday at {time}",
+  "@yesterdayAt": {
+    "placeholders": {
+      "time": {
+        "type": "Object"
+      }
+    }
+  }
 }

@@ -855,7 +855,7 @@ class _CategoriesManagementWidgetState extends State<CategoriesManagementWidget>
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Text(AppLocalizations.of(context)!.color + ': '),
+                  Text('${AppLocalizations.of(context)!.color}: '),
                   const SizedBox(width: 16),
                   ...[Colors.red, Colors.blue, Colors.green, Colors.orange, Colors.purple].map(
                     (color) => GestureDetector(

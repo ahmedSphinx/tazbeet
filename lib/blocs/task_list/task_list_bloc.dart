@@ -64,27 +64,44 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
 
   Future<void> _onAddTask(AddTask event, Emitter<TaskListState> emit) async {
     if (state is TaskListLoaded) {
-      // Persist FIRST to prevent data loss on crash
-      await taskRepository.addTask(event.task);
+      // Auto-create default reminder if task has dueDate but no reminder
+      Task taskToAdd = event.task;
+      if (taskToAdd.dueDate != null && taskToAdd.reminderDate == null) {
+        taskToAdd = taskToAdd.copyWith(reminderDate: taskToAdd.defaultReminderDate, reminderState: ReminderState.scheduled);
+      }
 
-      final List<Task> updatedTasks = List.from((state as TaskListLoaded).tasks)..add(event.task);
+      // Persist FIRST to prevent data loss on crash
+      await taskRepository.addTask(taskToAdd);
+
+      final List<Task> updatedTasks = List.from((state as TaskListLoaded).tasks)..add(taskToAdd);
       emit(TaskListLoaded(updatedTasks));
 
       // Update category task counts
       await categoryRepository.updateCategoryTaskCounts(updatedTasks);
 
       // Queue for sync instead of immediate sync
-      syncQueue.enqueueTaskCreate(event.task);
+      syncQueue.enqueueTaskCreate(taskToAdd);
+
+      // Schedule reminder if needed
+      if (taskToAdd.reminderDate != null) {
+        await notificationService.scheduleTaskReminder(taskToAdd);
+      }
     }
   }
 
   Future<void> _onUpdateTask(UpdateTask event, Emitter<TaskListState> emit) async {
     if (state is TaskListLoaded) {
+      // Auto-create default reminder if task has dueDate but no reminder
+      Task taskToUpdate = event.task;
+      if (taskToUpdate.dueDate != null && taskToUpdate.reminderDate == null) {
+        taskToUpdate = taskToUpdate.copyWith(reminderDate: taskToUpdate.defaultReminderDate, reminderState: ReminderState.scheduled);
+      }
+
       // Persist FIRST to prevent data loss on crash
-      await taskRepository.updateTask(event.task);
+      await taskRepository.updateTask(taskToUpdate);
 
       final List<Task> updatedTasks = (state as TaskListLoaded).tasks.map((task) {
-        return task.id == event.task.id ? event.task : task;
+        return task.id == taskToUpdate.id ? taskToUpdate : task;
       }).toList();
       emit(TaskListLoaded(updatedTasks));
 
@@ -92,7 +109,12 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
       await categoryRepository.updateCategoryTaskCounts(updatedTasks);
 
       // Queue for sync instead of immediate sync
-      syncQueue.enqueueTaskUpdate(event.task);
+      syncQueue.enqueueTaskUpdate(taskToUpdate);
+
+      // Schedule reminder if needed
+      if (taskToUpdate.reminderDate != null) {
+        await notificationService.scheduleTaskReminder(taskToUpdate);
+      }
     }
   }
 

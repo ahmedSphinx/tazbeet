@@ -474,7 +474,7 @@ class PerformanceAlert {
   final Duration? duration;
   final double? value;
 
-  PerformanceAlert({required this.type, required this.message, required this.severity, String? operation, this.duration, this.value}) : timestamp = DateTime.now(), operation = operation;
+  PerformanceAlert({required this.type, required this.message, required this.severity, this.operation, this.duration, this.value}) : timestamp = DateTime.now();
 }
 
 enum AlertType { performance, memory, timeout, error }

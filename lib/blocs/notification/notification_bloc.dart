@@ -4,6 +4,7 @@ import 'package:tazbeet/services/app_logging_service.dart';
 import '../../models/notification_item.dart';
 import '../../models/task.dart';
 import '../../repositories/notification_repository.dart';
+import '../../repositories/task_repository.dart';
 import '../../services/notification_service.dart';
 import 'notification_event.dart';
 import 'notification_state.dart';
@@ -19,12 +20,14 @@ import 'notification_state.dart';
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   final NotificationRepository _repository;
   final NotificationService _notificationService;
+  final TaskRepository _taskRepository;
   Timer? _dndTimer;
   Timer? _refreshTimer;
 
-  NotificationBloc({NotificationRepository? repository, NotificationService? notificationService})
+  NotificationBloc({NotificationRepository? repository, NotificationService? notificationService, TaskRepository? taskRepository})
     : _repository = repository ?? NotificationRepository(),
       _notificationService = notificationService ?? NotificationService(),
+      _taskRepository = taskRepository ?? TaskRepository(),
       super(const NotificationInitial()) {
     // Register event handlers
     on<InitializeNotifications>(_onInitialize);
@@ -56,6 +59,8 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     on<FilterNotificationsByType>(_onFilterByType);
     on<FilterNotificationsByStatus>(_onFilterByStatus);
     on<SearchNotifications>(_onSearchNotifications);
+    on<VerifyScheduledReminders>(_onVerifyScheduledReminders);
+    on<SnoozeTaskReminder>(_onSnoozeTaskReminder);
 
     // Start periodic refresh of pending notifications
     _startPeriodicRefresh();
@@ -415,9 +420,15 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   Future<void> _onCheckPermissions(CheckNotificationPermissions event, Emitter<NotificationState> emit) async {
     try {
       final granted = await _notificationService.areNotificationsEnabled();
+      final wasGranted = (state is NotificationLoaded) ? (state as NotificationLoaded).permissionsGranted : false;
 
       if (state is NotificationLoaded) {
         emit((state as NotificationLoaded).copyWith(permissionsGranted: granted));
+      }
+
+      // Trigger reschedule if permissions changed
+      if (wasGranted != granted && granted) {
+        add(const RescheduleAllReminders([]));
       }
     } catch (e) {
       AppLogging.logError('Failed to check permissions: $e', name: 'NotificationBloc');
@@ -572,6 +583,40 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         return NotificationPriority.medium;
       case TaskPriority.low:
         return NotificationPriority.low;
+    }
+  }
+
+  Future<void> _onVerifyScheduledReminders(VerifyScheduledReminders event, Emitter<NotificationState> emit) async {
+    try {
+      final pending = await _notificationService.getPendingNotifications();
+
+      if (state is NotificationLoaded) {
+        emit((state as NotificationLoaded).copyWith(pendingNotifications: pending));
+      }
+
+      AppLogging.logInfo('Verified ${pending.length} scheduled reminders', name: 'NotificationBloc');
+    } catch (e) {
+      AppLogging.logError('Failed to verify scheduled reminders: $e', name: 'NotificationBloc');
+    }
+  }
+
+  Future<void> _onSnoozeTaskReminder(SnoozeTaskReminder event, Emitter<NotificationState> emit) async {
+    try {
+      // Get the task to snooze from TaskRepository
+      final tasks = await _taskRepository.getAllTasks();
+      final task = tasks.firstWhere((t) => t.id == event.taskId);
+
+      // Calculate new reminder time
+      final newReminderTime = DateTime.now().add(event.duration);
+      final updatedTask = task.copyWith(reminderDate: newReminderTime, reminderState: ReminderState.scheduled, reminderRetryCount: 0, reminderFailureReason: null);
+
+      // Schedule the snoozed reminder
+      await _notificationService.scheduleTaskReminder(updatedTask);
+
+      AppLogging.logInfo('Snoozed reminder for task ${event.taskId} by ${event.duration.inMinutes} minutes', name: 'NotificationBloc');
+    } catch (e) {
+      AppLogging.logError('Failed to snooze task reminder: $e', name: 'NotificationBloc');
+      emit(NotificationError('Failed to snooze reminder: $e', previousState: state));
     }
   }
 

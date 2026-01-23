@@ -5,6 +5,14 @@ import 'pomodoro_plan.dart';
 
 enum TaskPriority { low, medium, high }
 
+enum ReminderState {
+  none, // No reminder scheduled
+  scheduled, // Reminder active and scheduled
+  delivered, // Reminder was shown
+  failed, // Scheduling failed
+  cancelled, // Reminder was cancelled
+}
+
 class Task extends Equatable {
   final String id;
   final String title;
@@ -51,6 +59,12 @@ class Task extends Equatable {
   final bool isPomodoroOptimized; // Flag for pomodoro-ready tasks
   final int focusScore; // 1-10 focus difficulty rating
 
+  // Reminder tracking fields
+  final ReminderState reminderState;
+  final DateTime? reminderLastAttempt;
+  final int reminderRetryCount;
+  final String? reminderFailureReason;
+
   const Task({
     required this.id,
     required this.title,
@@ -94,6 +108,11 @@ class Task extends Equatable {
     this.completedSessions = const [],
     this.isPomodoroOptimized = false,
     this.focusScore = 5,
+    // Reminder tracking fields
+    this.reminderState = ReminderState.none,
+    this.reminderLastAttempt,
+    this.reminderRetryCount = 0,
+    this.reminderFailureReason,
   });
 
   Task copyWith({
@@ -141,6 +160,12 @@ class Task extends Equatable {
     List<CompletedPomodoroSession>? completedSessions,
     bool? isPomodoroOptimized,
     int? focusScore,
+
+    // Reminder tracking fields
+    ReminderState? reminderState,
+    DateTime? reminderLastAttempt,
+    int? reminderRetryCount,
+    String? reminderFailureReason,
   }) {
     return Task(
       id: id ?? this.id,
@@ -187,6 +212,12 @@ class Task extends Equatable {
       completedSessions: completedSessions ?? this.completedSessions,
       isPomodoroOptimized: isPomodoroOptimized ?? this.isPomodoroOptimized,
       focusScore: focusScore ?? this.focusScore,
+
+      // Reminder tracking fields
+      reminderState: reminderState ?? this.reminderState,
+      reminderLastAttempt: reminderLastAttempt ?? this.reminderLastAttempt,
+      reminderRetryCount: reminderRetryCount ?? this.reminderRetryCount,
+      reminderFailureReason: reminderFailureReason ?? this.reminderFailureReason,
     );
   }
 
@@ -227,6 +258,12 @@ class Task extends Equatable {
       'sessionNotes': sessionNotes,
       'strategy': strategy.index,
       'autoStartNextSubtask': autoStartNextSubtask,
+
+      // Reminder tracking fields
+      'reminderState': reminderState.index,
+      'reminderLastAttempt': reminderLastAttempt?.toIso8601String(),
+      'reminderRetryCount': reminderRetryCount,
+      'reminderFailureReason': reminderFailureReason,
     };
   }
 
@@ -276,6 +313,12 @@ class Task extends Equatable {
         sessionNotes: json['sessionNotes'] is List ? List<String>.from(json['sessionNotes']) : [],
         strategy: json['strategy'] != null && json['strategy'] is int ? PomodoroStrategy.values[_safeConvert(json['strategy'], 0)] : PomodoroStrategy.sequential,
         autoStartNextSubtask: _safeConvert(json['autoStartNextSubtask'], false),
+
+        // Reminder tracking fields
+        reminderState: json['reminderState'] != null && json['reminderState'] is int ? ReminderState.values[_safeConvert(json['reminderState'], 0)] : ReminderState.none,
+        reminderLastAttempt: json['reminderLastAttempt'] != null && json['reminderLastAttempt'] is String ? DateTime.tryParse(json['reminderLastAttempt']) : null,
+        reminderRetryCount: _safeConvert(json['reminderRetryCount'], 0),
+        reminderFailureReason: json['reminderFailureReason'],
       );
     } catch (e) {
       // If parsing fails, return a basic task with required fields
@@ -403,6 +446,18 @@ class Task extends Equatable {
     return null;
   }
 
+  // Extension for default reminder calculation
+  DateTime? get defaultReminderDate {
+    if (dueDate == null) return null;
+    // Default: 1 hour before due date for high priority, 24 hours for medium, 48 hours for low
+    final hoursBefore = priority == TaskPriority.high
+        ? 1
+        : priority == TaskPriority.medium
+        ? 24
+        : 48;
+    return dueDate!.subtract(Duration(hours: hoursBefore));
+  }
+
   @override
   List<Object?> get props => [
     id,
@@ -440,5 +495,17 @@ class Task extends Equatable {
     sessionNotes,
     strategy,
     autoStartNextSubtask,
+    pomodoroPlan,
+    estimatedDuration,
+    actualDuration,
+    completedSessions,
+    isPomodoroOptimized,
+    focusScore,
+
+    // Reminder tracking fields
+    reminderState,
+    reminderLastAttempt,
+    reminderRetryCount,
+    reminderFailureReason,
   ];
 }

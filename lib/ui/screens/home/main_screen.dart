@@ -15,6 +15,7 @@ import 'package:tazbeet/ui/screens/recurring_tasks_screen.dart';
 import 'package:tazbeet/ui/screens/splash_screen.dart';
 import 'package:tazbeet/ui/widgets/empty_state.dart';
 import 'package:tazbeet/ui/screens/analytics/pomodoro_analytics_screen.dart';
+import 'package:tazbeet/ui/widgets/focus_mode_widgets.dart';
 import 'dart:async';
 
 import '../../../blocs/category/category_bloc.dart';
@@ -27,6 +28,8 @@ import '../profile_screen.dart';
 import '../../../blocs/user/user_event.dart';
 import '../../../blocs/user/user_bloc.dart';
 import '../../../blocs/user/user_state.dart';
+import '../../../blocs/notification/notification_bloc.dart';
+import '../../../blocs/notification/notification_event.dart';
 import '../../../models/task.dart';
 import '../../../services/analytics_service.dart';
 import '../admin_panel_screen.dart';
@@ -185,6 +188,7 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       context.read<TaskListBloc>().add(LoadTasks());
+      context.read<NotificationBloc>().add(const VerifyScheduledReminders());
     }
   }
 
@@ -415,26 +419,33 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is AuthProfileIncomplete) {
-          // Navigate to profile completion screen
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const ProfileScreen(isProfileCompletion: true)));
-        }
+    return WillPopScope(
+      onWillPop: () async {
+        // Show exit confirmation dialog
+        final shouldExit = await _showExitConfirmationDialog();
+        return shouldExit ?? false;
       },
-      child: Directionality(
-        textDirection: (AppLocalizations.of(context)?.localeName ?? 'en') == 'ar' ? TextDirection.rtl : TextDirection.ltr,
-        child: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Theme.of(context).brightness == Brightness.dark ? Brightness.light : Brightness.dark),
-          child: Scaffold(
-            key: _scaffoldGlobleKey,
-            appBar: _selectedIndex != 0 ? _buildAppBar() : null,
-            drawer: _buildDrawer(),
-            backgroundColor: Theme.of(context).colorScheme.background,
-            body: _buildBody(),
-            bottomNavigationBar: /*  !_hasShownTutorial ? */ _buildBottomNavigationBar() /* : _buildBottomNavigationBarTutorial() */,
-            // FAB removed - HomeScreen has its own FAB
-            floatingActionButton: /*  _selectedIndex == 0 ? null : */ _buildFloatingActionButton(),
+      child: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AuthProfileIncomplete) {
+            // Navigate to profile completion screen
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const ProfileScreen(isProfileCompletion: true)));
+          }
+        },
+        child: Directionality(
+          textDirection: (AppLocalizations.of(context)?.localeName ?? 'en') == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+          child: AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Theme.of(context).brightness == Brightness.dark ? Brightness.light : Brightness.dark),
+            child: Scaffold(
+              key: _scaffoldGlobleKey,
+              appBar: _selectedIndex != 0 ? _buildAppBar() : null,
+              drawer: _buildDrawer(),
+              backgroundColor: Theme.of(context).colorScheme.background,
+              body: FocusModeOverlay(child: _buildBody()),
+              bottomNavigationBar: /*  !_hasShownTutorial ? */ _buildBottomNavigationBar() /* : _buildBottomNavigationBarTutorial() */,
+              // FAB removed - HomeScreen has its own FAB
+              floatingActionButton: /*  _selectedIndex == 0 ? null : */ _buildFloatingActionButton(),
+            ),
           ),
         ),
       ),
@@ -534,6 +545,7 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
     if (_selectedIndex == 0) {
       return [
         const SyncStatusIndicator(),
+        FocusModeIndicator(),
         IconButton(
           icon: Icon(Icons.sort, color: iconColor),
           onPressed: () {
@@ -1108,6 +1120,33 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
     );
   }
 
+  Future<bool?> _showExitConfirmationDialog() async {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // User must actively choose
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.exit_to_app, color: Theme.of(context).colorScheme.primary),
+            const SizedBox(width: 12),
+            Text(AppLocalizations.of(context)!.close),
+          ],
+        ),
+        content: Text(AppLocalizations.of(context)!.areYouSureYouWantToExit),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false), // Don't exit
+            child: Text(AppLocalizations.of(context)!.cancelButton),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true), // Exit
+            child: Text(AppLocalizations.of(context)!.close, style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildDrawerFooter() {
     return Container(
       decoration: BoxDecoration(
@@ -1241,7 +1280,8 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
       // Home Screen manages its own selection-aware FAB
       return const SizedBox.shrink();
     } else {
-      return const SizedBox.shrink(); // Previously other tabs didn't have FAB either or were hidden
+      // Show QuickFocusModeButton for all other tabs
+      return const QuickFocusModeButton();
     }
   }
 

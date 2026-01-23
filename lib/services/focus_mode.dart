@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import '../../models/task.dart';
 import 'app_logging_service.dart';
+import 'smart_focus_mode.dart';
 
 class FocusMode {
   static bool _isActive = false;
@@ -77,6 +78,11 @@ class FocusMode {
     } catch (e) {
       _emitEvent(FocusModeEvent(type: FocusModeEventType.error, timestamp: DateTime.now(), data: {'error': e.toString()}));
     }
+  }
+
+  /// Enable smart focus mode with automatic configuration
+  static Future<void> enableSmartFocusMode({required Task task, bool autoDetect = true, int? customDuration}) async {
+    await SmartFocusMode.enableSmartFocusMode(task: task, autoDetect: autoDetect, customDuration: customDuration);
   }
 
   /// Update focus mode settings

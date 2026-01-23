@@ -1,153 +1,9 @@
 {
-  "@@locale": "ar",
-  "@bulkGenerationComplete": {
-    "placeholders": {
-      "count": {
-        "type": "String"
-      }
-    }
-  },
-  "@confirmDeleteCategory": {
-    "placeholders": {
-      "categoryName": {
-        "type": "String"
-      }
-    }
-  },
-  "@confirmDeleteTask": {
-    "placeholders": {
-      "taskTitle": {
-        "type": "String"
-      }
-    }
-  },
-  "@days": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@deleteTaskConfirmation": {
-    "placeholders": {
-      "task": {
-        "type": "String"
-      }
-    }
-  },
-  "@error": {
-    "placeholders": {
-      "message": {
-        "type": "String"
-      }
-    }
-  },
-  "@metricValue": {
-    "placeholders": {
-      "label": {
-        "type": "String"
-      },
-      "value": {
-        "type": "int"
-      }
-    }
-  },
-  "@minuteFocusSessions": {
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
-  "@percent": {
-    "placeholders": {
-      "value": {
-        "type": "int"
-      }
-    }
-  },
-  "@recurringTaskError": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "@recurringTaskNotification": {
-    "placeholders": {
-      "title": {
-        "type": "String"
-      }
-    }
-  },
-  "@reminder": {
-    "placeholders": {
-      "date": {
-        "type": "String"
-      }
-    }
-  },
-  "@reminderCancelledFor": {
-    "placeholders": {
-      "taskTitle": {
-        "type": "String"
-      }
-    }
-  },
-  "@subtasksCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@tasksCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@tasksDue": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@tasksForDate": {
-    "placeholders": {
-      "date": {
-        "type": "String"
-      }
-    }
-  },
-  "@timeRemaining": {
-    "placeholders": {
-      "time": {
-        "type": "String"
-      }
-    }
-  },
-  "@totalNotifications": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@version": {
-    "placeholders": {
-      "version": {
-        "type": "String"
-      }
-    }
-  },
-  "aIPoweredAnalysis": "تحليل مدعوم بالذكاء الاصطناعي",
   "about": "حول",
   "aboutTazbeet": "حول تطبيق تزبيت",
   "absolutelyAmazing": "مذهل تماماً!",
   "accentColor": "لون التمييز",
+  "acceptSuggestion": "قبول الاقتراح",
   "accessDenied": "الوصول مرفوض",
   "accessibilityCompleted": "اكتمل إعداد الوصول",
   "accessibilityFeatures": "ميزات الوصول",
@@ -161,9 +17,18 @@
   "actionLabel": "إجراء",
   "actions": "الإجراءات",
   "activateEmergencyMode": "تفعيل وضع الطوارئ لتعليق جميع التذكيرات والمؤقتات",
+  "active": "نشط",
   "activeNotificationsMuted": "نشط - الإشعارات مكتومة",
   "activeRecurringTasks": "المهام المتكررة النشطة",
   "activity": "نشاط",
+  "activityBreathing": "Deep breathing exercises",
+  "activityEyeRest": "20-20-20 eye exercises",
+  "activityHydration": "Drink water & walk around",
+  "activityMeditation": "Mindful breathing (2-5 min)",
+  "activityMusic": "Listen to calming music",
+  "activitySocial": "Quick chat with colleague",
+  "activityStretching": "Desk stretches (2-3 min)",
+  "activityWalking": "Short walk (3-5 min)",
   "adaptiveBreakSuggestions": "اقتراحات استراحة تكيفية",
   "adaptivePomodoro": "بومودورو التكيفي",
   "adaptivePomodoroDescription": "جلسات تركيز تتكيف مع أدائك",
@@ -174,6 +39,8 @@
   "addAttachment": "إضافة مرفق",
   "addButton": "إضافة",
   "addCategory": "إضافة فئة",
+  "addCustomReminderMessage": "أضف رسالة تذكير مخصصة",
+  "addedSuggestedCheckInTimesFromYourMoodHistory": "تمت إضافة {count} أوقات تسجيل مقترحة من سجل مزاجك",
   "addFirstSubtask": "إضافة أول مهمة فرعية",
   "addLevelThreeSubtask": "إضافة مهمة فرعية من المستوى الثالث",
   "addNote": "إضافة ملاحظة",
@@ -184,19 +51,24 @@
   "addSubtasks": "إضافة مهام فرعية",
   "addTask": "إضافة مهمة",
   "addTaskButton": "إضافة مهمة",
+  "addTasksToCategory": "أضف مهام إلى هذه الفئة",
   "addTaskTitle": "إضافة مهمة جديدة",
   "addTaskToGetStarted": "أضف مهمة للبدء",
-  "addTasksToCategory": "أضف مهام إلى هذه الفئة",
   "addYourFirstTask": "أضف أول مهمة لك",
-  "addedSuggestedCheckInTimesFromYourMoodHistory": "تمت إضافة {count} أوقات تسجيل مقترحة من سجل مزاجك",
   "adjustTheseSettingsToMakeTheAppWorkBetterForYou": "اضبط هذه الإعدادات لجعل التطبيق يعمل بشكل أفضل لك",
   "admin": "مدير: {isAdmin}",
+  "adminNotificationsChannelDesc": "Important notifications for administrators",
+  "adminNotificationsChannelName": "Admin Notifications",
   "adminPanel": "لوحة الإدارة",
+  "adminStatus": "مدير: {status}",
   "adminTools": "أدوات المسؤول",
+  "advancedDetails": "التفاصيل المتقدمة",
+  "advancedSection": "تفاصيل متقدمة",
   "advancedSettings": "الإعدادات المتقدمة",
   "afterDeletionTheAppWillResyncAllDataFromFirebase": "بعد الحذف، سيعيد التطبيق مزامنة جميع البيانات من Firebase.",
   "afternoonSteadyGoodForRoutineWork": "فترة ما بعد الظهر: جيدة للعمل الروتيني",
   "afternoonVibes": "طاقة بعد الظهر 🌻",
+  "aIPoweredAnalysis": "تحليل مدعوم بالذكاء الاصطناعي",
   "aiPoweredInsights": "رؤى مدعومة بالذكاء الاصطناعي",
   "aiPredictions": "تنبؤات الذكاء الاصطناعي",
   "all": "الكل",
@@ -205,48 +77,56 @@
   "allLabel": "الكل",
   "allNotificationsCancelled": "تم إلغاء جميع الإشعارات",
   "allNotificationsCleared": "تم مسح جميع الإشعارات!",
+  "allowAllUsersToAccessApp": "• السماح لجميع المستخدمين بالوصول إلى التطبيق",
+  "allowAllUsersToAccessTheApp": "• السماح لجميع المستخدمين بالوصول إلى التطبيق",
+  "allowUrgentNotifications": "السماح بالإشعارات العاجلة أثناء عدم الإزعاج",
   "allRecurringUpToDate": "جميع المهام المتكررة محدثة!",
   "allRemindersSuspended": "تم تعليق جميع التذكيرات والمؤقتات",
+  "allSessions": "جميع الجلسات",
   "allSessionsComplete": "انتهت جميع الجلسات",
   "allSuggestedTimesAreAlreadyInYourList": "جميع الأوقات المقترحة موجودة بالفعل في قائمتك",
   "allTasks": "جميع المهام",
   "allTasksCategoriesMoodsLocalSettings": "• جميع المهام\n• جميع الفئات\n• جميع المزاج\n• جميع الإعدادات المحلية",
+  "allTasksCompleted": "🎉 All tasks completed!",
   "allTimeStats": "إحصائيات جميع الأوقات",
-  "allowAllUsersToAccessApp": "• السماح لجميع المستخدمين بالوصول إلى التطبيق",
-  "allowAllUsersToAccessTheApp": "• السماح لجميع المستخدمين بالوصول إلى التطبيق",
-  "allowUrgentNotifications": "السماح بالإشعارات العاجلة أثناء عدم الإزعاج",
+  "almostThere": "🔥 Almost there! Keep going!",
+  "almostThereKeepItUp": "🌟 Almost there! Keep it up!",
   "am": "ص",
   "ambientMode": "الوضع المحيط",
   "ambientSounds": "الأصوات المحيطة",
-  "anErrorOccurredPleaseTryAgain": "حدث خطأ. يرجى المحاولة مرة أخرى.",
+  "anAdmin": "مدير",
   "analytics": "التحليلات",
   "analyticsAndProductivityInsights": "• تحليلات ورؤى الإنتاجية",
   "analyticsDashboard": "لوحة التحليلات",
   "analyticsDashboardDescription": "رؤى عميقة في إنتاجيتك",
   "analyticsDisabled": "تم تعطيل التحليلات",
   "analyticsEnabled": "تم تفعيل التحليلات",
+  "anErrorOccurredPleaseTryAgain": "حدث خطأ. يرجى المحاولة مرة أخرى.",
   "animationOptimization": "تحسين الرسوم المتحركة",
   "animationOptimizer": "محسن الرسوم المتحركة",
   "animationStatsLoggedToConsole": "تم تسجيل إحصائيات الرسوم المتحركة في وحدة التحكم",
   "anyUnsyncedLocalChangesWillBeLost": "ستفقد أي تغييرات محلية غير مزامنة!",
   "appDescription": "تطبيق إدارة مهام ذكي مع تكامل بومودورو وتوصيات مدعومة بالذكاء الاصطناعي.",
+  "appearance": "المظهر",
+  "appearanceSection": "المظهر",
+  "appearsIn10Seconds": "يظهر خلال 10 ثوانٍ",
   "appInformation": "معلومات التطبيق",
   "appInformationHelp": "معلومات التطبيق والمساعدة",
+  "applyButton": "تطبيق",
+  "applyColors": "تطبيق الألوان",
+  "applySettings": "تطبيق الإعدادات",
   "appSettings": "إعدادات التطبيق",
   "appTitle": "تظبيت",
   "appUpdates": "تحديثات التطبيق",
   "appVersion": "إصدار التطبيق",
-  "appearance": "المظهر",
-  "appearanceSection": "المظهر",
-  "appearsIn10Seconds": "يظهر خلال 10 ثوانٍ",
-  "applyButton": "تطبيق",
-  "applyColors": "تطبيق الألوان",
-  "applySettings": "تطبيق الإعدادات",
   "areYouSureYouWantToClearAllNotificationHistory": "هل أنت متأكد من مسح سجل جميع الإشعارات؟",
   "areYouSureYouWantToDeleteCategory": "هل أنت متأكد من حذف \"{categoryName}\"؟\n\nملاحظة: إذا كانت هذه الفئة مستخدمة من قبل أي مهام، فسيفشل الحذف. يرجى إعادة تعيين تلك المهام أولاً.",
   "areYouSureYouWantToDeleteSubtask": "هل أنت متأكد من أنك تريد حذف هذه المهمة الفرعية؟",
   "areYouSureYouWantToDeleteTask": "هل أنت متأكد من أنك تريد حذف \"{taskTitle}\"؟",
+  "areYouSureYouWantToDeleteThisSubtask": "هل أنت متأكد من أنك تريد حذف هذه المهمة الفرعية؟",
   "areYouSureYouWantToDeleteUser": "هل أنت متأكد من أنك تريد حذف {userName}؟\n\nسيتم حذف ما يلي بشكل دائم:\n• حساب المستخدم\n• جميع المهام\n• جميع الفئات\n• جميع المزاج\n\nلا يمكن التراجع عن هذا الإجراء.",
+  "areYouSureYouWantToExit": "هل أنت متأكد من أنك تريد الخروج من التطبيق؟",
+  "areYouSureYouWantToSignOut": "هل أنت متأكد من أنك تريد تسجيل الخروج؟",
   "areYouSureYouWantToStopTheCurrentSession": "هل أنت متأكد من أنك تريد إيقاف الجلسة الحالية؟ سيفقد تقدمك.",
   "areYouSureYouWantToToggleAdminRights": "هل أنت متأكد من أنك تريد {action} {userName}؟",
   "attachments": "المرفقات",
@@ -268,7 +148,6 @@
   "averageSessionDuration": "متوسط مدة الجلسة",
   "averageSessionLength": "متوسط طول الجلسة",
   "averageStress": "متوسط التوتر",
-  "avgFocus": "متوسط التركيز",
   "avgSession": "متوسط الجلسة",
   "backgroundColor": "لون الخلفية",
   "backup": "النسخ الاحتياطي",
@@ -277,9 +156,9 @@
   "backupFrequency": "تكرار النسخ الاحتياطي",
   "backupRestored": "تم استعادة النسخة الاحتياطية",
   "bad": "سيء",
-  "badIntensity": "شدة سيئة",
   "badgeOnlyMode": "وضع الشارة فقط",
   "badgeOnlyModeSubtitle": "إظهار الشارة بدون صوت أو نافذة منبثقة",
+  "badIntensity": "شدة سيئة",
   "balancedDayAhead": "يوم متوازن قادم",
   "basedOnRecentPatternsTomorrowLooksPromising": "بناءً على الأنماط الحديثة، يبدو الغد واعداً",
   "basicNotifications": "1. الإشعارات الأساسية",
@@ -287,6 +166,7 @@
   "bestPerformanceDay": "أفضل أداء يوم",
   "bio": "السيرة الذاتية",
   "birthday": "عيد الميلاد: {birthday}",
+  "birthdayDate": "تاريخ الميلاد: {date}",
   "birthdayLabel": "تاريخ الميلاد",
   "birthdayRequiredForProfile": "تاريخ الميلاد مطلوب للملف الشخصي",
   "biweekly": "كل أسبوعين",
@@ -295,7 +175,9 @@
   "breakSuggestionsMatchYourCurrentEnergyLevel": "تطابق اقتراحات الاستراحة مستوى طاقتك الحالي",
   "breakTime": "وقت الراحة!",
   "breakTimeDistribution": "توزيع وقت الراحة",
-  "bulkGenerationComplete": "تم إنشاء {count} حالات متكررة",
+  "breakTitleLong": "🌿 Long Break",
+  "breakTitleShort": "☕ Short Break",
+  "buildingMomentum": "🌟 Building momentum!",
   "bySigningInYouAgree": "بتسجيل الدخول، أنت توافق على شروط الخدمة وسياسة الخصوصية",
   "cacheSize": "حجم ذاكرة التخزين المؤقت",
   "calendar": "التقويم",
@@ -303,15 +185,17 @@
   "cancel": "إلغاء",
   "cancelAllNotifications": "إلغاء الكل",
   "cancelButton": "إلغاء",
+  "cancelled": "ملغي",
   "cannotSetReminderForPastDate": "لا يمكن ضبط تذكير لتاريخ سابق",
-  "cannotSetReminderWithoutPermission": "لا يمكن ضبط التذكير بدون إذن الإشعارات",
+  "cannotSetReminderWithoutPermission": "لا يمكن تعيين التذكير بدون إذن",
   "categories": "الفئات",
+  "category": "الفئة",
   "categoryBreakdown": "تفصيل الفئات",
   "categoryColor": "لون الفئة",
   "categoryCreated": "تم إنشاء الفئة بنجاح",
   "categoryCreatedSuccessfully": "تم إنشاء الفئة بنجاح",
   "categoryDeleted": "تم حذف الفئة بنجاح",
-  "categoryDeletedSuccessfully": "تم حذف الفئة \"{categoryName}\" بنجاح",
+  "categoryDeletedSuccessfully": "تم حذف الفئة \"{name}\" بنجاح",
   "categoryEfficiency": "الكفاءة: {score}%",
   "categoryIcon": "أيقونة الفئة",
   "categoryLabel": "الفئة (اختياري)",
@@ -320,17 +204,17 @@
   "categoryProgress": "تقدم الفئة",
   "categoryStatistics": "إحصائيات الفئة",
   "categoryTasksCount": "المهام: {count}",
-  "categoryUpdated": "تم تحديث الفئة بنجاح",
+  "categoryUpdated": "{action} الفئة: {name}",
   "categoryUpdatedSuccessfully": "تم تحديث الفئة بنجاح",
   "challengingDays": "أيام صعبة",
   "challengingPeriod": "فترة صعبة",
   "changeProfilePicture": "تغيير صورة الملف الشخصي",
   "checkForUpdates": "البحث عن تحديثات",
   "checkHistoryAfterDelivery": "3. تحقق من سجل الإشعارات بعد التسليم",
+  "checkingIn": "فحص! 👋",
   "checkPending": "فحص المعلق",
   "checkPendingNotifications": "فحص المعلقة",
   "checkYourEnergyLevelsThroughoutTheDay": "تحقق من مستويات طاقتك طوال اليوم",
-  "checkingIn": "فحص! 👋",
   "chooseBackgroundSound": "اختر صوت خلفية لمساعدتك على التركيز أو الاسترخاء",
   "chooseColor": "اختر اللون",
   "chooseEmojiFeeling": "اختر رمزًا تعبيريًا يمثل شعورك",
@@ -349,10 +233,10 @@
   "clearDateFilter": "مسح تصفية التاريخ",
   "clearFailedButton": "مسح الفاشلة",
   "clearHistory": "مسح السجل",
+  "clearingData": "جاري مسح البيانات...",
   "clearLogs": "مسح السجلات",
   "clearPerformance": "مسح الأداء",
   "clearQuality": "مسح الجودة",
-  "clearingData": "جاري مسح البيانات...",
   "close": "إغلاق",
   "closeButton": "إغلاق",
   "closeSearch": "إغلاق البحث",
@@ -361,32 +245,40 @@
   "coffeeShop": "مقهى",
   "collapse": "طي",
   "color": "اللون",
+  "colorLabel": "اللون: ",
   "colorPicker": "منتقي الألوان",
   "colorSettingsSaved": "تم حفظ إعدادات الألوان بنجاح",
   "colorTheme": "سمة اللون",
   "combineNotificationsOfTheSameType": "دمج الإشعارات من نفس النوع في مجموعات",
-  "completeSubtasksFirst": "أكمل المهام الفرعية أولاً",
-  "completeTaskButton": "إكمال المهمة",
-  "completeTasksToSeeProgress": "أكمل المهام لرؤية تقدمك",
-  "completeTasksToSeeYourProgress": "أكمل المهام لرؤية تقدمك",
-  "completeTutorial": "إكمال الدليل",
+  "complete": "مكتمل",
   "completed": "مكتمل",
   "completedAt": "تم الإكمال في",
   "completedLabel": "مكتملة",
   "completedSessions": "الجلسات المكتملة",
+  "completedStat": "مكتمل",
+  "completedStatus": "مكتمل: {status}",
+  "completedTag": "مكتمل",
   "completedTasks": "المهام المكتملة",
   "completedTasksInCategory": "مكتمل: {count}",
+  "completeSubtasksFirst": "أكمل المهام الفرعية أولاً",
+  "completeTask": "أكمل المهمة",
+  "completeTaskButton": "إكمال المهمة",
+  "completeTasksToSeeProgress": "أكمل المهام لرؤية تقدمك",
+  "completeTasksToSeeYourProgress": "أكمل المهام لرؤية تقدمك",
+  "completeTutorial": "إكمال الدليل",
+  "completionProgress": "تقدم الإنجاز",
   "completionRate": "معدل الإنجاز",
   "completionTime": "وقت الإنجاز",
   "configureNotificationSettings": "تكوين إعدادات الإشعارات",
   "configureQuietHours": "تكوين ساعات الهدوء",
   "confirm": "تأكيد",
   "confirmDelete": "تأكيد الحذف",
-  "confirmDeleteCategory": "هل أنت متأكد من حذف \"{categoryName}\"؟ سيؤدي هذا إلى إزالة الفئة من جميع المهام المرتبطة.",
   "confirmDeleteSubtask": "هل أنت متأكد من حذف هذه المهمة الفرعية؟",
-  "confirmDeleteTask": "هل أنت متأكد من أنك تريد حذف \"{taskTitle}\"؟",
+  "considerLighterTasks": "🌿 Consider lighter tasks or take a break",
   "considerMoreFrequentBreaks": "فكر في أخذ استراحات أكثر تكراراً",
   "considerPrioritizingSelfCareActivitiesTomorrow": "فكر في إعطاء الأولوية لأنشطة رعاية الذات غداً",
+  "contextualActions": "إجراءات سياقية",
+  "continueFocus": "تابع التركيز",
   "continueToApp": "متابعة إلى التطبيق",
   "controlTheAppWithYourVoice": "تحكم في التطبيق بصوتك",
   "copySuffix": "(نسخة)",
@@ -397,48 +289,52 @@
   "createBackup": "إنشاء نسخة احتياطية",
   "createCategoriesToOrganize": "قم بإنشاء فئات لتنظيم مهامك",
   "createCategory": "إنشاء فئة",
+  "created": "تم الإنشاء",
+  "createdAt": "تم الإنشاء: {date}",
   "createTasksWithYourVoice": "إنشاء مهام بصوتك",
   "createTemplate": "إنشاء القالب",
   "createYourFirstCategory": "أنشئ أول فئة لك لتنظيم المهام",
   "createYourFirstTaskToGetStarted": "أنشئ أول مهمة لك للبدء",
   "createYourPerfectPomodoroSetup": "أنشئ إعداد بومودورو المثالي",
-  "created": "تم الإنشاء",
   "currentStreak": "السلسلة الحالية",
   "currentVersion": "الإصدار الحالي",
   "custom": "مخصص",
-  "customColorSettings": "إعدادات الألوان المخصصة",
   "customColors": "ألوان مخصصة",
+  "customColorSettings": "إعدادات الألوان المخصصة",
   "customDurations": "الأوقات المخصصة (بالدقائق)",
   "customDurationsMinutes": "مدد مخصصة (بالدقائق)",
-  "customRange": "نطاق مخصص",
   "customizeEachNotificationType": "تخصيص كل نوع إشعار",
   "customizeNotificationBehavior": "تخصيص سلوك الإشعارات",
   "customizePomodoroSession": "تخصيص جلسة بومودورو",
   "customizeTheAppToWorkBestForYou": "خصص التطبيق ليعمل بشكل أفضل لك",
   "customizeYourExperience": "تخصيص تجربتك",
   "customizeYourPomodoroSession": "خصص جلسة البومودورو الخاصة بك",
+  "customMessageOptional": "رسالة مخصصة (اختيارية)",
+  "customRange": "نطاق مخصص",
+  "customReminder": "تذكير مخصص",
+  "customTime": "وقت مخصص",
   "cycles": "دورات",
   "cycles10": "1-10 دورات",
   "daily": "يومياً",
   "dailyMoodCheckIns": "فحوصات المزاج اليومية",
+  "dailySummary": "📊 Daily Summary",
   "dark": "داكن",
   "darkMode": "الوضع الداكن",
   "darkTheme": "داكن",
   "dashboard": "لوحة التحكم",
   "dashboardOverview": "نظرة عامة على لوحة التحكم",
   "dataBackupSection": "البيانات والنسخ الاحتياطي",
+  "databaseSize": "حجم قاعدة البيانات",
   "dataExported": "تم تصدير البيانات بنجاح",
   "dataImported": "تم استيراد البيانات بنجاح",
   "dataManagement": "إدارة البيانات",
   "dataSync": "مزامنة البيانات",
   "dataSyncedSuccessfullyFromFirebase": "تمت مزامنة البيانات بنجاح من Firebase!",
-  "databaseSize": "حجم قاعدة البيانات",
   "dateFormat": "تنسيق التاريخ",
   "dateRange": "نطاق التاريخ",
   "day": "يوم",
-  "dayStreak": "يوم متتالي",
-  "days": "أيام",
   "daysDone": "انتهى اليوم! ✨",
+  "daysLeft": "الأيام المتبقية",
   "daysStreak": "أيام متتالية",
   "debug": "تصحيح",
   "debugMode": "وضع التصحيح",
@@ -460,25 +356,27 @@
   "deleteSubtaskConfirmation": "هل أنت متأكد من حذف \"@taskName\"؟ لا يمكن التراجع عن هذا الإجراء.",
   "deleteTask": "حذف المهمة",
   "deleteTaskButton": "حذف المهمة",
-  "deleteTaskConfirmation": "هل أنت متأكد من أنك تريد حذف \"{taskTitle}\"؟",
   "deleteTaskConfirmationTitle": "حذف المهمة",
   "deleteTaskTitle": "حذف المهمة",
-  "details": "التفاصيل",
   "deleteUser": "حذف المستخدم",
+  "delivered": "تم التسليم",
   "deliveryLabel": "التسليم",
   "deliveryTracking": "تتبع التسليم",
-  "description": "الوصف: {description}",
+  "description": "الوصف",
+  "descriptionNA": "الوصف: {description}",
   "descriptionOfActivity": "وصف النشاط",
   "detailedEntry": "مدخلة مفصلة",
+  "details": "التفاصيل",
   "developerOptions": "خيارات المطور",
   "developerTools": "أدوات المطور",
   "disable": "تعطيل",
+  "disabled": "معطل",
   "disableDebugMode": "تعطيل وضع التصحيح",
   "disableMaintenanceMode": "تعطيل وضع الصيانة",
-  "disabled": "معطل",
+  "dismiss": "إغلاق",
   "dndInfo": "يُسكت وضع عدم الإزعاج جميع الإشعارات باستثناء حالات الطوارئ خلال الساعات المحددة.",
-  "doNotDisturb": "عدم الإزعاج",
   "dominantMood": "المزاج السائد",
+  "doNotDisturb": "عدم الإزعاج",
   "dontForget": "لا تنسى",
   "dontHaveAccount": "ليس لديك حساب؟",
   "down": "منخفض",
@@ -487,8 +385,12 @@
   "dueDate": "تاريخ الاستحقاق",
   "dueDateLabel": "تاريخ الاستحقاق (اختياري)",
   "dueDateMustBeInFuture": "يجب أن يكون تاريخ الاستحقاق في المستقبل",
+  "dueDateNA": "تاريخ الاستحقاق: {date}",
+  "dueDateReminder": "تذكير بتاريخ الاستحقاق",
   "dueDateTitle": "تاريخ الاستحقاق",
+  "dueIn": "متبقي",
   "dueInOneHour": "مستحق خلال ساعة واحدة - اضغط للعرض",
+  "dueSoon": "يستحق قريباً",
   "dueThisWeek": "مستحق هذا الأسبوع",
   "duplicateSubSubtask": "نسخ المهمة الفرعية",
   "duplicateSubtask": "نسخ المهمة الفرعية",
@@ -496,7 +398,7 @@
   "durationMinutes": "المدة (دقائق)",
   "earlierToday": "في وقت سابق اليوم",
   "easyFocusDeepFocusRequired": "1 = تركيز سهل، 10 = تركيز عميق مطلوب",
-  "edit": "تعديل",
+  "edit": "تحرير",
   "editButton": "تعديل",
   "editCategory": "تعديل الفئة",
   "editMaintenanceMessage": "تحرير رسالة الصيانة",
@@ -509,6 +411,7 @@
   "editTaskTitle": "تعديل المهمة",
   "egMyFocusPower": "مثلاً، قوة التركيز الخاصة بي",
   "email": "البريد الإلكتروني: {email}",
+  "emailNA": "البريد الإلكتروني: {email}",
   "emailNotifications": "إشعارات البريد الإلكتروني",
   "emergency": "حالة الطوارئ",
   "emergencyAlertsWillBypassQuietHours": "تنبيهات الطوارئ ستتجاوز ساعات الهدوء",
@@ -520,6 +423,7 @@
   "enable": "تفعيل",
   "enableActions": "تفعيل الإجراءات",
   "enableCustomColors": "تفعيل الألوان المخصصة",
+  "enabled": "مفعّل",
   "enableDebugMode": "تفعيل وضع التصحيح",
   "enableMaintenanceMode": "تفعيل وضع الصيانة",
   "enableMoodNotifications": "تفعيل إشعارات المزاج",
@@ -531,24 +435,28 @@
   "enableTaskCompletionSound": "تفعيل صوت إكمال المهمة",
   "enableVoiceCommands": "تفعيل الأوامر الصوتية",
   "enableVoiceTasks": "تفعيل المهام الصوتية",
-  "enabled": "مفعّل",
   "endOfDayVibes": "طاقة نهاية اليوم 🌇",
   "energy": "الطاقة",
   "energyAwarePlanning": "التخطيط المدرك للطاقة",
   "energyAwarePlanningDescription": "جدولة المهام بناءً على أنماط الطاقة",
   "energyAwareScheduling": "جدولة مدركة للطاقة",
   "energyLevel": "مستوى الطاقة",
+  "energyLevelGood": "🔥 Good Energy",
+  "energyLevelHigh": "⚡ High Energy!",
+  "energyLevelLow": "🔋 Low Energy",
+  "energyLevelModerate": "⚖️ Moderate Energy",
   "energyLevelMonitoring": "مراقبة مستوى الطاقة",
   "energyLevelTracking": "تتبع مستوى الطاقة",
+  "energyLevelVeryLow": "😴 Very Low Energy",
   "energyPattern": "نمط الطاقة",
   "energyTrackingHelpsIdentifyYourPatterns": "تتبع الطاقة يساعد في تحديد أنماطك",
   "enterCategoryName": "أدخل اسم الفئة",
   "enterMaintenanceMessage": "أدخل رسالة الصيانة",
   "enterMessageUsersWillSee": "أدخل الرسالة التي سيراها المستخدمون...",
+  "enterMinutes": "أدخل الدقائق (مثال: 45)",
   "enterTaskDescription": "أدخل وصف المهمة (اختياري)",
   "enterTaskManually": "إدخال المهمة يدوياً",
   "enterTaskTitle": "أدخل عنوان المهمة",
-  "error": "خطأ",
   "errorApplyingSettings": "خطأ في تطبيق الإعدادات: {error}",
   "errorClearingLogs": "خطأ في مسح السجلات",
   "errorCompletingOnboarding": "خطأ في إكمال التوجيه",
@@ -573,16 +481,20 @@
   "errorUpdatingProfilePicture": "خطأ في تحديث صورة الملف الشخصي",
   "errorUpdatingTask": "خطأ في تحديث المهمة: {error}",
   "errorUpdatingUser": "خطأ في تحديث المستخدم: {error}",
+  "estimatedSessions": "الجلسات المقدرة",
   "eveningCheckIn": "فحص مسائي! 🌙",
   "eveningDeclineLightTasksAndPlanning": "انخفاض المساء: مهام خفيفة والتخطيط",
   "eveningReflection": "تأمل مسائي 💭",
   "everyDayIsANewOpportunity": "كل يوم هو فرصة جديدة",
   "excellentCompletionRate": "معدل إتمام ممتاز! استمر في العمل الرائع",
+  "excellentFocus": "🌟 Excellent focus today!",
   "excellentPerformance": "أداء ممتاز!",
+  "executionSection": "تنفيذ المهمة",
   "expand": "توسيع",
-  "experienceAIPoweredTaskPrioritizationThatAdaptsToYourPatterns": "تجربة أولويات المهام المدعومة بالذكاء الاصطناعي التي تتكيف مع أنماطك",
   "experienceAiPoweredTaskPrioritizationThatAdaptsToYourPatterns": "جرّب أولويات المهام المدعومة بالذكاء الاصطناعي التي تتكيف مع أنماطك",
+  "experienceAIPoweredTaskPrioritizationThatAdaptsToYourPatterns": "تجربة أولويات المهام المدعومة بالذكاء الاصطناعي التي تتكيف مع أنماطك",
   "expertOptions": "خيارات الخبراء للمستخدمين المتقدمين",
+  "expired": "منتهي الصلاحية",
   "exploreFeatures": "استكشف المميزات",
   "exploreYourAnalyticsDashboard": "استكشف لوحة التحليلات الخاصة بك",
   "exportCSV": "تصدير CSV",
@@ -591,8 +503,10 @@
   "exportJSON": "تصدير JSON",
   "exportLogs": "تصدير السجلات",
   "exportYourTasksToExternalFormats": "تصدير مهامك إلى تنسيقات خارجية",
+  "extendSession": "⏱️ Extend Session",
   "fadeIn": "زيادة الصوت تدريجياً",
   "fadeOut": "خفض الصوت تدريجياً",
+  "failed": "فشل",
   "failedToAccessGallery": "فشل في الوصول إلى المعرض",
   "failedToAddSubtask": "فشل في إضافة المهمة الفرعية: {error}",
   "failedToCancelNotifications": "فشل في إلغاء الإشعارات: {error}",
@@ -602,25 +516,26 @@
   "failedToScheduleTestNotification": "فشل في جدولة الإشعار التجريبي: {error}",
   "failedToSendTestNotification": "فشل في إرسال الإشعار التجريبي: {error}",
   "failedToUploadImage": "فشل في رفع الصورة",
+  "failureReason": "سبب الفشل",
   "features": "المميزات:",
   "fifteenMinPause": "إيقاف مؤقت 15 دقيقة",
   "filter": "تصفية",
   "filterByStatus": "تصفية حسب الحالة",
   "filterByType": "تصفية حسب النوع",
-  "filterTasks": "تصفية المهام",
-  "filterTasksTitle": "تصفية المهام",
   "filters": "الفلاتر",
   "filtersAppliedSuccessfully": "تم تطبيق الفلاتر بنجاح",
+  "filterTasks": "تصفية المهام",
+  "filterTasksTitle": "تصفية المهام",
   "findingBalance": "إيجاد التوازن",
   "fireplace": "موقد",
   "focus": "تركيز",
   "focusAndRelaxation": "التركيز والاسترخاء",
   "focusBetterWithAdaptiveTimingAndSmartBreaks": "ركز بشكل أفضل مع التوقيت التكيفي والاستراحات الذكية",
+  "focusCompleted": "مكتمل",
   "focusDifficulty": "صعوبة التركيز: {score}",
-  "focusLevel": "مستوى التركيز",
   "focusMode": "وضع التركيز",
-  "focusModeFor": "وضع التركيز لـ {taskTitle}",
   "focusPattern": "نمط التركيز",
+  "focusProgress": "تقدم التركيز",
   "focusScore": "درجة التركيز",
   "focusScoreDistribution": "توزيع درجات التركيز",
   "focusTimeDistribution": "توزيع وقت التركيز",
@@ -634,8 +549,10 @@
   "fri": "الجمعة",
   "friday": "الجمعة",
   "fridayAbbrev": "الجمعة",
+  "fromNow": "من الآن",
   "galleryPermissionIsRequiredToSelectProfileImage": "إذن المعرض مطلوب لاختيار صورة الملف الشخصي",
   "galleryPermissionRequired": "إذن المعرض مطلوب لتحديد صورة الملف الشخصي",
+  "generalReminder": "تذكير عام",
   "generalSettings": "الإعدادات العامة",
   "generateAllInstances": "إنشاء جميع النسخ",
   "generateNextInstance": "إنشاء النسخة التالية",
@@ -644,8 +561,11 @@
   "getPersonalizedProductivityTips": "احصل على نصائح إنتاجية مخصصة",
   "getStarted": "ابدأ الآن",
   "getSuggestionsFromHistory": "الحصول على اقتراحات من السجل",
+  "getTaskStatusDescription": "_getTaskStatusDescription(task, l10n)",
+  "goalAchieved": "🏆 Goal achieved! Amazing work!",
   "good": "جيد",
   "goodDays": "أيام جيدة",
+  "goodFocus": "👍 Good focus maintained!",
   "goodIntensity": "شدة جيدة",
   "goodMorning": "صباح الخير!",
   "goodnightCheckIn": "فحص ليلي 💫",
@@ -656,16 +576,19 @@
   "greatConsistency": "اتساق رائع",
   "greatFocusExtendSessions": "تركيز رائع! فكر في تمديد الجلسات إلى 30-35 دقيقة",
   "greatJobCompleting": "عمل رائع في إكمال",
+  "greatJobFocused": "🔥 Great job staying focused!",
   "greatJobTakeABreak": "عمل رائع! خذ استراحة.",
   "greatProgress": "تقدم رائع!",
+  "greatStart": "🚀 Great start!",
   "groupSimilarNotifications": "تجميع الإشعارات المتشابهة",
   "guidedCheckIn": "فحص موجه",
+  "halfwayDone": "💪 Halfway done!",
+  "halfwayThere": "💪 Halfway there!",
   "helpAndSupport": "المساعدة والدعم",
   "helpImproveApp": "مساعدة في تحسين التطبيق من خلال بيانات الاستخدام",
   "helpImproveTheAppWithUsageData": "ساعد في تحسين التطبيق ببيانات الاستخدام",
   "helpUsUnderstandState": "ساعدنا على فهم حالتك الحالية",
-  "hiThere": "مرحباً!",
-  "high": "عالية",
+  "high": "عالي",
   "highContrast": "تباين عالي",
   "highContrastDisabled": "تم تعطيل التباين العالي",
   "highContrastEnabled": "تم تفعيل التباين العالي",
@@ -676,12 +599,15 @@
   "highPriorityNotificationIn10Seconds": "⏰ إشعار عالي الأولوية خلال 10 ثوانٍ",
   "history": "التاريخ",
   "historyCleared": "تم مسح السجل",
+  "hiThere": "مرحباً!",
   "hiveBoxes": "صناديق Hive: {count}",
   "homeScreenTitle": "الرئيسية",
   "honorDeviceDoNotDisturbSettings": "احترام إعدادات عدم الإزعاج للجهاز",
+  "hour1": "ساعة واحدة",
   "hourly": "كل ساعة",
   "hourlyProductivity": "الإنتاجية بالساعة",
   "hours": "س",
+  "hours2": "ساعتان",
   "howAreYou": "كيف حالك؟",
   "howAreYouEndingYourDay": "كيف تنهي يومك؟",
   "howAreYouFeeling": "😊 كيف تشعر؟",
@@ -693,10 +619,10 @@
   "howDidItGo": "كذاك؟",
   "howDidTodayGoForYou": "كذاك اليوم بالنسبة لك؟",
   "howIsYourDay": "كيف يومك؟",
-  "howWasYourDay": "كيف كان يومك؟",
   "howsYourAfternoonGoing": "كيف يسير بعد الظهر؟",
   "howsYourDayGoing": "كيف يسير يومك؟",
   "howsYourFocusRightNow": "كيف هو تركيزك الآن؟",
+  "howWasYourDay": "كيف كان يومك؟",
   "icon": "الأيقونة: {icon}",
   "identifyYourMostProductiveTimes": "حدد أوقاتك الأكثر إنتاجية",
   "idle": "خامل",
@@ -711,25 +637,29 @@
   "importLogs": "استيراد السجلات",
   "importTasksFromExternalFiles": "استيراد المهام من ملفات خارجية",
   "inAppNotifications": "الإشعارات داخل التطبيق",
-  "inProgress": "قيد التنفيذ",
   "includeSpecificTime": "تضمين وقت محدد",
   "incompleteLabel": "غير مكتملة",
+  "incompleteTag": "غير مكتمل",
   "increaseColorContrastForBetterVisibility": "زيادة تباين الألوان لرؤية أفضل",
   "increaseContrast": "زيادة التباين لسهولة القراءة",
   "increaseContrastForBetterVisibility": "زيادة التباين لرؤية أفضل",
   "info": "معلومات",
+  "inProgress": "قيد التنفيذ",
   "insightGenerallyPositive": "إيجابي بشكل عام 😊",
   "insightGreatConsistency": "اتساق رائع! 🔥",
   "insightMissingToday": "مفقود اليوم 📝",
   "insightNeedsSupport": "يحتاج دعم 🤗",
   "insights": "الرؤى",
-  "installUpdate": "تثبيت التحديث",
   "installingUpdate": "جاري تثبيت التحديث...",
+  "installUpdate": "تثبيت التحديث",
   "intelligentNotificationManagement": "إدارة الإشعارات الذكية",
   "invalidDueDate": "تاريخ استحقاق غير صالح",
   "isDueToday": "مستحقة اليوم",
+  "isNowAdmin": "{userName} الآن {status}",
   "itsOkayToHaveToughDays": "من الطبيعي أن تكون لديك أيام صعبة",
   "keepAppInBackground": "2. احتفظ بالتطبيق في الخلفية بعد الجدولة",
+  "keepItGoing": "🔥 Keep it Going!",
+  "keepItGoingBody": "🚀 Keep it going!",
   "keepShiningBright": "استمر بالتألق بقوة!",
   "keepUpTheGoodWork": "استمر في العمل الجيد",
   "keyInsights": "رؤى رئيسية",
@@ -743,6 +673,7 @@
   "last30Days": "آخر 30 يوم",
   "last7Days": "آخر 7 أيام",
   "last90Days": "آخر 90 يوم",
+  "lastAttempt": "المحاولة الأخيرة",
   "lastModified": "آخر تعديل",
   "lastUpdated": "آخر تحديث",
   "laterTasks": "مهمات لاحقة",
@@ -756,15 +687,15 @@
   "listening": "الاستماع...",
   "loading": "جاري التحميل...",
   "loadingPreferences": "جاري تحميل التفضيلات...",
+  "loginSubtitle": "نظم مهامك وزد من إنتاجيتك",
   "logLevel": "مستوى التسجيل",
   "logMood": "سجل مزاجك",
-  "logReport": "تسجيل التقرير",
-  "logStats": "تسجيل الإحصائيات",
-  "loginSubtitle": "نظم مهامك وزد من إنتاجيتك",
   "logout": "تسجيل الخروج",
+  "logReport": "تسجيل التقرير",
   "logsCleared": "تم مسح السجلات بنجاح",
   "logsExported": "تم تصدير السجلات بنجاح",
   "logsImported": "تم استيراد السجلات بنجاح",
+  "logStats": "تسجيل الإحصائيات",
   "longBreak": "استراحة طويلة",
   "longBreakAfterCycles": "استراحة طويلة: {longBreak}دقيقة بعد {cycles} دورات",
   "longBreakDuration": "مدة الاستراحة الطويلة",
@@ -788,6 +719,7 @@
   "markAsComplete": "وضع علامة مكتمل",
   "markAsCompleted": "وضع علامة مكتمل",
   "markAsIncomplete": "وضع علامة غير مكتمل",
+  "markedIncomplete": "تم وضع علامة غير مكتمل",
   "masterToggleForAllNotifications": "التبديل الرئيسي لجميع الإشعارات",
   "maxNotificationsPerHour": "الحد الأقصى للإشعارات في الساعة",
   "medium": "متوسطة",
@@ -799,20 +731,23 @@
   "memoryStatsLoggedToConsole": "تم تسجيل إحصائيات الذاكرة في وحدة التحكم",
   "memoryUsage": "استخدام الذاكرة",
   "message": "الرسالة",
-  "metricValue": "{label}: {value}/10",
+  "metadata": "البيانات الوصفية",
   "middayPause": "استراحة منتصف اليوم 🌤️",
   "min": "دقيقة",
   "min120": "1-120 دقيقة",
   "min30": "1-30 دقيقة",
   "min60": "1-60 دقيقة",
-  "minPerSession": "دقيقة لكل جلسة",
-  "minsTotal": "إجمالي الدقائق",
-  "minWorkMinBreak": "{work}دقيقة عمل → {rest}دقيقة استراحة",
-  "minWorkRest": "{work} دقيقة عمل • {rest} دقيقة استراحة",
   "minimizeAnimationsAndTransitions": "تقليل الرسوم المتحركة والانتقالات",
   "minimumMinutesBetweenSameType": "الحد الأدنى من الدقائق بين نفس النوع",
-  "minuteFocusSessions": "{minutes} دقيقة جلسات تركيز",
+  "minPerSession": "دقيقة لكل جلسة",
+  "minsTotal": "إجمالي الدقائق",
   "minutes": "دقائق",
+  "minutes15": "15 دقيقة",
+  "minutes30": "30 دقيقة",
+  "minutes5": "5 دقائق",
+  "minutesFromNow": "دقائق من الآن",
+  "minWorkMinBreak": "{work}دقيقة عمل → {rest}دقيقة استراحة",
+  "minWorkRest": "{work} دقيقة عمل • {rest} دقيقة استراحة",
   "missingToday": "مفقود اليوم",
   "modified": "تم التعديل",
   "mon": "الإثنين",
@@ -820,10 +755,10 @@
   "mondayAbbrev": "الإثنين",
   "monitorMoodAndEnergyCorrelations": "راقب ارتباطات المزاج والطاقة",
   "month": "شهر",
-  "monthView": "شهر",
   "monthly": "شهري",
   "monthlyProgress": "التقدم الشهري",
   "monthlyStats": "إحصائيات شهرية",
+  "monthView": "شهر",
   "mood": "المزاج",
   "moodAdded": "تمت إضافة المزاج",
   "moodAlreadyLoggedToday": "لقد قمت بتسجيل مزاجك بالفعل اليوم",
@@ -841,9 +776,11 @@
   "moodCheckIn": "تسجيل المزاج",
   "moodCheckInNotificationBody": "كيف تشعر الآن؟ اضغط لتسجيل مزاجك.",
   "moodCheckInNotificationTitle": "فحص المزاج",
+  "moodCheckIns": "فحوصات المزاج",
+  "moodCheckInsChannelDesc": "Mood check-in reminders",
+  "moodCheckInsChannelName": "Mood Check-Ins",
   "moodCheckInTimes": "أوقات فحص المزاج",
   "moodCheckInTitle": "فحص المزاج",
-  "moodCheckIns": "فحوصات المزاج",
   "moodEnergyLevel": "مستوى الطاقة",
   "moodEnergyTracking": "تتبع المزاج والطاقة",
   "moodFocusLevel": "مستوى التركيز",
@@ -861,13 +798,14 @@
   "moodPatternsSubtitle": "اكتشف الاتجاهات في رفاهيتك العاطفية",
   "moodPatternsTitle": "أنماطك المزاجية",
   "moodSaveButton": "حفظ المزاج",
-  "moodSaveFailed": "فشل في حفظ المزاج",
   "moodSaved": "تم حفظ المزاج",
   "moodSavedSuccess": "تم حفظ المزاج بنجاح",
+  "moodSaveFailed": "فشل في حفظ المزاج",
   "moodSelectLevel": "اختر مستوى مزاجك",
   "moodSettings": "إعدادات المزاج",
   "moodSettingsSubtitle": "إدارة تسجيل المزاج والإشعارات",
   "moodSettingsTitle": "إعدادات المزاج",
+  "moodsForDate": "مزاجيات لـ {date}",
   "moodStressLevel": "مستوى التوتر",
   "moodSuggestionsSubtitle": "توصيات مدعومة بالذكاء الاصطناعي بناءً على مزاجك",
   "moodSuggestionsTitle": "اقتراحات مخصصة",
@@ -876,8 +814,8 @@
   "moodUpdated": "تم تحديث المزاج",
   "moodVeryBad": "أعاني حقًا",
   "moodVeryGood": "رائع",
-  "moodsForDate": "مزاجيات لـ {date}",
   "moreDataNeeded": "بيانات أكثر مطلوبة",
+  "moreDetails": "المزيد من التفاصيل",
   "morningCheckIn": "فحص صباحي 💫",
   "morningPeakBestForComplexTasks": "ذروة الصباح: الأفضل للمهام المعقدة",
   "mostCommonMood": "المزاج الأكثر شيوعاً",
@@ -912,15 +850,19 @@
   "noDataAvailable": "لا توجد بيانات متاحة",
   "noDateTasks": "مهمات بدون تاريخ محدد",
   "noDueDate": "لا يوجد تاريخ استحقاق",
+  "noDueDateSet": "لم يتم تحديد تاريخ استحقاق",
   "noInsightsYet": "لا توجد رؤى بعد",
   "noInternetConnection": "لا يوجد اتصال بالإنترنت",
   "noMoodEntriesFound": "لم يتم العثور على إدخالات مزاج",
   "noMoodEntriesYet": "لا توجد إدخالات مزاجية بعد",
   "noMoodHistoryAvailableForSuggestions": "لا يوجد سجل مزاج متاح للاقتراحات",
   "noMoodRecorded": "لا يوجد مزاج مسجل",
+  "none": "لا شيء",
   "noNotes": "لا توجد ملاحظات",
   "noOverdueTasks": "لا توجد مهام متأخرة",
+  "noPomodoroData": "لا توجد بيانات بومودورو",
   "noPomodoroSessionsFound": "لم يتم العثور على جلسات بومودورو",
+  "noPomodoroSessionsYet": "لا توجد جلسات بومودورو بعد",
   "noProgressData": "لا توجد بيانات تقدم متاحة",
   "noProgressDataAvailable": "لا توجد بيانات تقدم متاحة",
   "noRecentTasks": "لم يتم العثور على مهام حديثة.",
@@ -928,22 +870,22 @@
   "noRecommendationsAvailableAtThisTime": "لا توجد توصيات متاحة في هذا الوقت.",
   "noRecurringTasksFound": "لم يتم العثور على مهام متكررة",
   "noReminder": "لا يوجد تذكير",
+  "noReminderHistory": "لا يوجد تاريخ تذكيرات",
   "noReminderSet": "لم يتم تعيين تذكير",
+  "noSessionsYet": "لا توجد جلسات بعد",
   "noSpeechDetected": "لم يتم اكتشاف كلام",
   "noSubtasks": "لا توجد مهام فرعية",
   "noSubtasksYet": "لا توجد مهام فرعية بعد",
+  "noSuggestionsAvailable": "لا توجد اقتراحات متاحة",
+  "notAnAdmin": "ليس مديرًا",
   "noTasksForThisDay": "لا توجد مهام لهذا اليوم",
   "noTasksFound": "لم يتم العثور على مهام",
   "noTasksFoundForSearch": "لم يتم العثور على مهام لـ \"{searchQuery}\"",
   "noTasksInCategory": "لا توجد مهام في هذه الفئة",
   "noTasksYet": "لا توجد مهام بعد",
-  "noUpcomingTasksWithReminders": "لا توجد مهام قادمة مع تذكيرات",
-  "noUpdatesAvailable": "لا توجد تحديثات متاحة",
-  "noUsersFound": "لم يتم العثور على مستخدمين",
-  "none": "لا شيء",
-  "notGreat": "ليس جيدًا",
   "notes": "الملاحظات",
   "notesOptional": "ملاحظات (اختيارية)",
+  "notGreat": "ليس جيدًا",
   "notificationAnalyticsAction": "معدل الإجراء",
   "notificationAnalyticsDelivered": "تم التسليم",
   "notificationAnalyticsLast7Days": "التحليلات (آخر 7 أيام)",
@@ -962,8 +904,12 @@
   "notificationPreferences": "إعدادات الإشعارات",
   "notificationPreferencesInfo": "معلومات تفضيلات الإشعارات",
   "notificationPreferencesInfoDetails": "قم بتكوين كيفية ووقت استلام الإشعارات. خصص كل نوع إشعار، وعيّن ساعات الهدوء، وتحكم في سلوك الإشعارات.",
+  "notifications": "الإشعارات",
   "notificationScheduledFor10Seconds": "⏰ تم جدولة الإشعار لمدة 10 ثوانٍ",
+  "notificationsDisabled": "مفعّل: ❌",
+  "notificationsEnabled": "مفعّل: ✅",
   "notificationSounds": "أصوات الإشعارات",
+  "notificationsSection": "الإشعارات",
   "notificationStatusCancelled": "تم الإلغاء",
   "notificationStatusDelivered": "تم التسليم",
   "notificationStatusExpired": "منتهي الصلاحية",
@@ -974,17 +920,20 @@
   "notificationTools": "أدوات الإشعارات",
   "notificationTypes": "أنواع الإشعارات",
   "notificationVerification": "التحقق من الإشعارات",
-  "notifications": "الإشعارات",
-  "notificationsDisabled": "مفعّل: ❌",
-  "notificationsEnabled": "مفعّل: ✅",
-  "notificationsSection": "الإشعارات",
+  "notYetCompleted": "لم يكتمل بعد",
+  "noUpcomingTasksWithReminders": "لا توجد مهام قادمة مع تذكيرات",
+  "noUpdatesAvailable": "لا توجد تحديثات متاحة",
+  "noUsersFound": "لم يتم العثور على مستخدمين",
+  "now": "الآن",
   "oceanWaves": "أمواج المحيط",
   "offf": "من",
   "ok": "موافق",
-  "okButton": "موافق",
   "okay": "حسنًا",
+  "okButton": "موافق",
   "onDays": "في {days}",
+  "oneDayBeforeDue": "يوم واحد قبل الاستحقاق",
   "oneHour": "ساعة واحدة",
+  "oneHourBeforeDue": "ساعة واحدة قبل الاستحقاق",
   "oneHourPause": "إيقاف مؤقت ساعة واحدة",
   "onlyAdminsCanAccessApp": "• يمكن للمسؤولين فقط الوصول إلى التطبيق",
   "onlyAdminsCanAccessTheApp": "• فقط المديرون يمكنهم الوصول إلى التطبيق",
@@ -997,6 +946,7 @@
   "options": "خيارات",
   "or": "أو",
   "organizeManage": "تنظيم وإدارة",
+  "others": "Others",
   "overdue": "متأخر",
   "overdueTasks": "المهام المتأخرة",
   "overdueTasksInCategory": "متأخر: {count}",
@@ -1012,7 +962,6 @@
   "pendingOperations": "عمليات معلقة",
   "pendingTasks": "المهام المعلقة",
   "pendingTasksInCategory": "معلق: {count}",
-  "percent": "{value}%",
   "performance": "الأداء",
   "performanceMemoryAndQualityMonitoring": "مراقبة الأداء والذاكرة والجودة",
   "performanceMetrics": "مقاييس الأداء",
@@ -1028,10 +977,12 @@
   "personalizedInsights": "رؤى مخصصة",
   "phone": "الهاتف",
   "pickAColor": "اختر لوناً",
+  "pickUpPace": "🚀 Let's pick up the pace!",
   "playSoundForNotifications": "تشغيل صوت للإشعارات",
   "playSoundWhenTasksAreCompleted": "تشغيل الصوت عند إكمال المهام",
   "pleaseEnterATemplateName": "الرجاء إدخال اسم القالب",
   "pleaseEnterSubtaskTitle": "يرجى إدخال عنوان المهمة الفرعية",
+  "pleaseEnterValidNumberOfMinutes": "يرجى إدخال عدد صحيح من الدقائق",
   "pleaseFillAllRequiredFields": "يرجى ملء جميع الحقول المطلوبة",
   "pleaseFixErrors": "يرجى إصلاح الأخطاء أعلاه",
   "pleaseTryAgain": "يرجى المحاولة مرة أخرى",
@@ -1064,9 +1015,10 @@
   "preview": "معاينة",
   "previous": "السابق",
   "primaryColor": "اللون الأساسي",
+  "prioritizeTasks": "ترتيب المهام حسب الأولوية",
   "priority": "الأولوية",
-  "priorityLabel": "الأولوية:",
   "priorityLevels": "2. مستويات الأولوية",
+  "priorityName": "الأولوية: {priority}",
   "priorityNotifications": "الإشعارات ذات الأولوية",
   "priorityNotificationsDescription": "عرض الإشعارات ذات الأولوية العالية فقط خلال وقت التركيز",
   "priorityTitle": "الأولوية",
@@ -1089,25 +1041,33 @@
   "progress": "التقدم",
   "progressOverview": "نظرة عامة على التقدم",
   "progressSaved": "تم حفظ التقدم",
+  "progressUpdate": "📈 Progress Update",
   "pullToRefresh": "اسحب للأسفل للتحديث عند الاتصال",
   "pushNotifications": "الإشعارات الفورية",
   "qualityMetricsCleared": "تم مسح مقاييس الجودة",
   "qualityReportLoggedToConsole": "تم تسجيل تقرير الجودة في وحدة التحكم",
   "qualityScore": "درجة الجودة: ",
+  "queueComplete": "🎉 Queue Complete!",
   "quickActions": "إجراءات سريعة",
   "quickCheck": "فحص سريع! ⏰",
   "quickControls": "عناصر تحكم سريعة",
   "quickEdit": "تعديل سريع",
   "quickEditButton": "تعديل سريع",
   "quickEmergencyAccess": "وصول طارئ سريع",
+  "quickFilters": "فلاتر سريعة",
   "quickInsights": "رؤى سريعة",
   "quickMoodCheckIn": "فحص المزاج السريع",
-  "quickTestGuide": "🎯 دليل الاختبار السريع",
+  "quickRefresh": "🧘 Quick refresh",
+  "quickReminders": "تذكيرات سريعة",
+  "quickSet": "تعيين سريع",
   "quickstart": "بداية سريعة",
+  "quickTestGuide": "🎯 دليل الاختبار السريع",
   "quietHours": "ساعات هادئة",
   "quietHoursDescription": "كتم جميع الإشعارات مؤقتاً",
   "quietNotificationMessage": "هذا إشعار هادئ",
   "rain": "مطر",
+  "readyToFocus": "جاهز للتركيز؟",
+  "readyToStartWorking": "جاهز لبدء العمل",
   "reallyStruggling": "أعاني حقًا",
   "receiveNotificationsForTasksAndReminders": "تلقي إشعارات للمهام والتذكيرات",
   "receivePeriodicMoodCheckInReminders": "تلقي تذكيرات تسجيل المزاج الدورية",
@@ -1116,18 +1076,18 @@
   "recentEntriesSuggestAChallengingTime": "المدخلات الحديثة تشير إلى وقت صعب",
   "recentImprovement": "تحسن حديث",
   "recentMoods": "الأمزجة الحديثة",
+  "recentPomodoroSessions": "جلسات البومودورو الأخيرة",
   "recentTasks": "المهام الحديثة",
   "recentTasksComingSoon": "المهام الحديثة قريباً!",
   "recommendations": "التوصيات",
   "recommendedAdjustments": "التعديلات الموصى بها:",
   "recommendedForAdhd": "موصى به لمن يعاني من ADHD",
   "recommendedForAdhders": "موصى به لمرضى فرط الحركة وتشتت الانتباه",
+  "recommendedTasks": "📋 Recommended tasks:",
   "recordingInProgress": "التسجيل قيد التنفيذ",
   "recurringInstancesGenerated": "تم إنشاء النسخ المتكررة بنجاح!",
   "recurringTaskAutomation": "• أتمتة المهام المتكررة",
-  "recurringTaskError": "خطأ في المهمة المتكررة: {error}",
   "recurringTaskGenerationFailed": "فشل إنشاء المهمة المتكررة",
-  "recurringTaskNotification": "تم إنشاء مهمة متكررة: {title}",
   "recurringTaskRetry": "إعادة المحاولة",
   "recurringTaskRetryLater": "إعادة المحاولة لاحقاً",
   "recurringTasksManager": "مدير المهام المتكررة",
@@ -1141,22 +1101,31 @@
   "regionalSection": "الإقليمي",
   "register": "تسجيل",
   "registrationIsDisabled": "التسجيل معطل",
+  "remaining": "متبقي",
   "rememberMe": "تذكرني",
-  "reminder": "تذكير: {date}",
-  "reminderCancelledFor": "تم إلغاء التذكير لـ: {taskTitle}",
-  "reminderSetFor": "تم تعيين التذكير لـ {date}",
+  "reminderActiveAndReady": "التذكير نشط وجاهز",
+  "reminderCancelled": "تم إلغاء التذكير",
+  "reminderExpired": "انتهت صلاحية التذكير",
+  "reminderHistory": "تاريخ التذكيرات",
+  "reminderRetryScheduled": "تم إعادة جدولة التذكير",
   "reminders": "التذكيرات",
+  "reminderSetFor": "تم تعيين التذكير لـ",
+  "reminderSetSuccessfully": "تم تعيين التذكير بنجاح",
   "remindersSuspended": "تم تعليق التذكيرات",
+  "reminderStatus": "حالة التذكير",
   "removeAdminRightsFrom": "إزالة صلاحيات المدير من",
   "removePhoto": "إزالة الصورة",
   "removeThisCheckInTime": "إزالة وقت التسجيل هذا؟",
   "repeat": "التكرار",
   "repeatCount": "({count} مرات)",
   "repeatForever": "(إلى الأبد)",
+  "repeats": "يتكرر",
   "repeatSameTimeEachDay": "التكرار في نفس الوقت كل يوم",
   "repeatSettings": "إعدادات التكرار",
   "repeatUntil": "حتى {date}",
   "required": "مطلوب",
+  "reschedule": "إعادة جدولة",
+  "rescheduleSelectedTasks": "إعادة جدولة المهام المحددة",
   "rescheduleTask": "إعادة جدولة المهمة",
   "reset": "إعادة تعيين",
   "resetAllThemeSettingsToDefaultValues": "إعادة تعيين جميع إعدادات السمة إلى القيم الافتراضية",
@@ -1173,7 +1142,9 @@
   "resumeAll": "استئناف الكل",
   "resumeNow": "استئناف الآن",
   "retry": "إعادة المحاولة",
+  "retryAttempts": "محاولات إعادة المحاولة",
   "retryButton": "إعادة المحاولة",
+  "retryNow": "إعادة المحاولة الآن",
   "returnToNormalOperation": "• العودة إلى التشغيل الطبيعي",
   "reviewCompletedSessionsWeekly": "راجع الجلسات المكتملة أسبوعياً لتحديد الأنماط",
   "riseAndShine": "استيقظ وتألق! 🌅",
@@ -1185,8 +1156,11 @@
   "saveMaintenanceSettings": "حفظ إعدادات الصيانة",
   "saveMood": "حفظ المزاج",
   "saveTask": "حفظ المهمة",
+  "scheduled": "مجدول",
+  "scheduledFor": "مجدول ل:",
   "scheduleDnd": "جدولة عدم الإزعاج",
   "scheduledQuietHours": "ساعات الهدوء المجدولة",
+  "scheduledTestMoodNotificationBody": "This is a scheduled test mood check-in notification.",
   "screenReader": "قارئ الشاشة",
   "screenReaderDisabled": "تم تعطيل قارئ الشاشة",
   "screenReaderEnabled": "تم تفعيل قارئ الشاشة",
@@ -1197,46 +1171,52 @@
   "searchNotifications": "البحث في الإشعارات...",
   "searchSettings": "البحث في الإعدادات",
   "searchSettingsHint": "بحث...",
-  "searchTasks": "البحث في المهام...",
+  "searchTasks": "بحث في المهام",
   "security": "الأمان",
   "seeAllPastNotifications": "عرض جميع الإشعارات السابقة",
   "select": "اختر",
+  "selectAccentColor": "اختر لون التمييز",
   "selectATemplateOrCustomizeYourSession": "اختر قالباً أو خصص جلستك",
   "selectATemplateThatFitsYourWorkStyle": "اختر قالباً يناسب أسلوب عملك",
-  "selectAccentColor": "اختر لون التمييز",
   "selectBackgroundColor": "اختر لون الخلفية",
   "selectBirthday": "اختر تاريخ الميلاد",
   "selectButton": "اختيار",
   "selectCategory": "اختر الفئة",
   "selectColor": "اختر اللون",
   "selectDueDate": "حدد تاريخ الاستحقاق",
+  "selectedColor": "اللون المحدد",
   "selectIcon": "اختر الأيقونة",
   "selectPrimaryColor": "اختر اللون الأساسي",
   "selectSurfaceColor": "اختر لون السطح",
   "selectTextColor": "اختر لون النص",
   "selectTime": "اختر الوقت",
-  "selectedColor": "اللون المحدد",
   "selfCareRecommended": "رعاية الذات موصى بها",
   "sendCrashReports": "إرسال تقارير الأعطال للمساعدة في إصلاح المشكلات",
   "sendCrashReportsToHelpFixIssues": "إرسال تقارير الأعطال للمساعدة في إصلاح المشاكل",
-  "sendTestNotification": "إرسال إشعار تجريبي",
   "sendingYouStrength": "أرسل لك القوة",
+  "sendTestNotification": "إرسال إشعار تجريبي",
+  "session": "جلسة",
   "sessionComplete": "انتهت الجلسة!",
   "sessionCompletionRate": "معدل إكمال الجلسة",
   "sessionDurationTrend": "اتجاه مدة الجلسة",
   "sessionHistory": "سجل الجلسات",
+  "sessionOptimization": "⚙️ Session Optimization",
   "sessionPatternAnalysis": "تحليل أنماط الجلسات",
+  "sessionPaused": "⏸️ Session Paused",
   "sessionProgress": "تقدم الجلسة",
-  "sessionTimingAdjustsBasedOnYourFocusPatterns": "تتعدل توقيت الجلسة بناءً على أنماط التركيز الخاصة بك",
-  "sessions": "الجلسات",
+  "sessions": "جلسات",
   "sessionsToLongBreak": "الجلسات حتى الاستراحة الطويلة",
   "sessionsUntilLongBreak": "الجلسات حتى الاستراحة الطويلة",
+  "sessionTimingAdjustsBasedOnYourFocusPatterns": "تتعدل توقيت الجلسة بناءً على أنماط التركيز الخاصة بك",
   "setAutomaticQuietHours": "تعيين ساعات الهدوء التلقائية",
-  "setDueDate": "تعيين تاريخ الاستحقاق",
+  "setCustomReminderTime": "قم بتعيين وقت تذكير مخصص",
+  "setDueDate": "حدد تاريخ الاستحقاق",
   "setPriority": "تعيين الأولوية",
   "setRealisticSessionGoals": "ضع أهدافاً واقعية للجلسة",
   "setReminder": "تعيين تذكير",
   "setReminderButton": "تعيين تذكير",
+  "setReminderToStayOnTrack": "قم بتعيين تذكير للبقاء على المسار الصحيح",
+  "setSmartReminder": "تعيين تذكير ذكي",
   "settings": "الإعدادات",
   "settingsButton": "الإعدادات",
   "settingsSaved": "تم حفظ الإعدادات",
@@ -1247,6 +1227,7 @@
   "shortBreakDuration": "مدة الاستراحة القصيرة",
   "shortBreakLabel": "استراحة قصيرة",
   "shortBreakMin": "استراحة قصيرة (دقيقة)",
+  "shortenSession": "⏰ Shorten Session",
   "shortPreset": "قصير (15/3/10)",
   "showActionButtons": "إظهار أزرار الإجراءات",
   "showBadge": "إظهار الشارة",
@@ -1254,10 +1235,10 @@
   "showMaintenanceScreenToUsers": "• إظهار شاشة الصيانة للمستخدمين",
   "showTasks": "عرض المهام",
   "signIn": "تسجيل الدخول",
+  "signingIn": "جاري تسجيل الدخول..",
   "signInWithApple": "تسجيل الدخول باستخدام آبل",
   "signInWithGoogle": "تسجيل الدخول باستخدام جوجل",
   "signOut": "تسجيل الخروج",
-  "signingIn": "جاري تسجيل الدخول..",
   "silentNotification10Seconds": "إشعار صامت - 10 ثوانٍ",
   "skip": "تخطي",
   "skipForNow": "تخطي حالياً",
@@ -1265,16 +1246,22 @@
   "smartFeatures": "الميزات الذكية",
   "smartFeaturesTutorial": "دليل الميزات الذكية",
   "smartNotificationsDescription": "ضبط توقيت الإشعارات تلقائياً بناءً على أنماط نشاطك",
+  "smartReminder": "تذكير ذكي",
+  "smartReminders": "تذكيرات ذكية",
+  "smartReminderSet": "تم تعيين تذكير ذكي",
+  "smartReminderSuggestion": "اقتراح التذكير الذكي",
   "smartScheduling": "الجدولة الذكية",
   "smartSchedulingInfo": "تتعلم الجدولة الذكية من أنماط استخدامك لتقديم الإشعارات في الأوقات المثلى.",
   "smartSortingConsidersTimeOfDayEnergyLevelsAndPatterns": "الفرز الذكي يأخذ في الاعتبار وقت اليوم ومستويات الطاقة والأنماط",
   "smartTaskSorting": "الفرز الذكي للمهام",
   "smartTaskSortingWithAiRecommendations": "• فرز المهام الذكي مع توصيات الذكاء الاصطناعي",
   "smartView": "ذكي",
+  "snooze15min": "تأجيل 15 دقيقة",
   "someSyncOperationsFailed": "فشلت بعض عمليات المزامنة",
   "somethingWentWrong": "حدث خطأ ما",
   "sometimesNeutralIsExactlyWhereWeNeedToBe": "أحياناً المحايد هو بالضبط حيث نحتاج أن نكون",
-  "sortBy": "ترتيب حسب",
+  "sortAndFilter": "فرز وتصفية",
+  "sortBy": "فرز حسب",
   "sound": "الصوت",
   "soundDisabled": "تم تعطيل الصوت",
   "soundEnabled": "تم تفعيل الصوت",
@@ -1287,14 +1274,16 @@
   "start": "بدء",
   "startAFocusedWorkSession": "ابدأ جلسة عمل مركزة",
   "startAPomodoroSessionToSeeAdaptiveTiming": "ابدأ جلسة بومودورو لرؤية التوقيت التكيفي",
-  "startFocusMode": "بدء وضع التركيز",
-  "startFocusSession": "ابدأ جلسة التركيز",
+  "startFocus": "ابدأ التركيز",
   "startLoggingMoods": "ابدأ في تسجيل مزاجك لرؤية تاريخك",
+  "startPomodoro": "بدء بومودورو",
   "startPomodoroSession": "بدء جلسة بومودورو",
+  "startPomodoroSessionsToSeeInsights": "ابدأ جلسات البومودورو لرؤية الرؤى",
   "startRecording": "بدء التسجيل",
   "startSession": "ابدأ الجلسة",
   "startTracking": "ابدأ رحلة تتبع مزاجك",
   "startTrackingYourMood": "ابدأ تتبع مزاجك لرؤية الرؤى",
+  "startWorking": "ابدأ العمل",
   "startYourFirstPomodoroSession": "ابدأ أول جلسة بومودورو لك لتعزيز الإنتاجية",
   "statistics": "الإحصائيات",
   "statisticsAnalytics": "الإحصاءات والتحليلات",
@@ -1322,14 +1311,13 @@
   "subtaskDescription": "الوصف (اختياري)",
   "subtaskDetails": "تفاصيل المهمة الفرعية",
   "subtaskDuplicated": "تم نسخ المهمة الفرعية بنجاح",
+  "subtasks": "المهام الفرعية",
   "subtaskTitle": "عنوان المهمة الفرعية",
   "subtaskUncompleted": "تم وضع علامة غير مكتمل على المهمة الفرعية",
   "subtaskUpdated": "تم تحديث المهمة الفرعية بنجاح",
-  "subtasks": "المهام الفرعية",
-  "subtasksCount": "{count} مهام فرعية",
-  "suggestTimes": "اقتراح الأوقات",
   "suggestedPlan": "الخطة المقترحة:",
   "suggestedTimes": "الأوقات المقترحة",
+  "suggestTimes": "اقتراح الأوقات",
   "sun": "الأحد",
   "sunday": "الأحد",
   "sundayAbbrev": "الأحد",
@@ -1338,12 +1326,12 @@
   "surfaceColor": "لون السطح",
   "suspendRemindersTimers": "تعليق جميع التذكيرات والمؤقتات فورًا",
   "syncError": "خطأ في المزامنة: {error}",
+  "syncingFromFirebase": "جاري المزامنة من Firebase...",
   "syncStatus": "حالة المزامنة",
   "syncStatusFailed": "فشل",
   "syncStatusIdle": "في الانتظار",
   "syncStatusSuccess": "نجح",
   "syncStatusSyncing": "جاري المزامنة",
-  "syncingFromFirebase": "جاري المزامنة من Firebase...",
   "system": "النظام",
   "systemAdministration": "إدارة النظام",
   "systemMode": "وضع النظام",
@@ -1356,50 +1344,62 @@
   "tapOptionBestDescribesMood": "اضغط على الخيار الذي يصف مزاجك بشكل أفضل",
   "tapToAddFirstTask": "اضغط على زر + لإضافة مهمتك الأولى",
   "tapToLogMood": "اضغط لتسجيل مزاجك",
+  "tapToSetInstantly": "انقر للتعيين فورًا",
   "tapToStartRecording": "اضغط لبدء التسجيل",
   "taskActions": "إجراءات المهمة",
   "taskAddedSuccessfully": "تمت إضافة المهمة بنجاح!",
   "taskAttachments": "المرفقات",
+  "taskCompleted": "{title} {status}",
+  "taskCompletedChannelDesc": "Celebration notifications for completed tasks",
+  "taskCompletedChannelName": "Task Completed",
+  "taskCompletedSuccessfully": "تم إكمال المهمة بنجاح",
   "taskCompleteReport": "📋 مهمة: إكمال التقرير",
-  "taskCompleted": "تم إكمال المهمة بنجاح",
   "taskCompletionSounds": "أصوات إكمال المهام",
+  "taskCount": "{count} مهمة{plural}",
   "taskCreatedSuccessfully": "تم إنشاء المهمة بنجاح",
   "taskDeleted": "تم حذف المهمة بنجاح",
-  "taskDeletedSuccessfully": "تم حذف {taskTitle} بنجاح",
+  "taskDeletedSuccessfully": "تم حذف {title} بنجاح",
   "taskDescription": "وصف المهمة",
   "taskDescriptionLabel": "الوصف (اختياري)",
   "taskDetails": "تفاصيل المهمة",
   "taskDue": "مهمة مستحقة",
+  "taskDueChannelDesc": "Notifications for due tasks",
+  "taskDueChannelName": "Task Due",
   "taskDueToday": "المهمة مستحقة اليوم",
-  "taskDuplicatedSuccessfully": "تم تكرار المهمة بنجاح",
+  "taskDuplicatedSuccessfully": "تم نسخ المهمة بنجاح",
+  "taskEssentials": "تفاصيل المهمة",
   "taskHistory": "سجل المهمة",
   "taskInformation": "معلومات المهمة",
+  "taskIsDueSoon": "المهمة مستحقة قريبًا",
+  "taskIsInProgress": "المهمة قيد التنفيذ",
+  "taskIsOverdue": "المهمة متأخرة",
   "taskNotes": "ملاحظات المهمة",
   "taskNotificationIn15Seconds": "⏰ إشعار المهمة خلال 15 ثانية (يحتوي على أزرار إجراءات!)",
+  "taskOverdue": "متأخر",
   "taskPath": "مسار المهمة",
   "taskPriorityDistribution": "توزيع أولويات المهام",
   "taskProgress": "التقدم",
   "taskRecommendations": "توصيات المهام",
   "taskReminder": "تذكير المهمة",
   "taskReminders": "تذكيرات المهام",
+  "taskRemindersChannelDesc": "Reminders for tasks",
+  "taskRemindersChannelName": "Task Reminders",
   "taskRescheduled": "تم إعادة جدولة المهمة",
+  "tasks": "المهام",
+  "tasksCompleted": "المهام المكتملة",
+  "tasksCompletedThisWeek": "المهام المكتملة هذا الأسبوع",
+  "tasksCreatedSuccessfully": "تم إنشاء المهام بنجاح!",
+  "tasksNeedingInstances": "المهام التي تحتاج نسخ جديدة",
   "taskSounds": "أصوات المهام",
+  "tasksSortedByPriorityAndSuitability": "المهام مرتبة حسب الأولوية والملاءمة",
   "taskStatistics": "إحصائيات المهمة",
+  "taskTimeline": "الجدول الزمني للمهمة",
   "taskTitle": "عنوان المهمة",
   "taskTitleLabel": "عنوان المهمة",
   "taskTitleRequired": "عنوان المهمة مطلوب",
   "taskUncompleted": "تم وضع علامة غير مكتمل على المهمة",
   "taskUpdated": "تم تحديث المهمة بنجاح",
   "taskValidationFailed": "فشل التحقق من المهمة",
-  "tasks": "المهام",
-  "tasksCompleted": "المهام المكتملة",
-  "tasksCompletedThisWeek": "المهام المكتملة هذا الأسبوع",
-  "tasksCount": "عدد المهام",
-  "tasksCreatedSuccessfully": "تم إنشاء المهام بنجاح!",
-  "tasksDue": "{count} مهمة مستحقة",
-  "tasksForDate": "مهام ليوم {date}",
-  "tasksNeedingInstances": "المهام التي تحتاج نسخ جديدة",
-  "tasksSortedByPriorityAndSuitability": "المهام مرتبة حسب الأولوية والملاءمة",
   "tellUsAboutYourself": "أخبرنا عن نفسك",
   "templateName": "اسم القالب",
   "termsAndPrivacy": "بتسجيل الدخول، أنت توافق على شروط الخدمة وسياسة الخصوصية الخاصة بنا",
@@ -1407,6 +1407,7 @@
   "testDNDMode": "5. اختبر وضع عدم الإزعاج في التفضيلات",
   "testHighPriority": "اختبار: أولوية عالية",
   "testIn20Seconds": "20 ثانية",
+  "testingTips": "نصائح الاختبار",
   "testLowPriority": "اختبار: أولوية منخفضة",
   "testMoodCheckIn": "اختبار: تسجيل المزاج",
   "testMoodNotificationBody": "هذا إشعار اختبار لفحص المزاج.",
@@ -1416,9 +1417,9 @@
   "testNotification": "اختبار الإشعار",
   "testNotificationBody": "نظام الإشعارات الجديد يعمل!",
   "testNotificationDescription": "هذا إشعار اختبار للتحقق من وظيفة التذكير",
+  "testNotifications": "اختبار الإشعارات",
   "testNotificationSent": "تم إرسال إشعار اختبار",
   "testNotificationTitle": "✅ إشعار اختباري",
-  "testNotifications": "اختبار الإشعارات",
   "testReminder": "تذكير اختبار",
   "testReminderIn10Seconds": "اختبار تذكير في 10 ثواني",
   "testReminderScheduled": "تم جدولة تذكير الاختبار لمدة 10 ثواني من الآن",
@@ -1426,7 +1427,6 @@
   "testSimpleNotification": "اختبار: إشعار بسيط",
   "testSound": "اختبار الصوت",
   "testTaskReminder": "اختبار: تذكير بمهمة",
-  "testingTips": "نصائح الاختبار",
   "textColor": "لون النص",
   "textInputComingSoon": "إدخال النص قريباً!",
   "thankYouForYourPatience": "شكراً لصبرك 💙",
@@ -1434,6 +1434,7 @@
   "themeLabel": "السمة",
   "themeSettings": "إعدادات السمة",
   "themeSettingsResetToDefaults": "تم إعادة تعيين إعدادات السمة إلى الافتراضي",
+  "thirtySeconds": "30 ثانية",
   "thisActionCannotBeUndone": "لا يمكن التراجع عن هذا الإجراء!",
   "thisWeek": "هذا الأسبوع",
   "thisWeekTasks": "مهمات هذا الأسبوع",
@@ -1447,38 +1448,41 @@
   "thursdayAbbrev": "الخميس",
   "timeBasedRecommendations": "توصيات قائمة على الوقت",
   "timeFormat": "تنسيق الوقت",
-  "timeRange": "النطاق الزمني:",
-  "timeRemaining": "الوقت المتبقي: {time}",
-  "timeSpent": "الوقت المستغرق",
-  "timeTracking": "تتبع الوقت",
   "timeline": "الجدول الزمني",
   "timelineView": "الخط الزمني",
+  "timeRange": "النطاق الزمني:",
+  "timeSpent": "الوقت المستغرق",
+  "timeToRecharge": "🌿 Time to recharge!",
+  "timeTracking": "تتبع الوقت",
   "today": "اليوم",
   "todayI": "اليوم أنا",
+  "todaysPerformance": "📊 Today's Performance:",
+  "todaysStatistics": "إحصائيات اليوم",
   "todayTasks": "مهام اليوم",
   "todayYoureFeeling": "اليوم تشعر",
-  "todaysStatistics": "إحصائيات اليوم",
   "toggleAdminStatus": "تبديل حالة المدير",
-  "tomorrow": "غداً",
+  "tomorrow": "غدًا",
   "tomorrowShouldBeATypicalDayForYou": "يجب أن يكون الغد يوماً نموذجياً لك",
+  "tomorrowsNewDay": "💪 Tomorrow's a new day!",
   "tomorrowTasks": "مهمات غداً",
   "toolsAndSettings": "الأدوات والإعدادات",
+  "total": "الإجمالي",
   "totalEntries": "إجمالي الإدخالات",
   "totalEstimatedTime": "الوقت التقديري الإجمالي: {minutes} دقيقة",
   "totalFocusTime": "إجمالي وقت التركيز",
   "totalHours": "إجمالي الساعات",
-  "totalNotifications": "إجمالي الإشعارات: {count}",
   "totalRecurringInstances": "إجمالي النسخ المتكررة",
   "totalSessions": "إجمالي الجلسات",
+  "totalStat": "الإجمالي",
+  "totaltasks": "إجمالي المهام",
   "totalTasks": "إجمالي المهام",
   "totalTasksInCategory": "إجمالي المهام: {count}",
-  "totaltasks": "إجمالي المهام",
+  "trackedOperations": "العمليات المتتبعة: {count}",
   "trackFocusPatternsAndSessionPerformance": "تتبع أنماط التركيز وأداء الجلسة",
   "trackNotificationInteractionStatistics": "تتبع إحصائيات تفاعل الإشعارات",
   "trackWhenNotificationsAreDelivered": "تتبع متى يتم تسليم الإشعارات وفتحها",
   "trackYourMoodForAWeek": "تتبع مزاجك لمدة أسبوع لرؤية الرؤى",
   "trackYourMoodForAWeekToGetAIPredictions": "تتبع مزاجك لمدة أسبوع للحصول على تنبؤات الذكاء الاصطناعي",
-  "trackedOperations": "العمليات المتتبعة: {count}",
   "trends": "الاتجاهات",
   "tryActionButtons": "4. جرب أزرار الإجراءات في إشعارات المهام",
   "tryAdjustingYourSearchTerms": "حاول تعديل شروط البحث",
@@ -1494,22 +1498,27 @@
   "tuesdayAbbrev": "الثلاثاء",
   "tutorialCompletedYoureAllSetToUseSmartFeatures": "اكتمل البرنامج التعليمي! أنت جاهز لاستخدام الميزات الذكية.",
   "twelveHour": "12 ساعة",
+  "twentyFiveMinuteSession": "جلسة 25 دقيقة",
   "twentyFourHour": "24 ساعة",
+  "twoDaysBeforeDue": "يومين قبل الاستحقاق",
   "typeToFilterSettingsSections": "اكتب لتصفية أقسام الإعدادات",
   "unableToLoadProgressData": "غير قادر على تحميل بيانات التقدم",
+  "uncompleteTask": "إلغاء إكمال المهمة",
   "uncompleteTaskButton": "إلغاء إكمال المهمة",
   "undatedTasks": "مهام بدون تواريخ",
   "understandYourPatternsAndOptimizeYourProductivity": "افهم أنماطك وحسن إنتاجيتك",
   "undo": "تراجع",
+  "unknown": "غير معروف",
   "upcoming": "قادم",
   "updateAvailable": "تحديث متاح",
   "updateButton": "تحديث",
+  "updated": "تم التحديث",
+  "updatedAt": "تم التحديث: {date}",
   "updateDownloaded": "تم تحميل التحديث",
   "updateError": "خطأ في التحديث",
   "updatePersonalInfo": "تحديث المعلومات الشخصية",
-  "updateTodaysEntryInstead": "يمكنك تحديث إدخال اليوم بدلاً من ذلك",
-  "updated": "تم التحديث: {date}",
   "updates": "التحديثات",
+  "updateTodaysEntryInstead": "يمكنك تحديث إدخال اليوم بدلاً من ذلك",
   "urgent": "عاجلة",
   "urgentNotification10Seconds": "إشعار عاجل - 10 ثوانٍ",
   "urgentNotificationMessage": "هذا إشعار عاجل!",
@@ -1518,13 +1527,14 @@
   "useLargerFontSizes": "استخدام أحجام خطوط أكبر للنص",
   "useLightTheme": "استخدام السمة الفاتحة",
   "userAndAllAssociatedDataDeletedSuccessfully": "تم حذف {userName} وكل البيانات المرتبطة بنجاح",
+  "userDeletedSuccessfully": "تم حذف {userName} وجميع البيانات المرتبطة بنجاح",
   "userId": "معرف المستخدم: {userId}",
+  "userIdNA": "معرف المستخدم: {userId}",
   "userNotAuthenticated": "المستخدم غير مصادق عليه",
   "userRegistration": "تسجيل المستخدمين",
   "verbose": "مفصل",
   "verificationReportLoggedToConsole": "تم تسجيل تقرير التحقق في وحدة التحكم",
   "verifyAllTasks": "تحقق من جميع المهام",
-  "version": "الإصدار: {version}",
   "veryBad": "سيء جداً",
   "veryBadIntensity": "شدة سيئة جداً",
   "veryGood": "جيد جداً",
@@ -1559,12 +1569,11 @@
   "wantToShareMore": "هل تريد مشاركة المزيد؟",
   "wantToShareMoreDetails": "هل تريد مشاركة المزيد من التفاصيل؟",
   "warning": "تحذير",
-  "weRecommendTheseSettings": "نوصي بهذه الإعدادات بناءً على تفضيلاتك",
+  "wasScheduledFor": "كان مجدولًا ل:",
   "wed": "الأربعاء",
   "wednesday": "الأربعاء",
   "wednesdayAbbrev": "الأربعاء",
   "week": "أسبوع",
-  "weekView": "أسبوع",
   "weekly": "أسبوعياً",
   "weeklyFocusTrend": "اتجاه التركيز الأسبوعي",
   "weeklyGoalProgress": "تقدم الهدف الأسبوعي",
@@ -1572,9 +1581,11 @@
   "weeklyProgressOf": "{progress} من {goal} جلسة",
   "weeklySessionCount": "عدد الجلسات الأسبوعي",
   "weeklyStats": "إحصائيات أسبوعية",
+  "weekView": "أسبوع",
   "welcomeToTazbeet": "مرحباً بك في تطبيق Tazbeet",
   "wellnessEmotions": "الصحة والعواطف",
   "wellnessInsights": "رؤى العافية",
+  "weRecommendTheseSettings": "نوصي بهذه الإعدادات بناءً على تفضيلاتك",
   "whatMadeTodayGreat": "ما الذي جعل اليوم رائعًا؟",
   "whatsGoingWell": "ما الذي يسير بشكل جيد؟",
   "whatsHappeningRightNow": "ما الذي يحدث الآن؟",
@@ -1603,8 +1614,10 @@
   "youDoNotHaveAdminPrivileges": "ليس لديك صلاحيات المدير.",
   "youHaventLoggedYourMoodTodayYet": "لم تقم بتسجيل مزاجك اليوم بعد",
   "youMightBenefitFromAdditionalSupport": "قد تستفيد من دعم إضافي",
-  "yourIntelligentTaskManagementCompanionWithAIPoweredFeatures": "رفيقك الذكي لإدارة المهام مع ميزات تعمل بالذكاء الاصطناعي",
+  "youreDoingGreat": "أنت تفعل رائعاً!",
+  "youreOnFire": "💪 You're on fire!",
   "yourIntelligentTaskManagementCompanionWithAiPoweredFeatures": "رفيقك لإدارة المهام الذكية مع ميزات مدعومة بالذكاء الاصطناعي",
+  "yourIntelligentTaskManagementCompanionWithAIPoweredFeatures": "رفيقك الذكي لإدارة المهام مع ميزات تعمل بالذكاء الاصطناعي",
   "yourJoyIsContagious": "فرحك معدي!",
   "yourMood": "مزاجك",
   "yourMoodHasBeenImprovingLately": "مزاجك كان يتحسن مؤخراً",
@@ -1612,23 +1625,493 @@
   "yourMoodJourney": "رحلتك المزاجية",
   "yourOverallMoodIsGenerallyPositive": "مزاجك العام إيجابي بشكل عام",
   "yourPersonalTaskManager": "مدير المهام الشخصي الخاص بك",
-  "youreDoingGreat": "أنت تفعل رائعاً!",
+  "yourProgress": "تقدمك",
   "youveBeenTrackingYourMoodForDays": "كنت تتتبع مزاجك لمدة {days} يوم",
+  "allTasksCompletedCount": "🎉 All {count} tasks completed!",
+  "@allTasksCompletedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "avgFocus": "متوسط التركيز",
+  "@avgFocus": {
+    "placeholders": {
+      "score": {
+        "type": "String"
+      }
+    }
+  },
   "bulkDeleteConfirmation": "هل أنت متأكد من حذف {count} مهمة؟",
-  "category": "الفئة",
-  "complete": "إكمال",
+  "@bulkDeleteConfirmation": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkGenerationComplete": "تم إنشاء {count} حالات متكررة",
+  "@bulkGenerationComplete": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "completedTaskNotification": "Completed: {taskTitle}",
+  "@completedTaskNotification": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteCategory": "هل أنت متأكد من حذف \"{categoryName}\"؟ سيؤدي هذا إلى إزالة الفئة من جميع المهام المرتبطة.",
+  "@confirmDeleteCategory": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteTask": "تأكيد حذف المهمة {taskTitle}",
+  "@confirmDeleteTask": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "Object"
+      }
+    }
+  },
+  "currentEnergyLevel": "⚡ Current energy: {level}",
+  "@currentEnergyLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "currentStreakDays": "🔥 Current streak: {count} days",
+  "@currentStreakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "days": "أيام",
+  "@days": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "daysRemaining": "📅 Days remaining: {count}",
+  "@daysRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "daysToGo": "📈 {count} days to go!",
+  "@daysToGo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dayStreak": "يوم متتالي",
+  "@dayStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteTaskConfirmation": "تأكيد حذف المهمة",
+  "@deleteTaskConfirmation": {
+    "placeholders": {
+      "task": {
+        "type": "String"
+      }
+    }
+  },
+  "error": "خطأ",
+  "@error": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "focusArea": "🎯 Focus: {area}",
+  "@focusArea": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
+  "focusLevel": "مستوى التركيز",
+  "@focusLevel": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "focusModeFor": "وضع التركيز لـ {taskTitle}",
+  "@focusModeFor": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "Object"
+      }
+    }
+  },
+  "focusRating": "Focus rating: {rating}/10",
+  "@focusRating": {
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "goalAchievedNewTarget": "🏆 Goal achieved! New target: {count} days",
+  "@goalAchievedNewTarget": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inHours": "في {count} ساعة",
+  "@inHours": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "inMinutes": "في {count} دقائق",
+  "@inMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
   "itemsSelected": "{count} محددة",
-  "prioritizeTasks": "ترتيب المهام حسب الأولوية",
-  "or": "أو",
-  "priority": "الأولوية",
-  "quickEdit": "تعديل سريع",
-  "quickFilters": "فلاتر سريعة",
-  "reschedule": "إعادة جدولة",
-  "reset": "إعادة تعيين",
-  "rescheduleSelectedTasks": "إعادة جدولة المهام المحددة",
-  "rescheduleTask": "إعادة جدولة المهمة",
-  "searchTasks": "بحث في المهام",
-  "search": "بحث",
-  "sortAndFilter": "فرز وتصفية",
-  "sortBy": "فرز حسب"
+  "@itemsSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "metricValue": "{label}: {value}/10",
+  "@metricValue": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "minuteBreak": "⏰ {minutes} minute {breakType}",
+  "@minuteBreak": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "breakType": {
+        "type": "String"
+      }
+    }
+  },
+  "minuteFocusSessions": "{minutes} دقيقة جلسات تركيز",
+  "@minuteFocusSessions": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "minuteSession": "جلسة {duration} دقيقة",
+  "@minuteSession": {
+    "placeholders": {
+      "duration": {
+        "type": "Object"
+      }
+    }
+  },
+  "minutesPerSession": "⏱️ {minutes} min per session",
+  "@minutesPerSession": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "nextTask": "Next: {taskTitle}",
+  "@nextTask": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "percent": "{value}%",
+  "@percent": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "priorityLabel": "الأولوية:",
+  "@priorityLabel": {
+    "placeholders": {
+      "priority": {
+        "type": "String"
+      }
+    }
+  },
+  "progressPercent": "Progress: {percent}%",
+  "@progressPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "reason": "💭 Reason: {reason}",
+  "@reason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "recurringTaskError": "خطأ في المهمة المتكررة: {error}",
+  "@recurringTaskError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "recurringTaskNotification": "تم إنشاء مهمة متكررة: {title}",
+  "@recurringTaskNotification": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "reminder": "تذكير: {date}",
+  "@reminder": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderCancelledFor": "تم إلغاء التذكير لـ: {taskTitle}",
+  "@reminderCancelledFor": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionNofM": "Session {current} of {total}",
+  "@sessionNofM": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "sessionsCount": "⏱️ {count} sessions",
+  "@sessionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sessionsPlanned": "📋 {count} sessions planned",
+  "@sessionsPlanned": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sessionsProgress": "Sessions: {completed}/{total}",
+  "@sessionsProgress": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "startingTask": "🍅 Starting: {taskTitle}",
+  "@startingTask": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "subtasksCount": "{count} مهام فرعية",
+  "@subtasksCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "suggestedActivity": "💡 Suggested activity: {activity}",
+  "@suggestedActivity": {
+    "placeholders": {
+      "activity": {
+        "type": "String"
+      }
+    }
+  },
+  "suggestedDuration": "⏱️ Suggested: {minutes} min",
+  "@suggestedDuration": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "targetDays": "🎯 Target: {count} days",
+  "@targetDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksCompletedCount": "✅ {count} tasks completed",
+  "@tasksCompletedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksCount": "{count}",
+  "@tasksCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksDue": "{count} مهمة مستحقة",
+  "@tasksDue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksForDate": "مهام ليوم {date}",
+  "@tasksForDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "timeRemaining": "الوقت المتبقي: {time}",
+  "@timeRemaining": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "todayAt": "اليوم الساعة {time}",
+  "@todayAt": {
+    "placeholders": {
+      "time": {
+        "type": "Object"
+      }
+    }
+  },
+  "totalNotifications": "إجمالي الإشعارات: {count}",
+  "@totalNotifications": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalTime": "⏱️ Total time: {time}",
+  "@totalTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "version": "الإصدار: {version}",
+  "@version": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "viewAll": "عرض الكل ({count})",
+  "@viewAll": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "weeklyGoalSessions": "🎯 Weekly Goal: {count} sessions",
+  "@weeklyGoalSessions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyProgressStatus": "✅ Progress: {current}/{total}",
+  "@weeklyProgressStatus": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "yesterdayAt": "أمس الساعة {time}",
+  "@yesterdayAt": {
+    "placeholders": {
+      "time": {
+        "type": "Object"
+      }
+    }
+  }
 }

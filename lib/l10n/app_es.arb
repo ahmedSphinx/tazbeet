@@ -1,153 +1,9 @@
 {
-  "@@locale": "es",
-  "@bulkGenerationComplete": {
-    "placeholders": {
-      "count": {
-        "type": "String"
-      }
-    }
-  },
-  "@confirmDeleteCategory": {
-    "placeholders": {
-      "categoryName": {
-        "type": "String"
-      }
-    }
-  },
-  "@confirmDeleteTask": {
-    "placeholders": {
-      "taskTitle": {
-        "type": "String"
-      }
-    }
-  },
-  "@days": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@deleteTaskConfirmation": {
-    "placeholders": {
-      "task": {
-        "type": "String"
-      }
-    }
-  },
-  "@error": {
-    "placeholders": {
-      "message": {
-        "type": "String"
-      }
-    }
-  },
-  "@metricValue": {
-    "placeholders": {
-      "label": {
-        "type": "String"
-      },
-      "value": {
-        "type": "int"
-      }
-    }
-  },
-  "@minuteFocusSessions": {
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
-  "@percent": {
-    "placeholders": {
-      "value": {
-        "type": "int"
-      }
-    }
-  },
-  "@recurringTaskError": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "@recurringTaskNotification": {
-    "placeholders": {
-      "title": {
-        "type": "String"
-      }
-    }
-  },
-  "@reminder": {
-    "placeholders": {
-      "date": {
-        "type": "String"
-      }
-    }
-  },
-  "@reminderCancelledFor": {
-    "placeholders": {
-      "taskTitle": {
-        "type": "String"
-      }
-    }
-  },
-  "@subtasksCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@tasksCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@tasksDue": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@tasksForDate": {
-    "placeholders": {
-      "date": {
-        "type": "String"
-      }
-    }
-  },
-  "@timeRemaining": {
-    "placeholders": {
-      "time": {
-        "type": "String"
-      }
-    }
-  },
-  "@totalNotifications": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@version": {
-    "placeholders": {
-      "version": {
-        "type": "String"
-      }
-    }
-  },
-  "aIPoweredAnalysis": "Análisis Impulsado por IA",
   "about": "About",
   "aboutTazbeet": "About Tazbeet",
   "absolutelyAmazing": "¡Absolutamente increíble!",
   "accentColor": "Accent Color",
+  "acceptSuggestion": "Aceptar Sugerencia",
   "accessDenied": "Access Denied",
   "accessibilityCompleted": "Accessibility setup completed",
   "accessibilityFeatures": "Accessibility Features",
@@ -164,6 +20,14 @@
   "activeNotificationsMuted": "Active - Notifications muted",
   "activeRecurringTasks": "Tareas Recurrentes Activas",
   "activity": "Activity",
+  "activityBreathing": "Deep breathing exercises",
+  "activityEyeRest": "20-20-20 eye exercises",
+  "activityHydration": "Drink water & walk around",
+  "activityMeditation": "Mindful breathing (2-5 min)",
+  "activityMusic": "Listen to calming music",
+  "activitySocial": "Quick chat with colleague",
+  "activityStretching": "Desk stretches (2-3 min)",
+  "activityWalking": "Short walk (3-5 min)",
   "adaptiveBreakSuggestions": "Adaptive break suggestions",
   "adaptivePomodoro": "Adaptive Pomodoro",
   "adaptivePomodoroDescription": "Focus sessions that adapt to your performance",
@@ -174,6 +38,7 @@
   "addAttachment": "Añadir Archivo Adjunto",
   "addButton": "Agregar",
   "addCategory": "Add Category",
+  "addedSuggestedCheckInTimesFromYourMoodHistory": "Se añadieron {count} horas de check-in sugeridas de tu historial de estado de ánimo",
   "addFirstSubtask": "Agregar Primera Subtarea",
   "addLevelThreeSubtask": "Agregar Subtarea de Nivel 3",
   "addNote": "Añadir Nota",
@@ -184,19 +49,23 @@
   "addSubtasks": "Añadir Subtareas",
   "addTask": "Add Task",
   "addTaskButton": "Añadir Tarea",
+  "addTasksToCategory": "Añadir tareas a esta categoría",
   "addTaskTitle": "Añadir Nueva Tarea",
   "addTaskToGetStarted": "Añade una tarea para empezar",
-  "addTasksToCategory": "Añadir tareas a esta categoría",
   "addYourFirstTask": "Añade tu primera tarea",
-  "addedSuggestedCheckInTimesFromYourMoodHistory": "Se añadieron {count} horas de check-in sugeridas de tu historial de estado de ánimo",
   "adjustTheseSettingsToMakeTheAppWorkBetterForYou": "Adjust these settings to make the app work better for you",
   "admin": "Admin: {isAdmin}",
+  "adminNotificationsChannelDesc": "Important notifications for administrators",
+  "adminNotificationsChannelName": "Admin Notifications",
   "adminPanel": "Admin Panel",
+  "adminStatus": "Admin: {status}",
   "adminTools": "Herramientas de Administración",
+  "advancedDetails": "Detalles Avanzados",
   "advancedSettings": "Advanced Settings",
   "afterDeletionTheAppWillResyncAllDataFromFirebase": "After deletion, the app will resync all data from Firebase.",
   "afternoonSteadyGoodForRoutineWork": "Afternoon steady: Good for routine work",
   "afternoonVibes": "Vibraciones de tarde 🌻",
+  "aIPoweredAnalysis": "Análisis Impulsado por IA",
   "aiPoweredInsights": "Perspectivas impulsadas por IA",
   "aiPredictions": "Predicciones IA",
   "all": "All",
@@ -205,50 +74,56 @@
   "allLabel": "Todas",
   "allNotificationsCancelled": "¡Todas las notificaciones canceladas!",
   "allNotificationsCleared": "¡Todas las notificaciones limpiadas!",
+  "allowAllUsersToAccessApp": "• Allow all users to access the app",
+  "allowAllUsersToAccessTheApp": "• Allow all users to access the app",
+  "allowUrgentNotifications": "Allow Urgent Notifications During DND",
   "allRecurringUpToDate": "Todas las tareas recurrentes están actualizadas",
   "allRemindersSuspended": "All reminders and timers are suspended",
   "allSessionsComplete": "Todas las sesiones completas",
   "allSuggestedTimesAreAlreadyInYourList": "All suggested times are already in your list",
   "allTasks": "All Tasks",
   "allTasksCategoriesMoodsLocalSettings": "• All tasks\n• All categories\n• All moods\n• All local settings",
+  "allTasksCompleted": "🎉 All tasks completed!",
   "allTimeStats": "All-Time Stats",
-  "allowAllUsersToAccessApp": "• Allow all users to access the app",
-  "allowAllUsersToAccessTheApp": "• Allow all users to access the app",
-  "allowUrgentNotifications": "Allow Urgent Notifications During DND",
+  "almostThere": "🔥 Almost there! Keep going!",
+  "almostThereKeepItUp": "🌟 Almost there! Keep it up!",
   "am": "AM",
   "ambientMode": "Ambient Mode",
   "ambientSounds": "Ambient Sounds",
-  "anErrorOccurredPleaseTryAgain": "An error occurred. Please try again.",
+  "anAdmin": "un administrador",
   "analytics": "Analytics",
   "analyticsAndProductivityInsights": "• Analytics and productivity insights",
   "analyticsDashboard": "Analytics Dashboard",
   "analyticsDashboardDescription": "Deep insights into your productivity",
   "analyticsDisabled": "Análisis deshabilitados",
   "analyticsEnabled": "Análisis habilitados",
+  "anErrorOccurredPleaseTryAgain": "An error occurred. Please try again.",
   "animationOptimization": "Animation Optimization",
   "animationOptimizer": "Animation Optimizer",
   "animationStatsLoggedToConsole": "Animation stats logged to console",
   "anyUnsyncedLocalChangesWillBeLost": "Any unsynced local changes will be lost!",
   "appDescription": "A smart task management app with Pomodoro integration and AI-powered recommendations.",
+  "appearance": "Appearance",
+  "appearanceSection": "Apariencia",
+  "appearsIn10Seconds": "Appears in 10 seconds",
   "appInformation": "App Information",
   "appInformationHelp": "App Information & Help",
+  "applyButton": "Aplicar",
+  "applyColors": "Apply Colors",
+  "applySettings": "Apply Settings",
   "appSettings": "App Settings",
   "appTitle": "Aplicación de Lista de Tareas",
   "appUpdates": "Actualizaciones de la App",
   "appVersion": "App Version",
-  "appearance": "Appearance",
-  "appearanceSection": "Apariencia",
-  "appearsIn10Seconds": "Appears in 10 seconds",
-  "applyButton": "Aplicar",
-  "applyColors": "Apply Colors",
-  "applySettings": "Apply Settings",
   "areYouSureYouWantToClearAllNotificationHistory": "Are you sure you want to clear all notification history?",
   "areYouSureYouWantToDeleteCategory": "Are you sure you want to delete \"{categoryName}\"?\n\nNote: If this category is being used by any tasks, deletion will fail. Please reassign those tasks first.",
   "areYouSureYouWantToDeleteSubtask": "Are you sure you want to delete this subtask?",
   "areYouSureYouWantToDeleteTask": "Are you sure you want to delete \"{taskTitle}\"?",
+  "areYouSureYouWantToDeleteThisSubtask": "¿Estás seguro de que quieres eliminar esta subtarea?",
   "areYouSureYouWantToDeleteUser": "Are you sure you want to delete {userName}?\n\nThis will permanently delete:\n• User account\n• All tasks\n• All categories\n• All moods\n\nThis action cannot be undone.",
+  "areYouSureYouWantToSignOut": "Are you sure you want to sign out?",
   "areYouSureYouWantToStopTheCurrentSession": "Are you sure you want to stop the current session? Your progress will be lost.",
-  "areYouSureYouWantToToggleAdminRights": "Are you sure you want to {action} {userName}?",
+  "areYouSureYouWantToToggleAdminRights": "¿Estás seguro de que quieres {action} {userName}?",
   "attachments": "Attachments",
   "authenticationErrorPleaseLogInAgain": "Authentication error. Please log in again.",
   "authenticationServiceNotAvailable": "Authentication service not available. Please try again.",
@@ -268,7 +143,6 @@
   "averageSessionDuration": "Average Session Duration",
   "averageSessionLength": "Average Session Length",
   "averageStress": "Average Stress",
-  "avgFocus": "Avg Focus",
   "avgSession": "Sesión Promedio",
   "backgroundColor": "Background Color",
   "backup": "Backup",
@@ -277,9 +151,9 @@
   "backupFrequency": "Backup Frequency",
   "backupRestored": "Copia de seguridad restaurada",
   "bad": "Malo",
-  "badIntensity": "Intensidad Mala",
   "badgeOnlyMode": "Badge Only Mode",
   "badgeOnlyModeSubtitle": "Show badge without sound or popup",
+  "badIntensity": "Intensidad Mala",
   "balancedDayAhead": "Día Equilibrado por Delante",
   "basedOnRecentPatternsTomorrowLooksPromising": "Basado en patrones recientes, mañana se ve prometedor",
   "basicNotifications": "1. Basic Notifications",
@@ -287,6 +161,7 @@
   "bestPerformanceDay": "Best Performance Day",
   "bio": "Bio",
   "birthday": "Birthday: {birthday}",
+  "birthdayDate": "Cumpleaños: {date}",
   "birthdayLabel": "Cumpleaños",
   "birthdayRequiredForProfile": "Birthday is required for profile",
   "biweekly": "Bi-weekly",
@@ -295,7 +170,9 @@
   "breakSuggestionsMatchYourCurrentEnergyLevel": "Break suggestions match your current energy level",
   "breakTime": "¡Tiempo de descanso!",
   "breakTimeDistribution": "Break Time Distribution",
-  "bulkGenerationComplete": "Generated {count} recurring instances",
+  "breakTitleLong": "🌿 Long Break",
+  "breakTitleShort": "☕ Short Break",
+  "buildingMomentum": "🌟 Building momentum!",
   "bySigningInYouAgree": "By signing in, you agree to our Terms of Service and Privacy Policy",
   "cacheSize": "Cache Size",
   "calendar": "Calendar",
@@ -303,15 +180,17 @@
   "cancel": "Cancel",
   "cancelAllNotifications": "Cancelar Todo",
   "cancelButton": "Cancelar",
+  "cancelled": "Cancelled",
   "cannotSetReminderForPastDate": "No se puede establecer recordatorio para fecha pasada",
   "cannotSetReminderWithoutPermission": "Cannot set reminder without notification permission",
   "categories": "Categorías",
+  "category": "Categoría",
   "categoryBreakdown": "Category Breakdown",
   "categoryColor": "Category Color",
   "categoryCreated": "Categoría creada",
   "categoryCreatedSuccessfully": "Category created successfully",
   "categoryDeleted": "Categoría eliminada",
-  "categoryDeletedSuccessfully": "Category \"{categoryName}\" deleted successfully",
+  "categoryDeletedSuccessfully": "Categoría \"{name}\" eliminada exitosamente",
   "categoryEfficiency": "Efficiency: {score}%",
   "categoryIcon": "Category Icon",
   "categoryLabel": "Categoría (Opcional)",
@@ -320,17 +199,17 @@
   "categoryProgress": "Progreso de Categoría",
   "categoryStatistics": "Category Statistics",
   "categoryTasksCount": "Tasks: {count}",
-  "categoryUpdated": "Category updated successfully",
+  "categoryUpdated": "{action} categoría: {name}",
   "categoryUpdatedSuccessfully": "Category updated successfully",
   "challengingDays": "Días Desafiantes",
   "challengingPeriod": "Período Desafiante",
   "changeProfilePicture": "Change Profile Picture",
   "checkForUpdates": "Buscar Actualizaciones",
   "checkHistoryAfterDelivery": "3. Check notification history after delivery",
+  "checkingIn": "¡Revisando! 👋",
   "checkPending": "Check Pending",
   "checkPendingNotifications": "Ver Pendientes",
   "checkYourEnergyLevelsThroughoutTheDay": "Check your energy levels throughout the day",
-  "checkingIn": "¡Revisando! 👋",
   "chooseBackgroundSound": "Choose a background sound to help you concentrate or relax",
   "chooseColor": "Choose Color",
   "chooseEmojiFeeling": "Choose an emoji that represents how you're feeling",
@@ -349,10 +228,10 @@
   "clearDateFilter": "Clear date filter",
   "clearFailedButton": "Clear Failed",
   "clearHistory": "Clear History",
+  "clearingData": "Clearing data...",
   "clearLogs": "Clear Logs",
   "clearPerformance": "Clear Performance",
   "clearQuality": "Clear Quality",
-  "clearingData": "Clearing data...",
   "close": "Close",
   "closeButton": "Close",
   "closeSearch": "Close search",
@@ -361,30 +240,32 @@
   "coffeeShop": "Coffee Shop",
   "collapse": "Colapsar",
   "color": "Color:",
+  "colorLabel": "Color: ",
   "colorPicker": "Color Picker",
   "colorSettingsSaved": "Color settings saved successfully",
   "colorTheme": "Color Theme",
   "combineNotificationsOfTheSameType": "Combine notifications of the same type into groups",
+  "complete": "Completar",
+  "completed": "Completada",
+  "completedAt": "Completed at",
+  "completedLabel": "Completada",
+  "completedSessions": "Completed Sessions",
+  "completedStatus": "Completado: {status}",
+  "completedTasks": "Tareas completadas",
+  "completedTasksInCategory": "Completed: {count}",
   "completeSubtasksFirst": "Completa las Subtareas Primero",
   "completeTaskButton": "Completar Tarea",
   "completeTasksToSeeProgress": "Complete tasks to see your progress",
   "completeTasksToSeeYourProgress": "Complete tasks to see your progress",
   "completeTutorial": "Complete Tutorial",
-  "completed": "Completada",
-  "completedAt": "Completed at",
-  "completedLabel": "Completada",
-  "completedSessions": "Completed Sessions",
-  "completedTasks": "Tareas completadas",
-  "completedTasksInCategory": "Completed: {count}",
   "completionRate": "Completion Rate",
   "completionTime": "Completion Time",
   "configureNotificationSettings": "Configure notification settings",
   "configureQuietHours": "Configure quiet hours",
   "confirm": "Confirm",
   "confirmDelete": "Confirm Delete",
-  "confirmDeleteCategory": "Are you sure you want to delete \"{categoryName}\"? This will remove the category from all associated tasks.",
   "confirmDeleteSubtask": "¿Estás seguro de eliminar esta subtarea?",
-  "confirmDeleteTask": "¿Estás seguro de que quieres eliminar \"{taskTitle}\"?",
+  "considerLighterTasks": "🌿 Consider lighter tasks or take a break",
   "considerMoreFrequentBreaks": "Considera tomar descansos más frecuentes",
   "considerPrioritizingSelfCareActivitiesTomorrow": "Considera priorizar actividades de autocuidado mañana",
   "continueToApp": "Continue to App",
@@ -397,47 +278,48 @@
   "createBackup": "Create Backup",
   "createCategoriesToOrganize": "Create categories to organize your tasks",
   "createCategory": "Create Category",
+  "created": "Creado",
+  "createdAt": "Creado: {date}",
   "createTasksWithYourVoice": "Create tasks with your voice",
   "createTemplate": "Create Template",
   "createYourFirstCategory": "Create your first category to organize tasks",
   "createYourFirstTaskToGetStarted": "Create your first task to get started",
   "createYourPerfectPomodoroSetup": "Create your perfect Pomodoro setup",
-  "created": "Creado",
   "currentStreak": "Current Streak",
   "currentVersion": "Versión Actual",
-  "custom": "Custom",
-  "customColorSettings": "Custom Color Settings",
+  "custom": "Personalizado",
   "customColors": "Custom Colors",
+  "customColorSettings": "Custom Color Settings",
   "customDurations": "Custom Durations (minutes)",
   "customDurationsMinutes": "Custom Durations (minutes)",
-  "customRange": "Custom Range",
   "customizeEachNotificationType": "Customize each notification type",
   "customizeNotificationBehavior": "Customize notification behavior",
   "customizePomodoroSession": "Personalizar Sesión Pomodoro",
   "customizeTheAppToWorkBestForYou": "Customize the app to work best for you",
   "customizeYourExperience": "Customize your experience",
   "customizeYourPomodoroSession": "Customize your pomodoro session",
+  "customRange": "Custom Range",
+  "customReminder": "",
   "cycles": "Cycles",
   "cycles10": "1-10 cycles",
   "daily": "Daily",
   "dailyMoodCheckIns": "Daily mood check-ins",
+  "dailySummary": "📊 Daily Summary",
   "dark": "Dark",
   "darkMode": "Dark Mode",
   "darkTheme": "Oscuro",
   "dashboard": "Dashboard",
   "dashboardOverview": "Descripción General del Panel",
   "dataBackupSection": "Datos y Copia de Seguridad",
+  "databaseSize": "Database Size",
   "dataExported": "Datos exportados exitosamente",
   "dataImported": "Datos importados exitosamente",
   "dataManagement": "Data Management",
   "dataSync": "Data Sync",
   "dataSyncedSuccessfullyFromFirebase": "Data synced successfully from Firebase!",
-  "databaseSize": "Database Size",
   "dateFormat": "Date Format",
   "dateRange": "Date Range",
   "day": "Day",
-  "dayStreak": "day streak",
-  "days": "{count} days",
   "daysDone": "¡Día terminado! ✨",
   "daysStreak": "días seguidos",
   "debug": "Debug",
@@ -460,25 +342,27 @@
   "deleteSubtaskConfirmation": "¿Está seguro de eliminar \"@taskName\"? Esta acción no se puede deshacer.",
   "deleteTask": "Delete Task",
   "deleteTaskButton": "Eliminar Tarea",
-  "deleteTaskConfirmation": "Are you sure you want to delete \"{taskTitle}\"?",
   "deleteTaskConfirmationTitle": "Eliminar Tarea",
   "deleteTaskTitle": "Eliminar Tarea",
-  "details": "Detalles",
   "deleteUser": "Delete User",
+  "delivered": "Delivered",
   "deliveryLabel": "Delivery",
   "deliveryTracking": "Delivery Tracking",
   "description": "Description: {description}",
+  "descriptionNA": "Descripción: {description}",
   "descriptionOfActivity": "Description of activity",
   "detailedEntry": "Entrada Detallada",
+  "details": "Detalles",
   "developerOptions": "Developer Options",
   "developerTools": "Developer Tools",
   "disable": "Disable",
+  "disabled": "Disabled",
   "disableDebugMode": "Disable Debug Mode",
   "disableMaintenanceMode": "Disable Maintenance Mode",
-  "disabled": "Disabled",
+  "dismiss": "",
   "dndInfo": "Do Not Disturb mode silences all notifications except emergencies during specified hours.",
-  "doNotDisturb": "Do Not Disturb",
   "dominantMood": "Estado de Ánimo Dominante",
+  "doNotDisturb": "Do Not Disturb",
   "dontForget": "No olvides",
   "dontHaveAccount": "Don't have an account?",
   "down": "Abatido",
@@ -487,6 +371,7 @@
   "dueDate": "Fecha de Vencimiento",
   "dueDateLabel": "Fecha de vencimiento (Opcional)",
   "dueDateMustBeInFuture": "Due date must be in the future",
+  "dueDateNA": "Fecha límite: {date}",
   "dueDateTitle": "Due Date",
   "dueInOneHour": "Due in 1 hour - tap to view",
   "dueThisWeek": "Vencido Esta Semana",
@@ -509,6 +394,7 @@
   "editTaskTitle": "Editar Tarea",
   "egMyFocusPower": "e.g., My Focus Power",
   "email": "Email: {email}",
+  "emailNA": "Email: {email}",
   "emailNotifications": "Email Notifications",
   "emergency": "Emergency",
   "emergencyAlertsWillBypassQuietHours": "Emergency alerts will bypass quiet hours",
@@ -520,6 +406,7 @@
   "enable": "Enable",
   "enableActions": "Enable Actions",
   "enableCustomColors": "Enable Custom Colors",
+  "enabled": "Enabled",
   "enableDebugMode": "Enable Debug Mode",
   "enableMaintenanceMode": "Enable Maintenance Mode",
   "enableMoodNotifications": "Habilitar notificaciones de estado de ánimo",
@@ -531,15 +418,19 @@
   "enableTaskCompletionSound": "Enable Task Completion Sound",
   "enableVoiceCommands": "Enable Voice Commands",
   "enableVoiceTasks": "Enable Voice Tasks",
-  "enabled": "Enabled",
   "endOfDayVibes": "Vibraciones de fin de día 🌇",
   "energy": "Energy",
   "energyAwarePlanning": "Energy-Aware Planning",
   "energyAwarePlanningDescription": "Schedule tasks based on your energy patterns",
   "energyAwareScheduling": "Energy-aware scheduling",
   "energyLevel": "Nivel de Energía",
+  "energyLevelGood": "🔥 Good Energy",
+  "energyLevelHigh": "⚡ High Energy!",
+  "energyLevelLow": "🔋 Low Energy",
+  "energyLevelModerate": "⚖️ Moderate Energy",
   "energyLevelMonitoring": "Energy level monitoring",
   "energyLevelTracking": "Energy level tracking",
+  "energyLevelVeryLow": "😴 Very Low Energy",
   "energyPattern": "Energy Pattern",
   "energyTrackingHelpsIdentifyYourPatterns": "Energy tracking helps identify your patterns",
   "enterCategoryName": "Enter category name",
@@ -548,7 +439,6 @@
   "enterTaskDescription": "Ingrese la descripción de la tarea (opcional)",
   "enterTaskManually": "Enter Task Manually",
   "enterTaskTitle": "Ingrese el título de la tarea",
-  "error": "Error: {message}",
   "errorApplyingSettings": "Error applying settings: {error}",
   "errorClearingLogs": "Error clearing logs",
   "errorCompletingOnboarding": "Error completing onboarding",
@@ -557,8 +447,8 @@
   "errorCreatingTask": "Error creating task",
   "errorCreatingVoiceTask": "Error creating voice task",
   "errorDeletingCategory": "Error deleting category: {error}",
-  "errorDeletingTask": "Error deleting task: {error}",
-  "errorDeletingUser": "Error deleting user: {error}",
+  "errorDeletingTask": "Error eliminando tarea: {error}",
+  "errorDeletingUser": "Error eliminando usuario: {error}",
   "errorExportingLogs": "Error exporting logs",
   "errorGeneratingInstances": "Error al generar instancias recurrentes",
   "errorImportingLogs": "Error importing logs",
@@ -571,17 +461,18 @@
   "errorUpdatingCategory": "Error updating category",
   "errorUpdatingProfile": "Error updating profile",
   "errorUpdatingProfilePicture": "Error updating profile picture",
-  "errorUpdatingTask": "Error updating task: {error}",
-  "errorUpdatingUser": "Error updating user: {error}",
+  "errorUpdatingTask": "Error actualizando tarea: {error}",
+  "errorUpdatingUser": "Error actualizando usuario: {error}",
   "eveningCheckIn": "¡Revisión nocturna! 🌙",
   "eveningDeclineLightTasksAndPlanning": "Evening decline: Light tasks and planning",
   "eveningReflection": "Reflexión nocturna 💭",
   "everyDayIsANewOpportunity": "Cada día es una nueva oportunidad",
   "excellentCompletionRate": "¡Excelente tasa de finalización! Sigue con el gran trabajo",
+  "excellentFocus": "🌟 Excellent focus today!",
   "excellentPerformance": "Excellent performance!",
   "expand": "Expandir",
-  "experienceAIPoweredTaskPrioritizationThatAdaptsToYourPatterns": "Experience AI-powered task prioritization that adapts to your patterns",
   "experienceAiPoweredTaskPrioritizationThatAdaptsToYourPatterns": "Experience AI-powered task prioritization that adapts to your patterns",
+  "experienceAIPoweredTaskPrioritizationThatAdaptsToYourPatterns": "Experience AI-powered task prioritization that adapts to your patterns",
   "expertOptions": "Expert options for power users",
   "exploreFeatures": "Explore Features",
   "exploreYourAnalyticsDashboard": "Explore your analytics dashboard",
@@ -591,8 +482,10 @@
   "exportJSON": "Export JSON",
   "exportLogs": "Export Logs",
   "exportYourTasksToExternalFormats": "Export your tasks to external formats",
+  "extendSession": "⏱️ Extend Session",
   "fadeIn": "Fade In",
   "fadeOut": "Fade Out",
+  "failed": "Failed",
   "failedToAccessGallery": "Failed to access gallery",
   "failedToAddSubtask": "Failed to add subtask: {error}",
   "failedToCancelNotifications": "Failed to cancel notifications: {error}",
@@ -602,22 +495,22 @@
   "failedToScheduleTestNotification": "Failed to schedule test notification: {error}",
   "failedToSendTestNotification": "Failed to send test notification: {error}",
   "failedToUploadImage": "Failed to upload image",
+  "failureReason": "Failure reason",
   "features": "Features:",
   "fifteenMinPause": "15 Min Pause",
   "filter": "Filter",
   "filterByStatus": "Filter by Status",
   "filterByType": "Filter by Type",
-  "filterTasks": "Filter tasks",
-  "filterTasksTitle": "Filtrar Tareas",
   "filters": "Filters",
   "filtersAppliedSuccessfully": "Filters applied successfully",
+  "filterTasks": "Filter tasks",
+  "filterTasksTitle": "Filtrar Tareas",
   "findingBalance": "Encontrar equilibrio",
   "fireplace": "Fireplace",
   "focus": "enfoque",
   "focusAndRelaxation": "Focus & Relaxation",
   "focusBetterWithAdaptiveTimingAndSmartBreaks": "Focus better with adaptive timing and smart breaks",
   "focusDifficulty": "Dificultad de enfoque: {score}",
-  "focusLevel": "Nivel de Enfoque",
   "focusMode": "Modo de Enfoque",
   "focusModeFor": "Focus mode for {taskTitle}",
   "focusPattern": "Focus Pattern",
@@ -644,8 +537,11 @@
   "getPersonalizedProductivityTips": "Get personalized productivity tips",
   "getStarted": "Get Started",
   "getSuggestionsFromHistory": "Get Suggestions from History",
+  "getTaskStatusDescription": "_getTaskStatusDescription(task, l10n)",
+  "goalAchieved": "🏆 Goal achieved! Amazing work!",
   "good": "Bueno",
   "goodDays": "Buenos Días",
+  "goodFocus": "👍 Good focus maintained!",
   "goodIntensity": "Intensidad Buena",
   "goodMorning": "¡Buenos días!",
   "goodnightCheckIn": "Revisión nocturna 💫",
@@ -656,15 +552,18 @@
   "greatConsistency": "Gran Consistencia",
   "greatFocusExtendSessions": "¡Gran enfoque! Considera extender las sesiones a 30-35 min",
   "greatJobCompleting": "Excelente trabajo completando",
+  "greatJobFocused": "🔥 Great job staying focused!",
   "greatJobTakeABreak": "Great job! Take a break.",
   "greatProgress": "Great progress!",
+  "greatStart": "🚀 Great start!",
   "groupSimilarNotifications": "Group Similar Notifications",
   "guidedCheckIn": "Check-in Guiado",
+  "halfwayDone": "💪 Halfway done!",
+  "halfwayThere": "💪 Halfway there!",
   "helpAndSupport": "Help & Support",
   "helpImproveApp": "Help improve the app with usage data",
   "helpImproveTheAppWithUsageData": "Help improve the app with usage data",
   "helpUsUnderstandState": "Help us understand your current state",
-  "hiThere": "¡Hola!",
   "high": "Alta",
   "highContrast": "High Contrast",
   "highContrastDisabled": "Alto contraste deshabilitado",
@@ -676,6 +575,7 @@
   "highPriorityNotificationIn10Seconds": "⏰ High priority notification in 10 seconds",
   "history": "History",
   "historyCleared": "History cleared",
+  "hiThere": "¡Hola!",
   "hiveBoxes": "Hive Boxes: {count}",
   "homeScreenTitle": "Inicio",
   "honorDeviceDoNotDisturbSettings": "Honor device Do Not Disturb settings",
@@ -693,10 +593,10 @@
   "howDidItGo": "¿Cómo te fue?",
   "howDidTodayGoForYou": "¿Cómo te fue hoy?",
   "howIsYourDay": "¿Cómo va tu día?",
-  "howWasYourDay": "¿Cómo fue tu día?",
   "howsYourAfternoonGoing": "¿Cómo va tu tarde?",
   "howsYourDayGoing": "How's your day going?",
   "howsYourFocusRightNow": "¿Cómo está tu enfoque ahora?",
+  "howWasYourDay": "¿Cómo fue tu día?",
   "icon": "Icono",
   "identifyYourMostProductiveTimes": "Identify your most productive times",
   "idle": "Inactivo",
@@ -711,25 +611,28 @@
   "importLogs": "Import Logs",
   "importTasksFromExternalFiles": "Import tasks from external files",
   "inAppNotifications": "In-App Notifications",
-  "inProgress": "In Progress",
   "includeSpecificTime": "Include specific time",
   "incompleteLabel": "Incompleta",
   "increaseColorContrastForBetterVisibility": "Increase color contrast for better visibility",
   "increaseContrast": "Increase contrast for better visibility",
   "increaseContrastForBetterVisibility": "Increase contrast for better visibility",
   "info": "Info",
+  "inProgress": "In Progress",
   "insightGenerallyPositive": "Generalmente positivo 😊",
   "insightGreatConsistency": "¡Gran consistencia! 🔥",
   "insightMissingToday": "Falta hoy 📝",
   "insightNeedsSupport": "Necesita apoyo 🤗",
   "insights": "Insights",
-  "installUpdate": "Instalar Actualización",
   "installingUpdate": "Instalando Actualización...",
+  "installUpdate": "Instalar Actualización",
   "intelligentNotificationManagement": "Intelligent Notification Management",
   "invalidDueDate": "Invalid due date",
   "isDueToday": "vence hoy",
+  "isNowAdmin": "{userName} ahora es {status}",
   "itsOkayToHaveToughDays": "Está bien tener días difíciles",
   "keepAppInBackground": "2. Keep app in background after scheduling",
+  "keepItGoing": "🔥 Keep it Going!",
+  "keepItGoingBody": "🚀 Keep it going!",
   "keepShiningBright": "¡Sigue brillando con fuerza!",
   "keepUpTheGoodWork": "Keep up the good work",
   "keyInsights": "Perspectivas Clave",
@@ -743,6 +646,7 @@
   "last30Days": "Last 30 Days",
   "last7Days": "Last 7 Days",
   "last90Days": "Last 90 Days",
+  "lastAttempt": "Last attempt",
   "lastModified": "Última Modificación",
   "lastUpdated": "Last Updated",
   "laterTasks": "Tareas posteriores",
@@ -756,15 +660,15 @@
   "listening": "Listening...",
   "loading": "Loading...",
   "loadingPreferences": "Loading preferences...",
+  "loginSubtitle": "Organiza tus tareas y aumenta tu productividad",
   "logLevel": "Log Level",
   "logMood": "Registra Tu Estado de Ánimo",
-  "logReport": "Log Report",
-  "logStats": "Log Stats",
-  "loginSubtitle": "Organiza tus tareas y aumenta tu productividad",
   "logout": "Logout",
+  "logReport": "Log Report",
   "logsCleared": "Logs cleared successfully",
   "logsExported": "Logs exported successfully",
   "logsImported": "Logs imported successfully",
+  "logStats": "Log Stats",
   "longBreak": "Descanso Largo",
   "longBreakAfterCycles": "Long break: {longBreak}min after {cycles} cycles",
   "longBreakDuration": "Long Break Duration",
@@ -788,6 +692,7 @@
   "markAsComplete": "Marcar como Completada",
   "markAsCompleted": "Marcar como Completada",
   "markAsIncomplete": "Marcar como Incompleta",
+  "markedIncomplete": "marcado como incompleto",
   "masterToggleForAllNotifications": "Interruptor principal para todas las notificaciones",
   "maxNotificationsPerHour": "Máx. Notificaciones por Hora",
   "medium": "Media",
@@ -799,20 +704,19 @@
   "memoryStatsLoggedToConsole": "Memory stats logged to console",
   "memoryUsage": "Memory Usage",
   "message": "Message",
-  "metricValue": "{label}: {value}/10",
+  "metadata": "Metadatos",
   "middayPause": "Pausa de mediodía 🌤️",
   "min": "min",
   "min120": "1-120 min",
   "min30": "1-30 min",
   "min60": "1-60 min",
-  "minPerSession": "min por sesión",
-  "minsTotal": "min totales",
-  "minWorkMinBreak": "{work}min work → {rest}min break",
-  "minWorkRest": "{work} min work • {rest} min rest",
   "minimizeAnimationsAndTransitions": "Minimize animations and transitions",
   "minimumMinutesBetweenSameType": "Minimum Minutes Between Same Type",
-  "minuteFocusSessions": "{minutes}-minute focus sessions",
+  "minPerSession": "min por sesión",
+  "minsTotal": "min totales",
   "minutes": "min",
+  "minWorkMinBreak": "{work}min work → {rest}min break",
+  "minWorkRest": "{work} min work • {rest} min rest",
   "missingToday": "Falta Hoy",
   "modified": "Modified",
   "mon": "Lun",
@@ -820,10 +724,10 @@
   "mondayAbbrev": "Lun",
   "monitorMoodAndEnergyCorrelations": "Monitor mood and energy correlations",
   "month": "Mes",
-  "monthView": "Month",
   "monthly": "Monthly",
   "monthlyProgress": "Monthly Progress",
   "monthlyStats": "Monthly Stats",
+  "monthView": "Month",
   "mood": "Mood",
   "moodAdded": "Mood added",
   "moodAlreadyLoggedToday": "You have already logged your mood today",
@@ -841,9 +745,11 @@
   "moodCheckIn": "Mood Check-in",
   "moodCheckInNotificationBody": "¿Cómo te sientes ahora? Toca para registrar tu estado de ánimo.",
   "moodCheckInNotificationTitle": "Check-in de Estado de Ánimo",
+  "moodCheckIns": "Mood Check-ins",
+  "moodCheckInsChannelDesc": "Mood check-in reminders",
+  "moodCheckInsChannelName": "Mood Check-Ins",
   "moodCheckInTimes": "Tiempos de Check-in",
   "moodCheckInTitle": "Check-in de Estado de Ánimo",
-  "moodCheckIns": "Mood Check-ins",
   "moodEnergyLevel": "Nivel de Energía",
   "moodEnergyTracking": "Mood & Energy Tracking",
   "moodFocusLevel": "Nivel de Enfoque",
@@ -861,13 +767,14 @@
   "moodPatternsSubtitle": "Descubre tendencias en tu bienestar emocional",
   "moodPatternsTitle": "Tus Patrones Emocionales",
   "moodSaveButton": "Guardar Estado de Ánimo",
-  "moodSaveFailed": "Error al guardar estado de ánimo",
   "moodSaved": "Mood saved",
   "moodSavedSuccess": "¡Estado de ánimo guardado exitosamente!",
+  "moodSaveFailed": "Error al guardar estado de ánimo",
   "moodSelectLevel": "Selecciona tu nivel de estado de ánimo",
   "moodSettings": "Mood Settings",
   "moodSettingsSubtitle": "Configurar notificaciones de check-in de estado de ánimo",
   "moodSettingsTitle": "Configuración de Estado de Ánimo",
+  "moodsForDate": "Moods for {date}",
   "moodStressLevel": "Nivel de Estrés",
   "moodSuggestionsSubtitle": "Recomendaciones impulsadas por IA basadas en tu estado de ánimo",
   "moodSuggestionsTitle": "Sugerencias Personalizadas",
@@ -876,7 +783,6 @@
   "moodUpdated": "Mood updated",
   "moodVeryBad": "Muy Malo",
   "moodVeryGood": "Muy Bueno",
-  "moodsForDate": "Moods for {date}",
   "moreDataNeeded": "Más Datos Necesarios",
   "morningCheckIn": "Revisión matutina 💫",
   "morningPeakBestForComplexTasks": "Morning peak: Best for complex tasks",
@@ -918,9 +824,12 @@
   "noMoodEntriesYet": "No mood entries yet",
   "noMoodHistoryAvailableForSuggestions": "No mood history available for suggestions",
   "noMoodRecorded": "No hay estado de ánimo registrado",
+  "none": "None",
   "noNotes": "No notes",
   "noOverdueTasks": "No hay tareas vencidas",
+  "noPomodoroData": "Sin datos de Pomodoro",
   "noPomodoroSessionsFound": "No Pomodoro sessions found",
+  "noPomodoroSessionsYet": "No hay sesiones Pomodoro aún",
   "noProgressData": "No progress data available",
   "noProgressDataAvailable": "No progress data available",
   "noRecentTasks": "No recent tasks found.",
@@ -928,22 +837,21 @@
   "noRecommendationsAvailableAtThisTime": "No recommendations available at this time.",
   "noRecurringTasksFound": "",
   "noReminder": "No Reminder",
+  "noReminderHistory": "Sin historial de recordatorios",
   "noReminderSet": "No se ha establecido recordatorio",
   "noSpeechDetected": "No speech detected",
   "noSubtasks": "Sin subtareas aún",
   "noSubtasksYet": "No hay subtareas aún",
+  "noSuggestionsAvailable": "No hay sugerencias disponibles",
+  "notAnAdmin": "no es administrador",
   "noTasksForThisDay": "No tasks for this day",
   "noTasksFound": "No se encontraron tareas",
   "noTasksFoundForSearch": "No tasks found for \"{searchQuery}\"",
   "noTasksInCategory": "No tasks in this category",
   "noTasksYet": "No tasks yet",
-  "noUpcomingTasksWithReminders": "No hay tareas próximas con recordatorios",
-  "noUpdatesAvailable": "No Hay Actualizaciones Disponibles",
-  "noUsersFound": "No users found",
-  "none": "None",
-  "notGreat": "Not great",
   "notes": "Notes",
   "notesOptional": "Notas (opcional)",
+  "notGreat": "Not great",
   "notificationAnalyticsAction": "Action Rate",
   "notificationAnalyticsDelivered": "Delivered",
   "notificationAnalyticsLast7Days": "Analytics (Last 7 Days)",
@@ -962,8 +870,12 @@
   "notificationPreferences": "Notification Preferences",
   "notificationPreferencesInfo": "Notification Preferences Info",
   "notificationPreferencesInfoDetails": "Configure how and when you receive notifications. Customize each notification type, set quiet hours, and control notification behavior.",
+  "notifications": "Notifications",
   "notificationScheduledFor10Seconds": "⏰ Notification scheduled for 10 seconds",
+  "notificationsDisabled": "Enabled: ❌",
+  "notificationsEnabled": "Enabled: ✅",
   "notificationSounds": "Notification Sounds",
+  "notificationsSection": "Notificaciones",
   "notificationStatusCancelled": "Cancelled",
   "notificationStatusDelivered": "Delivered",
   "notificationStatusExpired": "Expired",
@@ -974,17 +886,18 @@
   "notificationTools": "Notification Tools",
   "notificationTypes": "Notification Types",
   "notificationVerification": "Notification Verification",
-  "notifications": "Notifications",
-  "notificationsDisabled": "Enabled: ❌",
-  "notificationsEnabled": "Enabled: ✅",
-  "notificationsSection": "Notificaciones",
+  "noUpcomingTasksWithReminders": "No hay tareas próximas con recordatorios",
+  "noUpdatesAvailable": "No Hay Actualizaciones Disponibles",
+  "noUsersFound": "No users found",
   "oceanWaves": "Ocean Waves",
   "offf": "de",
   "ok": "OK",
-  "okButton": "OK",
   "okay": "Okay",
+  "okButton": "OK",
   "onDays": "on {days}",
+  "oneDayBeforeDue": "",
   "oneHour": "1 Hour",
+  "oneHourBeforeDue": "",
   "oneHourPause": "1 Hour Pause",
   "onlyAdminsCanAccessApp": "• Only admins can access the app",
   "onlyAdminsCanAccessTheApp": "• Only admins can access the app",
@@ -995,8 +908,9 @@
   "optionalAddContext": "Optional: Add context",
   "optionalWriteNote": "Optional: Write a note",
   "options": "Options",
-  "or": "or",
+  "or": "o",
   "organizeManage": "Organize & Manage",
+  "others": "Others",
   "overdue": "Vencido",
   "overdueTasks": "Tareas vencidas - requieren atención inmediata",
   "overdueTasksInCategory": "Overdue: {count}",
@@ -1012,7 +926,6 @@
   "pendingOperations": "Pending operations",
   "pendingTasks": "Pending Tasks",
   "pendingTasksInCategory": "Pending: {count}",
-  "percent": "{value}%",
   "performance": "Rendimiento",
   "performanceMemoryAndQualityMonitoring": "Performance, memory, and quality monitoring",
   "performanceMetrics": "Performance Metrics",
@@ -1028,6 +941,7 @@
   "personalizedInsights": "Personalized Insights",
   "phone": "Phone",
   "pickAColor": "Pick a color",
+  "pickUpPace": "🚀 Let's pick up the pace!",
   "playSoundForNotifications": "Reproducir sonido para notificaciones",
   "playSoundWhenTasksAreCompleted": "Play sound when tasks are completed",
   "pleaseEnterATemplateName": "Please enter a template name",
@@ -1064,9 +978,10 @@
   "preview": "Preview",
   "previous": "Previous",
   "primaryColor": "Primary Color",
+  "prioritizeTasks": "Priorizar Tareas",
   "priority": "Prioridad",
-  "priorityLabel": "Prioridad:",
   "priorityLevels": "2. Priority Levels",
+  "priorityName": "Prioridad: {priority}",
   "priorityNotifications": "Priority Notifications",
   "priorityNotificationsDescription": "Only show high-priority notifications during focus time",
   "priorityTitle": "Priority",
@@ -1089,25 +1004,31 @@
   "progress": "Progreso",
   "progressOverview": "Progress Overview",
   "progressSaved": "Progreso guardado",
+  "progressUpdate": "📈 Progress Update",
   "pullToRefresh": "Pull down to refresh when connected",
   "pushNotifications": "Push Notifications",
   "qualityMetricsCleared": "Quality metrics cleared",
   "qualityReportLoggedToConsole": "Quality report logged to console",
   "qualityScore": "Quality Score: ",
+  "queueComplete": "🎉 Queue Complete!",
   "quickActions": "Acciones Rápidas",
   "quickCheck": "¡Revisión rápida! ⏰",
   "quickControls": "Quick Controls",
-  "quickEdit": "Quick Edit",
+  "quickEdit": "Edición Rápida",
   "quickEditButton": "Quick Edit",
   "quickEmergencyAccess": "Acceso rápido de emergencia",
+  "quickFilters": "Filtros Rápidos",
   "quickInsights": "Perspectivas Rápidas",
   "quickMoodCheckIn": "Quick Mood Check-In",
-  "quickTestGuide": "🎯 Quick Test Guide",
+  "quickRefresh": "🧘 Quick refresh",
+  "quickReminders": "Recordatorios Rápidos",
   "quickstart": "Quick Start",
+  "quickTestGuide": "🎯 Quick Test Guide",
   "quietHours": "Quiet Hours",
   "quietHoursDescription": "Temporarily silence all notifications",
   "quietNotificationMessage": "This is a quiet notification",
   "rain": "Rain",
+  "readyToStartWorking": "Listo para empezar a trabajar",
   "reallyStruggling": "Really struggling",
   "receiveNotificationsForTasksAndReminders": "Recibir notificaciones para tareas y recordatorios",
   "receivePeriodicMoodCheckInReminders": "Receive periodic mood check-in reminders",
@@ -1116,18 +1037,18 @@
   "recentEntriesSuggestAChallengingTime": "Las entradas recientes sugieren un momento desafiante",
   "recentImprovement": "Mejora Reciente",
   "recentMoods": "Estados de Ánimo Recientes",
+  "recentPomodoroSessions": "Sesiones Pomodoro Recientes",
   "recentTasks": "Recent Tasks",
   "recentTasksComingSoon": "Recent tasks coming soon!",
   "recommendations": "Recommendations",
   "recommendedAdjustments": "Recommended Adjustments:",
   "recommendedForAdhd": "Recommended for ADHD",
   "recommendedForAdhders": "Recommended for ADHDers",
+  "recommendedTasks": "📋 Recommended tasks:",
   "recordingInProgress": "Recording in progress",
   "recurringInstancesGenerated": "¡Instancias recurrentes generadas exitosamente!",
   "recurringTaskAutomation": "• Recurring task automation",
-  "recurringTaskError": "Error in recurring task: {error}",
   "recurringTaskGenerationFailed": "Failed to generate recurring task",
-  "recurringTaskNotification": "New recurring task created: {title}",
   "recurringTaskRetry": "Retry",
   "recurringTaskRetryLater": "Retry Later",
   "recurringTasksManager": "Administrador de Tareas Recurrentes",
@@ -1142,11 +1063,13 @@
   "register": "Register",
   "registrationIsDisabled": "Registration is disabled",
   "rememberMe": "Remember me",
-  "reminder": "Recordatorio: {date}",
-  "reminderCancelledFor": "Recordatorio cancelado para: {taskTitle}",
-  "reminderSetFor": "Reminder set for {date}",
+  "reminderHistory": "Historial de Recordatorios",
+  "reminderRetryScheduled": "Reminder retry scheduled",
   "reminders": "Recordatorios",
+  "reminderSetFor": "Reminder set for {date}",
+  "reminderSetSuccessfully": "Recordatorio establecido exitosamente",
   "remindersSuspended": "Reminders Suspended",
+  "reminderStatus": "Reminder Status",
   "removeAdminRightsFrom": "remove admin rights from",
   "removePhoto": "Remove Photo",
   "removeThisCheckInTime": "Remove this check-in time?",
@@ -1157,8 +1080,10 @@
   "repeatSettings": "Configuración de Repetición",
   "repeatUntil": "until {date}",
   "required": "Required",
-  "rescheduleTask": "Reschedule Task",
-  "reset": "Reset",
+  "reschedule": "Reprogramar",
+  "rescheduleSelectedTasks": "Reprogramar tareas seleccionadas",
+  "rescheduleTask": "Reprogramar tarea",
+  "reset": "Restablecer",
   "resetAllThemeSettingsToDefaultValues": "Reset all theme settings to default values",
   "resetButton": "Restablecer",
   "resetColors": "Reset Colors",
@@ -1173,7 +1098,9 @@
   "resumeAll": "Resume All",
   "resumeNow": "Resume Now",
   "retry": "Reintentar",
+  "retryAttempts": "Retry attempts",
   "retryButton": "Retry",
+  "retryNow": "Retry Now",
   "returnToNormalOperation": "• Return to normal operation",
   "reviewCompletedSessionsWeekly": "Revisa las sesiones completadas semanalmente para identificar patrones",
   "riseAndShine": "¡Levántate y brilla! 🌅",
@@ -1185,57 +1112,64 @@
   "saveMaintenanceSettings": "Save Maintenance Settings",
   "saveMood": "Guardar Estado de Ánimo",
   "saveTask": "Save Task",
+  "scheduled": "Scheduled",
+  "scheduledFor": "Scheduled for",
   "scheduleDnd": "Schedule DND",
   "scheduledQuietHours": "Scheduled Quiet Hours",
+  "scheduledTestMoodNotificationBody": "This is a scheduled test mood check-in notification.",
   "screenReader": "Screen Reader",
   "screenReaderDisabled": "Lector de pantalla deshabilitado",
   "screenReaderEnabled": "Lector de pantalla habilitado",
-  "search": "Search",
+  "search": "Buscar",
   "searchButton": "Search",
   "searchCategories": "Buscar categorías...",
   "searchHint": "Buscar tareas...",
   "searchNotifications": "Search notifications...",
   "searchSettings": "Search Settings",
   "searchSettingsHint": "Search...",
-  "searchTasks": "Search tasks...",
+  "searchTasks": "Buscar Tareas",
   "security": "Security",
   "seeAllPastNotifications": "See all past notifications",
   "select": "Select",
+  "selectAccentColor": "Select Accent Color",
   "selectATemplateOrCustomizeYourSession": "Select a template or customize your session",
   "selectATemplateThatFitsYourWorkStyle": "Select a template that fits your work style",
-  "selectAccentColor": "Select Accent Color",
   "selectBackgroundColor": "Select Background Color",
   "selectBirthday": "Seleccionar cumpleaños",
   "selectButton": "Seleccionar",
   "selectCategory": "Select Category",
+  "selectColor": "Select Color",
   "selectDueDate": "Seleccionar fecha de vencimiento",
+  "selectedColor": "Selected Color",
   "selectIcon": "Select Icon",
   "selectPrimaryColor": "Select Primary Color",
   "selectSurfaceColor": "Select Surface Color",
   "selectTextColor": "Select Text Color",
   "selectTime": "Select Time",
-  "selectedColor": "Selected Color",
   "selfCareRecommended": "Autocuidado Recomendado",
   "sendCrashReports": "Send crash reports to help fix issues",
   "sendCrashReportsToHelpFixIssues": "Send crash reports to help fix issues",
-  "sendTestNotification": "Send Test Notification",
   "sendingYouStrength": "Te envío fuerza",
+  "sendTestNotification": "Send Test Notification",
   "sessionComplete": "Sesión completa",
   "sessionCompletionRate": "Session Completion Rate",
   "sessionDurationTrend": "Session Duration Trend",
   "sessionHistory": "Session History",
+  "sessionOptimization": "⚙️ Session Optimization",
   "sessionPatternAnalysis": "Session Pattern Analysis",
+  "sessionPaused": "⏸️ Session Paused",
   "sessionProgress": "Progreso de la Sesión",
-  "sessionTimingAdjustsBasedOnYourFocusPatterns": "Session timing adjusts based on your focus patterns",
   "sessions": "sesiones",
   "sessionsToLongBreak": "Sessions to Long Break",
   "sessionsUntilLongBreak": "Sessions until Long Break",
+  "sessionTimingAdjustsBasedOnYourFocusPatterns": "Session timing adjusts based on your focus patterns",
   "setAutomaticQuietHours": "Set automatic quiet hours",
   "setDueDate": "Set Due Date",
   "setPriority": "Set Priority",
   "setRealisticSessionGoals": "Establece objetivos de sesión realistas",
-  "setReminder": "Set Reminder",
+  "setReminder": "Establecer Recordatorio",
   "setReminderButton": "Establecer Recordatorio",
+  "setSmartReminder": "Set Smart Reminder",
   "settings": "Settings",
   "settingsButton": "Configuración",
   "settingsSaved": "Configuración guardada",
@@ -1246,6 +1180,7 @@
   "shortBreakDuration": "Short Break Duration",
   "shortBreakLabel": "Descanso Corto",
   "shortBreakMin": "Short Break (min)",
+  "shortenSession": "⏰ Shorten Session",
   "shortPreset": "Short (15/3/10)",
   "showActionButtons": "Show action buttons",
   "showBadge": "Show Badge",
@@ -1253,10 +1188,10 @@
   "showMaintenanceScreenToUsers": "• Show maintenance screen to users",
   "showTasks": "Show tasks",
   "signIn": "Sign In",
+  "signingIn": "Signing you in..",
   "signInWithApple": "Iniciar sesión con Apple",
   "signInWithGoogle": "Iniciar sesión con Google",
   "signOut": "Sign Out",
-  "signingIn": "Signing you in..",
   "silentNotification10Seconds": "Silent notification - 10 seconds",
   "skip": "Omitir",
   "skipForNow": "Skip for Now",
@@ -1264,16 +1199,20 @@
   "smartFeatures": "Características Inteligentes",
   "smartFeaturesTutorial": "Smart Features Tutorial",
   "smartNotificationsDescription": "Automatically adjust notification timing based on your activity patterns",
+  "smartReminder": "Smart Reminder",
+  "smartReminderSet": "Smart reminder set",
   "smartScheduling": "Smart Scheduling",
   "smartSchedulingInfo": "Smart scheduling learns from your usage patterns to deliver notifications at optimal times.",
   "smartSortingConsidersTimeOfDayEnergyLevelsAndPatterns": "Smart sorting considers time of day, energy levels, and patterns",
   "smartTaskSorting": "Smart Task Sorting",
   "smartTaskSortingWithAiRecommendations": "• Smart task sorting with AI recommendations",
   "smartView": "Inteligente",
+  "snooze15min": "Posponer 15min",
   "someSyncOperationsFailed": "Some sync operations failed",
   "somethingWentWrong": "Algo salió mal",
   "sometimesNeutralIsExactlyWhereWeNeedToBe": "A veces neutral es exactamente donde necesitamos estar",
-  "sortBy": "Sort by",
+  "sortAndFilter": "Ordenar y Filtrar",
+  "sortBy": "Ordenar por",
   "sound": "Sound",
   "soundDisabled": "Sonido deshabilitado",
   "soundEnabled": "Sonido habilitado",
@@ -1284,12 +1223,12 @@
   "splashTagline": "Tu Administrador Personal de Tareas",
   "splashVersion": "Versión 1.0.0",
   "start": "Iniciar",
-  "startAFocusedWorkSession": "Start a focused work session",
-  "startAPomodoroSessionToSeeAdaptiveTiming": "Start a Pomodoro session to see adaptive timing",
-  "startFocusMode": "Start Focus Mode",
-  "startFocusSession": "Start Focus Session",
-  "startLoggingMoods": "Start logging your moods to see your history",
-  "startPomodoroSession": "Iniciar Sesión Pomodoro",
+  "startAFocusedWorkSession": "Inicia una sesión de trabajo enfocado",
+  "startAPomodoroSessionToSeeAdaptiveTiming": "Inicia una sesión Pomodoro para ver el tiempo adaptativo",
+  "startFocusMode": "Inicia el modo de enfoque",
+  "startFocusSession": "Inicia una sesión de enfoque",
+  "startLoggingMoods": "Inicia el registro de tus estados de ánimo para ver tu historia",
+  "startPomodoroSessionsToSeeInsights": "Inicia sesiones Pomodoro para ver estadísticas",
   "startRecording": "Start Recording",
   "startSession": "Iniciar Sesión",
   "startTracking": "Start tracking your mood journey",
@@ -1321,14 +1260,13 @@
   "subtaskDescription": "Descripción (opcional)",
   "subtaskDetails": "Detalles de Subtarea",
   "subtaskDuplicated": "Subtarea duplicada exitosamente",
+  "subtasks": "Subtareas",
   "subtaskTitle": "Título de Subtarea",
   "subtaskUncompleted": "Subtask marked as incomplete",
   "subtaskUpdated": "Subtarea actualizada exitosamente",
-  "subtasks": "Subtareas",
-  "subtasksCount": "{count} subtasks",
-  "suggestTimes": "Sugerir tiempos",
   "suggestedPlan": "Plan sugerido:",
   "suggestedTimes": "Suggested Times",
+  "suggestTimes": "Sugerir tiempos",
   "sun": "Dom",
   "sunday": "Domingo",
   "sundayAbbrev": "Dom",
@@ -1337,12 +1275,12 @@
   "surfaceColor": "Surface Color",
   "suspendRemindersTimers": "Suspend all reminders and timers immediately",
   "syncError": "Sync error: {error}",
+  "syncingFromFirebase": "Syncing from Firebase...",
   "syncStatus": "Sync Status",
   "syncStatusFailed": "Failed",
   "syncStatusIdle": "Idle",
   "syncStatusSuccess": "Success",
   "syncStatusSyncing": "Syncing",
-  "syncingFromFirebase": "Syncing from Firebase...",
   "system": "System",
   "systemAdministration": "Administración del Sistema",
   "systemMode": "System Mode",
@@ -1359,9 +1297,12 @@
   "taskActions": "Task Actions",
   "taskAddedSuccessfully": "Task added successfully!",
   "taskAttachments": "Attachments",
-  "taskCompleteReport": "📋 Task: Complete Report",
   "taskCompleted": "¡Tarea Completada! 🎉",
+  "taskCompletedChannelDesc": "Celebration notifications for completed tasks",
+  "taskCompletedChannelName": "Task Completed",
+  "taskCompleteReport": "📋 Task: Complete Report",
   "taskCompletionSounds": "Sonidos de Finalización de Tarea",
+  "taskCount": "{count} tarea{plural}",
   "taskCreatedSuccessfully": "¡Tarea creada exitosamente!",
   "taskDeleted": "Tarea eliminada",
   "taskDeletedSuccessfully": "{taskTitle} eliminada exitosamente",
@@ -1369,8 +1310,10 @@
   "taskDescriptionLabel": "Descripción (Opcional)",
   "taskDetails": "Detalles de la Tarea",
   "taskDue": "Tarea Vence",
+  "taskDueChannelDesc": "Notifications for due tasks",
+  "taskDueChannelName": "Task Due",
   "taskDueToday": "Tarea Vence Hoy",
-  "taskDuplicatedSuccessfully": "¡Tarea duplicada exitosamente!",
+  "taskDuplicatedSuccessfully": "Tarea duplicada exitosamente",
   "taskHistory": "Historial de Tareas",
   "taskInformation": "Task Information",
   "taskNotes": "Task Notes",
@@ -1381,8 +1324,16 @@
   "taskRecommendations": "Task Recommendations",
   "taskReminder": "Recordatorio de Tarea",
   "taskReminders": "Task Reminders",
+  "taskRemindersChannelDesc": "Reminders for tasks",
+  "taskRemindersChannelName": "Task Reminders",
   "taskRescheduled": "Task rescheduled",
+  "tasks": "Tasks",
+  "tasksCompleted": "Tasks Completed",
+  "tasksCompletedThisWeek": "Tasks Completed This Week",
+  "tasksCreatedSuccessfully": "Tasks created successfully!",
+  "tasksNeedingInstances": "Tareas que Necesitan Instancias",
   "taskSounds": "Task Sounds",
+  "tasksSortedByPriorityAndSuitability": "Tasks sorted by priority and suitability",
   "taskStatistics": "Task Statistics",
   "taskTitle": "Título de Tarea",
   "taskTitleLabel": "Título de la Tarea",
@@ -1390,15 +1341,6 @@
   "taskUncompleted": "Task marked as incomplete",
   "taskUpdated": "Task updated successfully",
   "taskValidationFailed": "Task validation failed",
-  "tasks": "Tasks",
-  "tasksCompleted": "Tasks Completed",
-  "tasksCompletedThisWeek": "Tasks Completed This Week",
-  "tasksCount": "{count} tareas",
-  "tasksCreatedSuccessfully": "Tasks created successfully!",
-  "tasksDue": "{count} tasks due",
-  "tasksForDate": "Tasks for {date}",
-  "tasksNeedingInstances": "Tareas que Necesitan Instancias",
-  "tasksSortedByPriorityAndSuitability": "Tasks sorted by priority and suitability",
   "tellUsAboutYourself": "Tell us about yourself",
   "templateName": "Template Name",
   "termsAndPrivacy": "Al iniciar sesión, aceptas nuestros Términos de Servicio y Política de Privacidad",
@@ -1406,6 +1348,7 @@
   "testDNDMode": "5. Test DND mode in preferences",
   "testHighPriority": "Test: High Priority",
   "testIn20Seconds": "20 seconds",
+  "testingTips": "Testing Tips",
   "testLowPriority": "Test: Low Priority",
   "testMoodCheckIn": "Test: Mood Check-in",
   "testMoodNotificationBody": "Esta es una notificación de prueba para check-in de estado de ánimo.",
@@ -1415,9 +1358,9 @@
   "testNotification": "Notificación de Prueba",
   "testNotificationBody": "The new notification system works!",
   "testNotificationDescription": "Esta es una notificación de prueba para verificar la funcionalidad de recordatorios",
+  "testNotifications": "Test Notifications",
   "testNotificationSent": "¡Notificación de prueba enviada!",
   "testNotificationTitle": "✅ Test Notification",
-  "testNotifications": "Test Notifications",
   "testReminder": "Recordatorio de Prueba",
   "testReminderIn10Seconds": "Prueba de Recordatorio en 10s",
   "testReminderScheduled": "Recordatorio de prueba programado para 10 segundos desde ahora",
@@ -1425,7 +1368,6 @@
   "testSimpleNotification": "Test: Simple Notification",
   "testSound": "Test Sound",
   "testTaskReminder": "Test: Task Reminder",
-  "testingTips": "Testing Tips",
   "textColor": "Text Color",
   "textInputComingSoon": "Text input coming soon!",
   "thankYouForYourPatience": "Thank you for your patience 💙",
@@ -1446,38 +1388,39 @@
   "thursdayAbbrev": "Jue",
   "timeBasedRecommendations": "Time-based recommendations",
   "timeFormat": "Time Format",
-  "timeRange": "Time Range:",
-  "timeRemaining": "Time remaining: {time}",
-  "timeSpent": "Tiempo Gastado",
-  "timeTracking": "Time Tracking",
   "timeline": "Cronograma",
   "timelineView": "Línea de Tiempo",
+  "timeRange": "Time Range:",
+  "timeSpent": "Tiempo Gastado",
+  "timeToRecharge": "🌿 Time to recharge!",
+  "timeTracking": "Time Tracking",
   "today": "Today",
   "todayI": "Today I",
+  "todaysPerformance": "📊 Today's Performance:",
+  "todaysStatistics": "Today's Statistics",
   "todayTasks": "Tareas para completar hoy",
   "todayYoureFeeling": "Hoy te sientes",
-  "todaysStatistics": "Today's Statistics",
   "toggleAdminStatus": "Toggle Admin Status",
   "tomorrow": "Mañana",
   "tomorrowShouldBeATypicalDayForYou": "Mañana debería ser un día típico para ti",
+  "tomorrowsNewDay": "💪 Tomorrow's a new day!",
   "tomorrowTasks": "Tareas de mañana",
   "toolsAndSettings": "Herramientas y Configuración",
   "totalEntries": "Total Entries",
   "totalEstimatedTime": "Tiempo total estimado: {minutes} min",
   "totalFocusTime": "Total Focus Time",
   "totalHours": "Total Hours",
-  "totalNotifications": "Total Notifications: {count}",
   "totalRecurringInstances": "Total de Instancias Recurrentes",
   "totalSessions": "Total Sessions",
+  "totaltasks": "Tareas Totales",
   "totalTasks": "Total Tasks",
   "totalTasksInCategory": "Total tasks: {count}",
-  "totaltasks": "Tareas Totales",
+  "trackedOperations": "Tracked Operations: {count}",
   "trackFocusPatternsAndSessionPerformance": "Track focus patterns and session performance",
   "trackNotificationInteractionStatistics": "Track notification interaction statistics",
   "trackWhenNotificationsAreDelivered": "Track when notifications are delivered and opened",
   "trackYourMoodForAWeek": "Registra tu estado de ánimo durante una semana para ver perspectivas",
   "trackYourMoodForAWeekToGetAIPredictions": "Registra tu estado de ánimo durante una semana para obtener predicciones IA",
-  "trackedOperations": "Tracked Operations: {count}",
   "trends": "Trends",
   "tryActionButtons": "4. Try action buttons on task notifications",
   "tryAdjustingYourSearchTerms": "Try adjusting your search terms",
@@ -1493,22 +1436,26 @@
   "tuesdayAbbrev": "Mar",
   "tutorialCompletedYoureAllSetToUseSmartFeatures": "Tutorial completed! You're all set to use smart features.",
   "twelveHour": "12h",
+  "twentyFiveMinuteSession": "Sesión de 25 minutos",
   "twentyFourHour": "24h",
+  "twoDaysBeforeDue": "",
   "typeToFilterSettingsSections": "Type to filter settings sections",
   "unableToLoadProgressData": "Unable to load progress data",
   "uncompleteTaskButton": "Descompletar Tarea",
   "undatedTasks": "Tasks without dates",
   "understandYourPatternsAndOptimizeYourProductivity": "Understand your patterns and optimize your productivity",
   "undo": "Undo",
+  "unknown": "Unknown",
   "upcoming": "Próximas",
   "updateAvailable": "Actualización Disponible",
   "updateButton": "Actualizar",
+  "updated": "Updated: {date}",
+  "updatedAt": "Actualizado: {date}",
   "updateDownloaded": "Actualización Descargada",
   "updateError": "Error de Actualización",
   "updatePersonalInfo": "Actualizar Información Personal",
-  "updateTodaysEntryInstead": "You can update today's entry instead",
-  "updated": "Updated: {date}",
   "updates": "Updates",
+  "updateTodaysEntryInstead": "You can update today's entry instead",
   "urgent": "Urgent",
   "urgentNotification10Seconds": "Urgent notification - 10 seconds",
   "urgentNotificationMessage": "This is an urgent notification!",
@@ -1517,13 +1464,14 @@
   "useLargerFontSizes": "Use larger font sizes",
   "useLightTheme": "Use light theme",
   "userAndAllAssociatedDataDeletedSuccessfully": "{userName} and all associated data deleted successfully",
+  "userDeletedSuccessfully": "{userName} y todos los datos asociados eliminados exitosamente",
   "userId": "User ID: {userId}",
+  "userIdNA": "ID de usuario: {userId}",
   "userNotAuthenticated": "User not authenticated",
   "userRegistration": "User Registration",
   "verbose": "Verbose",
   "verificationReportLoggedToConsole": "Verification report logged to console",
   "verifyAllTasks": "Verify All Tasks",
-  "version": "Versión {version}",
   "veryBad": "Muy Malo",
   "veryBadIntensity": "Intensidad Muy Mala",
   "veryGood": "Muy Bueno",
@@ -1558,12 +1506,10 @@
   "wantToShareMore": "Want to share more?",
   "wantToShareMoreDetails": "¿Quieres compartir más detalles?",
   "warning": "Warning",
-  "weRecommendTheseSettings": "We recommend these settings based on your preferences",
   "wed": "Mié",
   "wednesday": "Miércoles",
   "wednesdayAbbrev": "Mié",
   "week": "Semana",
-  "weekView": "Week",
   "weekly": "Weekly",
   "weeklyFocusTrend": "Weekly Focus Trend",
   "weeklyGoalProgress": "Weekly Goal Progress",
@@ -1571,9 +1517,11 @@
   "weeklyProgressOf": "{progress} of {goal} sessions",
   "weeklySessionCount": "Weekly Session Count",
   "weeklyStats": "Weekly Stats",
+  "weekView": "Week",
   "welcomeToTazbeet": "Welcome to Tazbeet",
   "wellnessEmotions": "Bienestar y Emociones",
   "wellnessInsights": "Wellness insights",
+  "weRecommendTheseSettings": "We recommend these settings based on your preferences",
   "whatMadeTodayGreat": "What made today great?",
   "whatsGoingWell": "What's going well?",
   "whatsHappeningRightNow": "What's happening right now?",
@@ -1602,8 +1550,10 @@
   "youDoNotHaveAdminPrivileges": "You do not have admin privileges.",
   "youHaventLoggedYourMoodTodayYet": "Aún no has registrado tu estado de ánimo hoy",
   "youMightBenefitFromAdditionalSupport": "Podrías beneficiarte de apoyo adicional",
-  "yourIntelligentTaskManagementCompanionWithAIPoweredFeatures": "Your intelligent task management companion with AI-powered features",
+  "youreDoingGreat": "¡Lo estás haciendo genial!",
+  "youreOnFire": "💪 You're on fire!",
   "yourIntelligentTaskManagementCompanionWithAiPoweredFeatures": "Your intelligent task management companion with AI-powered features",
+  "yourIntelligentTaskManagementCompanionWithAIPoweredFeatures": "Your intelligent task management companion with AI-powered features",
   "yourJoyIsContagious": "¡Tu alegría es contagiosa!",
   "yourMood": "Your mood",
   "yourMoodHasBeenImprovingLately": "Tu estado de ánimo ha estado mejorando últimamente",
@@ -1611,23 +1561,441 @@
   "yourMoodJourney": "Tu Viaje Emocional",
   "yourOverallMoodIsGenerallyPositive": "Tu estado de ánimo general es generalmente positivo",
   "yourPersonalTaskManager": "Your Personal Task Manager",
-  "youreDoingGreat": "¡Lo estás haciendo genial!",
   "youveBeenTrackingYourMoodForDays": "Has estado registrando tu estado de ánimo durante {days} días",
+  "@@locale": "es",
+  "allTasksCompletedCount": "🎉 All {count} tasks completed!",
+  "@allTasksCompletedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "avgFocus": "Avg Focus",
+  "@avgFocus": {
+    "placeholders": {
+      "score": {
+        "type": "String"
+      }
+    }
+  },
   "bulkDeleteConfirmation": "¿Estás seguro de que quieres eliminar {count} tareas?",
-  "category": "Categoría",
-  "complete": "Completar",
+  "@bulkDeleteConfirmation": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkGenerationComplete": "Generated {count} recurring instances",
+  "@bulkGenerationComplete": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "completedTaskNotification": "Completed: {taskTitle}",
+  "@completedTaskNotification": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteCategory": "Are you sure you want to delete \"{categoryName}\"? This will remove the category from all associated tasks.",
+  "@confirmDeleteCategory": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteTask": "¿Estás seguro de que quieres eliminar \"{taskTitle}\"?",
+  "@confirmDeleteTask": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "Object"
+      }
+    }
+  },
+  "currentEnergyLevel": "⚡ Current energy: {level}",
+  "@currentEnergyLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "currentStreakDays": "🔥 Current streak: {count} days",
+  "@currentStreakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "days": "{count} days",
+  "@days": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "daysRemaining": "📅 Days remaining: {count}",
+  "@daysRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "daysToGo": "📈 {count} days to go!",
+  "@daysToGo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dayStreak": "day streak",
+  "@dayStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteTaskConfirmation": "Are you sure you want to delete \"{taskTitle}\"?",
+  "@deleteTaskConfirmation": {
+    "placeholders": {
+      "task": {
+        "type": "String"
+      }
+    }
+  },
+  "error": "Error: {message}",
+  "@error": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "focusArea": "🎯 Focus: {area}",
+  "@focusArea": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
+  "focusLevel": "Nivel de Enfoque",
+  "@focusLevel": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "focusRating": "Focus rating: {rating}/10",
+  "@focusRating": {
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "goalAchievedNewTarget": "🏆 Goal achieved! New target: {count} days",
+  "@goalAchievedNewTarget": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "itemsSelected": "{count} seleccionados",
-  "or": "o",
-  "prioritizeTasks": "Priorizar Tareas",
-  "priority": "Prioridad",
-  "quickEdit": "Edición Rápida",
-  "quickFilters": "Filtros Rápidos",
-  "reschedule": "Reprogramar",
-  "reset": "Restablecer",
-  "rescheduleSelectedTasks": "Reprogramar tareas seleccionadas",
-  "rescheduleTask": "Reprogramar tarea",
-  "searchTasks": "Buscar Tareas",
-  "search": "Buscar",
-  "sortAndFilter": "Ordenar y Filtrar",
-  "sortBy": "Ordenar por"
+  "@itemsSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "metricValue": "{label}: {value}/10",
+  "@metricValue": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "minuteBreak": "⏰ {minutes} minute {breakType}",
+  "@minuteBreak": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "breakType": {
+        "type": "String"
+      }
+    }
+  },
+  "minuteFocusSessions": "{minutes}-minute focus sessions",
+  "@minuteFocusSessions": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "minutesPerSession": "⏱️ {minutes} min per session",
+  "@minutesPerSession": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "nextTask": "Next: {taskTitle}",
+  "@nextTask": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "percent": "{value}%",
+  "@percent": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "priorityLabel": "Prioridad:",
+  "@priorityLabel": {
+    "placeholders": {
+      "priority": {
+        "type": "String"
+      }
+    }
+  },
+  "progressPercent": "Progress: {percent}%",
+  "@progressPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "reason": "💭 Reason: {reason}",
+  "@reason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "recurringTaskError": "Error in recurring task: {error}",
+  "@recurringTaskError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "recurringTaskNotification": "New recurring task created: {title}",
+  "@recurringTaskNotification": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "reminder": "Recordatorio: {date}",
+  "@reminder": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderCancelledFor": "Recordatorio cancelado para: {taskTitle}",
+  "@reminderCancelledFor": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionNofM": "Session {current} of {total}",
+  "@sessionNofM": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "sessionsCount": "⏱️ {count} sessions",
+  "@sessionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sessionsPlanned": "📋 {count} sessions planned",
+  "@sessionsPlanned": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sessionsProgress": "Sessions: {completed}/{total}",
+  "@sessionsProgress": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "smart_reminder": "Smart Reminder",
+  "@smart_reminder": {
+    "description": "المذكر الذكي"
+  },
+  "startingTask": "🍅 Starting: {taskTitle}",
+  "@startingTask": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "subtasksCount": "{count} subtasks",
+  "@subtasksCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "suggestedActivity": "💡 Suggested activity: {activity}",
+  "@suggestedActivity": {
+    "placeholders": {
+      "activity": {
+        "type": "String"
+      }
+    }
+  },
+  "suggestedDuration": "⏱️ Suggested: {minutes} min",
+  "@suggestedDuration": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "targetDays": "🎯 Target: {count} days",
+  "@targetDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksCompletedCount": "✅ {count} tasks completed",
+  "@tasksCompletedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksCount": "{count} tareas",
+  "@tasksCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksDue": "{count} tasks due",
+  "@tasksDue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksForDate": "Tasks for {date}",
+  "@tasksForDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "timeRemaining": "Time remaining: {time}",
+  "@timeRemaining": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "totalNotifications": "Total Notifications: {count}",
+  "@totalNotifications": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalTime": "⏱️ Total time: {time}",
+  "@totalTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "version": "Versión {version}",
+  "@version": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "weeklyGoalSessions": "🎯 Weekly Goal: {count} sessions",
+  "@weeklyGoalSessions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyProgressStatus": "✅ Progress: {current}/{total}",
+  "@weeklyProgressStatus": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  }
 }

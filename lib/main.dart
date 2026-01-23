@@ -33,9 +33,9 @@ import 'models/notification_preferences.dart';
 import 'package:tazbeet/services/auth_service.dart';
 import 'package:tazbeet/services/color_customization_service.dart';
 import 'package:tazbeet/services/task_sound_service.dart';
-import 'package:tazbeet/services/ambient_service.dart';
 import 'package:tazbeet/services/update_service.dart';
 import 'package:tazbeet/services/firebase_service_wrapper.dart';
+import 'package:tazbeet/adapters/reminder_state_adapter.dart';
 import 'models/mood.dart';
 import 'models/mood_achievement.dart';
 import 'blocs/mood/mood_bloc.dart';
@@ -92,6 +92,7 @@ void main() async {
   Hive.registerAdapter(QuietHoursAdapter());
   Hive.registerAdapter(NotificationTypePreferencesAdapter());
   Hive.registerAdapter(NotificationPreferencesAdapter());
+  Hive.registerAdapter(ReminderStateAdapter());
 
   // Initialize notification service
   final notificationService = NotificationService();
@@ -255,14 +256,15 @@ class Tazbeet extends StatelessWidget {
           BlocProvider<MoodBloc>(create: (context) => MoodBloc(context.read<MoodRepository>())),
           BlocProvider<UserBloc>(create: (context) => UserBloc(context.read<UserRepository>())),
           BlocProvider<NotificationBloc>(
-            create: (context) => NotificationBloc(repository: context.read<NotificationRepository>(), notificationService: notificationService)..add(const InitializeNotifications()),
+            create: (context) => NotificationBloc(repository: context.read<NotificationRepository>(), notificationService: notificationService, taskRepository: context.read<TaskRepository>())
+              ..add(const InitializeNotifications())
+              ..add(const VerifyScheduledReminders()),
           ),
         ],
         child: MultiProvider(
           providers: [
             ChangeNotifierProvider.value(value: settingsService),
             ChangeNotifierProvider.value(value: colorCustomizationService),
-            ChangeNotifierProvider<AmbientService>(create: (_) => AmbientService()),
             ChangeNotifierProvider<EmergencyService>(create: (_) => EmergencyService()),
             ChangeNotifierProvider.value(value: taskSoundService),
             ChangeNotifierProvider.value(value: updateService),

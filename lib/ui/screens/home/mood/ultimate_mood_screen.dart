@@ -668,6 +668,7 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
   }
 
   logandsnak(String message) {
+    final l10n = AppLocalizations.of(context)!;
     AppLogging.logError(message);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
@@ -679,7 +680,7 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
             SnackBar(
               content: Text(message),
               backgroundColor: Colors.red.shade400,
-              action: SnackBarAction(label: 'Dismiss', onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar()),
+              action: SnackBarAction(label: l10n.dismiss, onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar()),
             ),
           );
         }

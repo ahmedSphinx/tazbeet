@@ -1,8 +1,12 @@
+import 'dart:convert';
 import 'package:tazbeet/services/app_logging_service.dart';
 import 'package:tazbeet/services/navigation_service.dart';
 import 'package:tazbeet/services/settings_service.dart';
 import 'package:tazbeet/services/error_notification_service.dart';
 import 'package:tazbeet/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../blocs/notification/notification_bloc.dart';
+import '../blocs/notification/notification_event.dart';
 
 import 'package:flutter/material.dart';
 
@@ -47,8 +51,35 @@ class NotificationService {
       onDidReceiveNotificationResponse: (NotificationResponse response) {
         // Handle notification tap
         AppLogging.logInfo('Notification received/tapped: ${response.payload}', name: 'NotificationService');
+
         if (response.payload == 'mood_check_in') {
           NavigationService.navigatorKey.currentState?.pushNamed('/mood_input');
+          return;
+        }
+
+        // Handle task reminder actions
+        try {
+          final payload = jsonDecode(response.payload!);
+          if (payload['type'] == 'task_reminder') {
+            final taskId = payload['taskId'];
+            final action = response.actionId;
+
+            if (action == 'complete') {
+              // Navigate to task details for completion
+              NavigationService.navigatorKey.currentState?.pushNamed('/task_details', arguments: taskId);
+            } else if (action == 'snooze') {
+              // Dispatch snooze event to NotificationBloc
+              final context = NavigationService.navigatorKey.currentContext;
+              if (context != null) {
+                context.read<NotificationBloc>().add(SnoozeTaskReminder(taskId, const Duration(minutes: 15)));
+              }
+            } else {
+              // Default: navigate to task details
+              NavigationService.navigatorKey.currentState?.pushNamed('/task_details', arguments: taskId);
+            }
+          }
+        } catch (e) {
+          AppLogging.logError('Failed to handle notification response: $e', name: 'NotificationService');
         }
       },
     );
@@ -87,7 +118,7 @@ class NotificationService {
         return;
       }
       final l10n = AppLocalizations.of(context)!;
-      ErrorNotificationService().showError(l10n.notificationPermissionDenied, isWarning: true);
+      ErrorNotificationService().showError(context, l10n.notificationPermissionDenied, isWarning: true);
     }
 
     // Request to ignore battery optimizations for reliable notifications
@@ -114,9 +145,11 @@ class NotificationService {
 
   /// Generate unique notification ID for task
   int _generateTaskNotificationId(String taskId, {String suffix = ''}) {
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
     final hash = taskId.hashCode.abs();
-    return int.parse('${timestamp.toString().substring(6)}${hash.toString().substring(0, 3)}$suffix');
+    // Use modulo to ensure ID fits within 32-bit signed integer range
+    // Max positive 32-bit int is 2147483647
+    final baseId = (hash % 1000000) + 1000000; // Keep ID in reasonable range
+    return int.parse('$baseId$suffix');
   }
 
   /// Verify that a reminder was scheduled successfully
@@ -155,7 +188,7 @@ class NotificationService {
           return;
         }
         final l10n = AppLocalizations.of(context)!;
-        ErrorNotificationService().showError('${l10n.cannotSetReminderForPastDate}: ${task.title}', isWarning: true);
+        ErrorNotificationService().showError(context, '${l10n.cannotSetReminderForPastDate}: ${task.title}', isWarning: true);
       }
       return;
     }
@@ -168,6 +201,17 @@ class NotificationService {
     final l10n = AppLocalizations.of(context)!;
 
     AppLogging.logInfo('Scheduling task reminder for task: ${task.id} - ${task.title} at ${task.reminderDate}', name: 'NotificationService');
+
+    // Check for duplicate notifications before scheduling
+    final isDuplicate = await _isDuplicateNotification(task.id);
+    if (isDuplicate) {
+      AppLogging.logInfo('Found existing reminder for task ${task.id}, updating instead of creating duplicate', name: 'NotificationService');
+
+      // Cancel existing reminder before scheduling new one
+      await cancelTaskReminder(task.id);
+
+      // Continue with scheduling the new reminder
+    }
 
     final AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'task_reminders',
@@ -189,6 +233,12 @@ class NotificationService {
       scheduledTime,
       platformChannelSpecifics,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      payload: jsonEncode({
+        'type': 'task_reminder',
+        'taskId': task.id,
+        'actions': ['complete', 'snooze', 'view'],
+        'snoozeOptions': [5, 15, 60],
+      }),
     );
 
     // Verify the reminder was scheduled successfully
@@ -459,8 +509,8 @@ class NotificationService {
 
     await _flutterLocalNotificationsPlugin.show(
       task.id.hashCode + 2000, // Different ID for completion notifications
-      l10n.taskCompleted,
-      '${l10n.greatJobCompleting}: ${task.title}',
+      l10n.taskCompletedSuccessfully,
+      '${l10n.greatJobCompleting} ${task.title}',
       platformChannelSpecifics,
       payload: task.id,
     );
@@ -800,6 +850,53 @@ class NotificationService {
       AppLogging.logInfo('Cancelled all notifications', name: 'NotificationService');
     } catch (e) {
       AppLogging.logError('Failed to cancel all notifications: $e', name: 'NotificationService');
+    }
+  }
+
+  /// Heal failed reminder with single retry
+
+  /// Check for duplicate notifications before scheduling
+  Future<bool> _isDuplicateNotification(String taskId) async {
+    try {
+      final pending = await getPendingNotifications();
+      AppLogging.logInfo('Checking for duplicate notifications for task $taskId. Pending notifications: ${pending.length}', name: 'NotificationService');
+
+      // Method 1: Check payload-based detection
+      for (final notification in pending) {
+        final payload = notification.payload;
+        if (payload != null) {
+          try {
+            final data = Map<String, dynamic>.from(json.decode(payload));
+            if (data['taskId'] == taskId) {
+              AppLogging.logInfo('Found duplicate notification with payload for task $taskId', name: 'NotificationService');
+              return true;
+            }
+          } catch (e) {
+            AppLogging.logWarning('Failed to parse notification payload: $e', name: 'NotificationService');
+          }
+        }
+      }
+
+      // Method 2: Fallback - check notification ID pattern
+      final notificationId = _generateTaskNotificationId(taskId);
+      final idMatch = pending.any((notification) => notification.id == notificationId);
+      if (idMatch) {
+        AppLogging.logInfo('Found duplicate notification with ID for task $taskId', name: 'NotificationService');
+        return true;
+      }
+
+      // Method 3: Fallback - check task ID in notification title
+      final titleMatch = pending.any((notification) => notification.title != null && notification.title!.contains(taskId));
+      if (titleMatch) {
+        AppLogging.logInfo('Found duplicate notification with title containing task ID for task $taskId', name: 'NotificationService');
+        return true;
+      }
+
+      AppLogging.logInfo('No duplicate notification found for task $taskId', name: 'NotificationService');
+      return false;
+    } catch (e) {
+      AppLogging.logError('Failed to check for duplicates: $e', name: 'NotificationService');
+      return false;
     }
   }
 

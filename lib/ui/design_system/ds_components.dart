@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tazbeet/models/task.dart';
-import 'ds_spacing.dart';
-import 'ds_typography.dart';
-import 'ds_colors.dart';
+import 'package:tazbeet/l10n/app_localizations.dart';
+import '../widgets/smart_reminder_indicator.dart';
 import 'ds_border_radius.dart';
+import 'ds_spacing.dart';
+import 'ds_colors.dart';
+import 'ds_typography.dart';
 import 'ds_elevation.dart';
 
 /// Design System: Reusable Component Library
@@ -112,8 +114,9 @@ class DSTaskCard extends StatelessWidget {
   final bool isSelected;
   final bool showDeleteButton;
   final bool isRecommended;
+  final AppLocalizations? l10n;
 
-  const DSTaskCard({super.key, required this.task, this.onTap, this.onToggle, this.onDelete, this.onLongPress, this.isSelected = false, this.showDeleteButton = false, this.isRecommended = false});
+  const DSTaskCard({super.key, required this.task, this.onTap, this.onToggle, this.onDelete, this.onLongPress, this.isSelected = false, this.showDeleteButton = false, this.isRecommended = false, this.l10n});
 
   @override
   Widget build(BuildContext context) {
@@ -184,6 +187,9 @@ class DSTaskCard extends StatelessWidget {
                           Text(_formatDate(task.dueDate!), style: DSTypography.caption(context).copyWith(color: priorityColor)),
                         ],
                       ),
+
+                      // Smart Reminder Indicator
+                      if (l10n != null) SmartReminderIndicator(task: task, l10n: l10n!),
                     ],
                     // Subtask progress indicator
                     if (task.subtasks.isNotEmpty) ...[const SizedBox(height: DSSpacing.xs), _buildSubtaskProgress(context)],

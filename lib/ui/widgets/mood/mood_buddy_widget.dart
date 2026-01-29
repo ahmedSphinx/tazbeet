@@ -30,7 +30,7 @@ class MoodBuddyWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(colors: buddyState.colors, begin: Alignment.topLeft, end: Alignment.bottomRight),
                 shape: BoxShape.circle,
-                boxShadow: [BoxShadow(color: buddyState.colors.first.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 10))],
+                boxShadow: [BoxShadow(color: buddyState.colors.first.withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, 10))],
               ),
               child: Center(child: Text(buddyState.emoji, style: const TextStyle(fontSize: 64))),
             ),

@@ -261,19 +261,10 @@ class _SubtaskDetailsScreenState extends State<SubtaskDetailsScreen> {
               const SizedBox(height: 20),
 
               // Description
-              if (_currentSubtask.description != null && _currentSubtask.description!.isNotEmpty) ...[
-                _buildDetailSection(context, l10n.taskDescription, _currentSubtask.description!, Icons.description_outlined, colorScheme.primary),
-                const SizedBox(height: 16),
-              ],
+              if (_currentSubtask.description != null && _currentSubtask.description!.isNotEmpty) ...[_buildDetailSection(context, l10n.taskDescription, _currentSubtask.description!, Icons.description_outlined, colorScheme.primary), const SizedBox(height: 16)],
 
               // Status
-              _buildDetailRow(
-                context,
-                l10n.status,
-                _currentSubtask.isCompleted ? l10n.completed : l10n.pending,
-                _currentSubtask.isCompleted ? Icons.check_circle : Icons.pending,
-                _currentSubtask.isCompleted ? Colors.green : Colors.orange,
-              ),
+              _buildDetailRow(context, l10n.status, _currentSubtask.isCompleted ? l10n.completed : l10n.pending, _currentSubtask.isCompleted ? Icons.check_circle : Icons.pending, _currentSubtask.isCompleted ? Colors.green : Colors.orange),
 
               const SizedBox(height: 12),
 
@@ -501,17 +492,9 @@ class _SubtaskDetailsScreenState extends State<SubtaskDetailsScreen> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  if (subSubtask.dueDate != null) ...[
-                    Icon(Icons.calendar_today, size: 14, color: Colors.grey[600]),
-                    const SizedBox(width: 4),
-                    Text(_formatDate(subSubtask.dueDate!), style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-                  ],
+                  if (subSubtask.dueDate != null) ...[Icon(Icons.calendar_today, size: 14, color: Colors.grey[600]), const SizedBox(width: 4), Text(_formatDate(subSubtask.dueDate!), style: TextStyle(fontSize: 12, color: Colors.grey[600]))],
                   if (subSubtask.dueDate != null && subSubtask.subtasks.isNotEmpty) ...[const SizedBox(width: 12)],
-                  if (subSubtask.subtasks.isNotEmpty) ...[
-                    Icon(Icons.subdirectory_arrow_right, size: 14, color: Colors.grey[600]),
-                    const SizedBox(width: 4),
-                    Text("${subSubtask.subtasks.length} sub-subtasks", style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-                  ],
+                  if (subSubtask.subtasks.isNotEmpty) ...[Icon(Icons.subdirectory_arrow_right, size: 14, color: Colors.grey[600]), const SizedBox(width: 4), Text("${subSubtask.subtasks.length} sub-subtasks", style: TextStyle(fontSize: 12, color: Colors.grey[600]))],
                 ],
               ),
             ],
@@ -589,7 +572,7 @@ class _SubtaskDetailsScreenState extends State<SubtaskDetailsScreen> {
             TextField(
               controller: titleController,
               decoration: InputDecoration(labelText: l10n.taskTitle, hintText: l10n.enterTaskTitle, border: const OutlineInputBorder()),
-              autofocus: true,
+              autofocus: true, // User-initiated dialog should focus for good UX
             ),
             const SizedBox(height: 16),
             TextField(
@@ -650,14 +633,7 @@ class _SubtaskDetailsScreenState extends State<SubtaskDetailsScreen> {
 
   void _duplicateSubSubtask(BuildContext context, Task subSubtask) {
     final l10n = AppLocalizations.of(context)!;
-    final duplicatedSubSubtask = subSubtask.copyWith(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      title: "${subSubtask.title} (Copy)",
-      isCompleted: false,
-      subtasks: [],
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    );
+    final duplicatedSubSubtask = subSubtask.copyWith(id: DateTime.now().millisecondsSinceEpoch.toString(), title: "${subSubtask.title} (Copy)", isCompleted: false, subtasks: [], createdAt: DateTime.now(), updatedAt: DateTime.now());
 
     setState(() {
       _currentSubtask = _currentSubtask.copyWith(subtasks: [..._currentSubtask.subtasks, duplicatedSubSubtask]);
@@ -811,14 +787,7 @@ class _SubtaskDetailsScreenState extends State<SubtaskDetailsScreen> {
 
   void _duplicateSubtask(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final duplicatedSubtask = _currentSubtask.copyWith(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      title: "${_currentSubtask.title} (Copy)",
-      isCompleted: false,
-      subtasks: [],
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    );
+    final duplicatedSubtask = _currentSubtask.copyWith(id: DateTime.now().millisecondsSinceEpoch.toString(), title: "${_currentSubtask.title} (Copy)", isCompleted: false, subtasks: [], createdAt: DateTime.now(), updatedAt: DateTime.now());
 
     if (_parentTask != null) {
       final updatedParent = _parentTask!.copyWith(subtasks: [..._parentTask!.subtasks, duplicatedSubtask]);

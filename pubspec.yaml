@@ -35,6 +35,7 @@ dependencies:
   flutter_local_notifications: ^19.4.2
   flutter_localizations:
     sdk: flutter
+  flutter_secure_storage: ^10.0.0
   flutter_slidable: ^4.0.1
   flutter_staggered_animations: ^1.1.1
   flutter_tts: ^4.1.0
@@ -69,11 +70,13 @@ dependencies:
   workmanager: ^0.9.0+3
 
 dev_dependencies:
+  bloc_test: ^10.0.0
   build_runner: ^2.4.13
   flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
   hive_generator: ^2.0.1
+  mockito: ^5.4.5
 
 flutter:
   uses-material-design: true

@@ -355,9 +355,9 @@ class _PomodoroAnalyticsScreenState extends State<PomodoroAnalyticsScreen> with 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -373,7 +373,7 @@ class _PomodoroAnalyticsScreenState extends State<PomodoroAnalyticsScreen> with 
             ],
           ),
           const SizedBox(height: 8),
-          Text(title, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7))),
+          Text(title, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
         ],
       ),
     );
@@ -394,16 +394,9 @@ class _PomodoroAnalyticsScreenState extends State<PomodoroAnalyticsScreen> with 
         children: [
           Text(AppLocalizations.of(context)!.weeklyGoalProgress, style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 12),
-          LinearProgressIndicator(
-            value: progress,
-            backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
-            valueColor: AlwaysStoppedAnimation<Color>(progress >= 1.0 ? Colors.green : Theme.of(context).colorScheme.primary),
-          ),
+          LinearProgressIndicator(value: progress, backgroundColor: Theme.of(context).colorScheme.surfaceVariant, valueColor: AlwaysStoppedAnimation<Color>(progress >= 1.0 ? Colors.green : Theme.of(context).colorScheme.primary)),
           const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text('$weeklyProgress ${AppLocalizations.of(context)!.offf} $weeklyGoal ${AppLocalizations.of(context)!.sessions}'), Text('${(progress * 100).toInt()}%')],
-          ),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('$weeklyProgress ${AppLocalizations.of(context)!.offf} $weeklyGoal ${AppLocalizations.of(context)!.sessions}'), Text('${(progress * 100).toInt()}%')]),
         ],
       ),
     );
@@ -415,9 +408,9 @@ class _PomodoroAnalyticsScreenState extends State<PomodoroAnalyticsScreen> with 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [Colors.orange.withOpacity(0.1), Colors.red.withOpacity(0.1)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        gradient: LinearGradient(colors: [Colors.orange.withValues(alpha: 0.1), Colors.red.withValues(alpha: 0.1)], begin: Alignment.topLeft, end: Alignment.bottomRight),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.orange.withOpacity(0.3)),
+        border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
@@ -572,7 +565,7 @@ class _PomodoroAnalyticsScreenState extends State<PomodoroAnalyticsScreen> with 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [Colors.blue.withOpacity(0.1), Colors.purple.withOpacity(0.1)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        gradient: LinearGradient(colors: [Colors.blue.withValues(alpha: 0.1), Colors.purple.withValues(alpha: 0.1)], begin: Alignment.topLeft, end: Alignment.bottomRight),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -672,11 +665,7 @@ class _PomodoroAnalyticsScreenState extends State<PomodoroAnalyticsScreen> with 
                   dataSource: hourlyData,
                   xValueMapper: (HourlyProductivityData data, _) => data.hour,
                   yValueMapper: (HourlyProductivityData data, _) => data.productivity,
-                  gradient: LinearGradient(
-                    colors: [Theme.of(context).colorScheme.primary.withValues(alpha: 0.3), Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
+                  gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary.withValues(alpha: 0.3), Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)], begin: Alignment.topCenter, end: Alignment.bottomCenter),
                   borderColor: Theme.of(context).colorScheme.primary,
                   borderWidth: 2,
                   dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.outside),
@@ -729,15 +718,7 @@ class _PomodoroAnalyticsScreenState extends State<PomodoroAnalyticsScreen> with 
 
   Widget _buildFocusScoreChart() {
     final l10n = AppLocalizations.of(context)!;
-    final focusData = [
-      FocusScoreData(l10n.mon, 85),
-      FocusScoreData(l10n.tue, 78),
-      FocusScoreData(l10n.wed, 92),
-      FocusScoreData(l10n.thu, 88),
-      FocusScoreData(l10n.fri, 75),
-      FocusScoreData(l10n.sat, 65),
-      FocusScoreData(l10n.sun, 70),
-    ];
+    final focusData = [FocusScoreData(l10n.mon, 85), FocusScoreData(l10n.tue, 78), FocusScoreData(l10n.wed, 92), FocusScoreData(l10n.thu, 88), FocusScoreData(l10n.fri, 75), FocusScoreData(l10n.sat, 65), FocusScoreData(l10n.sun, 70)];
 
     return Container(
       height: 250,
@@ -796,11 +777,11 @@ class _PomodoroAnalyticsScreenState extends State<PomodoroAnalyticsScreen> with 
                 : SfCartesianChart(
                     primaryXAxis: CategoryAxis(
                       majorGridLines: MajorGridLines(width: 0),
-                      labelStyle: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+                      labelStyle: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
                     ),
                     primaryYAxis: NumericAxis(
                       majorGridLines: MajorGridLines(width: 0),
-                      labelStyle: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+                      labelStyle: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
                     ),
                     series: <CartesianSeries<ChartData, String>>[
                       SplineSeries<ChartData, String>(
@@ -842,11 +823,11 @@ class _PomodoroAnalyticsScreenState extends State<PomodoroAnalyticsScreen> with 
                 : SfCartesianChart(
                     primaryXAxis: CategoryAxis(
                       majorGridLines: MajorGridLines(width: 0),
-                      labelStyle: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+                      labelStyle: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
                     ),
                     primaryYAxis: NumericAxis(
                       majorGridLines: MajorGridLines(width: 0),
-                      labelStyle: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+                      labelStyle: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
                       minimum: 0,
                       maximum: 10,
                     ),
@@ -891,11 +872,11 @@ class _PomodoroAnalyticsScreenState extends State<PomodoroAnalyticsScreen> with 
                 : SfCartesianChart(
                     primaryXAxis: CategoryAxis(
                       majorGridLines: MajorGridLines(width: 0),
-                      labelStyle: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+                      labelStyle: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
                     ),
                     primaryYAxis: NumericAxis(
                       majorGridLines: MajorGridLines(width: 0),
-                      labelStyle: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+                      labelStyle: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
                       labelFormat: '{value}${l10n.min}',
                     ),
                     series: <CartesianSeries>[
@@ -923,9 +904,9 @@ class _PomodoroAnalyticsScreenState extends State<PomodoroAnalyticsScreen> with 
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.insert_chart_outlined, size: 48, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3)),
+          Icon(Icons.insert_chart_outlined, size: 48, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
           const SizedBox(height: 16),
-          Text(AppLocalizations.of(context)!.noDataAvailable, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),
+          Text(AppLocalizations.of(context)!.noDataAvailable, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6))),
         ],
       ),
     );

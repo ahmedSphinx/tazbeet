@@ -201,7 +201,7 @@ class VoiceTaskQuickAccess extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3), borderRadius: BorderRadius.circular(AppRadius.md)),
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(AppRadius.md)),
       child: Row(
         children: [
           Icon(Icons.mic, color: Theme.of(context).colorScheme.primary, size: 20),

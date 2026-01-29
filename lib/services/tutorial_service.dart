@@ -7,14 +7,7 @@ class TutorialService {
   TutorialCoachMark? _tutorialCoachMark;
   final List<TargetFocus> targets = [];
 
-  void initTargets({
-    required GlobalKey addTaskKey,
-    required GlobalKey pomodoroKey,
-    required GlobalKey categoryFilterKey,
-    required GlobalKey moodTrackingKey,
-    required GlobalKey taskDetailsKey,
-    required BuildContext context,
-  }) {
+  void initTargets({required GlobalKey addTaskKey, required GlobalKey pomodoroKey, required GlobalKey categoryFilterKey, required GlobalKey moodTrackingKey, required GlobalKey taskDetailsKey, required BuildContext context}) {
     targets.clear();
 
     final theme = Theme.of(context);
@@ -109,9 +102,9 @@ class TutorialService {
             margin: const EdgeInsets.only(bottom: 20),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
+              color: Colors.white.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 1),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -124,7 +117,7 @@ class TutorialService {
                 ...List.generate(totalSteps, (index) {
                   final isCompleted = index < step - 1;
                   final isCurrent = index == step - 1;
-                //  final isUpcoming = index > step - 1;
+                  //  final isUpcoming = index > step - 1;
 
                   return Container(
                     width: 6,
@@ -136,8 +129,8 @@ class TutorialService {
                           ? Colors.white
                           : isCurrent
                           ? color
-                          : Colors.white.withOpacity(0.3),
-                      boxShadow: isCurrent ? [BoxShadow(color: color.withOpacity(0.5), blurRadius: 4, spreadRadius: 1)] : null,
+                          : Colors.white.withValues(alpha: 0.3),
+                      boxShadow: isCurrent ? [BoxShadow(color: color.withValues(alpha: 0.5), blurRadius: 4, spreadRadius: 1)] : null,
                     ),
                   ).animate(delay: Duration(milliseconds: index * 100)).scale(begin: Offset.zero, end: const Offset(1, 1), duration: const Duration(milliseconds: 400), curve: Curves.elasticOut);
                 }),
@@ -149,11 +142,11 @@ class TutorialService {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [color, color.withOpacity(0.8), Color.lerp(color, colorScheme.surface, 0.3)!], begin: Alignment.topLeft, end: Alignment.bottomRight, stops: const [0.0, 0.7, 1.0]),
+              gradient: LinearGradient(colors: [color, color.withValues(alpha: 0.8), Color.lerp(color, colorScheme.surface, 0.3)!], begin: Alignment.topLeft, end: Alignment.bottomRight, stops: const [0.0, 0.7, 1.0]),
               shape: BoxShape.circle,
               boxShadow: [
-                BoxShadow(color: color.withOpacity(0.4), blurRadius: 20, offset: const Offset(0, 8), spreadRadius: 2),
-                BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 40, offset: const Offset(0, 16)),
+                BoxShadow(color: color.withValues(alpha: 0.4), blurRadius: 20, offset: const Offset(0, 8), spreadRadius: 2),
+                BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 40, offset: const Offset(0, 16)),
               ],
             ),
             child: Icon(icon, color: Colors.white, size: 36),
@@ -163,63 +156,54 @@ class TutorialService {
 
           // Enhanced Title with better typography
           Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  title,
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
-                    height: 1.2,
-                    shadows: [Shadow(color: Colors.black.withOpacity(0.3), offset: const Offset(0, 2), blurRadius: 4)],
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              )
-              .animate()
-              .fadeIn(delay: const Duration(milliseconds: 300), duration: const Duration(milliseconds: 500))
-              .slideY(begin: 0.3, end: 0, delay: const Duration(milliseconds: 300), duration: const Duration(milliseconds: 500), curve: Curves.easeOutCubic),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(
+              title,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+                height: 1.2,
+                shadows: [Shadow(color: Colors.black.withValues(alpha: 0.3), offset: const Offset(0, 2), blurRadius: 4)],
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ).animate().fadeIn(delay: const Duration(milliseconds: 300), duration: const Duration(milliseconds: 500)).slideY(begin: 0.3, end: 0, delay: const Duration(milliseconds: 300), duration: const Duration(milliseconds: 500), curve: Curves.easeOutCubic),
 
           const SizedBox(height: 12),
 
           // Enhanced Description with better styling
           Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  description,
-                  style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white.withOpacity(0.95), height: 1.5, fontSize: 16, fontWeight: FontWeight.w400),
-                  textAlign: TextAlign.center,
-                ),
-              )
-              .animate()
-              .fadeIn(delay: const Duration(milliseconds: 500), duration: const Duration(milliseconds: 500))
-              .slideY(begin: 0.2, end: 0, delay: const Duration(milliseconds: 500), duration: const Duration(milliseconds: 500), curve: Curves.easeOutCubic),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              description,
+              style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white.withValues(alpha: 0.95), height: 1.5, fontSize: 16, fontWeight: FontWeight.w400),
+              textAlign: TextAlign.center,
+            ),
+          ).animate().fadeIn(delay: const Duration(milliseconds: 500), duration: const Duration(milliseconds: 500)).slideY(begin: 0.2, end: 0, delay: const Duration(milliseconds: 500), duration: const Duration(milliseconds: 500), curve: Curves.easeOutCubic),
 
           const SizedBox(height: 24),
 
           // Enhanced action hint
           Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(25),
-                  border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(25),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 1),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.touch_app_rounded, color: Colors.white.withValues(alpha: 0.9), size: 18),
+                const SizedBox(width: 8),
+                Text(
+                  'Tap anywhere to continue',
+                  style: theme.textTheme.bodySmall?.copyWith(color: Colors.white.withValues(alpha: 0.9), fontWeight: FontWeight.w500, fontSize: 13),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.touch_app_rounded, color: Colors.white.withOpacity(0.9), size: 18),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Tap anywhere to continue',
-                      style: theme.textTheme.bodySmall?.copyWith(color: Colors.white.withOpacity(0.9), fontWeight: FontWeight.w500, fontSize: 13),
-                    ),
-                  ],
-                ),
-              )
-              .animate()
-              .fadeIn(delay: const Duration(milliseconds: 700), duration: const Duration(milliseconds: 400))
-              .scale(begin: const Offset(0.8, 0.8), end: const Offset(1, 1), delay: const Duration(milliseconds: 700), duration: const Duration(milliseconds: 400), curve: Curves.elasticOut),
+              ],
+            ),
+          ).animate().fadeIn(delay: const Duration(milliseconds: 700), duration: const Duration(milliseconds: 400)).scale(begin: const Offset(0.8, 0.8), end: const Offset(1, 1), delay: const Duration(milliseconds: 700), duration: const Duration(milliseconds: 400), curve: Curves.elasticOut),
         ],
       ),
     );
@@ -229,7 +213,7 @@ class TutorialService {
     final filteredTargets = targetIds == null ? targets : targets.where((t) => targetIds.contains(t.identify)).toList();
     _tutorialCoachMark = TutorialCoachMark(
       targets: filteredTargets,
-      colorShadow: Colors.black.withOpacity(0.7),
+      colorShadow: Colors.black.withValues(alpha: 0.7),
       textSkip: "Skip Tutorial",
       paddingFocus: 8,
       opacityShadow: 0.8,

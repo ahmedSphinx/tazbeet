@@ -66,13 +66,7 @@ class _MoodInputScreenState extends State<MoodInputScreen> with TickerProviderSt
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final Map<MoodLevel, String> moodLabels = {
-      MoodLevel.very_bad: l10n.moodVeryBad,
-      MoodLevel.bad: l10n.moodBad,
-      MoodLevel.neutral: l10n.moodNeutral,
-      MoodLevel.good: l10n.moodGood,
-      MoodLevel.very_good: l10n.moodVeryGood,
-    };
+    final Map<MoodLevel, String> moodLabels = {MoodLevel.very_bad: l10n.moodVeryBad, MoodLevel.bad: l10n.moodBad, MoodLevel.neutral: l10n.moodNeutral, MoodLevel.good: l10n.moodGood, MoodLevel.very_good: l10n.moodVeryGood};
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.moodCheckInTitle),
@@ -138,7 +132,7 @@ class _MoodInputScreenState extends State<MoodInputScreen> with TickerProviderSt
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isSelected ? primaryColor.withOpacity(0.1) : Colors.transparent,
+          color: isSelected ? primaryColor.withValues(alpha: 0.1) : Colors.transparent,
           border: Border.all(color: isSelected ? primaryColor : Colors.grey.shade300, width: isSelected ? 2 : 1),
           borderRadius: BorderRadius.circular(12),
         ),

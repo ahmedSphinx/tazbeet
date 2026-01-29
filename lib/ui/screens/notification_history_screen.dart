@@ -161,7 +161,7 @@ class _NotificationHistoryScreenState extends State<NotificationHistoryScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3), borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceVariant.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(12)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -320,7 +320,7 @@ class _NotificationHistoryScreenState extends State<NotificationHistoryScreen> {
                 children: [
                   Container(
                     padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(color: _getTypeColor(notification.type).withOpacity(0.2), borderRadius: BorderRadius.circular(8)),
+                    decoration: BoxDecoration(color: _getTypeColor(notification.type).withValues(alpha: 0.2), borderRadius: BorderRadius.circular(8)),
                     child: Icon(_getTypeIcon(notification.type), color: _getTypeColor(notification.type), size: 20),
                   ),
                   const SizedBox(width: 12),
@@ -353,10 +353,7 @@ class _NotificationHistoryScreenState extends State<NotificationHistoryScreen> {
                       'Action: ${_getActionLabel(notification.action)}',
                       style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.secondary, fontWeight: FontWeight.w500),
                     ),
-                    if (notification.interactedAt != null) ...[
-                      const SizedBox(width: 8),
-                      Text('• ${dateFormat.format(notification.interactedAt!)}', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline)),
-                    ],
+                    if (notification.interactedAt != null) ...[const SizedBox(width: 8), Text('• ${dateFormat.format(notification.interactedAt!)}', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline))],
                   ],
                 ),
               ],
@@ -397,8 +394,8 @@ class _NotificationHistoryScreenState extends State<NotificationHistoryScreen> {
     return Chip(
       avatar: Icon(icon, size: 16, color: color),
       label: Text(_getStatusLabel(status), style: TextStyle(color: color, fontSize: 12)),
-      backgroundColor: color.withOpacity(0.1),
-      side: BorderSide(color: color.withOpacity(0.3)),
+      backgroundColor: color.withValues(alpha: 0.1),
+      side: BorderSide(color: color.withValues(alpha: 0.3)),
     );
   }
 

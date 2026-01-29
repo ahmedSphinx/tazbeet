@@ -50,6 +50,7 @@ import 'repositories/notification_repository.dart';
 import 'services/notification_service.dart';
 import 'services/background_service.dart';
 import 'services/emergency_service.dart';
+import 'services/recurring_task_service.dart';
 import 'services/settings_service.dart' as settings;
 import 'services/localization_service.dart';
 import 'ui/screens/home/mood/mood_input_screen.dart';
@@ -127,6 +128,10 @@ void main() async {
     // Initialize sync status service
     final syncStatusService = SyncStatusService();
     await syncStatusService.initialize();
+
+    // Initialize recurring task service
+    RecurringTaskService().start();
+    AppLogging.logInfo('Recurring task service initialized');
 
     // Initialize performance monitor service (singleton)
     /*  if (kDebugMode) {
@@ -298,7 +303,21 @@ class Tazbeet extends StatelessWidget {
                   final mediaQuery = MediaQuery.of(context);
                   return MediaQuery(
                     data: mediaQuery.copyWith(textScaler: TextScaler.linear(settingsService.settings.enableLargeText ? 1.3 : 1.0)),
-                    child: child!,
+                    child: Builder(
+                      builder: (context) {
+                        // Prevent keyboard auto-opening globally - more aggressive approach
+                        /*    WidgetsBinding.instance.addPostFrameCallback((_) {
+                          FocusScope.of(context).unfocus();
+                        }); */
+                        // Add a second delayed unfocus for stubborn cases
+                        /*  WidgetsBinding.instance.addPostFrameCallback((_) {
+                          Future.delayed(const Duration(milliseconds: 100), () {
+                            FocusScope.of(context).unfocus();
+                          });
+                        }); */
+                        return child!;
+                      },
+                    ),
                   );
                 },
                 locale: _getLocale(settingsService.settings.language),

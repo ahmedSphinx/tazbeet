@@ -141,7 +141,7 @@ class _VoiceTaskRecorderState extends State<VoiceTaskRecorder> with TickerProvid
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(AppRadius.lg),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -198,7 +198,7 @@ class _VoiceTaskRecorderState extends State<VoiceTaskRecorder> with TickerProvid
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Theme.of(context).colorScheme.primary,
-                    boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.primary.withOpacity(0.3), blurRadius: 20, spreadRadius: 2)],
+                    boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3), blurRadius: 20, spreadRadius: 2)],
                   ),
                   child: const Icon(Icons.mic, color: Colors.white, size: 32),
                 ),
@@ -212,14 +212,14 @@ class _VoiceTaskRecorderState extends State<VoiceTaskRecorder> with TickerProvid
         Text(
           'Tap to start recording',
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
         ),
         const SizedBox(height: AppSpacing.sm),
 
         // Tips
         Container(
           padding: const EdgeInsets.all(AppSpacing.md),
-          decoration: BoxDecoration(color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3), borderRadius: BorderRadius.circular(AppRadius.md)),
+          decoration: BoxDecoration(color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(AppRadius.md)),
           child: Row(
             children: [
               Icon(Icons.lightbulb_outline, color: Theme.of(context).colorScheme.primary, size: 20),
@@ -238,7 +238,7 @@ class _VoiceTaskRecorderState extends State<VoiceTaskRecorder> with TickerProvid
         // Waveform visualization
         Container(
           height: 100,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadius.md), color: Theme.of(context).colorScheme.surfaceVariant),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadius.md), color: Theme.of(context).colorScheme.surfaceContainer),
           child: AnimatedBuilder(
             animation: _waveAnimation,
             builder: (context, child) {
@@ -298,7 +298,7 @@ class _VoiceTaskRecorderState extends State<VoiceTaskRecorder> with TickerProvid
         ),
         const SizedBox(height: AppSpacing.lg),
 
-        Text('Processing your voice...', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7))),
+        Text('Processing your voice...', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
       ],
     );
   }
@@ -319,7 +319,7 @@ class _VoiceTaskRecorderState extends State<VoiceTaskRecorder> with TickerProvid
         Container(
           width: double.infinity,
           padding: const EdgeInsets.all(AppSpacing.md),
-          decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceVariant, borderRadius: BorderRadius.circular(AppRadius.md)),
+          decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainer, borderRadius: BorderRadius.circular(AppRadius.md)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -393,7 +393,7 @@ class WaveformPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.blue.withOpacity(0.7)
+      ..color = Colors.blue.withValues(alpha: 0.7)
       ..strokeWidth = 2.0;
 
     final path = Path();

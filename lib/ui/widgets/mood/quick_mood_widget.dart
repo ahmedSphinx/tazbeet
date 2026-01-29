@@ -22,13 +22,7 @@ class _QuickMoodWidgetState extends State<QuickMoodWidget> with TickerProviderSt
 
   final Map<MoodLevel, String> _moodEmojis = {MoodLevel.very_bad: '😭', MoodLevel.bad: '😔', MoodLevel.neutral: '😐', MoodLevel.good: '🙂', MoodLevel.very_good: '😊'};
 
-  final Map<MoodLevel, Color> _moodColors = {
-    MoodLevel.very_bad: const Color(0xFFFF5252),
-    MoodLevel.bad: const Color(0xFFFF9800),
-    MoodLevel.neutral: const Color(0xFF9E9E9E),
-    MoodLevel.good: const Color(0xFF8BC34A),
-    MoodLevel.very_good: const Color(0xFF4CAF50),
-  };
+  final Map<MoodLevel, Color> _moodColors = {MoodLevel.very_bad: const Color(0xFFFF5252), MoodLevel.bad: const Color(0xFFFF9800), MoodLevel.neutral: const Color(0xFF9E9E9E), MoodLevel.good: const Color(0xFF8BC34A), MoodLevel.very_good: const Color(0xFF4CAF50)};
 
   @override
   void initState() {
@@ -119,9 +113,9 @@ class _QuickMoodWidgetState extends State<QuickMoodWidget> with TickerProviderSt
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
-                border: Border.all(color: color.withOpacity(0.3), width: 2),
+                border: Border.all(color: color.withValues(alpha: 0.3), width: 2),
               ),
               child: Center(child: Text(_moodEmojis[mood]!, style: const TextStyle(fontSize: 32))),
             ),

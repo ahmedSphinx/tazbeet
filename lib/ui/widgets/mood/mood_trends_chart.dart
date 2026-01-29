@@ -41,14 +41,10 @@ class _MoodTrendsChartState extends State<MoodTrendsChart> with TickerProviderSt
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [theme.colorScheme.secondaryContainer.withOpacity(0.2), theme.colorScheme.tertiaryContainer.withOpacity(0.1), theme.colorScheme.surface],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: LinearGradient(colors: [theme.colorScheme.secondaryContainer.withValues(alpha: 0.2), theme.colorScheme.tertiaryContainer.withValues(alpha: 0.1), theme.colorScheme.surface], begin: Alignment.topLeft, end: Alignment.bottomRight),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: theme.colorScheme.outline.withOpacity(0.1)),
-        boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withOpacity(0.1), blurRadius: 30, offset: const Offset(0, 15))],
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.1)),
+        boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withValues(alpha: 0.1), blurRadius: 30, offset: const Offset(0, 15))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,7 +86,7 @@ class _MoodTrendsChartState extends State<MoodTrendsChart> with TickerProviderSt
           decoration: BoxDecoration(
             gradient: LinearGradient(colors: [theme.colorScheme.secondary, theme.colorScheme.tertiary]),
             shape: BoxShape.circle,
-            boxShadow: [BoxShadow(color: theme.colorScheme.secondary.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4))],
+            boxShadow: [BoxShadow(color: theme.colorScheme.secondary.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4))],
           ),
           child: const Icon(Icons.trending_up, color: Colors.white, size: 20),
         ),
@@ -106,7 +102,7 @@ class _MoodTrendsChartState extends State<MoodTrendsChart> with TickerProviderSt
                 style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
               ),
               const SizedBox(height: 4),
-              Text(_getTimeframeDescription(), style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
+              Text(_getTimeframeDescription(), style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
             ],
           ),
         ),
@@ -126,17 +122,17 @@ class _MoodTrendsChartState extends State<MoodTrendsChart> with TickerProviderSt
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: isNeutral
-            ? theme.colorScheme.outline.withOpacity(0.1)
+            ? theme.colorScheme.outline.withValues(alpha: 0.1)
             : isPositive
-            ? Colors.green.withOpacity(0.1)
-            : Colors.red.withOpacity(0.1),
+            ? Colors.green.withValues(alpha: 0.1)
+            : Colors.red.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isNeutral
-              ? theme.colorScheme.outline.withOpacity(0.3)
+              ? theme.colorScheme.outline.withValues(alpha: 0.3)
               : isPositive
-              ? Colors.green.withOpacity(0.3)
-              : Colors.red.withOpacity(0.3),
+              ? Colors.green.withValues(alpha: 0.3)
+              : Colors.red.withValues(alpha: 0.3),
         ),
       ),
       child: Row(
@@ -182,23 +178,12 @@ class _MoodTrendsChartState extends State<MoodTrendsChart> with TickerProviderSt
     return Row(
       children: [
         // Legend
-        Expanded(
-          child: Wrap(
-            spacing: 16,
-            runSpacing: 8,
-            children: [
-              _buildLegendItem(theme, 'Mood', theme.colorScheme.primary),
-              _buildLegendItem(theme, 'Energy', Colors.orange),
-              _buildLegendItem(theme, 'Focus', Colors.blue),
-              _buildLegendItem(theme, 'Stress', Colors.red),
-            ],
-          ),
-        ),
+        Expanded(child: Wrap(spacing: 16, runSpacing: 8, children: [_buildLegendItem(theme, 'Mood', theme.colorScheme.primary), _buildLegendItem(theme, 'Energy', Colors.orange), _buildLegendItem(theme, 'Focus', Colors.blue), _buildLegendItem(theme, 'Stress', Colors.red)])),
 
         // Quick stats
         Container(
           padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(color: theme.colorScheme.primaryContainer.withOpacity(0.2), borderRadius: BorderRadius.circular(12)),
+          decoration: BoxDecoration(color: theme.colorScheme.primaryContainer.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(12)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -206,7 +191,7 @@ class _MoodTrendsChartState extends State<MoodTrendsChart> with TickerProviderSt
                 'Avg: ${stats['avgMood']?.toStringAsFixed(1) ?? 'N/A'}',
                 style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.primary),
               ),
-              Text('Range: ${stats['range']?.toStringAsFixed(1) ?? 'N/A'}', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
+              Text('Range: ${stats['range']?.toStringAsFixed(1) ?? 'N/A'}', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
             ],
           ),
         ),
@@ -224,7 +209,7 @@ class _MoodTrendsChartState extends State<MoodTrendsChart> with TickerProviderSt
           decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(1.5)),
         ),
         const SizedBox(width: 6),
-        Text(label, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7))),
+        Text(label, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7))),
       ],
     );
   }
@@ -311,7 +296,7 @@ class MoodTrendsPainter extends CustomPainter {
 
   void _drawEmptyState(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = theme.colorScheme.outline.withOpacity(0.3)
+      ..color = theme.colorScheme.outline.withValues(alpha: 0.3)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
 
@@ -321,7 +306,7 @@ class MoodTrendsPainter extends CustomPainter {
     final textPainter = TextPainter(
       text: TextSpan(
         text: 'No data available',
-        style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.5), fontSize: 14),
+        style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 14),
       ),
       textDirection: TextDirection.ltr,
     );
@@ -331,7 +316,7 @@ class MoodTrendsPainter extends CustomPainter {
 
   void _drawGrid(Canvas canvas, Rect chartRect) {
     final paint = Paint()
-      ..color = theme.colorScheme.outline.withOpacity(0.1)
+      ..color = theme.colorScheme.outline.withValues(alpha: 0.1)
       ..strokeWidth = 1;
 
     // Horizontal grid lines
@@ -387,8 +372,7 @@ class MoodTrendsPainter extends CustomPainter {
       fillPath.lineTo(points.first.dx, chartRect.bottom);
       fillPath.close();
 
-      final gradientPaint = Paint()
-        ..shader = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [theme.colorScheme.primary.withOpacity(0.3), theme.colorScheme.primary.withOpacity(0.05)]).createShader(chartRect);
+      final gradientPaint = Paint()..shader = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [theme.colorScheme.primary.withValues(alpha: 0.3), theme.colorScheme.primary.withValues(alpha: 0.05)]).createShader(chartRect);
 
       canvas.drawPath(fillPath, gradientPaint);
     }
@@ -405,7 +389,7 @@ class MoodTrendsPainter extends CustomPainter {
 
     for (final metric in metrics) {
       final paint = Paint()
-        ..color = (metric['color'] as Color).withOpacity(0.7)
+        ..color = (metric['color'] as Color).withValues(alpha: 0.7)
         ..strokeWidth = 2
         ..style = PaintingStyle.stroke;
 
@@ -443,7 +427,7 @@ class MoodTrendsPainter extends CustomPainter {
 
       // Outer circle
       final outerPaint = Paint()
-        ..color = theme.colorScheme.primary.withOpacity(0.3)
+        ..color = theme.colorScheme.primary.withValues(alpha: 0.3)
         ..style = PaintingStyle.fill;
       canvas.drawCircle(Offset(x, y), 8, outerPaint);
 
@@ -523,13 +507,6 @@ class MoodDataPoint {
     final avgFocus = moods.map((m) => m.focusLevel).reduce((a, b) => a + b) / moods.length;
     final avgStress = moods.map((m) => m.stressLevel).reduce((a, b) => a + b) / moods.length;
 
-    return MoodDataPoint(
-      date: date,
-      avgMood: avgMood.isNaN ? 0 : avgMood,
-      avgEnergy: avgEnergy.isNaN ? 0 : avgEnergy,
-      avgFocus: avgFocus.isNaN ? 0 : avgFocus,
-      avgStress: avgStress.isNaN ? 0 : avgStress,
-      count: moods.length,
-    );
+    return MoodDataPoint(date: date, avgMood: avgMood.isNaN ? 0 : avgMood, avgEnergy: avgEnergy.isNaN ? 0 : avgEnergy, avgFocus: avgFocus.isNaN ? 0 : avgFocus, avgStress: avgStress.isNaN ? 0 : avgStress, count: moods.length);
   }
 }

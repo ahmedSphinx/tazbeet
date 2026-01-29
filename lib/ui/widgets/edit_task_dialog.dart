@@ -17,9 +17,10 @@ class EditTaskDialog extends StatefulWidget {
 }
 
 class _EditTaskDialogState extends State<EditTaskDialog> {
-  late TextEditingController _titleController;
-  late TextEditingController _descriptionController;
-  late TaskPriority selectedPriority;
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _focusNode = FocusNode();
+ late TaskPriority selectedPriority;
   DateTime? selectedDueDate;
   RepeatRule? selectedRepeatRule;
   bool _showRepeatSettings = false;
@@ -27,17 +28,24 @@ class _EditTaskDialogState extends State<EditTaskDialog> {
   @override
   void initState() {
     super.initState();
-    _titleController = TextEditingController(text: widget.task.title);
-    _descriptionController = TextEditingController(text: widget.task.description ?? '');
+    _titleController.text = widget.task.title;
+    _descriptionController.text = widget.task.description ?? '';
     selectedPriority = widget.task.priority;
     selectedDueDate = widget.task.dueDate;
     selectedRepeatRule = widget.task.repeatRule;
+    // Aggressive focus for dialogs
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _focusNode.requestFocus();
+      }
+    });
   }
 
   @override
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -57,12 +65,13 @@ class _EditTaskDialogState extends State<EditTaskDialog> {
                 const SizedBox(height: 24),
                 TextField(
                   controller: _titleController,
+                  focusNode: _focusNode,
                   decoration: InputDecoration(
                     labelText: AppLocalizations.of(context)!.taskTitleLabel,
                     hintText: AppLocalizations.of(context)!.taskTitleLabel,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  autofocus: true,
+                  autofocus: true, // User-initiated dialog should focus for good UX
                   inputFormatters: [LengthLimitingTextInputFormatter(100)],
                 ),
                 const SizedBox(height: 16),
@@ -236,14 +245,7 @@ class _EditTaskDialogState extends State<EditTaskDialog> {
       return;
     }
 
-    final updatedTask = widget.task.copyWith(
-      title: _titleController.text.trim(),
-      description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
-      priority: selectedPriority,
-      dueDate: selectedDueDate,
-      repeatRule: selectedRepeatRule,
-      updatedAt: DateTime.now(),
-    );
+    final updatedTask = widget.task.copyWith(title: _titleController.text.trim(), description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(), priority: selectedPriority, dueDate: selectedDueDate, repeatRule: selectedRepeatRule, updatedAt: DateTime.now());
 
     widget.onTaskUpdated(updatedTask);
     Navigator.of(context).pop();
@@ -311,7 +313,7 @@ class _AddSubtaskDialogState extends State<_AddSubtaskDialog> {
                   labelText: AppLocalizations.of(context)!.subtaskTitle,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 ),
-                autofocus: true,
+                autofocus: true, // User-initiated dialog should focus for good UX
               ),
               const SizedBox(height: 16),
               TextField(

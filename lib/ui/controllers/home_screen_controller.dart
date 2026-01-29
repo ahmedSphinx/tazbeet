@@ -29,10 +29,15 @@ class HomeScreenController {
   final ValueNotifier<bool> isSelectionMode = ValueNotifier<bool>(false);
   final ValueNotifier<Set<String>> selectedTaskIds = ValueNotifier<Set<String>>({});
 
+  // Callback to notify parent when selection mode changes
+  final Function(bool)? onSelectionModeChanged;
+
   // Smart recommendation engine
   final PomodoroRecommendationEngine _recommendationEngine = PomodoroRecommendationEngine();
 
   Timer? _searchTimer;
+
+  HomeScreenController({this.onSelectionModeChanged});
 
   void clearDate() => selectedDate.value = null;
   void setDate(DateTime date) => selectedDate.value = date;
@@ -241,12 +246,14 @@ class HomeScreenController {
   void enterSelectionMode(String taskId) {
     isSelectionMode.value = true;
     selectedTaskIds.value = {taskId};
+    onSelectionModeChanged?.call(true);
   }
 
   /// Exit selection mode and clear all selections
   void exitSelectionMode() {
     isSelectionMode.value = false;
     selectedTaskIds.value = {};
+    onSelectionModeChanged?.call(false);
   }
 
   /// Toggle selection for a specific task
@@ -258,6 +265,7 @@ class HomeScreenController {
       // Exit selection mode if no tasks are selected
       if (currentSelection.isEmpty) {
         isSelectionMode.value = false;
+        onSelectionModeChanged?.call(false);
       }
     } else {
       currentSelection.add(taskId);

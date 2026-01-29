@@ -71,9 +71,9 @@ class NotificationStatsWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         children: [
@@ -97,7 +97,7 @@ class NotificationStatsWidget extends StatelessWidget {
     return Container(
       height: 200,
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: theme.colorScheme.surfaceVariant.withOpacity(0.3), borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(color: theme.colorScheme.surfaceContainer.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(12)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -188,7 +188,7 @@ class NotificationStatsWidget extends StatelessWidget {
                 Expanded(flex: 2, child: Text(_formatTypeName(entry.key), style: theme.textTheme.bodyMedium)),
                 Expanded(child: Text('$sent sent', style: theme.textTheme.bodySmall)),
                 Expanded(
-                  child: LinearProgressIndicator(value: (typeData['deliveryRate'] ?? 0.0) as double, backgroundColor: Colors.grey.withOpacity(0.2), valueColor: AlwaysStoppedAnimation<Color>(_getTypeColor(entry.key))),
+                  child: LinearProgressIndicator(value: (typeData['deliveryRate'] ?? 0.0) as double, backgroundColor: Colors.grey.withValues(alpha: 0.2), valueColor: AlwaysStoppedAnimation<Color>(_getTypeColor(entry.key))),
                 ),
                 const SizedBox(width: 8),
                 SizedBox(
@@ -210,7 +210,7 @@ class NotificationStatsWidget extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: theme.colorScheme.primaryContainer.withOpacity(0.3), borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(12)),
       child: Row(
         children: [
           Icon(Icons.timer, color: theme.colorScheme.primary),

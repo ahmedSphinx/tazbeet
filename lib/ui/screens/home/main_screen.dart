@@ -68,6 +68,16 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
   int _selectedIndex = 0;
   bool _isSearching = false;
 
+  // Track selection mode state for back button handling
+  bool _isSelectionModeActive = false;
+
+  // Handle selection mode changes from HomeScreen
+  void _handleSelectionModeChanged(bool isActive) {
+    setState(() {
+      _isSelectionModeActive = isActive;
+    });
+  }
+
   // New focused controllers
   late final NavigationController _navigationController;
   late final TutorialManager _tutorialManager;
@@ -138,13 +148,7 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
     _categorySearchFadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _categorySearchAnimationController, curve: Curves.easeInOut));
 
     // Initialize screens once to preserve state across tab switches
-    _screens = [
-      HomeScreen(scaffoldGlobalKey: _scaffoldGlobleKey, onTabSwitchRequested: (index) => _onItemTapped(index)),
-      const ProgressScreen(),
-      const PomodoroHomeScreen(),
-      const CategoryScreen(),
-      UltimateMoodScreen(tabController: moodTabController),
-    ];
+    _screens = [HomeScreen(scaffoldGlobalKey: _scaffoldGlobleKey, onTabSwitchRequested: (index) => _onItemTapped(index), onSelectionModeChanged: _handleSelectionModeChanged), const ProgressScreen(), const PomodoroHomeScreen(), const CategoryScreen(), UltimateMoodScreen(tabController: moodTabController)];
 
     WidgetsBinding.instance.addObserver(this);
 
@@ -160,6 +164,13 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
 
     // Show tutorial for first time users
     _checkAndShowTutorial();
+
+    // Prevent keyboard auto-opening on app launch
+   /*  WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        FocusScope.of(context).unfocus();
+      }
+    }); */
   }
 
   // Debounced search functionality
@@ -421,6 +432,18 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
+        // If we're on HomeScreen and selection mode is active, exit selection mode
+        if (_selectedIndex == 0 && _isSelectionModeActive) {
+          // Find the HomeScreen widget and call its controller's exitSelectionMode method
+          final homeScreen = _screens[0] as HomeScreen;
+          // Access the controller through the widget's state
+          final homeScreenState = homeScreen.createState() as dynamic;
+          if (homeScreenState._controller != null) {
+            homeScreenState._controller.exitSelectionMode();
+          }
+          return false; // Don't allow back navigation
+        }
+
         // Show exit confirmation dialog
         final shouldExit = await _showExitConfirmationDialog();
         return shouldExit ?? false;
@@ -485,7 +508,7 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
       backgroundColor: Colors.transparent,
       flexibleSpace: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [theme.colorScheme.primary, theme.colorScheme.primary.withOpacity(0.8)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+          gradient: LinearGradient(colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.8)], begin: Alignment.topLeft, end: Alignment.bottomRight),
         ),
       ),
     );
@@ -508,7 +531,7 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
             onChanged: (value) {
               // Search functionality handled by SearchManager
             },
-            autofocus: true,
+            // autofocus: true, // Removed to prevent keyboard auto-opening
             decoration: InputDecoration(
               hintText: AppLocalizations.of(context)!.searchCategories,
               prefixIcon: const Icon(Icons.search),
@@ -632,7 +655,7 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
     return TabBar(
       indicatorColor: tabColor,
       labelColor: tabColor,
-      unselectedLabelColor: tabColor.withOpacity(0.7),
+      unselectedLabelColor: tabColor.withValues(alpha: 0.7),
       controller: moodTabController,
       tabs: [
         Tab(
@@ -656,16 +679,16 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
       preferredSize: const Size.fromHeight(70),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface.withOpacity(0.95),
+          color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.95),
           borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 2))],
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 2))],
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: CustomSearchBar(
           controller: _searchController,
           onChanged: _onSearchChanged,
           hintText: AppLocalizations.of(context)!.searchHint,
-          autofocus: _isSearching,
+          autofocus: false, // Prevent keyboard auto-opening on app launch
           onSubmitted: (value) {
             setState(() {
               _isSearching = false;
@@ -823,47 +846,15 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
 
         // Main Navigation Section
         _buildDrawerSectionHeader(AppLocalizations.of(context)!.mainNavigation),
-        _buildModernDrawerItem(
-          icon: Icons.home_rounded,
-          title: AppLocalizations.of(context)!.homeScreenTitle,
-          subtitle: AppLocalizations.of(context)!.dashboardOverview,
-          isSelected: _selectedIndex == 0,
-          onTap: () => _onItemTapped(0),
-          badge: _getSmartSortBadge(),
-        ),
+        _buildModernDrawerItem(icon: Icons.home_rounded, title: AppLocalizations.of(context)!.homeScreenTitle, subtitle: AppLocalizations.of(context)!.dashboardOverview, isSelected: _selectedIndex == 0, onTap: () => _onItemTapped(0), badge: _getSmartSortBadge()),
         const SizedBox(height: 4),
-        _buildModernDrawerItem(
-          icon: Icons.bar_chart_rounded,
-          title: AppLocalizations.of(context)!.progressSaved,
-          subtitle: AppLocalizations.of(context)!.statisticsAnalytics,
-          isSelected: _selectedIndex == 1,
-          onTap: () => _onItemTapped(1),
-        ),
+        _buildModernDrawerItem(icon: Icons.bar_chart_rounded, title: AppLocalizations.of(context)!.progressSaved, subtitle: AppLocalizations.of(context)!.statisticsAnalytics, isSelected: _selectedIndex == 1, onTap: () => _onItemTapped(1)),
         const SizedBox(height: 4),
-        _buildModernDrawerItem(
-          icon: Icons.timer_rounded,
-          title: AppLocalizations.of(context)!.pomodoroSection,
-          subtitle: AppLocalizations.of(context)!.focusTimeManagement,
-          isSelected: _selectedIndex == 2,
-          onTap: () => _onItemTapped(2),
-          badge: _getPomodoroBadge(),
-        ),
+        _buildModernDrawerItem(icon: Icons.timer_rounded, title: AppLocalizations.of(context)!.pomodoroSection, subtitle: AppLocalizations.of(context)!.focusTimeManagement, isSelected: _selectedIndex == 2, onTap: () => _onItemTapped(2), badge: _getPomodoroBadge()),
         const SizedBox(height: 4),
-        _buildModernDrawerItem(
-          icon: Icons.folder_rounded,
-          title: AppLocalizations.of(context)!.allCategories,
-          subtitle: AppLocalizations.of(context)!.organizeManage,
-          isSelected: _selectedIndex == 3,
-          onTap: () => _onItemTapped(3),
-        ),
+        _buildModernDrawerItem(icon: Icons.folder_rounded, title: AppLocalizations.of(context)!.allCategories, subtitle: AppLocalizations.of(context)!.organizeManage, isSelected: _selectedIndex == 3, onTap: () => _onItemTapped(3)),
         const SizedBox(height: 4),
-        _buildModernDrawerItem(
-          icon: Icons.mood_rounded,
-          title: AppLocalizations.of(context)!.moodTracking,
-          subtitle: AppLocalizations.of(context)!.wellnessEmotions,
-          isSelected: _selectedIndex == 4,
-          onTap: () => _onItemTapped(4),
-        ),
+        _buildModernDrawerItem(icon: Icons.mood_rounded, title: AppLocalizations.of(context)!.moodTracking, subtitle: AppLocalizations.of(context)!.wellnessEmotions, isSelected: _selectedIndex == 4, onTap: () => _onItemTapped(4)),
         const SizedBox(height: 16),
 
         // Smart Features Section
@@ -1010,9 +1001,7 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
   }
 
   TextStyle? _getTextStyle(bool isSelected) {
-    return Theme.of(
-      context,
-    ).textTheme.titleMedium?.copyWith(color: isSelected ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface, fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500);
+    return Theme.of(context).textTheme.titleMedium?.copyWith(color: isSelected ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface, fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500);
   }
 
   TextStyle? _getSubtitleStyle(bool isSelected) {
@@ -1231,7 +1220,7 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 8, offset: const Offset(0, -2))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 8, offset: const Offset(0, -2))],
       ),
       child: SafeArea(
         child: Row(
@@ -1276,12 +1265,32 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
   }
 
   Widget _buildFloatingActionButton() {
-    if (_selectedIndex == 0) {
-      // Home Screen manages its own selection-aware FAB
-      return const SizedBox.shrink();
-    } else {
-      // Show QuickFocusModeButton for all other tabs
-      return const QuickFocusModeButton();
+    final l10n = AppLocalizations.of(context)!;
+    switch (_selectedIndex) {
+      case 0:
+        // Home Screen manages its own selection-aware FAB
+        return const SizedBox.shrink();
+      case 1:
+        // Progress Screen - Stats/Export FAB
+        return FloatingActionButton.extended(onPressed: _showProgressOptions, backgroundColor: Theme.of(context).colorScheme.primary, foregroundColor: Colors.white, icon: const Icon(Icons.analytics), label: Text(l10n.statistics));
+      case 2:
+        // Pomodoro Screen - Has its own timer controls, no additional FAB needed
+        return const SizedBox.shrink();
+      case 3:
+        // Category Screen - Add Category FAB
+        return FloatingActionButton.extended(onPressed: _showAddCategoryDialog, backgroundColor: Theme.of(context).colorScheme.primary, foregroundColor: Colors.white, icon: const Icon(Icons.add), label: Text(l10n.addCategory));
+      /*  case 4:
+        // Mood Screen - Quick Mood Entry FAB
+        return FloatingActionButton.extended(
+          onPressed: _showQuickMoodDialog,
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Colors.white,
+          icon: const Icon(Icons.mood),
+          label: Text(l10n.mood),
+        );
+     */
+      default:
+        return const SizedBox.shrink();
     }
   }
 
@@ -1298,6 +1307,91 @@ class _HomeScreenState extends State<MainScreen> with TickerProviderStateMixin, 
     setState(() {
       _selectedIndex = 4; // Mood tab index
     });
+  }
+
+  void _showProgressOptions() {
+    // Show progress/stats options dialog
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Progress Options'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.analytics),
+              title: const Text('View Statistics'),
+              onTap: () {
+                Navigator.pop(context);
+                // Navigate to detailed stats view
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.download),
+              title: const Text('Export Data'),
+              onTap: () {
+                Navigator.pop(context);
+                // Export functionality
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.share),
+              title: const Text('Share Progress'),
+              onTap: () {
+                Navigator.pop(context);
+                // Share functionality
+              },
+            ),
+          ],
+        ),
+        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel'))],
+      ),
+    );
+  }
+
+  void _showQuickMoodDialog() {
+    // Show quick mood entry dialog
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('How are you feeling?'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [_buildMoodButton('😊', 'Happy'), _buildMoodButton('😐', 'Neutral'), _buildMoodButton('😔', 'Sad')]),
+            const SizedBox(height: 16),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [_buildMoodButton('😤', 'Frustrated'), _buildMoodButton('😰', 'Anxious'), _buildMoodButton('😴', 'Tired')]),
+          ],
+        ),
+        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel'))],
+      ),
+    );
+  }
+
+  Widget _buildMoodButton(String emoji, String mood) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pop(context);
+        // Save mood and navigate to mood tab for details
+        setState(() {
+          _selectedIndex = 4; // Mood tab index
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          children: [
+            Text(emoji, style: const TextStyle(fontSize: 32)),
+            const SizedBox(height: 4),
+            Text(mood, style: const TextStyle(fontSize: 12)),
+          ],
+        ),
+      ),
+    );
   }
 
   void _showQuickAddTaskDialog() {
@@ -1344,18 +1438,7 @@ class TaskListSection extends StatelessWidget {
   final Function(Task) onTaskEdit;
   final Function(String) onTaskDelete;
 
-  const TaskListSection({
-    super.key,
-    required this.tasks,
-    this.selectedCategoryId,
-    this.sortByPriority = false,
-    this.searchQuery = '',
-    this.filterPriority,
-    this.filterCompleted,
-    required this.onTaskToggle,
-    required this.onTaskEdit,
-    required this.onTaskDelete,
-  });
+  const TaskListSection({super.key, required this.tasks, this.selectedCategoryId, this.sortByPriority = false, this.searchQuery = '', this.filterPriority, this.filterCompleted, required this.onTaskToggle, required this.onTaskEdit, required this.onTaskDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -1368,15 +1451,7 @@ class TaskListSection extends StatelessWidget {
 
     final l10n = AppLocalizations.of(context)!;
     final groupOrder = ['Overdue', 'Today', 'Tomorrow', 'This Week', 'Later', 'No Date', 'Completed'];
-    final groupTitles = {
-      'Overdue': l10n.overdueTasks,
-      'Today': l10n.todayTasks,
-      'Tomorrow': l10n.tomorrowTasks,
-      'This Week': l10n.thisWeekTasks,
-      'Later': l10n.laterTasks,
-      'No Date': l10n.noDateTasks,
-      'Completed': l10n.completedTasks,
-    };
+    final groupTitles = {'Overdue': l10n.overdueTasks, 'Today': l10n.todayTasks, 'Tomorrow': l10n.tomorrowTasks, 'This Week': l10n.thisWeekTasks, 'Later': l10n.laterTasks, 'No Date': l10n.noDateTasks, 'Completed': l10n.completedTasks};
 
     // Sort within groups by priority and due date
     for (var entry in groups.entries) {
@@ -1404,7 +1479,7 @@ class TaskListSection extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, 2))],
+                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4, offset: const Offset(0, 2))],
               ),
               child: Row(
                 children: [

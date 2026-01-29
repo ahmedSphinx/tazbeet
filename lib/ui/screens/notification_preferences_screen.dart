@@ -89,10 +89,7 @@ class _NotificationPreferencesScreenState extends State<NotificationPreferencesS
         title: Text(l10n.enableNotifications, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
         subtitle: Text(l10n.masterToggleForAllNotifications),
         value: preferences.masterNotificationsEnabled,
-        secondary: Icon(
-          preferences.masterNotificationsEnabled ? Icons.notifications_active : Icons.notifications_off,
-          color: preferences.masterNotificationsEnabled ? theme.colorScheme.primary : theme.colorScheme.outline,
-        ),
+        secondary: Icon(preferences.masterNotificationsEnabled ? Icons.notifications_active : Icons.notifications_off, color: preferences.masterNotificationsEnabled ? theme.colorScheme.primary : theme.colorScheme.outline),
         onChanged: (value) {
           final updatedPreferences = preferences.copyWith(masterNotificationsEnabled: value);
           context.read<NotificationBloc>().add(UpdateNotificationPreferences(updatedPreferences));
@@ -108,7 +105,7 @@ class _NotificationPreferencesScreenState extends State<NotificationPreferencesS
 
     return Card(
       elevation: 2,
-      color: isDNDActive ? theme.colorScheme.errorContainer.withOpacity(0.3) : null,
+      color: isDNDActive ? theme.colorScheme.errorContainer.withValues(alpha: 0.3) : null,
       child: ExpansionTile(
         leading: Icon(isDNDActive ? Icons.do_not_disturb_on : Icons.do_not_disturb_off, color: isDNDActive ? theme.colorScheme.error : theme.colorScheme.primary),
         title: Text(l10n.doNotDisturb, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
@@ -165,11 +162,7 @@ class _NotificationPreferencesScreenState extends State<NotificationPreferencesS
                 // Scheduled Quiet Hours
                 SwitchListTile(
                   title: Text(l10n.scheduledQuietHours, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-                  subtitle: Text(
-                    quietHours.enabled
-                        ? 'Active ${quietHours.startHour}:${quietHours.startMinute.toString().padLeft(2, '0')} - ${quietHours.endHour}:${quietHours.endMinute.toString().padLeft(2, '0')}'
-                        : l10n.setAutomaticQuietHours,
-                  ),
+                  subtitle: Text(quietHours.enabled ? 'Active ${quietHours.startHour}:${quietHours.startMinute.toString().padLeft(2, '0')} - ${quietHours.endHour}:${quietHours.endMinute.toString().padLeft(2, '0')}' : l10n.setAutomaticQuietHours),
                   value: quietHours.enabled,
                   onChanged: (value) {
                     final updatedQuietHours = quietHours.copyWith(enabled: value);

@@ -81,8 +81,8 @@ class _UltimateMoodBuddyState extends State<UltimateMoodBuddy> with TickerProvid
                     gradient: LinearGradient(colors: buddyState.colors, begin: Alignment.topLeft, end: Alignment.bottomRight),
                     shape: BoxShape.circle,
                     boxShadow: [
-                      BoxShadow(color: buddyState.colors.first.withOpacity(0.4), blurRadius: 30, offset: const Offset(0, 15)),
-                      BoxShadow(color: buddyState.colors.last.withOpacity(0.2), blurRadius: 20, offset: const Offset(0, 5)),
+                      BoxShadow(color: buddyState.colors.first.withValues(alpha: 0.4), blurRadius: 30, offset: const Offset(0, 15)),
+                      BoxShadow(color: buddyState.colors.last.withValues(alpha: 0.2), blurRadius: 20, offset: const Offset(0, 5)),
                     ],
                   ),
                   child: Stack(
@@ -109,9 +109,9 @@ class _UltimateMoodBuddyState extends State<UltimateMoodBuddy> with TickerProvid
             curve: Curves.easeOutCubic,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
-              color: buddyState.colors.first.withOpacity(0.1),
+              color: buddyState.colors.first.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: buddyState.colors.first.withOpacity(0.3)),
+              border: Border.all(color: buddyState.colors.first.withValues(alpha: 0.3)),
             ),
             child: Column(
               children: [
@@ -147,7 +147,7 @@ class _UltimateMoodBuddyState extends State<UltimateMoodBuddy> with TickerProvid
           builder: (context, child) {
             return Transform.scale(
               scale: 0.5 + _pulseAnimation.value * 0.5,
-              child: Icon(Icons.star, size: 12, color: Colors.yellow.shade600.withOpacity(0.8)),
+              child: Icon(Icons.star, size: 12, color: Colors.yellow.shade600.withValues(alpha: 0.8)),
             );
           },
         ),
@@ -167,7 +167,7 @@ class _UltimateMoodBuddyState extends State<UltimateMoodBuddy> with TickerProvid
             decoration: BoxDecoration(
               gradient: LinearGradient(colors: [Colors.orange.shade400, Colors.red.shade400], begin: Alignment.topLeft, end: Alignment.bottomRight),
               borderRadius: BorderRadius.circular(25),
-              boxShadow: [BoxShadow(color: Colors.orange.shade300.withOpacity(0.4), blurRadius: 15, offset: const Offset(0, 5))],
+              boxShadow: [BoxShadow(color: Colors.orange.shade300.withValues(alpha: 0.4), blurRadius: 15, offset: const Offset(0, 5))],
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,

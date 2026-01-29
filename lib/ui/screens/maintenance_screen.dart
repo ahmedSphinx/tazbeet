@@ -90,7 +90,7 @@ class MaintenanceScreen extends StatelessWidget {
           fontSize: 32,
           fontWeight: FontWeight.bold,
           color: Colors.white,
-          shadows: [Shadow(offset: const Offset(0, 2), blurRadius: 8, color: Colors.black.withOpacity(0.3))],
+          shadows: [Shadow(offset: const Offset(0, 2), blurRadius: 8, color: Colors.black.withValues(alpha: 0.3))],
         ),
         textAlign: TextAlign.center,
       );
@@ -108,10 +108,10 @@ class MaintenanceScreen extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.15),
+          color: Colors.white.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 20, offset: const Offset(0, 10))],
+          border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 1),
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, 10))],
         ),
         child: Column(
           children: [
@@ -126,7 +126,7 @@ class MaintenanceScreen extends StatelessWidget {
               width: 200,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: LinearProgressIndicator(backgroundColor: Colors.white.withOpacity(0.2), valueColor: AlwaysStoppedAnimation<Color>(isDark ? Colors.orange : Colors.white)),
+                child: LinearProgressIndicator(backgroundColor: Colors.white.withValues(alpha: 0.2), valueColor: AlwaysStoppedAnimation<Color>(isDark ? Colors.orange : Colors.white)),
               ),
             ),
           ],
@@ -135,7 +135,7 @@ class MaintenanceScreen extends StatelessWidget {
     } catch (e) {
       return Container(
         padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(color: Colors.red.withOpacity(0.2), borderRadius: BorderRadius.circular(20)),
+        decoration: BoxDecoration(color: Colors.red.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(20)),
         child: const Text(
           'Unable to load maintenance message. Please try again later.',
           style: TextStyle(fontSize: 16, color: Colors.white),
@@ -149,12 +149,12 @@ class MaintenanceScreen extends StatelessWidget {
     try {
       return Text(
         AppLocalizations.of(context)!.thankYouForYourPatience,
-        style: TextStyle(fontSize: 16, color: Colors.white.withOpacity(0.8), fontWeight: FontWeight.w500),
+        style: TextStyle(fontSize: 16, color: Colors.white.withValues(alpha: 0.8), fontWeight: FontWeight.w500),
       );
     } catch (e) {
       return Text(
         'Thank you for your patience 💙',
-        style: TextStyle(fontSize: 16, color: Colors.white.withOpacity(0.8), fontWeight: FontWeight.w500),
+        style: TextStyle(fontSize: 16, color: Colors.white.withValues(alpha: 0.8), fontWeight: FontWeight.w500),
       );
     }
   }
@@ -204,8 +204,8 @@ class MaintenanceScreen extends StatelessWidget {
       padding: const EdgeInsets.all(30),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.white.withOpacity(0.2),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 30, offset: const Offset(0, 10))],
+        color: Colors.white.withValues(alpha: 0.2),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 30, offset: const Offset(0, 10))],
       ),
       child: TweenAnimationBuilder<double>(
         tween: Tween(begin: 0.0, end: 1.0),
@@ -224,9 +224,9 @@ class MaintenanceScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 1),
       ),
       child: Column(
         children: [
@@ -239,7 +239,7 @@ class MaintenanceScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             settings.supportEmail,
-            style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.9), decoration: TextDecoration.underline),
+            style: TextStyle(fontSize: 14, color: Colors.white.withValues(alpha: 0.9), decoration: TextDecoration.underline),
           ),
         ],
       ),

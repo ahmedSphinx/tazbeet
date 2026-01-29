@@ -44,10 +44,10 @@ class _MoodSuggestionsWidgetState extends State<MoodSuggestionsWidget> with Tick
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [theme.colorScheme.tertiaryContainer.withOpacity(0.2), Colors.amber.withOpacity(0.1), theme.colorScheme.surface], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        gradient: LinearGradient(colors: [theme.colorScheme.tertiaryContainer.withValues(alpha: 0.2), Colors.amber.withValues(alpha: 0.1), theme.colorScheme.surface], begin: Alignment.topLeft, end: Alignment.bottomRight),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: theme.colorScheme.outline.withOpacity(0.1)),
-        boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withOpacity(0.1), blurRadius: 30, offset: const Offset(0, 15))],
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.1)),
+        boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withValues(alpha: 0.1), blurRadius: 30, offset: const Offset(0, 15))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,7 +93,7 @@ class _MoodSuggestionsWidgetState extends State<MoodSuggestionsWidget> with Tick
           decoration: BoxDecoration(
             gradient: LinearGradient(colors: [Colors.amber, Colors.orange]),
             shape: BoxShape.circle,
-            boxShadow: [BoxShadow(color: Colors.amber.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4))],
+            boxShadow: [BoxShadow(color: Colors.amber.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4))],
           ),
           child: const Icon(Icons.lightbulb, color: Colors.white, size: 20),
         ),
@@ -109,7 +109,7 @@ class _MoodSuggestionsWidgetState extends State<MoodSuggestionsWidget> with Tick
                 style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
               ),
               const SizedBox(height: 4),
-              Text(AppLocalizations.of(context)!.moodSuggestionsSubtitle, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
+              Text(AppLocalizations.of(context)!.moodSuggestionsSubtitle, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
             ],
           ),
         ),
@@ -118,9 +118,9 @@ class _MoodSuggestionsWidgetState extends State<MoodSuggestionsWidget> with Tick
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [Colors.purple.withOpacity(0.2), Colors.blue.withOpacity(0.2)]),
+            gradient: LinearGradient(colors: [Colors.purple.withValues(alpha: 0.2), Colors.blue.withValues(alpha: 0.2)]),
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.purple.withOpacity(0.3)),
+            border: Border.all(color: Colors.purple.withValues(alpha: 0.3)),
           ),
           child: Text(
             'AI',
@@ -141,10 +141,10 @@ class _MoodSuggestionsWidgetState extends State<MoodSuggestionsWidget> with Tick
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [suggestion.color.withOpacity(0.1), suggestion.color.withOpacity(0.05), theme.colorScheme.surface], begin: Alignment.topLeft, end: Alignment.bottomRight),
+          gradient: LinearGradient(colors: [suggestion.color.withValues(alpha: 0.1), suggestion.color.withValues(alpha: 0.05), theme.colorScheme.surface], begin: Alignment.topLeft, end: Alignment.bottomRight),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: suggestion.color.withOpacity(0.2)),
-          boxShadow: [BoxShadow(color: suggestion.color.withOpacity(0.1), blurRadius: 15, offset: const Offset(0, 8))],
+          border: Border.all(color: suggestion.color.withValues(alpha: 0.2)),
+          boxShadow: [BoxShadow(color: suggestion.color.withValues(alpha: 0.1), blurRadius: 15, offset: const Offset(0, 8))],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,7 +157,7 @@ class _MoodSuggestionsWidgetState extends State<MoodSuggestionsWidget> with Tick
                 const Spacer(),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-                  decoration: BoxDecoration(color: suggestion.color.withOpacity(0.2), borderRadius: BorderRadius.circular(6)),
+                  decoration: BoxDecoration(color: suggestion.color.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(6)),
                   child: Text(
                     suggestion.priority,
                     style: theme.textTheme.bodySmall?.copyWith(fontSize: 9, fontWeight: FontWeight.bold, color: suggestion.color),
@@ -182,7 +182,7 @@ class _MoodSuggestionsWidgetState extends State<MoodSuggestionsWidget> with Tick
             Expanded(
               child: Text(
                 suggestion.description,
-                style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6), fontSize: 11),
+                style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 11),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -222,21 +222,15 @@ class _MoodSuggestionsWidgetState extends State<MoodSuggestionsWidget> with Tick
 
     // Generate personalized suggestions based on patterns
     if (avgMood < 2.0) {
-      suggestions.add(
-        MoodSuggestion(title: 'أنشطة تحسين المزاج', description: 'جرب أنشطة إيجابية لتحسين مزاجك', emoji: '🌟', color: Colors.yellow, priority: 'عالي', actions: ['استمع لموسيقى مبهجة', 'اتصل بصديق', 'تمشى في الخارج']),
-      );
+      suggestions.add(MoodSuggestion(title: 'أنشطة تحسين المزاج', description: 'جرب أنشطة إيجابية لتحسين مزاجك', emoji: '🌟', color: Colors.yellow, priority: 'عالي', actions: ['استمع لموسيقى مبهجة', 'اتصل بصديق', 'تمشى في الخارج']));
     }
 
     if (avgEnergy < 4.0) {
-      suggestions.add(
-        MoodSuggestion(title: 'محفزات الطاقة', description: 'طرق طبيعية لزيادة مستوى طاقتك', emoji: '⚡', color: Colors.orange, priority: 'متوسط', actions: ['خذ قيلولة قصيرة', 'اشرب الشاي الأخضر', 'مارس تمارين خفيفة']),
-      );
+      suggestions.add(MoodSuggestion(title: 'محفزات الطاقة', description: 'طرق طبيعية لزيادة مستوى طاقتك', emoji: '⚡', color: Colors.orange, priority: 'متوسط', actions: ['خذ قيلولة قصيرة', 'اشرب الشاي الأخضر', 'مارس تمارين خفيفة']));
     }
 
     if (avgStress > 6.0) {
-      suggestions.add(
-        MoodSuggestion(title: 'تخفيف التوتر', description: 'تقنيات لمساعدتك على الاسترخاء والهدوء', emoji: '🧘', color: Colors.blue, priority: 'عالي', actions: ['مارس التنفس العميق', 'جرب التأمل', 'خذ حمام دافئ']),
-      );
+      suggestions.add(MoodSuggestion(title: 'تخفيف التوتر', description: 'تقنيات لمساعدتك على الاسترخاء والهدوء', emoji: '🧘', color: Colors.blue, priority: 'عالي', actions: ['مارس التنفس العميق', 'جرب التأمل', 'خذ حمام دافئ']));
     }
 
     // Time-based suggestions
@@ -260,14 +254,7 @@ class _MoodSuggestionsWidgetState extends State<MoodSuggestionsWidget> with Tick
       MoodSuggestion(title: 'ابدأ التتبع', description: 'ابدأ رحلة مزاجك بفحوصات يومية', emoji: '📝', color: Colors.green, priority: 'عالي', actions: ['سجل مزاجك الأول', 'اضبط تذكيرات يومية', 'استكشف الميزات']),
       MoodSuggestion(title: 'اليقظة الذهنية', description: 'مارس التواجد في اللحظة الحالية', emoji: '🧘', color: Colors.blue, priority: 'متوسط', actions: ['تأمل 5 دقائق', 'تمرين التنفس', 'فحص الجسم']),
       MoodSuggestion(title: 'النشاط البدني', description: 'حرك جسمك لتحسين مزاجك', emoji: '🏃', color: Colors.red, priority: 'متوسط', actions: ['مشي سريع', 'تمدد', 'رقص على الموسيقى']),
-      MoodSuggestion(
-        title: 'التواصل الاجتماعي',
-        description: 'تواصل مع الآخرين للحصول على الدعم العاطفي',
-        emoji: '👥',
-        color: Colors.purple,
-        priority: 'منخفض',
-        actions: ['راسل صديق', 'مكالمة فيديو مع العائلة', 'انضم لمجتمع'],
-      ),
+      MoodSuggestion(title: 'التواصل الاجتماعي', description: 'تواصل مع الآخرين للحصول على الدعم العاطفي', emoji: '👥', color: Colors.purple, priority: 'منخفض', actions: ['راسل صديق', 'مكالمة فيديو مع العائلة', 'انضم لمجتمع']),
     ];
   }
 
@@ -306,7 +293,7 @@ class _MoodSuggestionsWidgetState extends State<MoodSuggestionsWidget> with Tick
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-        boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withOpacity(0.2), blurRadius: 20, offset: const Offset(0, -10))],
+        boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withValues(alpha: 0.2), blurRadius: 20, offset: const Offset(0, -10))],
       ),
       child: Column(
         children: [
@@ -315,7 +302,7 @@ class _MoodSuggestionsWidgetState extends State<MoodSuggestionsWidget> with Tick
             width: 40,
             height: 4,
             margin: const EdgeInsets.symmetric(vertical: 12),
-            decoration: BoxDecoration(color: theme.colorScheme.outline.withOpacity(0.3), borderRadius: BorderRadius.circular(2)),
+            decoration: BoxDecoration(color: theme.colorScheme.outline.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(2)),
           ),
 
           // Header
@@ -331,7 +318,7 @@ class _MoodSuggestionsWidgetState extends State<MoodSuggestionsWidget> with Tick
                     children: [
                       Text(suggestion.title, style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
                       const SizedBox(height: 4),
-                      Text(suggestion.description, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7))),
+                      Text(suggestion.description, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7))),
                     ],
                   ),
                 ),
@@ -350,7 +337,7 @@ class _MoodSuggestionsWidgetState extends State<MoodSuggestionsWidget> with Tick
                   margin: const EdgeInsets.only(bottom: 12),
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundColor: suggestion.color.withOpacity(0.2),
+                      backgroundColor: suggestion.color.withValues(alpha: 0.2),
                       child: Text(
                         '${index + 1}',
                         style: TextStyle(color: suggestion.color, fontWeight: FontWeight.bold),

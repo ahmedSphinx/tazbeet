@@ -47,15 +47,7 @@ class TaskListSection extends StatelessWidget {
 
     final l10n = AppLocalizations.of(context)!;
     final groupOrder = ['Overdue', 'Today', 'Tomorrow', 'This Week', 'Later', 'No Date', 'Completed'];
-    final groupTitles = {
-      'Overdue': l10n.overdueTasks,
-      'Today': l10n.todayTasks,
-      'Tomorrow': l10n.tomorrowTasks,
-      'This Week': l10n.thisWeekTasks,
-      'Later': l10n.laterTasks,
-      'No Date': l10n.noDateTasks,
-      'Completed': l10n.completedTasks,
-    };
+    final groupTitles = {'Overdue': l10n.overdueTasks, 'Today': l10n.todayTasks, 'Tomorrow': l10n.tomorrowTasks, 'This Week': l10n.thisWeekTasks, 'Later': l10n.laterTasks, 'No Date': l10n.noDateTasks, 'Completed': l10n.completedTasks};
 
     // Sort within groups by index, then priority and due date
     for (var entry in groups.entries) {
@@ -85,7 +77,7 @@ class TaskListSection extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, 2))],
+                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4, offset: const Offset(0, 2))],
                 ),
                 child: Row(
                   children: [
@@ -122,16 +114,7 @@ class TaskListSection extends StatelessWidget {
                 },
                 children: [
                   for (final task in groups[groupKey]!)
-                    TaskItem(
-                      key: ValueKey(task.id),
-                      task: task,
-                      onToggle: () => onTaskToggle(task.id),
-                      onEdit: () => onTaskEdit(task),
-                      onDelete: () => onTaskDelete(task.id),
-                      batchSelectionMode: batchSelectionMode,
-                      onTaskSelected: onTaskSelected,
-                      selected: selectedTaskIds?.contains(task.id) ?? false,
-                    ),
+                    TaskItem(key: ValueKey(task.id), task: task, onToggle: () => onTaskToggle(task.id), onEdit: () => onTaskEdit(task), onDelete: () => onTaskDelete(task.id), batchSelectionMode: batchSelectionMode, onTaskSelected: onTaskSelected, selected: selectedTaskIds?.contains(task.id) ?? false),
                 ],
               ),
             ],

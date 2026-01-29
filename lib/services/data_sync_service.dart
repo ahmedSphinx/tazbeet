@@ -72,6 +72,11 @@ class DataSyncService {
       return;
     }
 
+    if (taskId.isEmpty) {
+      AppLogging.logError('Cannot delete task: taskId is empty');
+      return;
+    }
+
     try {
       await userDoc.collection('tasks').doc(taskId).delete();
       AppLogging.logInfo('Deleted task from Firestore: $taskId');
@@ -260,13 +265,7 @@ class DataSyncService {
 
     final firestoreCategories = snapshot.docs.map((doc) {
       final data = doc.data();
-      return Category(
-        id: doc.id,
-        name: data['name'] ?? '',
-        color: Color(data['color'] ?? 0xFF2196F3),
-        icon: data['icon'] ?? 'folder',
-        createdAt: data['createdAt'] != null ? DateTime.parse(data['createdAt']) : DateTime.now(),
-      );
+      return Category(id: doc.id, name: data['name'] ?? '', color: Color(data['color'] ?? 0xFF2196F3), icon: data['icon'] ?? 'folder', createdAt: data['createdAt'] != null ? DateTime.parse(data['createdAt']) : DateTime.now());
     }).toList();
 
     // Add or update categories from Firestore
@@ -419,17 +418,7 @@ class DataSyncService {
     // Add/update moods that exist locally (with all fields)
     for (final mood in localMoods) {
       final moodRef = moodsRef.doc(mood.id);
-      batch.set(moodRef, {
-        'level': mood.level.index,
-        'note': mood.note,
-        'date': mood.date.toIso8601String(),
-        'createdAt': mood.createdAt.toIso8601String(),
-        'updatedAt': mood.updatedAt.toIso8601String(),
-        'tags': mood.tags,
-        'energyLevel': mood.energyLevel,
-        'focusLevel': mood.focusLevel,
-        'stressLevel': mood.stressLevel,
-      });
+      batch.set(moodRef, {'level': mood.level.index, 'note': mood.note, 'date': mood.date.toIso8601String(), 'createdAt': mood.createdAt.toIso8601String(), 'updatedAt': mood.updatedAt.toIso8601String(), 'tags': mood.tags, 'energyLevel': mood.energyLevel, 'focusLevel': mood.focusLevel, 'stressLevel': mood.stressLevel});
     }
 
     await batch.commit();

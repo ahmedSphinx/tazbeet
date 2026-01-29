@@ -123,7 +123,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         ),
                         contentPadding: const EdgeInsets.all(DSSpacing.md),
                       ),
-                      autofocus: true,
+                    //  autofocus: false, // Prevent keyboard auto-opening
                       inputFormatters: [LengthLimitingTextInputFormatter(100)],
                     ),
                     const SizedBox(height: DSSpacing.lg),
@@ -184,9 +184,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         if (pickedDate != null && context.mounted) {
                           // For today, ensure time is at least 1 minute in the future
                           final now = DateTime.now();
-                          final initialTime = (pickedDate.year == now.year && pickedDate.month == now.month && pickedDate.day == now.day)
-                              ? TimeOfDay.fromDateTime(now.add(const Duration(minutes: 1)))
-                              : TimeOfDay.fromDateTime(selectedDueDate ?? DateTime.now());
+                          final initialTime = (pickedDate.year == now.year && pickedDate.month == now.month && pickedDate.day == now.day) ? TimeOfDay.fromDateTime(now.add(const Duration(minutes: 1))) : TimeOfDay.fromDateTime(selectedDueDate ?? DateTime.now());
 
                           final pickedTime = await showTimePicker(context: context, initialTime: initialTime);
 
@@ -213,10 +211,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           selectedDueDate != null
                               ? '${selectedDueDate!.day}/${selectedDueDate!.month}/${selectedDueDate!.year} - ${((selectedDueDate!.hour % 12) == 0 ? 12 : (selectedDueDate!.hour % 12))}:${selectedDueDate!.minute.toString().padLeft(2, '0')} ${selectedDueDate!.hour >= 12 ? 'PM' : 'AM'}'
                               : AppLocalizations.of(context)!.selectDueDate,
-                          style: TextStyle(
-                            color: selectedDueDate != null ? colorScheme.onSurface : colorScheme.onSurface.withValues(alpha: 0.6),
-                            fontWeight: selectedDueDate != null ? FontWeight.w600 : FontWeight.normal,
-                          ),
+                          style: TextStyle(color: selectedDueDate != null ? colorScheme.onSurface : colorScheme.onSurface.withValues(alpha: 0.6), fontWeight: selectedDueDate != null ? FontWeight.w600 : FontWeight.normal),
                         ),
                       ),
                     ),
@@ -243,12 +238,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 const SizedBox(height: DSSpacing.lg),
 
                 // SECTION 3: REPEAT SETTINGS
-                DSSectionHeader(
-                  title: AppLocalizations.of(context)!.repeatSettings,
-                  icon: Icons.repeat,
-                  actionIcon: _showRepeatSettings ? Icons.expand_less : Icons.expand_more,
-                  onActionTap: () => setState(() => _showRepeatSettings = !_showRepeatSettings),
-                ),
+                DSSectionHeader(title: AppLocalizations.of(context)!.repeatSettings, icon: Icons.repeat, actionIcon: _showRepeatSettings ? Icons.expand_less : Icons.expand_more, onActionTap: () => setState(() => _showRepeatSettings = !_showRepeatSettings)),
                 if (_showRepeatSettings)
                   _buildFormSection(
                     column: [
@@ -266,12 +256,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 const SizedBox(height: DSSpacing.lg),
 
                 // SECTION 4: POMODORO PLANNING
-                DSSectionHeader(
-                  title: AppLocalizations.of(context)!.pomodoroPlanning,
-                  icon: Icons.timer,
-                  actionIcon: _showPomodoroSettings ? Icons.expand_less : Icons.expand_more,
-                  onActionTap: () => setState(() => _showPomodoroSettings = !_showPomodoroSettings),
-                ),
+                DSSectionHeader(title: AppLocalizations.of(context)!.pomodoroPlanning, icon: Icons.timer, actionIcon: _showPomodoroSettings ? Icons.expand_less : Icons.expand_more, onActionTap: () => setState(() => _showPomodoroSettings = !_showPomodoroSettings)),
                 if (_showPomodoroSettings)
                   _buildFormSection(
                     column: [
@@ -409,15 +394,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     // Create pomodoro plan if optimization is enabled
     PomodoroPlan? pomodoroPlan;
     if (enablePomodoroOptimization) {
-      final tempTask = Task(
-        id: newId,
-        title: _titleController.text.trim(),
-        description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
-        priority: selectedPriority,
-        focusScore: focusScore,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
+      final tempTask = Task(id: newId, title: _titleController.text.trim(), description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(), priority: selectedPriority, focusScore: focusScore, createdAt: DateTime.now(), updatedAt: DateTime.now());
       pomodoroPlan = _plannerService.createOptimalPlan(tempTask);
     }
 
@@ -451,15 +428,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       return;
     }
 
-    final tempTask = Task(
-      id: 'temp',
-      title: _titleController.text.trim(),
-      description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
-      priority: selectedPriority,
-      focusScore: focusScore,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    );
+    final tempTask = Task(id: 'temp', title: _titleController.text.trim(), description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(), priority: selectedPriority, focusScore: focusScore, createdAt: DateTime.now(), updatedAt: DateTime.now());
 
     setState(() {
       suggestedPomodoroPlan = _plannerService.createOptimalPlan(tempTask);

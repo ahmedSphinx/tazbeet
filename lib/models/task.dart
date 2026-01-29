@@ -173,7 +173,7 @@ class Task extends Equatable {
       description: description ?? this.description,
       priority: priority ?? this.priority,
       dueDate: dueDate ?? this.dueDate,
-      reminderDate: reminderDate ?? this.reminderDate,
+      reminderDate: reminderDate,
       isCompleted: isCompleted ?? this.isCompleted,
       categoryId: categoryId ?? this.categoryId,
       parentId: parentId ?? this.parentId,

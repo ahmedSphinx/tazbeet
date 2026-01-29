@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/category.dart';
+import '../services/encryption_service.dart';
 
 class CategoryAdapter extends TypeAdapter<Category> {
   @override
@@ -47,11 +48,19 @@ class CategoryRepository {
   static const String _boxName = 'categories';
   late Box<Category> _categoryBox;
 
+  Future<Box<Category>> _getBox() async {
+    if (!Hive.isBoxOpen(_boxName)) {
+      final cipher = await EncryptionService.getCipher();
+      return await Hive.openBox<Category>(_boxName, encryptionCipher: cipher);
+    }
+    return Hive.box<Category>(_boxName);
+  }
+
   Future<void> init() async {
     if (!Hive.isAdapterRegistered(1)) {
       Hive.registerAdapter(CategoryAdapter());
     }
-    _categoryBox = await Hive.openBox<Category>(_boxName);
+    _categoryBox = await _getBox();
   }
 
   Future<List<Category>> getAllCategories() async {

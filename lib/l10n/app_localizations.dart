@@ -555,6 +555,12 @@ abstract class AppLocalizations {
   /// **'All data cleared and resynced successfully!'**
   String get allDataClearedAndResyncedSuccessfully;
 
+  /// No description provided for @allDone.
+  ///
+  /// In en, this message translates to:
+  /// **'All Done!'**
+  String get allDone;
+
   /// No description provided for @allLabel.
   ///
   /// In en, this message translates to:
@@ -1232,6 +1238,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cannot set reminder for past date'**
   String get cannotSetReminderForPastDate;
+
+  /// No description provided for @cannotSetReminderOnCompletedTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot set reminder on completed task'**
+  String get cannotSetReminderOnCompletedTask;
 
   /// No description provided for @cannotSetReminderWithoutPermission.
   ///
@@ -2403,6 +2415,12 @@ abstract class AppLocalizations {
   /// **'Downloading Update...'**
   String get downloadingUpdate;
 
+  /// No description provided for @dragToReorderSubtasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to reorder subtasks'**
+  String get dragToReorderSubtasks;
+
   /// No description provided for @dueDate.
   ///
   /// In en, this message translates to:
@@ -2853,11 +2871,23 @@ abstract class AppLocalizations {
   /// **'Enter task title'**
   String get enterTaskTitle;
 
+  /// No description provided for @errorAddingSubtask.
+  ///
+  /// In en, this message translates to:
+  /// **'Error adding subtask: {error}'**
+  String errorAddingSubtask(Object error);
+
   /// No description provided for @errorApplyingSettings.
   ///
   /// In en, this message translates to:
   /// **'Error applying settings: {error}'**
   String errorApplyingSettings(Object error);
+
+  /// No description provided for @errorCancellingReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Error cancelling reminder: {error}'**
+  String errorCancellingReminder(Object error);
 
   /// No description provided for @errorClearingLogs.
   ///
@@ -2913,6 +2943,12 @@ abstract class AppLocalizations {
   /// **'Error deleting user: {error}'**
   String errorDeletingUser(Object error);
 
+  /// No description provided for @errorDuplicatingTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Error duplicating task: {error}'**
+  String errorDuplicatingTask(Object error);
+
   /// No description provided for @errorExportingLogs.
   ///
   /// In en, this message translates to:
@@ -2943,6 +2979,12 @@ abstract class AppLocalizations {
   /// **'Error loading tasks'**
   String get errorLoadingTasks;
 
+  /// No description provided for @errorReorderingSubtasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Error reordering subtasks'**
+  String get errorReorderingSubtasks;
+
   /// No description provided for @errorSavingColorSettings.
   ///
   /// In en, this message translates to:
@@ -2954,6 +2996,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error saving maintenance settings'**
   String get errorSavingMaintenanceSettings;
+
+  /// No description provided for @errorSettingQuickReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Error setting reminder'**
+  String get errorSettingQuickReminder;
+
+  /// No description provided for @errorSettingReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Error setting reminder: {error}'**
+  String errorSettingReminder(Object error);
 
   /// No description provided for @errorTitle.
   ///
@@ -3183,11 +3237,23 @@ abstract class AppLocalizations {
   /// **'Failed to check pending notifications: {error}'**
   String failedToCheckPendingNotifications(Object error);
 
+  /// No description provided for @failedToCompleteTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to complete task: {error}'**
+  String failedToCompleteTask(Object error);
+
   /// No description provided for @failedToGetSuggestions.
   ///
   /// In en, this message translates to:
   /// **'Failed to get suggestions: {error}'**
   String failedToGetSuggestions(Object error);
+
+  /// No description provided for @failedToOpenPomodoroTemplates.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to open Pomodoro templates: {error}'**
+  String failedToOpenPomodoroTemplates(Object error);
 
   /// No description provided for @failedToScheduleTestNotification.
   ///
@@ -3200,6 +3266,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to send test notification: {error}'**
   String failedToSendTestNotification(Object error);
+
+  /// No description provided for @failedToUncompleteTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to uncomplete task: {error}'**
+  String failedToUncompleteTask(Object error);
 
   /// No description provided for @failedToUploadImage.
   ///
@@ -3224,6 +3296,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'15 Min Pause'**
   String get fifteenMinPause;
+
+  /// No description provided for @fifteenMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'15 minutes'**
+  String get fifteenMinutes;
 
   /// No description provided for @filter.
   ///
@@ -3278,6 +3356,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fireplace'**
   String get fireplace;
+
+  /// No description provided for @fiveMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'5 minutes'**
+  String get fiveMinutes;
 
   /// No description provided for @focus.
   ///
@@ -3758,6 +3842,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'2h'**
   String get hours2;
+
+  /// No description provided for @hours6.
+  ///
+  /// In en, this message translates to:
+  /// **'6 hours'**
+  String get hours6;
 
   /// No description provided for @howAreYou.
   ///
@@ -5145,6 +5235,12 @@ abstract class AppLocalizations {
   /// **'Next'**
   String get next;
 
+  /// No description provided for @nextWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Week'**
+  String get nextWeek;
+
   /// No description provided for @nightReflection.
   ///
   /// In en, this message translates to:
@@ -5706,7 +5802,7 @@ abstract class AppLocalizations {
   /// No description provided for @oneHour.
   ///
   /// In en, this message translates to:
-  /// **'1 Hour'**
+  /// **'1 hour'**
   String get oneHour;
 
   /// No description provided for @oneHourBeforeDue.
@@ -6020,6 +6116,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please fix the errors above'**
   String get pleaseFixErrors;
+
+  /// No description provided for @pleaseSelectBothDateAndTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select both date and time'**
+  String get pleaseSelectBothDateAndTime;
 
   /// No description provided for @pleaseTryAgain.
   ///
@@ -6627,6 +6729,18 @@ abstract class AppLocalizations {
   /// **'Recurring instances generated'**
   String get recurringInstancesGenerated;
 
+  /// No description provided for @recurringOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring Options'**
+  String get recurringOptions;
+
+  /// No description provided for @recurringReminderSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring reminder set: {frequency}'**
+  String recurringReminderSet(Object frequency);
+
   /// No description provided for @recurringTaskAutomation.
   ///
   /// In en, this message translates to:
@@ -6752,6 +6866,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reminder History'**
   String get reminderHistory;
+
+  /// No description provided for @reminderMustBeInFuture.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder must be in the future'**
+  String get reminderMustBeInFuture;
 
   /// No description provided for @reminderRetryScheduled.
   ///
@@ -7389,12 +7509,6 @@ abstract class AppLocalizations {
   /// **'Set more realistic session goals'**
   String get setRealisticSessionGoals;
 
-  /// No description provided for @setReminder.
-  ///
-  /// In en, this message translates to:
-  /// **'Set Reminder'**
-  String get setReminder;
-
   /// No description provided for @setReminderButton.
   ///
   /// In en, this message translates to:
@@ -7646,6 +7760,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Smart'**
   String get smartView;
+
+  /// No description provided for @snooze.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze'**
+  String get snooze;
 
   /// No description provided for @snooze15min.
   ///
@@ -7988,6 +8108,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Subtasks'**
   String get subtasks;
+
+  /// No description provided for @subtasksReordered.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtasks reordered'**
+  String get subtasksReordered;
 
   /// No description provided for @subtaskTitle.
   ///
@@ -8529,6 +8655,12 @@ abstract class AppLocalizations {
   /// **'Template Name'**
   String get templateName;
 
+  /// No description provided for @tenMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'10 minutes'**
+  String get tenMinutes;
+
   /// No description provided for @termsAndPrivacy.
   ///
   /// In en, this message translates to:
@@ -8720,6 +8852,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Theme settings reset to defaults'**
   String get themeSettingsResetToDefaults;
+
+  /// No description provided for @thirtyMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'30 minutes'**
+  String get thirtyMinutes;
 
   /// No description provided for @thirtySeconds.
   ///

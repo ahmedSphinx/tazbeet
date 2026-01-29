@@ -20,22 +20,52 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' show DateFormat;
+import 'package:tazbeet/ui/screens/home/pomodoro/pomodoro_template_screen.dart';
+import '../widgets/subtask_widget.dart';
+import '../widgets/floating_quick_actions.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../../models/task.dart';
 import '../../blocs/task_details/task_details_bloc.dart';
 import '../../blocs/task_details/task_details_event.dart';
 import '../../blocs/task_details/task_details_state.dart';
-import '../../models/task.dart';
+import '../../blocs/task_list/task_list_bloc.dart';
+import '../../blocs/task_list/task_list_event.dart';
 import '../../repositories/task_repository.dart';
-import '../../services/pomodoro_service.dart';
 import '../../services/notification_service.dart';
 import '../../services/app_logging_service.dart';
-import '../widgets/subtask_widget.dart';
 import '../widgets/add_task_dialog.dart';
 import '../widgets/edit_task_dialog.dart';
 import '../widgets/error_display.dart';
+import '../widgets/skeleton_loading.dart';
+import '../widgets/swipeable_task_card.dart';
+import '../widgets/smart_empty_states.dart';
+import '../widgets/progress_timeline.dart';
+import '../widgets/milestone_celebrations.dart';
+import '../widgets/offline_sync_indicator.dart';
 import 'home/pomodoro/pomodoro_screen.dart';
+
+/// Reminder suggestion data model
+class ReminderSuggestion {
+  final String label;
+  final int minutes;
+  final Color color;
+  final IconData icon;
+  final String description;
+
+  const ReminderSuggestion({required this.label, required this.minutes, required this.color, required this.icon, required this.description});
+}
+
+/// Reminder state data model for clean state management
+class _ReminderState {
+  final bool hasReminder;
+  final bool isActive;
+  final bool isExpired;
+  final DateTime? reminderTime;
+
+  const _ReminderState({required this.hasReminder, required this.isActive, required this.isExpired, this.reminderTime});
+}
 
 /// Constants for TaskDetailsScreen
 class _TaskDetailsConstants {
@@ -45,19 +75,83 @@ class _TaskDetailsConstants {
   static const Duration animationDuration = Duration(milliseconds: 300);
 }
 
-/// Helper class for haptic feedback
+/// Enhanced haptic feedback helper with contextual patterns
 class _HapticHelper {
+  // Basic actions
   static void onActionButton() => HapticFeedback.mediumImpact();
-  static void onToggle() => HapticFeedback.lightImpact();
-  static void onComplete() => HapticFeedback.heavyImpact();
+
+  // Enhanced contextual haptics
+  static void onTaskComplete() async {
+    await HapticFeedback.mediumImpact();
+    await Future.delayed(const Duration(milliseconds: 100));
+    await HapticFeedback.heavyImpact();
+  }
+
+  static void onTaskUncomplete() => HapticFeedback.mediumImpact();
+
+  static void onSwipeAction() => HapticFeedback.selectionClick();
+
+  static void onSwipeComplete() async {
+    await HapticFeedback.lightImpact();
+    await Future.delayed(const Duration(milliseconds: 50));
+    await HapticFeedback.mediumImpact();
+  }
+
+  static void onSwipeDelete() async {
+    await HapticFeedback.mediumImpact();
+    await Future.delayed(const Duration(milliseconds: 100));
+    await HapticFeedback.heavyImpact();
+  }
+
+  static void onFocusStart() async {
+    await HapticFeedback.lightImpact();
+    await Future.delayed(const Duration(milliseconds: 80));
+    await HapticFeedback.mediumImpact();
+  }
+
+  static void onReminderSet() => HapticFeedback.selectionClick();
+
+  static void onMilestone(int percentage) async {
+    if (percentage >= 100) {
+      // Celebration pattern
+      for (int i = 0; i < 3; i++) {
+        await HapticFeedback.heavyImpact();
+        await Future.delayed(const Duration(milliseconds: 150));
+      }
+    } else if (percentage >= 75) {
+      // Almost there pattern
+      await HapticFeedback.mediumImpact();
+      await Future.delayed(const Duration(milliseconds: 100));
+      await HapticFeedback.heavyImpact();
+    } else if (percentage >= 50) {
+      // Halfway pattern
+      await HapticFeedback.lightImpact();
+      await Future.delayed(const Duration(milliseconds: 80));
+      await HapticFeedback.mediumImpact();
+    } else if (percentage >= 25) {
+      // Getting started pattern
+      await HapticFeedback.lightImpact();
+    }
+  }
+
+  static void onError() async {
+    await HapticFeedback.heavyImpact();
+    await Future.delayed(const Duration(milliseconds: 200));
+    await HapticFeedback.heavyImpact();
+  }
+
+  static void onSuccess() async {
+    await HapticFeedback.lightImpact();
+    await Future.delayed(const Duration(milliseconds: 100));
+    await HapticFeedback.mediumImpact();
+  }
+
+  static void onButtonPress() => HapticFeedback.selectionClick();
+  static void onRefresh() => HapticFeedback.mediumImpact();
 }
 
 /// Helper class for task action logic
 class _TaskActionHelper {
-  static bool canCompleteTask(Task task) {
-    return task.subtasks.every((s) => s.isCompleted) || !task.strictCompletionMode;
-  }
-
   static String getPrimaryActionLabel(Task task, AppLocalizations l10n) {
     if (task.isCompleted) return l10n.uncompleteTask;
     if (canStartFocus(task)) return l10n.startFocus;
@@ -106,10 +200,14 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
   late final AnimationController _animationController;
   late final ScrollController _scrollController;
   late final ConfettiController _confettiController;
+  late final TaskDetailsBloc _taskDetailsBloc;
 
   // Cached theme values for performance
   late ColorScheme _colorScheme;
   late TextTheme _textTheme;
+
+  // Offline sync manager
+  late final OfflineSyncManager _syncManager;
 
   // ===== Lifecycle Methods =====
   @override
@@ -118,6 +216,13 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
     _scrollController = ScrollController();
     _animationController = AnimationController(duration: _TaskDetailsConstants.animationDuration, vsync: this);
     _confettiController = ConfettiController(duration: const Duration(seconds: 1));
+    _syncManager = OfflineSyncManager();
+
+    // Initialize TaskDetailsBloc
+    _taskDetailsBloc = TaskDetailsBloc(taskRepository: context.read<TaskRepository>())..add(LoadTaskDetails(widget.taskId));
+
+    // Simulate some offline behavior for demo
+    // _simulateOfflineScenarios();
   }
 
   @override
@@ -134,6 +239,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
     _confettiController.dispose();
     _animationController.dispose();
     _scrollController.dispose();
+    _syncManager.dispose();
+    _taskDetailsBloc.close();
     super.dispose();
   }
 
@@ -145,33 +252,48 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
   Widget build(BuildContext context) {
     super.build(context); // Required for AutomaticKeepAliveClientMixin
 
-    return BlocProvider(
-      create: (context) => TaskDetailsBloc(taskRepository: context.read<TaskRepository>())..add(LoadTaskDetails(widget.taskId)),
-      child: Scaffold(
-        body: Stack(
-          children: [
-            BlocBuilder<TaskDetailsBloc, TaskDetailsState>(builder: (context, state) => _buildWithLoadingState(state)),
-            // Celebration confetti
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: ConfettiWidget(confettiController: _confettiController, blastDirectionality: BlastDirectionality.explosive, shouldLoop: false, colors: const [Colors.red, Colors.blue, Colors.green, Colors.yellow]),
+    return BlocProvider<TaskDetailsBloc>.value(
+      value: _taskDetailsBloc,
+      child: BlocBuilder<TaskDetailsBloc, TaskDetailsState>(
+        builder: (context, state) {
+          return Scaffold(
+            body: Stack(
+              children: [
+                _buildWithLoadingState(state),
+                // Celebration confetti
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: ConfettiWidget(confettiController: _confettiController, blastDirectionality: BlastDirectionality.explosive, shouldLoop: false, colors: const [Colors.red, Colors.blue, Colors.green, Colors.yellow]),
+                ),
+                // Offline sync indicator
+                Positioned(
+                  top: MediaQuery.of(context).padding.top + 8,
+                  left: 0,
+                  right: 0,
+                  child: OfflineSyncIndicator(syncManager: _syncManager, onTap: () => showSyncStatusDialog(context, _syncManager)),
+                ),
+              ],
             ),
-          ],
-        ),
+            //floatingActionButton: state is TaskDetailsLoaded ? _buildFloatingQuickActions(context, state.task, AppLocalizations.of(context)!) : null,
+            //floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          );
+        },
       ),
     );
   }
 
+  /// Builds floating quick actions FAB with expandable menu
+
   /// Builds content with proper loading states and error handling
   Widget _buildWithLoadingState(TaskDetailsState state) {
     if (state is TaskDetailsLoading) {
-      return const Center(child: CircularProgressIndicator.adaptive());
+      return const TaskDetailsSkeleton();
     }
 
     if (state is TaskDetailsError) {
-      return ErrorDisplay(message: state.message, onRetry: () => context.read<TaskDetailsBloc>().add(LoadTaskDetails(widget.taskId)));
+      return ErrorDisplay(message: state.message, onRetry: () => _refreshTaskDetails());
     }
 
     if (state is TaskDetailsLoaded) {
@@ -186,56 +308,71 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
     final task = state.task;
     final l10n = AppLocalizations.of(context)!;
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        context.read<TaskDetailsBloc>().add(LoadTaskDetails(widget.taskId));
-        AppLogging.logInfo('TaskDetailsScreen: Manual refresh triggered for task ${widget.taskId}', name: 'TaskDetailsRefresh');
-      },
-      child: CustomScrollView(
-        controller: _scrollController,
-        physics: const AlwaysScrollableScrollPhysics(),
-        slivers: [
-          // 1. Compact Header (180px instead of 280px)
-          _buildCompactAppBar(task, l10n),
+    // Debug logging to track state changes
+    //ppLogging.logInfo('UI State - Task: ${task.id}, completed: ${task.isCompleted}, reminderDate: ${task.reminderDate}');
 
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(_TaskDetailsConstants.standardPadding),
-              child: Column(
-                children: [
-                  // 2. Smart Action Bar (Primary action + contextual menu)
-                  _buildSmartActionBar(task, l10n),
+    return /* SwipeableTaskCard(
+      leftActions: _getLeftSwipeActions(task, l10n),
+      rightActions: _getRightSwipeActions(task, l10n),
+      child: */ FloatingQuickActionsMenu(
+      actions: _getQuickActions(task, l10n),
+      useStandardFabPosition: true, // Use standard endFloat positioning like normal FAB
+      child: RefreshIndicator(
+        onRefresh: () async {
+          _HapticHelper.onRefresh();
+          _refreshTaskDetails();
+          AppLogging.logInfo('TaskDetailsScreen: Manual refresh triggered for task ${widget.taskId}', name: 'TaskDetailsRefresh');
+        },
+        child: CustomScrollView(
+          controller: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            // 1. Compact Header (180px instead of 280px)
+            _buildCompactAppBar(task, l10n),
 
-                  const SizedBox(height: _TaskDetailsConstants.standardPadding),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(_TaskDetailsConstants.standardPadding),
+                child: Column(
+                  children: [
+                    // 2. Smart Action Bar (Primary action + contextual menu)
+                    _buildSmartActionBar(task, l10n),
 
-                  // 3. Essential Information Card (Status, Due date, Priority)
-                  _buildEssentialInfoCard(task, l10n),
+                    const SizedBox(height: _TaskDetailsConstants.standardPadding),
 
-                  const SizedBox(height: _TaskDetailsConstants.standardPadding),
+                    // 3. Essential Information Card (Status, Due date, Priority)
+                    _buildEssentialInfoCard(task, l10n),
 
-                  // 4. Focus Assistant (Pomodoro integration - only if not completed)
-                  if (!task.isCompleted) ...[_buildFocusAssistant(task, l10n), const SizedBox(height: _TaskDetailsConstants.standardPadding)],
+                    const SizedBox(height: _TaskDetailsConstants.standardPadding),
 
-                  // 5. Intelligent Reminder (Single smart suggestion)
-                  _buildIntelligentReminder(task, l10n),
+                    // 4. Focus Assistant (Pomodoro integration - only if not completed)
+                    if (!task.isCompleted) ...[_buildFocusAssistant(task, l10n), const SizedBox(height: _TaskDetailsConstants.standardPadding)],
 
-                  const SizedBox(height: _TaskDetailsConstants.standardPadding),
+                    // 5. Intelligent Reminder (Single smart suggestion)
+                    //_buildIntelligentReminder(task, l10n),                    const SizedBox(height: _TaskDetailsConstants.standardPadding),
+                    _buildSmartReminderSection(context, task, l10n),
 
-                  // 6. Subtasks (Inline, show max 3, collapsible)
-                  _buildSubtasksSection(context, task, l10n),
+                    const SizedBox(height: _TaskDetailsConstants.standardPadding),
 
-                  const SizedBox(height: _TaskDetailsConstants.standardPadding),
+                    // 6. Subtasks (Inline, show max 3, collapsible)
+                    _buildSubtasksSection(context, task, l10n),
 
-                  // 7. Expandable Advanced Details
-                  _buildExpandableDetails(task, l10n),
+                    // 7. Attachment Gallery                    _buildAttachmentSection(task, l10n),
+                    const SizedBox(height: _TaskDetailsConstants.standardPadding),
 
-                  // Bottom padding for FAB
-                  const SizedBox(height: 100),
-                ],
+                    // 8. Expandable Advanced Details
+                    _buildExpandableDetails(task, l10n),
+
+                    // Bottom padding for FAB
+                    const SizedBox(height: 100),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
+        /*       ),
+         */
       ),
     );
   }
@@ -255,7 +392,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
           tag: 'task_title_${task.id}',
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(color: Colors.black.withOpacity(0.3), borderRadius: BorderRadius.circular(20)),
+            decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(20)),
             child: Text(
               task.title,
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
@@ -272,7 +409,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
             children: [
               // Background Pattern
               Positioned.fill(
-                child: CustomPaint(painter: _ModernPatternPainter(color: Colors.white.withOpacity(0.05))),
+                child: CustomPaint(painter: _ModernPatternPainter(color: Colors.white.withValues(alpha: 0.05))),
               ),
               // Center Icon with Animation
               Center(
@@ -282,7 +419,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
                   builder: (context, value, child) {
                     return Transform.scale(
                       scale: value,
-                      child: Icon(_getPriorityIcon(task.priority), size: 80, color: Colors.white.withOpacity(0.2)),
+                      child: Icon(_getPriorityIcon(task.priority), size: 80, color: Colors.white.withValues(alpha: 0.2)),
                     );
                   },
                 ),
@@ -340,7 +477,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(_TaskDetailsConstants.cardBorderRadius)),
                 elevation: 4,
-                shadowColor: color.withOpacity(0.3),
+                shadowColor: color.withValues(alpha: 0.3),
               ),
             ),
           );
@@ -358,7 +495,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
         decoration: BoxDecoration(
           color: _colorScheme.surface,
           borderRadius: BorderRadius.circular(_TaskDetailsConstants.cardBorderRadius),
-          border: Border.all(color: _colorScheme.outline.withOpacity(0.2)),
+          border: Border.all(color: _colorScheme.outline.withValues(alpha: 0.2)),
         ),
         child: Icon(Icons.more_vert, color: _colorScheme.onSurface),
       ),
@@ -378,14 +515,50 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
+            // Header with checkbox
             Row(
               children: [
+                // Task completion checkbox
+                GestureDetector(
+                  onTap: () {
+                    final l10n = AppLocalizations.of(context)!;
+
+                    if (task.isCompleted) {
+                      _uncompleteTask(task, l10n);
+                    } else {
+                      // Check if all subtasks are completed before allowing main task completion
+                      if (task.subtasks.isNotEmpty) {
+                        final completedSubtasks = task.subtasks.where((s) => s.isCompleted).length;
+                        final totalSubtasks = task.subtasks.length;
+
+                        if (completedSubtasks < totalSubtasks) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.completeSubtasksFirst), backgroundColor: Colors.orange, duration: const Duration(seconds: 2)));
+                          return;
+                        }
+                      }
+
+                      _completeTask(task, l10n);
+                    }
+                  },
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: task.isCompleted ? Colors.green : Colors.transparent,
+                      border: Border.all(color: task.isCompleted ? Colors.green : _colorScheme.outline, width: 2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: task.isCompleted ? const Icon(Icons.check, color: Colors.white, size: 20) : null,
+                  ),
+                ),
+                const SizedBox(width: 16),
                 Icon(Icons.info_outline, color: _colorScheme.primary, size: 24),
                 const SizedBox(width: 12),
-                Text(
-                  l10n.taskInformation,
-                  style: _textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: _colorScheme.primary),
+                Expanded(
+                  child: Text(
+                    l10n.taskInformation,
+                    style: _textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: _colorScheme.primary),
+                  ),
                 ),
               ],
             ),
@@ -405,215 +578,221 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
             _buildInfoRow(Icons.flag, l10n.priority, _getPriorityText(task.priority, l10n), color: _getPriorityColors(task.priority)[0]),
 
             // Description (if exists)
-            if (task.description != null && task.description!.isNotEmpty) ...[
-              const SizedBox(height: 12),
-              _buildInfoRow(Icons.description, l10n.description(task.description!), task.description!, isExpandable: task.description!.length > 100),
-            ],
+            if (task.description != null && task.description!.isNotEmpty) ...[const SizedBox(height: 12), _buildInfoRow(Icons.description, l10n.description(task.description!), task.description!, isExpandable: task.description!.length > 100)],
           ],
         ),
       ),
     );
   }
 
-  /// Builds focus assistant with consolidated Pomodoro features
   Widget _buildFocusAssistant(Task task, AppLocalizations l10n) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(_TaskDetailsConstants.cardBorderRadius)),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Row(
-              children: [
-                Icon(Icons.timer, color: Colors.green, size: 24),
-                const SizedBox(width: 12),
-                Text(
-                  'Focus Assistant',
-                  style: _textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.green),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
+    final hasEstimatedSessions = task.estimatedSessions > 0;
+    final progress = hasEstimatedSessions ? task.pomodoroCount / task.estimatedSessions : 0.0;
+    final isComplete = hasEstimatedSessions && task.pomodoroCount >= task.estimatedSessions;
 
-            // Progress Ring
-            if (task.estimatedSessions > 0) ...[
-              SizedBox(
-                height: 120,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    CircularProgressIndicator(value: task.pomodoroCount / task.estimatedSessions, strokeWidth: 8, backgroundColor: Colors.grey.shade300, valueColor: const AlwaysStoppedAnimation<Color>(Colors.green)),
-                    Column(
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [Colors.green.withValues(alpha: 0.1), Theme.of(context).colorScheme.surface], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.green.withValues(alpha: 0.3), width: 1),
+        boxShadow: [BoxShadow(color: Colors.green.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Enhanced Header
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [Colors.green.withValues(alpha: 0.15), Colors.green.withValues(alpha: 0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            ),
+            child: Row(
+              children: [
+                // Icon with gradient background
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [Colors.green, Colors.green.shade700]),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [BoxShadow(color: Colors.green.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 4))],
+                  ),
+                  child: Icon(Icons.timer_rounded, color: Colors.white, size: 24),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.pomodoroSection,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.green.shade800),
+                      ),
+                      if (hasEstimatedSessions) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          '${task.pomodoroCount} / ${task.estimatedSessions} ${l10n.completedSessions}',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.green.shade700, fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                // Status badge
+                if (isComplete)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [BoxShadow(color: Colors.green.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2))],
+                    ),
+                    child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        Icon(Icons.check_circle, size: 14, color: Colors.white),
+                        const SizedBox(width: 4),
                         Text(
-                          '${task.pomodoroCount}/${task.estimatedSessions}',
-                          style: _textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: Colors.green),
+                          l10n.complete,
+                          style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
                         ),
-                        Text('sessions', style: _textTheme.bodySmall?.copyWith(color: Colors.grey[600])),
                       ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-            ],
-
-            // Action Button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () => _startPomodoroSession(task, l10n),
-                icon: const Icon(Icons.play_arrow),
-                label: Text(l10n.startFocusSession),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(_TaskDetailsConstants.cardBorderRadius)),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Builds intelligent reminder with AI-powered suggestions
-  Widget _buildIntelligentReminder(Task task, AppLocalizations l10n) {
-    final suggestion = _getOptimalReminderSuggestion(task, l10n);
-    final hasActiveReminder = task.reminderDate != null && task.reminderDate!.isAfter(DateTime.now());
-
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(_TaskDetailsConstants.cardBorderRadius)),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header with status indicator
-            Row(
-              children: [
-                Icon(hasActiveReminder ? Icons.notifications_active : Icons.notifications_outlined, color: hasActiveReminder ? Colors.green : _colorScheme.primary, size: 24),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    l10n.smartReminders,
-                    style: _textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: hasActiveReminder ? Colors.green : _colorScheme.primary),
-                  ),
-                ),
-                if (hasActiveReminder)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(12)),
-                    child: Text(
-                      l10n.active,
-                      style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                   ),
               ],
             ),
-            const SizedBox(height: 16),
+          ),
 
-            if (hasActiveReminder) ...[
-              // Active reminder display
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.green.withOpacity(0.3)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(l10n.scheduledFor, style: _textTheme.bodySmall?.copyWith(color: Colors.grey[600])),
-                    const SizedBox(height: 4),
-                    Text(
-                      DateFormat.yMMMd().add_jm().format(task.reminderDate!),
-                      style: _textTheme.titleMedium?.copyWith(color: Colors.green, fontWeight: FontWeight.bold),
+          // Content
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                // Progress Ring with enhanced design
+                if (hasEstimatedSessions) ...[
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.green.withValues(alpha: 0.05),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.green.withValues(alpha: 0.2)),
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Quick actions
-              Row(
-                children: [
-                  Expanded(
-                    child: TextButton.icon(onPressed: () => _snoozeReminder(task, 15, l10n), icon: const Icon(Icons.snooze), label: Text('Snooze 15min')),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextButton.icon(
-                      onPressed: () => _cancelReminder(task, l10n),
-                      icon: const Icon(Icons.cancel),
-                      label: Text(l10n.cancel),
-                      style: TextButton.styleFrom(foregroundColor: Colors.red),
-                    ),
-                  ),
-                ],
-              ),
-            ] else if (suggestion != null) ...[
-              // AI suggestion
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(color: _colorScheme.primary.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+                    child: Row(
                       children: [
-                        Icon(Icons.lightbulb_outline, color: _colorScheme.primary),
-                        const SizedBox(width: 8),
+                        // Circular progress
+                        SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              SizedBox(
+                                width: 100,
+                                height: 100,
+                                child: CircularProgressIndicator(value: progress, strokeWidth: 10, backgroundColor: Colors.grey.shade300, valueColor: AlwaysStoppedAnimation<Color>(isComplete ? Colors.green : Colors.green.shade600)),
+                              ),
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    '${task.pomodoroCount}/${task.estimatedSessions}',
+                                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: Colors.green.shade800),
+                                  ),
+                                  Text(l10n.sessions, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600])),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        // Stats
                         Expanded(
-                          child: Text(
-                            suggestion.text,
-                            style: _textTheme.titleMedium?.copyWith(color: _colorScheme.primary, fontWeight: FontWeight.bold),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildStatRow(Icons.check_circle_outline, l10n.completed, '${task.pomodoroCount}', Colors.green),
+                              const SizedBox(height: 8),
+                              _buildStatRow(Icons.pending_outlined, l10n.remaining, '${task.estimatedSessions - task.pomodoroCount}', Colors.orange),
+                              const SizedBox(height: 8),
+                              _buildStatRow(Icons.percent, l10n.progress, '${(progress * 100).toInt()}%', Colors.blue),
+                            ],
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    Text(suggestion.reason, style: _textTheme.bodyMedium?.copyWith(color: Colors.grey[700])),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Action buttons
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () => _acceptSuggestion(suggestion, task, l10n),
-                      icon: const Icon(Icons.schedule),
-                      label: Text('Accept Suggestion'),
-                      style: ElevatedButton.styleFrom(backgroundColor: _colorScheme.primary, foregroundColor: Colors.white),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+
+                // Action Button with enhanced styling
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () => _startPomodoroSession(task, l10n),
+                    icon: Icon(Icons.play_arrow_rounded, size: 24),
+                    label: Text(l10n.startFocusSession, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      elevation: 4,
+                      shadowColor: Colors.green.withValues(alpha: 0.4),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextButton.icon(onPressed: () => _showCustomReminderDialog(task, l10n), icon: const Icon(Icons.edit), label: Text(l10n.customTime)),
+                ),
+
+                // Quick tips
+                if (!hasEstimatedSessions) ...[
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.lightbulb_outline, size: 20, color: Colors.blue),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            '${l10n.setReminderToStayOnTrack} ${l10n.estimatedSessions}',
+                            style: TextStyle(fontSize: 13, color: Colors.blue.shade800, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
-              ),
-            ] else ...[
-              // No suggestion available
-              Text('No suggestions available'),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(onPressed: () => _showCustomReminderDialog(task, l10n), icon: const Icon(Icons.add_alarm), label: Text(l10n.setReminder)),
-              ),
-            ],
-          ],
-        ),
+              ],
+            ),
+          ),
+        ],
       ),
+    );
+  }
+
+  /// Builds a stat row for focus assistant
+  Widget _buildStatRow(IconData icon, String label, String value, Color color) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
+          child: Icon(icon, size: 16, color: color),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(label, style: TextStyle(fontSize: 13, color: Colors.grey[700])),
+        ),
+        Text(
+          value,
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color),
+        ),
+      ],
     );
   }
 
@@ -622,9 +801,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
     return ExpansionTile(
       title: Row(
         children: [
-          Icon(Icons.expand_more, color: _colorScheme.onSurface),
+          Icon(Icons.info_outline_rounded, color: _colorScheme.onSurface),
           const SizedBox(width: 8),
-          Text('Advanced Details', style: _textTheme.titleMedium),
+          Text(l10n.advancedSection, style: _textTheme.titleMedium),
         ],
       ),
       children: [
@@ -632,6 +811,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
+              // Progress Timeline
+              ProgressTimeline(events: TaskTimelineBuilder.fromTask(task), isCompact: true, padding: EdgeInsets.zero),
+              const SizedBox(height: 16),
+
               // Task metadata
               _buildMetadataSection(task, l10n),
               const SizedBox(height: 16),
@@ -683,7 +866,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
       children: [
         Container(
           padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: (color ?? _colorScheme.primary).withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(color: (color ?? _colorScheme.primary).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
           child: Icon(icon, color: color ?? _colorScheme.primary, size: 16),
         ),
         const SizedBox(width: 12),
@@ -733,15 +916,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
           decoration: BoxDecoration(
             color: _colorScheme.surface,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: _colorScheme.outline.withOpacity(0.2)),
+            border: Border.all(color: _colorScheme.outline.withValues(alpha: 0.2)),
           ),
-          child: Column(
-            children: [
-              _buildMetadataRow('Task ID', task.id.substring(0, 8)),
-              _buildMetadataRow('Created', DateFormat.yMMMd().format(task.createdAt)),
-              _buildMetadataRow('Last Modified', DateFormat.yMMMd().format(task.updatedAt)),
-            ],
-          ),
+          child: Column(children: [_buildMetadataRow('Task ID', task.id.substring(0, 8)), _buildMetadataRow('Created', DateFormat.yMMMd().format(task.createdAt)), _buildMetadataRow('Last Modified', DateFormat.yMMMd().format(task.updatedAt))]),
         ),
       ],
     );
@@ -780,7 +957,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
         if (sessions.isEmpty)
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: Colors.grey.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(color: Colors.grey.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
             child: Row(
               children: [
                 Icon(Icons.timer_off, color: Colors.grey[400]),
@@ -804,9 +981,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: completed ? Colors.green.withOpacity(0.1) : Colors.orange.withOpacity(0.1),
+        color: completed ? Colors.green.withValues(alpha: 0.1) : Colors.orange.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: completed ? Colors.green.withOpacity(0.3) : Colors.orange.withOpacity(0.3)),
+        border: Border.all(color: completed ? Colors.green.withValues(alpha: 0.3) : Colors.orange.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
@@ -821,16 +998,123 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
     );
   }
 
+  // ===== Quick Actions =====
+
+  /// Gets quick actions for the floating menu
+  List<QuickAction> _getQuickActions(Task task, l10n) {
+    return TaskQuickActions.forTask(
+      l10n: l10n,
+      isCompleted: task.isCompleted,
+      canStartFocus: _TaskActionHelper.canStartFocus(task),
+      onComplete: () => _completeTask(task, AppLocalizations.of(context)!),
+      onUncomplete: () => _uncompleteTask(task, AppLocalizations.of(context)!),
+      onEdit: () => _editTask(task),
+      onFocus: () => _startPomodoroSession(task, AppLocalizations.of(context)!),
+      onSetReminder: () => _showCustomReminderDialog(task, AppLocalizations.of(context)!),
+      onAddSubtask: () => _addSubtask(context, task, AppLocalizations.of(context)!),
+      onDuplicate: () => _duplicateTask(task, AppLocalizations.of(context)!),
+      onDelete: () => _deleteTask(task, AppLocalizations.of(context)!),
+    );
+  }
+
+  // ===== Swipe Actions =====
+
+  /// Gets left swipe actions (shown when swiping right)
+  List<SwipeAction> _getLeftSwipeActions(Task task, AppLocalizations l10n) {
+    final actions = <SwipeAction>[];
+
+    if (!task.isCompleted) {
+      // Complete task action
+      actions.add(
+        SwipeAction(
+          label: l10n.complete,
+          icon: Icons.check,
+          color: Colors.green,
+          onTap: () {
+            _HapticHelper.onSwipeComplete();
+            _completeTask(task, AppLocalizations.of(context)!);
+          },
+        ),
+      );
+    } else {
+      // Uncomplete task action
+      actions.add(
+        SwipeAction(
+          label: l10n.uncompleteTask,
+          icon: Icons.undo,
+          color: Colors.orange,
+          onTap: () {
+            _HapticHelper.onTaskUncomplete();
+            _uncompleteTask(task, AppLocalizations.of(context)!);
+          },
+        ),
+      );
+    }
+
+    return actions;
+  }
+
+  /// Gets right swipe actions (shown when swiping left)
+  List<SwipeAction> _getRightSwipeActions(Task task, AppLocalizations l10n) {
+    final actions = <SwipeAction>[];
+
+    // Edit action (only for incomplete tasks)
+    if (!task.isCompleted) {
+      actions.add(
+        SwipeAction(
+          label: l10n.edit,
+          icon: Icons.edit,
+          color: Colors.blue,
+          onTap: () {
+            _HapticHelper.onButtonPress();
+            _editTask(task);
+          },
+        ),
+      );
+    }
+
+    // Focus/Pomodoro action
+    if (_TaskActionHelper.canStartFocus(task)) {
+      actions.add(
+        SwipeAction(
+          label: 'Focus',
+          icon: Icons.timer,
+          color: Colors.purple,
+          onTap: () {
+            _HapticHelper.onFocusStart();
+            _startPomodoroSession(task, l10n);
+          },
+        ),
+      );
+    }
+
+    // Delete action
+    actions.add(
+      SwipeAction(
+        label: l10n.delete,
+        icon: Icons.delete,
+        color: Colors.red,
+        isDestructive: true,
+        onTap: () {
+          _HapticHelper.onSwipeDelete();
+          _deleteTask(task, l10n);
+        },
+      ),
+    );
+
+    return actions;
+  }
+
   // ===== Action Handlers =====
 
   /// Handles primary action based on task state
   void _handlePrimaryAction(Task task, AppLocalizations l10n) {
     if (task.isCompleted) {
-      _uncompleteTask(task);
+      _uncompleteTask(task, l10n);
     } else if (_TaskActionHelper.canStartFocus(task)) {
       _startPomodoroSession(task, l10n);
     } else {
-      _completeTask(task);
+      _completeTask(task, AppLocalizations.of(context)!);
     }
   }
 
@@ -887,22 +1171,66 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
   }
 
   /// Starts a Pomodoro session for the task
-  void _startPomodoroSession(Task task, AppLocalizations l10n) {
+  void _startPomodoroSession(Task task, AppLocalizations l10n) async {
     _HapticHelper.onActionButton();
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => PomodoroScreen()));
+
+    try {
+      // Show Pomodoro template selection modal
+      final template = await PomodoroTemplateScreen.showAsModal(context, initialTask: task);
+
+      if (template != null) {
+        AppLogging.logInfo('TaskDetailsScreen: Received template - Name: ${template.name}, Work: ${template.workDuration}min, Rest: ${template.restDuration}min, ID: ${template.id}', name: 'TaskDetails');
+        // Navigate to PomodoroScreen with selected template
+        if (mounted) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => PomodoroScreen(initialTask: task, template: template),
+            ),
+          );
+        }
+      }
+      // If template is null, user cancelled - do nothing
+    } catch (e) {
+      _HapticHelper.onError();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to open Pomodoro templates: $e'), backgroundColor: Colors.red));
+      }
+    }
   }
 
   /// Completes the task
-  void _completeTask(Task task) {
-    _HapticHelper.onComplete();
-    _confettiController.play();
-    context.read<TaskDetailsBloc>().add(CompleteTask(task.id));
+  void _completeTask(Task task, AppLocalizations l10n) async {
+    try {
+      _HapticHelper.onTaskComplete();
+      _showCelebrationMessage('${l10n.greatJobCompleting} ${task.title}');
+      _confettiController.play();
+
+      _taskDetailsBloc.add(CompleteTask(task.id));
+
+      // Trigger milestone celebration for task completion
+      _triggerTaskCompletionCelebration(task);
+    } catch (e) {
+      _HapticHelper.onError();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${l10n.failedToCompleteTask}: $e'), backgroundColor: Colors.red));
+    }
   }
 
   /// Uncompletes the task
-  void _uncompleteTask(Task task) {
-    _HapticHelper.onToggle();
-    context.read<TaskDetailsBloc>().add(UncompleteTask(task.id));
+  void _uncompleteTask(Task task, AppLocalizations l10n) {
+    try {
+      _HapticHelper.onTaskUncomplete();
+      _taskDetailsBloc.add(UncompleteTask(task.id));
+    } catch (e) {
+      _HapticHelper.onError();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${l10n.failedToUncompleteTask}: $e'), backgroundColor: Colors.red));
+    }
+  }
+
+  /// Refreshes task details to update all widgets
+  void _refreshTaskDetails() {
+    // Force reload of task data
+    _taskDetailsBloc.add(LoadTaskDetails(widget.taskId));
+    setState(() {});
   }
 
   /// Edits the task
@@ -912,7 +1240,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
       builder: (context) => EditTaskDialog(
         task: task,
         onTaskUpdated: (updatedTask) {
-          context.read<TaskDetailsBloc>().add(LoadTaskDetails(widget.taskId));
+          // BLoC will handle state update automatically
         },
       ),
     );
@@ -920,8 +1248,12 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
 
   /// Duplicates the task
   void _duplicateTask(Task task, AppLocalizations l10n) {
-    context.read<TaskDetailsBloc>().add(DuplicateTask(task.id));
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Task duplicated successfully')));
+    try {
+      _taskDetailsBloc.add(DuplicateTask(task.id));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.taskDuplicatedSuccessfully)));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${l10n.errorDuplicatingTask}: $e'), backgroundColor: Colors.red));
+    }
   }
 
   /// Deletes the task
@@ -935,9 +1267,15 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
           TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(l10n.cancel)),
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
-              context.read<TaskDetailsBloc>().add(LoadTaskDetails(widget.taskId));
-              Navigator.of(context).pop(); // Go back to previous screen
+              try {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Go back to previous screen
+                // Actually delete the task
+                context.read<TaskListBloc>().add(DeleteTask(task.id));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.taskDeletedSuccessfully(task.title, task.title))));
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${l10n.errorDeletingTask}: $e'), backgroundColor: Colors.red));
+              }
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
             child: Text(l10n.delete),
@@ -947,9 +1285,81 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
     );
   }
 
-  /// Accepts an AI reminder suggestion
-  void _acceptSuggestion(_ReminderSuggestion suggestion, Task task, AppLocalizations l10n) {
-    _setReminder(task, suggestion.reminderTime, l10n);
+  /// Shows snooze options in a bottom sheet
+  void _showSnoozeOptions(Task task, AppLocalizations l10n, BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Header
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(color: Colors.orange.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(12)),
+                    child: const Icon(Icons.snooze, color: Colors.orange, size: 20),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    l10n.snooze,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.orange),
+                  ),
+                  const Spacer(),
+                  IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.close)),
+                ],
+              ),
+            ),
+
+            // Snooze options
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  _buildSnoozeOption(task, 5, l10n.fiveMinutes, Icons.timer, context, l10n),
+                  _buildSnoozeOption(task, 10, l10n.tenMinutes, Icons.timer, context, l10n),
+                  _buildSnoozeOption(task, 15, l10n.fifteenMinutes, Icons.timer, context, l10n),
+                  _buildSnoozeOption(task, 30, l10n.thirtyMinutes, Icons.timer, context, l10n),
+                  _buildSnoozeOption(task, 60, l10n.oneHour, Icons.hourglass_empty, context, l10n),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Builds individual snooze option
+  Widget _buildSnoozeOption(Task task, int minutes, String label, IconData icon, BuildContext context, AppLocalizations l10n) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ListTile(
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(color: Colors.orange.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+          child: Icon(icon, color: Colors.orange, size: 20),
+        ),
+        title: Text(label, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600)),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: () {
+          Navigator.of(context).pop();
+          _snoozeReminder(task, minutes, l10n);
+        },
+      ),
+    );
   }
 
   /// Snoozes the current reminder
@@ -959,19 +1369,45 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
   }
 
   /// Cancels the current reminder
-  void _cancelReminder(Task task, AppLocalizations l10n) {
-    context.read<TaskDetailsBloc>().add(UpdateTaskDetails(task.copyWith(reminderDate: null)));
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.reminderCancelled)));
+  Future<void> _cancelReminder(Task task, AppLocalizations l10n) async {
+    try {
+      final updatedTask = task.copyWith(reminderDate: null);
+      _taskDetailsBloc.add(UpdateTaskDetails(updatedTask));
+
+      // Cancel notification
+      final notificationService = NotificationService();
+      await notificationService.cancelTaskReminder(task.id);
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.reminderCancelled), backgroundColor: Colors.orange, duration: const Duration(seconds: 2)));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${l10n.errorCancellingReminder}: $e'), backgroundColor: Colors.red));
+    }
   }
 
   /// Sets a reminder for the task
   void _setReminder(Task task, DateTime dateTime, AppLocalizations l10n) {
-    context.read<TaskDetailsBloc>().add(UpdateTaskDetails(task.copyWith(reminderDate: dateTime)));
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Reminder set successfully')));
+    // Prevent setting reminders on completed tasks
+    if (task.isCompleted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.cannotSetReminderOnCompletedTask), backgroundColor: Colors.orange));
+      return;
+    }
+
+    try {
+      _taskDetailsBloc.add(UpdateTaskDetails(task.copyWith(reminderDate: dateTime)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.reminderSetSuccessfully)));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${l10n.errorSettingReminder}: $e'), backgroundColor: Colors.red));
+    }
   }
 
   /// Shows custom reminder dialog
   void _showCustomReminderDialog(Task task, AppLocalizations l10n) {
+    // Prevent setting reminders on completed tasks
+    if (task.isCompleted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.cannotSetReminderOnCompletedTask), backgroundColor: Colors.orange));
+      return;
+    }
+
     showDatePicker(context: context, initialDate: DateTime.now().add(const Duration(hours: 1)), firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 365))).then((date) {
       if (date != null) {
         showTimePicker(context: context, initialTime: TimeOfDay.now()).then((time) {
@@ -982,6 +1418,1011 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> with TickerProvid
         });
       }
     });
+  }
+
+  /// Triggers milestone celebration for task completion
+  void _triggerTaskCompletionCelebration(Task task) {
+    Future.delayed(const Duration(milliseconds: 800), () {
+      if (!mounted) return;
+
+      final celebration = MilestoneCelebrations.taskCompleted(taskTitle: task.title);
+
+      showMilestoneCelebration(
+        context,
+        celebration,
+        onComplete: () {
+          _HapticHelper.onMilestone(100);
+        },
+      );
+    });
+  }
+
+  /// Shows a localized celebration message overlay
+  void _showCelebrationMessage(String message) {
+    if (!mounted) return;
+
+    final overlay = Overlay.of(context);
+    final entry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: MediaQuery.of(context).size.height * 0.3,
+        left: 0,
+        right: 0,
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.8), borderRadius: BorderRadius.circular(12)),
+            child: Text(
+              message,
+              style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    overlay.insert(entry);
+
+    // Remove the overlay after 2 seconds
+    Future.delayed(const Duration(seconds: 2), () {
+      if (entry.mounted) {
+        entry.remove();
+      }
+    });
+  }
+
+  /// Adds a subtask to the task
+  void _addSubtask(BuildContext context, Task task, AppLocalizations l10n) {
+    showDialog(
+      context: context,
+      builder: (context) => AddTaskDialog(
+        parentTaskId: task.id,
+        isSubtask: true,
+        onTaskAdded: (newSubtask) {
+          try {
+            // Use AddSubtask event to properly add subtask to parent task tree
+            _taskDetailsBloc.add(AddSubtask(task.id, newSubtask));
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${l10n.errorAddingSubtask}: $e'), backgroundColor: Colors.red));
+          }
+        },
+      ),
+    );
+  }
+
+  /// Reorders subtasks with drag and drop functionality
+  void _reorderSubtasks(BuildContext context, Task task, int oldIndex, int newIndex, AppLocalizations l10n) {
+    try {
+      // Add haptic feedback for better UX
+      HapticFeedback.lightImpact();
+
+      // Validate indices
+      if (oldIndex < 0 || oldIndex >= task.subtasks.length || newIndex < 0 || newIndex >= task.subtasks.length) {
+        return;
+      }
+
+      // Create mutable copy and reorder
+      final subtasks = List<Task>.from(task.subtasks);
+      final item = subtasks.removeAt(oldIndex);
+      subtasks.insert(newIndex, item);
+
+      // Dispatch BLoC event to update state
+      _taskDetailsBloc.add(ReorderSubtasks(task.id, subtasks));
+
+      // Optional: Show success feedback
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.subtasksReordered), duration: const Duration(seconds: 1), behavior: SnackBarBehavior.floating));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${l10n.errorReorderingSubtasks}: $e'), backgroundColor: Colors.red));
+    }
+  }
+
+  /// Sets a smart reminder with date and time
+  Future<void> _setSmartReminderWithDateTime(BuildContext context, DateTime reminderDateTime, String customMessage, Task task, AppLocalizations l10n) async {
+    // Prevent setting reminders on completed tasks
+    if (task.isCompleted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.cannotSetReminderOnCompletedTask), backgroundColor: Colors.orange));
+      return;
+    }
+
+    final updatedTask = task.copyWith(reminderDate: reminderDateTime);
+    _taskDetailsBloc.add(UpdateTaskDetails(updatedTask));
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${l10n.reminderSetFor(DateFormat.yMMMd().add_jm().format(reminderDateTime))}'), backgroundColor: Colors.green));
+    // Refresh the page to update all widgets
+    _refreshTaskDetails();
+  }
+
+  /// Sets a smart reminder based on minutes from now
+  Future<void> _setSmartReminder(BuildContext context, int minutesFromNow, Task task, AppLocalizations l10n) async {
+    final reminderTime = DateTime.now().add(Duration(minutes: minutesFromNow));
+    await _setSmartReminderWithDateTime(context, reminderTime, '', task, l10n);
+  }
+
+  /// Builds the enhanced subtasks section with modern design
+  Widget _buildSubtasksSection(BuildContext context, Task task, AppLocalizations l10n) {
+    final isCompleted = task.isCompleted;
+    final totalSubtasks = task.subtasks.length;
+    final completedSubtasks = task.subtasks.where((s) => s.isCompleted).length;
+    final progress = totalSubtasks > 0 ? completedSubtasks / totalSubtasks : 0.0;
+    //final completedSubtasksCount = _getCompletedSubtasksCount(task);
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3), Theme.of(context).colorScheme.surface], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2), width: 1),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Enhanced Header with Progress
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary.withValues(alpha: 0.1), Theme.of(context).colorScheme.primary.withValues(alpha: 0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    // Icon with gradient background
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.primary.withValues(alpha: 0.7)]),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 4))],
+                      ),
+                      child: Icon(Icons.checklist_rounded, color: Theme.of(context).colorScheme.onPrimary, size: 24),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.subtasks,
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
+                          ),
+                          if (totalSubtasks > 0) ...[
+                            const SizedBox(height: 4),
+                            Text(
+                              '$completedSubtasks / $totalSubtasks ${l10n.completedTasks}',
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    // Add button with enhanced styling
+                    if (!isCompleted)
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)),
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.add_rounded, color: Theme.of(context).colorScheme.primary),
+                          onPressed: () => _addSubtask(context, task, l10n),
+                          tooltip: l10n.addSubtask,
+                        ),
+                      ),
+                  ],
+                ),
+
+                // Progress bar
+                if (totalSubtasks > 0) ...[
+                  const SizedBox(height: 16),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: LinearProgressIndicator(value: progress, minHeight: 8, backgroundColor: Theme.of(context).colorScheme.surfaceVariant, valueColor: AlwaysStoppedAnimation<Color>(progress == 1.0 ? Colors.green : Theme.of(context).colorScheme.primary)),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${(progress * 100).toInt()}% ${l10n.complete}',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
+                      ),
+                      if (progress == 1.0)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(color: Colors.green.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(12)),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.check_circle, size: 14, color: Colors.green),
+                              const SizedBox(width: 4),
+                              Text(
+                                l10n.allDone,
+                                style: TextStyle(color: Colors.green, fontSize: 11, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ],
+            ),
+          ),
+
+          // Subtasks list or empty state with drag-and-drop reordering
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: task.subtasks.isEmpty
+                ? TaskEmptyStates.noSubtasks(onAddSubtask: () => _addSubtask(context, task, l10n), l10n: l10n)
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Reorder hint
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
+                        child: Row(
+                          children: [
+                            Icon(Icons.drag_indicator, size: 16, color: Theme.of(context).colorScheme.primary),
+                            const SizedBox(width: 8),
+                            Text(
+                              l10n.dragToReorderSubtasks,
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Subtasks list using ReorderableListView for drag-and-drop
+                      ReorderableListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: task.subtasks.length,
+                        onReorder: (oldIndex, newIndex) {
+                          _reorderSubtasks(context, task, oldIndex, newIndex, l10n);
+                        },
+                        itemBuilder: (context, index) {
+                          final subtask = task.subtasks[index];
+                          return SubtaskWidget(
+                            key: ValueKey('subtask_${subtask.id}'),
+                            subtask: subtask,
+                            depth: 0,
+                            maxDepth: task.maxSubtaskDepth,
+                            onToggle: (toggledSubtask) {
+                              _taskDetailsBloc.add(UpdateSubtask(toggledSubtask));
+                            },
+                            onEdit: (editedSubtask) {
+                              _taskDetailsBloc.add(UpdateSubtask(editedSubtask));
+                            },
+                            onDelete: (subtaskId) {
+                              _taskDetailsBloc.add(DeleteSubtask(subtaskId));
+                            },
+                            onAddNested: (newSubtask) {
+                              _taskDetailsBloc.add(AddSubtask(subtask.id, newSubtask));
+                            },
+                            strictMode: task.strictCompletionMode,
+                            isParentCompleted: task.isCompleted,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Rebuilt with clean architecture, optimized logic, and modern UI patterns
+  Widget _buildSmartReminderSection(BuildContext context, Task task, AppLocalizations l10n) {
+    // Core state calculations
+    final reminderState = _calculateReminderState(task);
+    final isRTL = Directionality.of(context) == TextDirection.rtl;
+
+    // Get contextual suggestions based on task analysis
+    final suggestions = _generateContextualSuggestions(task, l10n);
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 16),
+      decoration: _buildSectionDecoration(reminderState.isActive, isRTL, context),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header with status and badge
+          _buildSectionHeader(reminderState, l10n, context),
+
+          // Current reminder display with countdown and snooze (if exists)
+          if (reminderState.hasReminder) ...[_buildReminderDisplayWithSnooze(reminderState, task, l10n, context)],
+
+          // Quick actions and suggestions
+          _buildQuickActionsSection(suggestions, reminderState, task, l10n, context),
+        ],
+      ),
+    );
+  }
+
+  /// Calculates reminder state with proper null safety and logic
+  _ReminderState _calculateReminderState(Task task) {
+    final hasReminder = task.reminderDate != null;
+    final isActive = hasReminder && task.reminderDate!.isAfter(DateTime.now());
+    final isExpired = hasReminder && !isActive;
+
+    // AppLogging.logInfo('Reminder State - Task: ${task.id}, hasReminder: $hasReminder, isActive: $isActive, reminderDate: ${task.reminderDate}');
+
+    return _ReminderState(hasReminder: hasReminder, isActive: isActive, isExpired: isExpired, reminderTime: task.reminderDate);
+  }
+
+  /// Builds section decoration with RTL support and theme integration
+  BoxDecoration _buildSectionDecoration(bool isActive, bool isRTL, BuildContext context) {
+    return BoxDecoration(
+      gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary.withValues(alpha: 0.08), Theme.of(context).colorScheme.primary.withValues(alpha: 0.02)], begin: isRTL ? Alignment.topRight : Alignment.topLeft, end: isRTL ? Alignment.bottomLeft : Alignment.bottomRight),
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: isActive ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.4) : Theme.of(context).colorScheme.outline.withValues(alpha: 0.3), width: isActive ? 2 : 1),
+      boxShadow: [
+        if (isActive) BoxShadow(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15), blurRadius: 12, offset: const Offset(0, 4)),
+        BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 8, offset: const Offset(0, 2)),
+      ],
+    );
+  }
+
+  /// Builds section header with icon, title, and status badge
+  Widget _buildSectionHeader(_ReminderState state, AppLocalizations l10n, BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: state.isActive ? LinearGradient(colors: [Theme.of(context).colorScheme.primary.withValues(alpha: 0.15), Theme.of(context).colorScheme.primary.withValues(alpha: 0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight) : null,
+        borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+      ),
+      child: Row(
+        children: [
+          // Status icon with gradient background
+          _buildStatusIcon(state, context),
+          const SizedBox(width: 16),
+
+          // Title and subtitle
+          Expanded(child: _buildHeaderContent(state, l10n, context)),
+
+          // Status badge (if reminder exists)
+          if (state.hasReminder) _buildStatusBadge(state, l10n, context),
+        ],
+      ),
+    );
+  }
+
+  /// Builds animated status icon
+  Widget _buildStatusIcon(_ReminderState state, BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        gradient: state.isActive
+            ? LinearGradient(colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.primary.withValues(alpha: 0.8)], begin: Alignment.topLeft, end: Alignment.bottomRight)
+            : LinearGradient(colors: [Theme.of(context).colorScheme.surface, Theme.of(context).colorScheme.surface.withValues(alpha: 0.8)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: state.isActive ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.3) : Colors.black.withValues(alpha: 0.1), blurRadius: 8, offset: const Offset(0, 4))],
+      ),
+      child: Icon(state.isActive ? Icons.notifications_active : Icons.notifications_outlined, color: state.isActive ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), size: 24),
+    );
+  }
+
+  /// Builds header title and subtitle
+  Widget _buildHeaderContent(_ReminderState state, AppLocalizations l10n, BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.smartReminders,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: state.isActive ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          _getHeaderSubtitle(state, l10n),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: state.isActive ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.8) : Colors.grey[600], fontWeight: FontWeight.w500),
+        ),
+      ],
+    );
+  }
+
+  /// Gets appropriate subtitle based on reminder state
+  String _getHeaderSubtitle(_ReminderState state, AppLocalizations l10n) {
+    if (state.isActive) return l10n.reminderActiveAndReady;
+    if (state.isExpired) return l10n.reminderExpired;
+    return l10n.setReminderToStayOnTrack;
+  }
+
+  /// Builds status badge with gradient and animation
+  Widget _buildStatusBadge(_ReminderState state, AppLocalizations l10n, BuildContext context) {
+    final badgeColor = state.isActive ? Colors.green : Colors.orange;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [badgeColor, badgeColor.withValues(alpha: 0.8)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [BoxShadow(color: badgeColor.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2))],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(state.isActive ? Icons.play_arrow : Icons.schedule, color: Colors.white, size: 14),
+          const SizedBox(width: 4),
+          Text(
+            state.isActive ? l10n.active : l10n.expired,
+            style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Builds reminder display with countdown timer and snooze functionality
+  Widget _buildReminderDisplayWithSnooze(_ReminderState state, Task task, AppLocalizations l10n, BuildContext context) {
+    return StreamBuilder<Duration>(
+      stream: Stream.periodic(const Duration(seconds: 1), (_) {
+        return state.reminderTime!.difference(DateTime.now());
+      }).where((duration) => !duration.isNegative),
+      builder: (context, snapshot) {
+        final duration = snapshot.data ?? Duration.zero;
+
+        if (duration.inSeconds <= 0) {
+          return const SizedBox.shrink();
+        }
+
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: state.isActive ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.08) : Colors.red.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: state.isActive ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2) : Colors.red.withValues(alpha: 0.2)),
+          ),
+          child: Column(
+            children: [
+              // Reminder info row with snooze button
+              Row(
+                children: [
+                  state.isActive
+                      ? SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              // Background ring
+                              CircularProgressIndicator(value: 1.0, strokeWidth: 3, backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1), valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.primary.withValues(alpha: 0.2))),
+                              // Progress ring
+                              TweenAnimationBuilder<double>(
+                                tween: Tween<double>(begin: 0.0, end: 1.0),
+                                duration: const Duration(seconds: 1),
+                                builder: (context, value, child) {
+                                  final totalSeconds = state.reminderTime!.difference(DateTime.now()).inSeconds;
+                                  final elapsedSeconds = 0; // We start from now
+                                  final progress = 1.0 - (elapsedSeconds / totalSeconds).clamp(0.0, 1.0);
+
+                                  return CircularProgressIndicator(value: progress, strokeWidth: 3, backgroundColor: Colors.transparent, valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.primary));
+                                },
+                              ),
+                              // Center icon
+                              Icon(Icons.timer, size: 16, color: Theme.of(context).colorScheme.primary),
+                            ],
+                          ),
+                        )
+                      : Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(color: state.isActive ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.15) : Colors.red.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+                          child: Icon(Icons.schedule, size: 20, color: state.isActive ? Theme.of(context).colorScheme.primary : Colors.red),
+                        ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          state.isActive ? l10n.scheduledFor : l10n.wasScheduledFor,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600], fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          _formatCountdown(duration),
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
+                        ),
+                        /* const SizedBox(height: 2),
+                        Text(
+                          _formatReminderDateTime(state.reminderTime!, l10n),
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: state.isActive ? Theme.of(context).colorScheme.primary : Colors.red, fontWeight: FontWeight.bold),
+                        ), */
+                      ],
+                    ),
+                  ),
+                  if (state.isActive) ...[
+                    // Snooze button
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+                      ),
+                      child: PopupMenuButton<int>(
+                        icon: Icon(Icons.snooze, size: 18, color: Colors.orange),
+                        tooltip: l10n.snooze,
+                        onSelected: (minutes) {
+                          _snoozeReminder(task, minutes, l10n);
+                        },
+                        itemBuilder: (context) => [
+                          PopupMenuItem(value: 5, child: Row(children: [const Icon(Icons.timer, size: 16), const SizedBox(width: 8), Text(l10n.fiveMinutes)])),
+                          PopupMenuItem(value: 10, child: Row(children: [const Icon(Icons.timer, size: 16), const SizedBox(width: 8), Text(l10n.tenMinutes)])),
+                          PopupMenuItem(value: 15, child: Row(children: [const Icon(Icons.timer, size: 16), const SizedBox(width: 8), Text(l10n.fifteenMinutes)])),
+                          PopupMenuItem(value: 30, child: Row(children: [const Icon(Icons.timer, size: 16), const SizedBox(width: 8), Text(l10n.thirtyMinutes)])),
+                          PopupMenuItem(value: 60, child: Row(children: [const Icon(Icons.hourglass_empty, size: 16), const SizedBox(width: 8), Text(l10n.oneHour)])),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(color: Colors.green.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(10)),
+                      child: Icon(Icons.notifications_active, size: 18, color: Colors.green),
+                    ),
+                  ],
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(color: _getUrgencyColor(duration).withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
+                    child: Text(
+                      _getUrgencyLabel(duration, l10n),
+                      style: TextStyle(color: _getUrgencyColor(duration), fontSize: 10, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+
+              // Countdown timer (only for active reminders)         if (state.isActive) ...[const SizedBox(height: 12), _buildCountdownTimer(state.reminderTime!, l10n)],
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  /// Builds reminder info row with icon and text
+  Widget _buildReminderInfoRow(_ReminderState state, AppLocalizations l10n, BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(color: state.isActive ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.15) : Colors.red.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+          child: Icon(state.isActive ? Icons.schedule : Icons.history, size: 20, color: state.isActive ? Theme.of(context).colorScheme.primary : Colors.red),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                state.isActive ? l10n.scheduledFor : l10n.wasScheduledFor,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600], fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                _formatReminderDateTime(state.reminderTime!, l10n),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: state.isActive ? Theme.of(context).colorScheme.primary : Colors.red, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+        if (state.isActive) ...[
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(color: Colors.green.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(10)),
+            child: Icon(Icons.notifications_active, size: 18, color: Colors.green),
+          ),
+        ],
+      ],
+    );
+  }
+
+  /// Builds quick actions section with suggestions and buttons
+  Widget _buildQuickActionsSection(List<ReminderSuggestion> suggestions, _ReminderState state, Task task, AppLocalizations l10n, BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Section header
+          _buildQuickActionsHeader(l10n, context),
+          const SizedBox(height: 16),
+
+          // Contextual time suggestions
+          _buildTimeSuggestionsGrid(suggestions, task, l10n, context),
+          const SizedBox(height: 20),
+
+          // Action buttons
+          _buildActionButtons(state, task, l10n, context),
+        ],
+      ),
+    );
+  }
+
+  /// Builds quick actions section header
+  Widget _buildQuickActionsHeader(AppLocalizations l10n, BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
+          child: Icon(Icons.flash_on, size: 16, color: Theme.of(context).colorScheme.primary),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          l10n.quickSet,
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
+        ),
+        const Spacer(),
+        Text(l10n.tapToSetInstantly, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600])),
+      ],
+    );
+  }
+
+  /// Builds grid of time suggestion chips
+  Widget _buildTimeSuggestionsGrid(List<ReminderSuggestion> suggestions, Task task, AppLocalizations l10n, BuildContext context) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, childAspectRatio: 2.5, crossAxisSpacing: 8, mainAxisSpacing: 8),
+      itemCount: suggestions.length,
+      itemBuilder: (context, index) {
+        final suggestion = suggestions[index];
+        return _buildContextualTimeChip(context, suggestion.label, suggestion.minutes, task, suggestion.color, suggestion.icon, suggestion.description, l10n);
+      },
+    );
+  }
+
+  /// Builds action buttons (custom time, snooze, cancel, recurring options)
+  Widget _buildActionButtons(_ReminderState state, Task task, AppLocalizations l10n, BuildContext context) {
+    return Column(
+      children: [
+        // Primary action buttons
+        Row(
+          children: [
+            // Custom time button
+            Expanded(
+              flex: 2,
+              child: ElevatedButton.icon(
+                onPressed: () => _showCustomReminderDialog(task, l10n),
+                icon: const Icon(Icons.tune, size: 18),
+                label: Text(l10n.customTime),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  foregroundColor: Theme.of(context).colorScheme.onSurface,
+                  elevation: 2,
+                  shadowColor: Colors.black.withValues(alpha: 0.1),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: BorderSide(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
+                  ),
+                ),
+              ),
+            ),
+
+            // Action buttons for existing reminders
+            if (state.hasReminder) ...[
+              const SizedBox(width: 8),
+              // Snooze button
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () => _showSnoozeOptions(task, l10n, context),
+                  icon: const Icon(Icons.snooze, size: 18),
+                  label: Text(l10n.snooze),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange.withValues(alpha: 0.1),
+                    foregroundColor: Colors.orange,
+                    elevation: 2,
+                    shadowColor: Colors.orange.withValues(alpha: 0.2),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side: BorderSide(color: Colors.orange.withValues(alpha: 0.3)),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              // Cancel button
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () => _cancelReminder(task, l10n),
+                  icon: const Icon(Icons.cancel, size: 18),
+                  label: Text(l10n.cancel),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red.withValues(alpha: 0.1),
+                    foregroundColor: Colors.red,
+                    elevation: 2,
+                    shadowColor: Colors.red.withValues(alpha: 0.2),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side: BorderSide(color: Colors.red.withValues(alpha: 0.3)),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+
+        // Recurring options (if no reminder exists)
+        if (!state.hasReminder) ...[const SizedBox(height: 12), _buildRecurringOptions(task, l10n, context)],
+      ],
+    );
+  }
+
+  /// Builds recurring reminder options
+  Widget _buildRecurringOptions(Task task, AppLocalizations l10n, BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Recurring options header
+          Row(
+            children: [
+              Icon(Icons.repeat, size: 16, color: Theme.of(context).colorScheme.primary),
+              const SizedBox(width: 6),
+              Text(
+                l10n.recurringOptions,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+
+          // Recurring option buttons
+          Row(
+            children: [
+              Expanded(child: _buildRecurringOption(context, l10n.daily, Icons.today, Colors.blue, () => _setRecurringReminder(task, 'daily', l10n))),
+              const SizedBox(width: 8),
+              Expanded(child: _buildRecurringOption(context, l10n.weekly, Icons.calendar_view_week, Colors.purple, () => _setRecurringReminder(task, 'weekly', l10n))),
+              const SizedBox(width: 8),
+              Expanded(child: _buildRecurringOption(context, l10n.custom, Icons.settings, Colors.teal, () => _showCustomRecurringDialog(task, l10n))),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Generates contextual reminder suggestions based on task properties
+  List<ReminderSuggestion> _generateContextualSuggestions(Task task, AppLocalizations l10n) {
+    final suggestions = <ReminderSuggestion>[];
+    final now = DateTime.now();
+    final isOverdue = task.dueDate != null && task.dueDate!.isBefore(now);
+    final isHighPriority = task.priority == TaskPriority.high;
+    final hasSubtasks = task.subtasks.isNotEmpty;
+
+    // Base suggestions for all tasks
+    suggestions.addAll([ReminderSuggestion(label: l10n.minutes15, minutes: 15, color: Colors.orange, icon: Icons.timer, description: 'Quick start'), ReminderSuggestion(label: l10n.hour1, minutes: 60, color: Colors.blue, icon: Icons.hourglass_top, description: 'Focus session')]);
+
+    // Context-aware suggestions
+    if (isOverdue) {
+      suggestions.insert(0, ReminderSuggestion(label: l10n.minutes5, minutes: 5, color: Colors.red, icon: Icons.priority_high, description: 'Urgent!'));
+    }
+
+    if (isHighPriority) {
+      suggestions.add(ReminderSuggestion(label: l10n.minutes30, minutes: 30, color: Colors.purple, icon: Icons.star, description: 'Priority task'));
+    }
+
+    if (hasSubtasks) {
+      suggestions.add(ReminderSuggestion(label: l10n.hours2, minutes: 120, color: Colors.teal, icon: Icons.task_alt, description: 'Subtask review'));
+    }
+
+    // Due date based suggestions
+    if (task.dueDate != null) {
+      final daysUntilDue = task.dueDate!.difference(now).inDays;
+      final hoursUntilDue = task.dueDate!.difference(now).inHours;
+
+      if (daysUntilDue < 0) {
+        // Overdue - add urgent reminder
+        if (!suggestions.any((s) => s.minutes <= 5)) {
+          suggestions.insert(0, ReminderSuggestion(label: l10n.minutes5, minutes: 5, color: Colors.red, icon: Icons.priority_high, description: 'Overdue!'));
+        }
+      } else if (daysUntilDue == 0) {
+        // Due today - add same-day reminders
+        if (hoursUntilDue <= 2) {
+          suggestions.add(ReminderSuggestion(label: l10n.hours2, minutes: 120, color: Colors.orange, icon: Icons.today, description: 'Due today'));
+        } else {
+          suggestions.add(ReminderSuggestion(label: l10n.hours6, minutes: 360, color: Colors.blue, icon: Icons.event, description: 'Due today'));
+        }
+      } else if (daysUntilDue == 1) {
+        // Due tomorrow
+        suggestions.add(ReminderSuggestion(label: l10n.tomorrow, minutes: 1440, color: Colors.green, icon: Icons.event, description: 'Due tomorrow'));
+      } else if (daysUntilDue <= 7) {
+        // Due this week
+        suggestions.add(ReminderSuggestion(label: l10n.nextWeek, minutes: 10080, color: Colors.indigo, icon: Icons.calendar_today, description: 'Due this week'));
+      }
+    }
+
+    // Limit to 6 suggestions max
+    return suggestions.take(6).toList();
+  }
+
+  /// Builds contextual time chip with enhanced features
+  Widget _buildContextualTimeChip(BuildContext context, String label, int minutes, Task task, Color color, IconData icon, String description, AppLocalizations l10n) {
+    final isRTL = Directionality.of(context) == TextDirection.rtl;
+
+    return Tooltip(
+      message: '$label - $description',
+      child: GestureDetector(
+        onTap: () => _setSmartReminder(context, minutes, task, l10n),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [color.withValues(alpha: 0.15), color.withValues(alpha: 0.05)], begin: isRTL ? Alignment.topRight : Alignment.topLeft, end: isRTL ? Alignment.bottomLeft : Alignment.bottomRight),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: color.withValues(alpha: 0.4), width: 1.5),
+            boxShadow: [BoxShadow(color: color.withValues(alpha: 0.2), blurRadius: 4, offset: const Offset(0, 2))],
+          ),
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, color: color, size: 14),
+                const SizedBox(width: 4),
+                Flexible(
+                  child: Text(
+                    label,
+                    style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Formats countdown duration into readable string
+  String _formatCountdown(Duration duration) {
+    final days = duration.inDays;
+    final hours = duration.inHours % 24;
+    final minutes = duration.inMinutes % 60;
+    final seconds = duration.inSeconds % 60;
+
+    if (days > 0) {
+      return '${days}d ${hours}h ${minutes}m';
+    } else if (hours > 0) {
+      return '${hours}h ${minutes}m ${seconds}s';
+    } else if (minutes > 0) {
+      return '${minutes}m ${seconds}s';
+    } else {
+      return '${seconds}s';
+    }
+  }
+
+  /// Gets urgency color based on remaining time
+  Color _getUrgencyColor(Duration duration) {
+    final totalMinutes = duration.inMinutes;
+
+    if (totalMinutes <= 5) {
+      return Colors.red;
+    } else if (totalMinutes <= 30) {
+      return Colors.orange;
+    } else if (totalMinutes <= 120) {
+      return Colors.yellow;
+    } else {
+      return Colors.green;
+    }
+  }
+
+  /// Gets urgency label based on remaining time
+  String _getUrgencyLabel(Duration duration, AppLocalizations l10n) {
+    final totalMinutes = duration.inMinutes;
+
+    if (totalMinutes <= 5) {
+      return 'Urgent!';
+    } else if (totalMinutes <= 30) {
+      return 'Soon';
+    } else if (totalMinutes <= 120) {
+      return 'Upcoming';
+    } else {
+      return 'Plenty';
+    }
+  }
+
+  /// Builds recurring reminder option button
+  Widget _buildRecurringOption(BuildContext context, String label, IconData icon, Color color, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [color.withValues(alpha: 0.1), color.withValues(alpha: 0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 16),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Sets a recurring reminder
+  void _setRecurringReminder(Task task, String frequency, AppLocalizations l10n) {
+    final now = DateTime.now();
+    DateTime reminderTime;
+
+    switch (frequency) {
+      case 'daily':
+        reminderTime = DateTime(now.year, now.month, now.day + 1, 9, 0); // Tomorrow 9 AM
+        break;
+      case 'weekly':
+        reminderTime = DateTime(now.year, now.month, now.day + 7, 9, 0); // Next week 9 AM
+        break;
+      default:
+        reminderTime = now.add(const Duration(hours: 1));
+    }
+
+    // Create updated task with recurring reminder
+    final updatedTask = task.copyWith(
+      reminderDate: reminderTime,
+      // Add recurring info to description if it exists
+      description: task.description != null && task.description!.isNotEmpty ? '${task.description}\n[Recurring: $frequency]' : '[Recurring: $frequency]',
+    );
+
+    _taskDetailsBloc.add(UpdateTaskDetails(updatedTask));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Recurring reminder set: $frequency'), backgroundColor: Colors.green));
+    _refreshTaskDetails();
+  }
+
+  /// Shows custom recurring reminder dialog
+  void _showCustomRecurringDialog(Task task, AppLocalizations l10n) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Custom Recurring Reminder'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Set custom recurring reminder options'),
+            const SizedBox(height: 16),
+            // Add custom recurring options here
+            // For now, just show a simple message
+            const Text('Advanced recurring options coming soon!'),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              // For now, just set a daily reminder
+              _setRecurringReminder(task, 'daily', l10n);
+            },
+            child: const Text('Set Daily'),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -1041,7 +2482,7 @@ Widget _buildTaskStatistics(BuildContext context, Task task, AppLocalizations l1
       Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary.withOpacity(0.1), Theme.of(context).colorScheme.secondary.withOpacity(0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+          gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary.withValues(alpha: 0.1), Theme.of(context).colorScheme.secondary.withValues(alpha: 0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -1073,63 +2514,6 @@ Widget _buildTaskStatistics(BuildContext context, Task task, AppLocalizations l1
 /// Gets completed subtasks count
 int _getCompletedSubtasksCount(Task task) {
   return task.subtasks.where((subtask) => subtask.isCompleted).length;
-}
-
-/// Adds a subtask to the task
-void _addSubtask(BuildContext context, Task task, AppLocalizations l10n) {
-  showDialog(
-    context: context,
-    builder: (context) => AddTaskDialog(
-      onTaskAdded: (newTask) {
-        context.read<TaskDetailsBloc>().add(LoadTaskDetails(task.id));
-      },
-    ),
-  );
-}
-
-/// Toggles subtask completion
-void _toggleSubtask(BuildContext context, Task subtask) {
-  if (subtask.isCompleted) {
-    context.read<TaskDetailsBloc>().add(UncompleteTask(subtask.id));
-  } else {
-    context.read<TaskDetailsBloc>().add(CompleteTask(subtask.id));
-  }
-  HapticFeedback.lightImpact();
-}
-
-/// Edits a subtask
-void _editSubtask(BuildContext context, Task subtask, AppLocalizations l10n) {
-  showDialog(
-    context: context,
-    builder: (context) => EditTaskDialog(
-      task: subtask,
-      onTaskUpdated: (updatedTask) {
-        context.read<TaskDetailsBloc>().add(LoadTaskDetails(subtask.id));
-      },
-    ),
-  );
-}
-
-/// Deletes a subtask
-void _deleteSubtask(BuildContext context, Task subtask, AppLocalizations l10n) {
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text(l10n.deleteTask),
-      content: Text('Are you sure you want to delete this subtask?'),
-      actions: [
-        TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(l10n.cancel)),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-            context.read<TaskDetailsBloc>().add(LoadTaskDetails(subtask.id));
-          },
-          style: TextButton.styleFrom(foregroundColor: Colors.red),
-          child: Text(l10n.delete),
-        ),
-      ],
-    ),
-  );
 }
 
 /// Custom painter for header pattern
@@ -1208,45 +2592,6 @@ Widget _buildModernAppBar(BuildContext context, Task task, AppLocalizations l10n
   );
 }
 
-// 🎯 CONTEXTUAL PRIMARY ACTION
-Widget _buildPrimaryAction(BuildContext context, Task task, AppLocalizations l10n) {
-  // Determine the most appropriate action based on task state
-  if (task.isCompleted) {
-    return _buildActionButton(context, Icons.undo, l10n.uncompleteTask, Colors.orange, () => _uncompleteTask(context, task));
-  }
-
-  if (_canStartFocus(task)) {
-    return _buildActionButton(context, Icons.play_arrow, l10n.startFocus, Colors.green, () => startExecution(context, task, l10n));
-  }
-
-  return _buildActionButton(context, Icons.check, l10n.completeTask, Colors.blue, () => startExecution(context, task, l10n));
-}
-
-// 🎯 CONTEXTUAL ACTIONS MENU
-Widget _buildContextualActions(BuildContext context, Task task, AppLocalizations l10n) {
-  final actions = _getContextualActions(task, l10n);
-  if (actions.isEmpty) return const SizedBox.shrink();
-
-  return Container(
-    margin: const EdgeInsets.only(right: 16, top: 8),
-    child: PopupMenuButton<String>(
-      icon: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.2),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
-        ),
-        child: const Icon(Icons.more_vert, color: Colors.white, size: 20),
-      ),
-      color: Theme.of(context).colorScheme.surface,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      onSelected: (value) => _handleContextualAction(context, task, value, l10n),
-      itemBuilder: (context) => actions,
-    ),
-  );
-}
-
 List<PopupMenuEntry<String>> _getContextualActions(Task task, AppLocalizations l10n) {
   final actions = <PopupMenuEntry<String>>[];
 
@@ -1283,44 +2628,25 @@ List<PopupMenuEntry<String>> _getContextualActions(Task task, AppLocalizations l
   return actions;
 }
 
-void _handleContextualAction(BuildContext context, Task task, String value, AppLocalizations l10n) {
-  switch (value) {
-    case 'edit':
-      _editTask(context, task);
-      break;
-    case 'duplicate':
-      _duplicateTask(context, task, l10n);
-      break;
-    case 'delete':
-      _deleteTask(context, task, l10n);
-      break;
-  }
-}
-
 Widget _buildActionButton(BuildContext context, IconData icon, String label, Color color, VoidCallback onPressed) {
   return Container(
     margin: const EdgeInsets.only(right: 16, top: 8),
-    child:
-        ElevatedButton.icon(
-              onPressed: () {
-                HapticFeedback.lightImpact();
-                onPressed();
-              },
-              icon: Icon(icon, size: 20),
-              label: Text(label),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: color,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-                elevation: 4,
-                shadowColor: color.withValues(alpha: 0.3),
-              ),
-            )
-            .animate()
-            .scale(begin: const Offset(1.0, 1.0), end: const Offset(1.05, 1.05), duration: const Duration(milliseconds: 150), curve: Curves.easeInOut)
-            .then()
-            .scale(begin: const Offset(1.05, 1.05), end: const Offset(1.0, 1.0), duration: const Duration(milliseconds: 150), curve: Curves.easeInOut),
+    child: ElevatedButton.icon(
+      onPressed: () {
+        HapticFeedback.lightImpact();
+        onPressed();
+      },
+      icon: Icon(icon, size: 20),
+      label: Text(label),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        elevation: 4,
+        shadowColor: color.withValues(alpha: 0.3),
+      ),
+    ).animate().scale(begin: const Offset(1.0, 1.0), end: const Offset(1.05, 1.05), duration: const Duration(milliseconds: 150), curve: Curves.easeInOut).then().scale(begin: const Offset(1.05, 1.05), end: const Offset(1.0, 1.0), duration: const Duration(milliseconds: 150), curve: Curves.easeInOut),
   );
 }
 
@@ -1345,68 +2671,6 @@ Widget _buildModernActionButton(BuildContext context, IconData icon, String labe
 
 // 🏗️ MODERN BODY - 3-Tier Execution-Focused Layout
 
-// 🎯 TIER 1: EXECUTION SECTION
-Widget _buildExecutionSection(BuildContext context, Task task, AppLocalizations l10n) {
-  return Card(
-    elevation: 2,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l10n.readyToFocus,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 16),
-
-          // Focus/Pomodoro Integration
-          if (!task.isCompleted) ...[_buildFocusIntegration(context, task, l10n)] else ...[_buildCompletionCelebration(context, task, l10n)],
-        ],
-      ),
-    ),
-  );
-}
-
-// 🎯 TIER 2: TASK ESSENTIALS
-Widget _buildTaskEssentials(BuildContext context, Task task, AppLocalizations l10n) {
-  return Card(
-    elevation: 2,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-    child: Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.info_outline, color: Theme.of(context).colorScheme.primary, size: 24),
-              const SizedBox(width: 12),
-              Text(
-                l10n.yourProgress,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-
-          // Core Task Information
-          _buildCoreTaskInfo(context, task, l10n),
-
-          const SizedBox(height: 16),
-
-          // Quick Stats Row
-          _buildQuickStatsRow(context, task, task.getCompletionProgress(), l10n),
-
-          // Smart Reminder Section
-          _buildSmartReminderSection(context, task, l10n),
-        ],
-      ),
-    ),
-  );
-}
-
 // 🎯 TIER 3: ADVANCED DETAILS (Collapsible)
 Widget _buildAdvancedSection(BuildContext context, Task task, double progress, AppLocalizations l10n) {
   return ExpansionTile(
@@ -1424,43 +2688,6 @@ Widget _buildAdvancedSection(BuildContext context, Task task, double progress, A
       // Subtasks Section (if has subtasks)
       if (task.subtasks.isNotEmpty) ...[_buildModernSubtasksSection(context, task, l10n), const SizedBox(height: 24)],
     ],
-  );
-}
-
-// 🎯 EXECUTION SECTION HELPERS
-Widget _buildFocusIntegration(BuildContext context, Task task, AppLocalizations l10n) {
-  return Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Theme.of(context).colorScheme.surface,
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: Colors.grey.shade200),
-    ),
-    child: Column(
-      children: [
-        // Status text only
-        if (task.estimatedSessions > 0) ...[
-          Row(
-            children: [
-              Icon(Icons.timer_outlined, color: Theme.of(context).colorScheme.primary, size: 20),
-              const SizedBox(width: 8),
-              Text('${task.pomodoroCount}/${task.estimatedSessions} sessions', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface)),
-            ],
-          ),
-        ] else ...[
-          Row(
-            children: [
-              Icon(Icons.play_circle_outline, color: Theme.of(context).colorScheme.primary, size: 20),
-              const SizedBox(width: 8),
-              Text('Ready to start working', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.primary)),
-            ],
-          ),
-        ],
-        const SizedBox(height: 12),
-        // Use the unused action button for a secondary quick action
-        _buildModernActionButton(context, Icons.speed, 'Quick Start', () => startExecution(context, task, l10n), Theme.of(context).colorScheme.primary),
-      ],
-    ),
   );
 }
 
@@ -1550,13 +2777,7 @@ Widget _buildTaskMetadata(BuildContext context, Task task, AppLocalizations l10n
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
         ),
-        child: Column(
-          children: [
-            _buildMetadataRow(context, 'Task ID', task.id.substring(0, 8)),
-            _buildMetadataRow(context, 'Created', DateFormat.yMMMd().format(task.createdAt)),
-            _buildMetadataRow(context, 'Last Modified', DateFormat.yMMMd().format(task.updatedAt)),
-          ],
-        ),
+        child: Column(children: [_buildMetadataRow(context, 'Task ID', task.id.substring(0, 8)), _buildMetadataRow(context, 'Created', DateFormat.yMMMd().format(task.createdAt)), _buildMetadataRow(context, 'Last Modified', DateFormat.yMMMd().format(task.updatedAt))]),
       ),
     ],
   );
@@ -1598,11 +2819,7 @@ Widget _buildTaskStatistics(BuildContext context, Task task, AppLocalizations l1
       Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Theme.of(context).colorScheme.primary.withValues(alpha: 0.1), Theme.of(context).colorScheme.secondary.withValues(alpha: 0.05)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary.withValues(alpha: 0.1), Theme.of(context).colorScheme.secondary.withValues(alpha: 0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -1651,125 +2868,26 @@ Widget _buildStatCard(BuildContext context, String label, String value, IconData
   );
 }
 
-Widget _buildSmartReminderSuggestion(BuildContext context, Task task, AppLocalizations l10n) {
-  final suggestion = _getOptimalReminderSuggestion(task, l10n);
-  if (suggestion == null) return const SizedBox.shrink();
-
-  return Card(
-    margin: const EdgeInsets.only(top: 16),
-    elevation: 2,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-    child: Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary.withOpacity(0.1), Theme.of(context).colorScheme.secondary.withOpacity(0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.lightbulb_outline, color: Theme.of(context).colorScheme.primary),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  suggestion.text,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(suggestion.reason, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[700])),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () => _setSmartReminderWithDateTime(context, suggestion.reminderTime, '', task, l10n),
-                  icon: const Icon(Icons.schedule),
-                  label: Text('Set Reminder'),
-                  style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary, foregroundColor: Colors.white),
-                ),
-              ),
-              const SizedBox(width: 8),
-              TextButton.icon(onPressed: () => _showCustomReminderDialog(context, task, l10n, suggestion), icon: const Icon(Icons.edit), label: Text('Custom')),
-            ],
-          ),
-        ],
-      ),
-    ),
-  ).animate().fadeIn().slideY(begin: -0.1);
-}
-
-Widget _buildEnhancedReminderSection(BuildContext context, Task task, AppLocalizations l10n) {
-  return Card(
-    margin: const EdgeInsets.symmetric(vertical: 16),
-    elevation: 4,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Section header
-          Row(
-            children: [
-              Icon(Icons.notifications_active, color: Theme.of(context).colorScheme.primary),
-              const SizedBox(width: 12),
-              Text(
-                l10n.smartReminders,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 16),
-
-          // Reuse existing suggestion logic
-          _buildSmartReminderSuggestion(context, task, l10n),
-
-          const SizedBox(height: 16),
-
-          // NEW: Quick reminder presets
-          _buildQuickReminderPresets(context, task, l10n),
-
-          const SizedBox(height: 16),
-
-          // NEW: Reminder history
-          _buildReminderHistory(context, task, l10n),
-        ],
-      ),
-    ),
-  ).animate().fadeIn().slideY(begin: -0.1);
-}
-
 Widget _buildQuickReminderPresets(BuildContext context, Task task, AppLocalizations l10n) {
   final presets = [
     {'label': 'In 30 minutes', 'minutes': 30},
     {'label': 'In 1 hour', 'minutes': 60},
     {'label': 'In 2 hours', 'minutes': 120},
+    {'label': 'In 4 hours', 'minutes': 240},
     {'label': 'Tomorrow', 'minutes': 1440},
   ];
 
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text('Quick Reminders', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
-      const SizedBox(height: 8),
-      Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: presets.map((preset) {
-          return ActionChip(
-            label: Text(preset['label']! as String),
-            onPressed: () => _setQuickReminder(context, task, preset['minutes']! as int, l10n),
-            backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-            side: BorderSide(color: Theme.of(context).colorScheme.primary.withOpacity(0.3)),
-          );
-        }).toList(),
-      ),
-    ],
+  return Wrap(
+    spacing: 8,
+    runSpacing: 8,
+    children: presets.map((preset) {
+      return ActionChip(
+        label: Text(preset['label']! as String),
+        onPressed: task.isCompleted ? null : () => _setQuickReminder(context, task, preset['minutes']! as int, l10n),
+        backgroundColor: task.isCompleted ? Colors.grey.withValues(alpha: 0.1) : Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+        side: BorderSide(color: task.isCompleted ? Colors.grey.withValues(alpha: 0.3) : Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)),
+      );
+    }).toList(),
   );
 }
 
@@ -1777,7 +2895,7 @@ Widget _buildReminderHistory(context, Task task, AppLocalizations l10n) {
   // This would show reminder history - for now showing placeholder
   return Container(
     padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(color: Colors.grey.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+    decoration: BoxDecoration(color: Colors.grey.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
     child: Row(
       children: [
         Icon(Icons.history, size: 16, color: Colors.grey[600]),
@@ -1815,7 +2933,7 @@ Widget _buildModernStatusBar(BuildContext context, Task task, AppLocalizations l
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
     decoration: BoxDecoration(
-      gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary.withOpacity(0.1), Theme.of(context).colorScheme.secondary.withOpacity(0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+      gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary.withValues(alpha: 0.1), Theme.of(context).colorScheme.secondary.withValues(alpha: 0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
     ),
     child: Row(
       children: [
@@ -1868,15 +2986,7 @@ Widget _buildQuickStatsRow(BuildContext context, Task task, double progress, App
       const SizedBox(width: 12),
       Expanded(child: _buildModernStatCard(context, l10n.progress, '${(progress * 100).toInt()}%', Icons.pie_chart, Theme.of(context).colorScheme.secondary)),
       const SizedBox(width: 12),
-      Expanded(
-        child: _buildModernStatCard(
-          context,
-          l10n.daysLeft,
-          task.dueDate != null ? '${task.dueDate!.difference(DateTime.now()).inDays}' : '∞',
-          Icons.calendar_today,
-          task.dueDate != null && task.dueDate!.isBefore(DateTime.now().add(const Duration(days: 3))) ? Colors.red : Colors.green,
-        ),
-      ),
+      Expanded(child: _buildModernStatCard(context, l10n.daysLeft, task.dueDate != null ? '${task.dueDate!.difference(DateTime.now()).inDays}' : '∞', Icons.calendar_today, task.dueDate != null && task.dueDate!.isBefore(DateTime.now().add(const Duration(days: 3))) ? Colors.red : Colors.green)),
     ],
   );
 }
@@ -1885,9 +2995,9 @@ Widget _buildModernStatCard(BuildContext context, String title, String value, Ic
   return Container(
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
-      gradient: LinearGradient(colors: [color.withOpacity(0.1), color.withOpacity(0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+      gradient: LinearGradient(colors: [color.withValues(alpha: 0.1), color.withValues(alpha: 0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
       borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: color.withOpacity(0.2)),
+      border: Border.all(color: color.withValues(alpha: 0.2)),
     ),
     child: Column(
       children: [
@@ -1911,10 +3021,10 @@ Widget _buildModernStatCard(BuildContext context, String title, String value, Ic
 Widget _buildModernTaskInfoCard(BuildContext context, Task task, AppLocalizations l10n) {
   return Container(
     decoration: BoxDecoration(
-      gradient: LinearGradient(colors: [Theme.of(context).colorScheme.surface, Theme.of(context).colorScheme.surface.withOpacity(0.8)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+      gradient: LinearGradient(colors: [Theme.of(context).colorScheme.surface, Theme.of(context).colorScheme.surface.withValues(alpha: 0.8)], begin: Alignment.topLeft, end: Alignment.bottomRight),
       borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
-      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
+      border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
+      boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))],
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1923,14 +3033,14 @@ Widget _buildModernTaskInfoCard(BuildContext context, Task task, AppLocalization
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary.withOpacity(0.05), Theme.of(context).colorScheme.primary.withOpacity(0.02)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+            gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary.withValues(alpha: 0.05), Theme.of(context).colorScheme.primary.withValues(alpha: 0.02)], begin: Alignment.topLeft, end: Alignment.bottomRight),
             borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
           ),
           child: Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+                decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
                 child: Icon(Icons.info_outline, color: Theme.of(context).colorScheme.primary, size: 20),
               ),
               const SizedBox(width: 12),
@@ -1972,15 +3082,15 @@ Widget _buildModernInfoItem(BuildContext context, IconData icon, String label, S
   return Container(
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
-      color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
+      color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
       borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.1)),
+      border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.1)),
     ),
     child: Row(
       children: [
         Container(
           padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+          decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
           child: Icon(icon, color: Theme.of(context).colorScheme.primary, size: 20),
         ),
         const SizedBox(width: 16),
@@ -2019,332 +3129,6 @@ Widget _buildModernInfoItem(BuildContext context, IconData icon, String label, S
   );
 }
 
-// ignore: prefer_typing_uninitialized_variables
-var isCompleted = false;
-
-// 🚀 SMART REMINDER SECTION - Completely Rebuilt
-Widget _buildSmartReminderSection(context, Task task, AppLocalizations l10n) {
-  final hasReminder = task.reminderDate != null;
-  final isReminderActive = hasReminder && task.reminderDate!.isAfter(DateTime.now());
-
-  return Container(
-    margin: const EdgeInsets.symmetric(vertical: 16),
-    decoration: BoxDecoration(
-      gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary.withOpacity(0.08), Theme.of(context).colorScheme.primary.withOpacity(0.02)], begin: Alignment.topLeft, end: Alignment.bottomRight),
-      borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: isReminderActive ? Theme.of(context).colorScheme.primary.withOpacity(0.4) : Theme.of(context).colorScheme.outline.withOpacity(0.3), width: isReminderActive ? 2 : 1),
-      boxShadow: [
-        if (isReminderActive) BoxShadow(color: Theme.of(context).colorScheme.primary.withOpacity(0.15), blurRadius: 12, offset: const Offset(0, 4)),
-        BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, 2)),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Enhanced Header Section
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            gradient: isReminderActive
-                ? LinearGradient(colors: [Theme.of(context).colorScheme.primary.withOpacity(0.15), Theme.of(context).colorScheme.primary.withOpacity(0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight)
-                : null,
-            borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-          ),
-          child: Row(
-            children: [
-              // Enhanced Icon Container
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  gradient: isReminderActive
-                      ? LinearGradient(colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.primary.withOpacity(0.8)], begin: Alignment.topLeft, end: Alignment.bottomRight)
-                      : LinearGradient(colors: [Theme.of(context).colorScheme.surface, Theme.of(context).colorScheme.surface.withOpacity(0.8)], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [BoxShadow(color: isReminderActive ? Theme.of(context).colorScheme.primary.withOpacity(0.3) : Colors.black.withOpacity(0.1), blurRadius: 8, offset: const Offset(0, 4))],
-                ),
-                child: Icon(
-                  isReminderActive ? Icons.notifications_active : Icons.notifications_outlined,
-                  color: isReminderActive ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.smartReminders,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: isReminderActive ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      isReminderActive
-                          ? l10n.reminderActiveAndReady
-                          : hasReminder
-                          ? l10n.reminderExpired
-                          : l10n.setReminderToStayOnTrack,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: isReminderActive ? Theme.of(context).colorScheme.primary.withOpacity(0.8) : Colors.grey[600], fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-              ),
-              // Enhanced Status Badge
-              if (hasReminder)
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: isReminderActive ? [Colors.green, Colors.green.withOpacity(0.8)] : [Colors.orange, Colors.orange.withOpacity(0.8)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [BoxShadow(color: (isReminderActive ? Colors.green : Colors.orange).withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2))],
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(isReminderActive ? Icons.play_arrow : Icons.schedule, color: Colors.white, size: 14),
-                      const SizedBox(width: 4),
-                      Text(
-                        isReminderActive ? l10n.active : l10n.expired,
-                        style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
-        ),
-
-        // Enhanced Current Reminder Status
-        if (hasReminder) ...[
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: isReminderActive ? Theme.of(context).colorScheme.primary.withOpacity(0.08) : Colors.red.withOpacity(0.05),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: isReminderActive ? Theme.of(context).colorScheme.primary.withOpacity(0.2) : Colors.red.withOpacity(0.2)),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(color: isReminderActive ? Theme.of(context).colorScheme.primary.withOpacity(0.15) : Colors.red.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
-                  child: Icon(isReminderActive ? Icons.schedule : Icons.history, size: 20, color: isReminderActive ? Theme.of(context).colorScheme.primary : Colors.red),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        isReminderActive ? l10n.scheduledFor : l10n.wasScheduledFor,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600], fontWeight: FontWeight.w500),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        _formatReminderDateTime(task.reminderDate!, l10n),
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: isReminderActive ? Theme.of(context).colorScheme.primary : Colors.red, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
-                if (isReminderActive) ...[
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(color: Colors.green.withOpacity(0.15), borderRadius: BorderRadius.circular(10)),
-                    child: Icon(Icons.notifications_active, size: 18, color: Colors.green),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ],
-
-        // Enhanced Quick Actions Section
-        Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Section Header
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
-                    child: Icon(Icons.flash_on, size: 16, color: Theme.of(context).colorScheme.primary),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    l10n.quickSet,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
-                  ),
-                  const Spacer(),
-                  Text(l10n.tapToSetInstantly, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600])),
-                ],
-              ),
-              const SizedBox(height: 16),
-
-              // Enhanced Smart Time Suggestions
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, childAspectRatio: 2.5, crossAxisSpacing: 8, mainAxisSpacing: 8),
-                itemCount: 7,
-                itemBuilder: (context, index) {
-                  final chips = [
-                    (l10n.now, 0, Colors.red),
-                    (l10n.minutes5, 5, Colors.orange),
-                    (l10n.minutes15, 15, Colors.orange),
-                    (l10n.minutes30, 30, Colors.blue),
-                    (l10n.hour1, 60, Colors.blue),
-                    (l10n.hours2, 120, Colors.purple),
-                    (l10n.tomorrow, 1440, Colors.green),
-                  ];
-                  final chip = chips[index];
-                  return _buildEnhancedTimeChip(context, chip.$1, chip.$2, task, chip.$3, l10n);
-                },
-              ),
-
-              const SizedBox(height: 20),
-
-              // Enhanced Action Buttons
-              Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: ElevatedButton.icon(
-                      onPressed: () => _showSmartReminderDialog(context, task, l10n),
-                      icon: const Icon(Icons.tune, size: 18),
-                      label: Text(l10n.customTime),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.surface,
-                        foregroundColor: Theme.of(context).colorScheme.onSurface,
-                        elevation: 2,
-                        shadowColor: Colors.black.withOpacity(0.1),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          side: BorderSide(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (hasReminder) ...[
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: () => _cancelReminder(context, task, l10n),
-                        icon: const Icon(Icons.cancel, size: 18),
-                        label: Text(l10n.cancel),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red.withOpacity(0.1),
-                          foregroundColor: Colors.red,
-                          elevation: 2,
-                          shadowColor: Colors.red.withOpacity(0.2),
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            side: BorderSide(color: Colors.red.withOpacity(0.3)),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-// Enhanced time chip widget with better animations and visual feedback
-Widget _buildEnhancedTimeChip(BuildContext context, String label, int minutes, Task task, Color color, AppLocalizations l10n) {
-  return GestureDetector(
-    onTap: () => _setSmartReminder(context, minutes, task, l10n),
-    child: AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [color.withOpacity(0.15), color.withOpacity(0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.4), width: 1.5),
-        boxShadow: [BoxShadow(color: color.withOpacity(0.2), blurRadius: 4, offset: const Offset(0, 2))],
-      ),
-      child: Center(
-        child: Text(
-          label,
-          style: TextStyle(color: color, fontSize: 13, fontWeight: FontWeight.bold),
-        ),
-      ),
-    ),
-  );
-}
-
-Widget _buildSubtasksSection(BuildContext context, Task task, AppLocalizations l10n) {
-  return AnimatedOpacity(
-    duration: const Duration(milliseconds: 500),
-    opacity: isCompleted ? 0.5 : 1.0,
-    child: Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(l10n.subtasks, style: Theme.of(context).textTheme.titleLarge),
-                IconButton(icon: const Icon(Icons.add), onPressed: isCompleted ? null : () => _addSubtask(context, task, l10n)),
-              ],
-            ),
-            const SizedBox(height: 16),
-            if (task.subtasks.isEmpty)
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.checklist, size: 80, color: Colors.grey),
-                    const SizedBox(height: 16),
-                    Text(l10n.noSubtasks),
-                  ],
-                ),
-              )
-            else
-              Column(
-                children: task.subtasks.map((subtask) {
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    child: SubtaskWidget(
-                      subtask: subtask,
-                      depth: 0,
-                      maxDepth: task.maxSubtaskDepth,
-                      onToggle: (updated) => _toggleSubtask(context, updated),
-                      onEdit: (sub) => _editSubtask(context, subtask, l10n) /*  context.read<TaskDetailsBloc>().add(UpdateSubtask(sub)) */,
-                      onDelete: (id) => _deleteSubtask(context, subtask, l10n) /*  context.read<TaskDetailsBloc>().add(DeleteSubtask(id)) */,
-                      onAddNested: (subtask) => _addSubtask(context, task, l10n) /*  context.read<TaskDetailsBloc>().add(AddSubtask(task.id, subtask)),*/,
-                      strictMode: task.strictCompletionMode,
-                      isParentCompleted: task.isCompleted,
-                    ),
-                  );
-                }).toList(),
-              ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-// 🎯 UNUSED HELPER METHODS - Can be utilized for enhanced features
 Widget _buildSessionsChart(Task task, AppLocalizations l10n) {
   if (task.pomodoroSessions.isEmpty) {
     return Center(
@@ -2578,7 +3362,7 @@ Widget _buildProductivityInsights(BuildContext context, Task task, AppLocalizati
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
+          border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
         ),
         child: Column(
           children: [
@@ -2597,7 +3381,7 @@ Widget _buildProductivityInsights(BuildContext context, Task task, AppLocalizati
 Widget _buildEmptyInsights(BuildContext context, AppLocalizations l10n) {
   return Container(
     padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(color: Colors.grey.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+    decoration: BoxDecoration(color: Colors.grey.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
     child: Column(
       children: [
         Icon(Icons.insights, size: 48, color: Colors.grey[400]),
@@ -2620,7 +3404,7 @@ Widget _buildInsightRow(BuildContext context, IconData icon, String label, Strin
       children: [
         Container(
           padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
           child: Icon(icon, color: color, size: 16),
         ),
         const SizedBox(width: 12),
@@ -2652,7 +3436,7 @@ Widget _buildSessionPatterns(BuildContext context, Task task, AppLocalizations l
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
+          border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
         ),
         child: Column(
           children: [
@@ -2676,7 +3460,7 @@ Widget _buildPatternItem(BuildContext context, IconData icon, String label, Stri
         Expanded(child: Text(label, style: Theme.of(context).textTheme.bodyMedium)),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+          decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
           child: Text(
             value,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(color: color, fontWeight: FontWeight.w600),
@@ -2691,9 +3475,9 @@ Widget _buildPomodoroHistorySection(BuildContext context, {required Task task, r
   return Container(
     margin: const EdgeInsets.symmetric(vertical: 16),
     decoration: BoxDecoration(
-      gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary.withOpacity(0.08), Theme.of(context).colorScheme.primary.withOpacity(0.02)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+      gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary.withValues(alpha: 0.08), Theme.of(context).colorScheme.primary.withValues(alpha: 0.02)], begin: Alignment.topLeft, end: Alignment.bottomRight),
       borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.3)),
+      border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3)),
     ),
     child: Column(
       mainAxisSize: MainAxisSize.min,
@@ -2776,7 +3560,7 @@ Widget _buildPomodoroSessionCard(BuildContext context, Map<String, dynamic> sess
     decoration: BoxDecoration(
       color: Theme.of(context).colorScheme.surface,
       borderRadius: BorderRadius.circular(16),
-      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, 2))],
+      boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 8, offset: const Offset(0, 2))],
     ),
     child: InkWell(
       onTap: () => _showPomodoroSessionDetails(context, session, l10n),
@@ -2823,10 +3607,7 @@ Widget _buildPomodoroSessionCard(BuildContext context, Map<String, dynamic> sess
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('${duration} minutes', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-                      if (completed)
-                        Text('Completed', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.green))
-                      else
-                        Text('In Progress', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.orange)),
+                      if (completed) Text('Completed', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.green)) else Text('In Progress', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.orange)),
                     ],
                   ),
                 ),
@@ -2839,152 +3620,12 @@ Widget _buildPomodoroSessionCard(BuildContext context, Map<String, dynamic> sess
   );
 }
 
-/* 
-  Widget _buildSubtasksSection(BuildContext context, Task task, AppLocalizations l10n) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Theme.of(context).colorScheme.primary.withOpacity(0.08), Theme.of(context).colorScheme.primary.withOpacity(0.02)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.3)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Icon(Icons.task_alt, color: Theme.of(context).colorScheme.primary, size: 24),
-                const SizedBox(width: 12),
-                Text(
-                  'Subtasks',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-
-          // Subtasks List
-          Expanded(
-            child: task.subtasks.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.checklist, size: 48, color: Colors.grey[400]),
-                        const SizedBox(height: 16),
-                        Text('No subtasks yet', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey[600])),
-                        const SizedBox(height: 8),
-                        ElevatedButton.icon(onPressed: () => _addSubtask(context, task, l10n), icon: const Icon(Icons.add), label: Text('Add First Subtask')),
-                      ],
-                    ),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.all(8),
-                    itemCount: task.subtasks.length,
-                    itemBuilder: (context, index) {
-                      final subtask = task.subtasks[index];
-                      return _buildSubtaskCard(context, subtask, task, l10n);
-                    },
-                  ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSubtaskCard(BuildContext context, Task subtask, Task parentTask, AppLocalizations l10n) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, 2))],
-      ),
-      child: InkWell(
-        onTap: () => _showSubtaskDetails(context, subtask, parentTask, l10n),
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              // Checkbox
-              Checkbox(value: subtask.isCompleted, onChanged: (value) => _toggleSubtaskCompletion(subtask, parentTask), activeColor: Theme.of(context).colorScheme.primary),
-              const SizedBox(width: 12),
-
-              // Subtask info
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      subtask.title,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, decoration: subtask.isCompleted ? TextDecoration.lineThrough : null),
-                    ),
-                    if (subtask.description!.isNotEmpty) Text(subtask!.description!, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600])),
-                    const SizedBox(height: 4),
-
-                    // Subtask actions
-                    Row(
-                      children: [
-                        if (!subtask.isCompleted) IconButton(onPressed: () => _startPomodoroForSubtask(context, subtask, l10n), icon: const Icon(Icons.play_arrow), tooltip: 'Start Pomodoro'),
-                        IconButton(onPressed: () => _editSubtask(context, subtask, l10n), icon: const Icon(Icons.edit), tooltip: 'Edit Subtask'),
-                        IconButton(onPressed: () => _deleteSubtask(context, subtask, l10n), icon: const Icon(Icons.delete), tooltip: 'Delete Subtask'),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
- */
-Widget _buildFAB(BuildContext context, AppLocalizations l10n) {
-  return BlocBuilder<TaskDetailsBloc, TaskDetailsState>(
-    builder: (context, state) {
-      if (state is TaskDetailsLoaded) {
-        if (state.task.isCompleted) {
-          return FloatingActionButton.extended(
-            onPressed: () => _uncompleteTask(context, state.task),
-            backgroundColor: Colors.orange,
-            icon: const Icon(Icons.undo),
-            label: Text(l10n.uncompleteTask),
-          ).animate().shake(duration: 500.ms, hz: 4);
-        }
-        final canComplete = state.canComplete;
-        return FloatingActionButton.extended(
-          onPressed: canComplete
-              ? () {
-                  context.read<TaskDetailsBloc>().add(CompleteTask(state.task.id));
-                  HapticFeedback.heavyImpact();
-                }
-              : null,
-          backgroundColor: canComplete ? Colors.green : Colors.grey,
-          icon: const Icon(Icons.check),
-          label: Text(canComplete ? l10n.completeTaskButton : l10n.completeSubtasksFirst),
-        ).animate().shake(duration: 500.ms, hz: 4);
-      }
-      return const SizedBox.shrink();
-    },
-  );
-}
-
 Widget _buildModernProgressSection(BuildContext context, Task task, double progress, AppLocalizations l10n) {
   return Container(
     decoration: BoxDecoration(
-      gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary.withOpacity(0.05), Theme.of(context).colorScheme.primary.withOpacity(0.02)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+      gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary.withValues(alpha: 0.05), Theme.of(context).colorScheme.primary.withValues(alpha: 0.02)], begin: Alignment.topLeft, end: Alignment.bottomRight),
       borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.2)),
+      border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)),
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -2993,7 +3634,7 @@ Widget _buildModernProgressSection(BuildContext context, Task task, double progr
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
             borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
           ),
           child: Row(
@@ -3082,9 +3723,9 @@ Widget _buildProgressStat(BuildContext context, String label, String value, Icon
 Widget _buildModernSubtasksSection(BuildContext context, Task task, AppLocalizations l10n) {
   return Container(
     decoration: BoxDecoration(
-      gradient: LinearGradient(colors: [Theme.of(context).colorScheme.secondary.withOpacity(0.05), Theme.of(context).colorScheme.secondary.withOpacity(0.02)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+      gradient: LinearGradient(colors: [Theme.of(context).colorScheme.secondary.withValues(alpha: 0.05), Theme.of(context).colorScheme.secondary.withValues(alpha: 0.02)], begin: Alignment.topLeft, end: Alignment.bottomRight),
       borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: Theme.of(context).colorScheme.secondary.withOpacity(0.2)),
+      border: Border.all(color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2)),
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -3093,7 +3734,7 @@ Widget _buildModernSubtasksSection(BuildContext context, Task task, AppLocalizat
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+            color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
             borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
           ),
           child: Row(
@@ -3128,7 +3769,7 @@ Widget _buildModernSubtasksSection(BuildContext context, Task task, AppLocalizat
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
+                  border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
                 ),
                 child: Row(
                   children: [
@@ -3137,9 +3778,7 @@ Widget _buildModernSubtasksSection(BuildContext context, Task task, AppLocalizat
                     Expanded(
                       child: Text(
                         subtask.title,
-                        style: Theme.of(
-                          context,
-                        ).textTheme.bodyMedium?.copyWith(decoration: subtask.isCompleted ? TextDecoration.lineThrough : null, color: subtask.isCompleted ? Colors.grey : Theme.of(context).colorScheme.onSurface),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(decoration: subtask.isCompleted ? TextDecoration.lineThrough : null, color: subtask.isCompleted ? Colors.grey : Theme.of(context).colorScheme.onSurface),
                       ),
                     ),
                     if (subtask.priority == TaskPriority.high)
@@ -3165,9 +3804,9 @@ Widget _buildModernSubtasksSection(BuildContext context, Task task, AppLocalizat
 Widget _buildModernTimelineSection(BuildContext context, Task task, AppLocalizations l10n) {
   return Container(
     decoration: BoxDecoration(
-      gradient: LinearGradient(colors: [Theme.of(context).colorScheme.tertiary.withOpacity(0.05), Theme.of(context).colorScheme.tertiary.withOpacity(0.02)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+      gradient: LinearGradient(colors: [Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.05), Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.02)], begin: Alignment.topLeft, end: Alignment.bottomRight),
       borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: Theme.of(context).colorScheme.tertiary.withOpacity(0.2)),
+      border: Border.all(color: Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.2)),
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -3176,7 +3815,7 @@ Widget _buildModernTimelineSection(BuildContext context, Task task, AppLocalizat
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.tertiary.withOpacity(0.1),
+            color: Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.1),
             borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
           ),
           child: Row(
@@ -3198,9 +3837,7 @@ Widget _buildModernTimelineSection(BuildContext context, Task task, AppLocalizat
             children: [
               _buildTimelineItem(context, l10n.created, '${DateFormat.yMMMd().format(task.createdAt)} ${DateFormat.jm().format(task.createdAt)}', Icons.add_circle, Colors.blue),
               const SizedBox(height: 12),
-              if (task.updatedAt != task.createdAt) ...[
-                _buildTimelineItem(context, '${l10n.updated}', '${DateFormat.yMMMd().format(task.updatedAt)} ${DateFormat.jm().format(task.updatedAt)}', Icons.edit, Colors.orange),
-              ],
+              if (task.updatedAt != task.createdAt) ...[_buildTimelineItem(context, '${l10n.updated}', '${DateFormat.yMMMd().format(task.updatedAt)} ${DateFormat.jm().format(task.updatedAt)}', Icons.edit, Colors.orange)],
               const SizedBox(height: 12),
               if (task.isCompleted) _buildTimelineItem(context, l10n.completed, l10n.notYetCompleted, Icons.check_circle, Colors.green),
             ],
@@ -3216,7 +3853,7 @@ Widget _buildTimelineItem(BuildContext context, String title, String time, IconD
     children: [
       Container(
         padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
         child: Icon(icon, color: color, size: 20),
       ),
       const SizedBox(width: 16),
@@ -3233,142 +3870,12 @@ Widget _buildTimelineItem(BuildContext context, String title, String time, IconD
   );
 }
 
-/// ? sevices ///////////////////////////////
-/* void _toggleSubtaskCompletion(Task subtask, Task parentTask) {
-    // This would normally update to database
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Subtask ${subtask.isCompleted ? 'uncompleted' : 'completed'}')));
-  } */
-
-void _startPomodoroForSubtask(BuildContext context, Task subtask, AppLocalizations l10n) {
-  // Navigate to Pomodoro screen with the subtask
-  Navigator.of(context).push(MaterialPageRoute(builder: (context) => PomodoroScreen(initialTask: subtask)));
-}
-
-void _showSubtaskDetails(BuildContext context, Task subtask, Task parentTask, AppLocalizations l10n) {
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text('Subtask Details'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Title: ${subtask.title}'),
-          if (subtask.description?.isNotEmpty == true) Text('Description: ${subtask.description}'),
-          Text('Status: ${subtask.isCompleted ? 'Completed' : 'Pending'}'),
-          Text('Parent Task: ${parentTask.title}'),
-        ],
-      ),
-      actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text('Close'))],
-    ),
-  );
-}
-
-void _startFocusMode(BuildContext context, Task task, AppLocalizations l10n) {
-  // Navigate to PomodoroScreen with the current task
-  Navigator.of(context).push(MaterialPageRoute(builder: (context) => PomodoroScreen(initialTask: task)));
-}
-
-void _editTask(BuildContext context, Task task) {
-  showDialog(
-    context: context,
-    builder: (context) => EditTaskDialog(
-      task: task,
-      onTaskUpdated: (updatedTask) {
-        context.read<TaskDetailsBloc>().add(UpdateTaskDetails(updatedTask));
-      },
-    ),
-  );
-}
-
-void _duplicateTask(BuildContext context, Task task, AppLocalizations l10n) {
-  context.read<TaskDetailsBloc>().add(DuplicateTask(task.id));
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.taskDuplicatedSuccessfully)));
-}
-
-void _deleteTask(BuildContext context, Task task, AppLocalizations l10n) {
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text('${l10n.deleteTaskConfirmation}'),
-      content: Text('${l10n.confirmDeleteTask(task.title)}'),
-      actions: [
-        TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancel')),
-        TextButton(
-          onPressed: () {
-            // Delete task logic
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
-          },
-          style: TextButton.styleFrom(foregroundColor: Colors.red),
-          child: Text(l10n.delete),
-        ),
-      ],
-    ),
-  );
-}
-
-/* void _toggleSubtask(BuildContext context, Task subtask) {
-  context.read<TaskDetailsBloc>().add(UpdateSubtask(subtask));
-  HapticFeedback.lightImpact();
-} */
-
-void _reorderSubtasks(BuildContext context, Task task, int oldIndex, int newIndex) {
-  final subtasks = List<Task>.from(task.subtasks);
-  final item = subtasks.removeAt(oldIndex);
-  subtasks.insert(newIndex, item);
-  context.read<TaskDetailsBloc>().add(ReorderSubtasks(task.id, subtasks));
-}
-
-void startExecution(BuildContext context, Task task, AppLocalizations l10n) {
-  if (task.estimatedSessions > 0) {
-    _startFocusMode(context, task, l10n);
-  } else {
-    context.read<TaskDetailsBloc>().add(CompleteTask(task.id));
-    HapticFeedback.heavyImpact();
-  }
-}
-
-void _showAllSessions(BuildContext context, Task task, AppLocalizations l10n) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-    builder: (context) => DraggableScrollableSheet(
-      initialChildSize: 0.7,
-      maxChildSize: 0.9,
-      minChildSize: 0.5,
-      builder: (context, scrollController) => Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(l10n.allSessions, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                IconButton(onPressed: () => Navigator.of(context).pop(), icon: Icon(Icons.close)),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                controller: scrollController,
-                itemCount: task.pomodoroSessions.length,
-                itemBuilder: (context, index) {
-                  final session = task.pomodoroSessions[task.pomodoroSessions.length - 1 - index];
-                  return _buildDetailedSessionItem(session, task, l10n);
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
 void _setQuickReminder(BuildContext context, Task task, int minutes, AppLocalizations l10n) async {
+  if (task.isCompleted) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Cannot set reminder on completed task'), backgroundColor: Colors.orange));
+    return;
+  }
+
   final reminderTime = DateTime.now().add(Duration(minutes: minutes));
   final updatedTask = task.copyWith(reminderDate: reminderTime);
 
@@ -3388,68 +3895,6 @@ void _setQuickReminder(BuildContext context, Task task, int minutes, AppLocaliza
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error setting reminder'), backgroundColor: Colors.red));
     }
   }
-}
-
-void _showCustomReminderDialog(context, task, l10n, suggestion) {
-  showDialog(
-    context: context,
-    builder: (context) => Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary.withOpacity(0.1), Theme.of(context).colorScheme.secondary.withOpacity(0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withOpacity(0.2), borderRadius: BorderRadius.circular(8)),
-                child: Icon(Icons.schedule, color: Theme.of(context).colorScheme.primary, size: 20),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.smartReminderSuggestion,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.primary),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(suggestion.text, style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500)),
-                    Text(suggestion.reason, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey.shade600)),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: () => _setSmartReminder(context, suggestion.minutes, task, l10n),
-              icon: const Icon(Icons.add_alarm, size: 18),
-              label: Text(l10n.setReminder),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-void _uncompleteTask(BuildContext context, Task task) {
-  context.read<TaskDetailsBloc>().add(UncompleteTask(task.id));
-  HapticFeedback.mediumImpact();
 }
 
 // Helper methods for analytics
@@ -3586,6 +4031,7 @@ Map<String, String> _analyzeSessionPatterns(List<Map<String, dynamic>> sessions,
   return patterns;
 }
 
+/* 
 Future<void> _setSmartReminder(BuildContext context, int minutesFromNow, Task task, AppLocalizations l10n) async {
   // Check notification permissions first
   final notificationService = NotificationService();
@@ -3626,7 +4072,7 @@ Future<void> _setSmartReminder(BuildContext context, int minutesFromNow, Task ta
   final updatedTask = task.copyWith(reminderDate: reminderDate);
 
   // Update task
-  context.read<TaskDetailsBloc>().add(UpdateTaskDetails(updatedTask));
+  _taskDetailsBloc.add(UpdateTaskDetails(updatedTask));
 
   // Schedule notification
   await notificationService.scheduleTaskReminder(updatedTask);
@@ -3644,19 +4090,6 @@ Future<void> _setSmartReminder(BuildContext context, int minutesFromNow, Task ta
   }
 
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${l10n.reminderSetFor(timeText)}  ${l10n.fromNow}'), backgroundColor: Colors.green, duration: const Duration(seconds: 2)));
-}
-
-Future<void> _cancelReminder(context, Task task, AppLocalizations l10n) async {
-  final updatedTask = task.copyWith(reminderDate: null);
-
-  // Update task
-  context.read<TaskDetailsBloc>().add(UpdateTaskDetails(updatedTask));
-
-  // Cancel notification
-  final notificationService = NotificationService();
-  await notificationService.cancelTaskReminder(task.id);
-
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.reminderCancelled), backgroundColor: Colors.orange, duration: const Duration(seconds: 2)));
 }
 
 Future<void> _showSmartReminderDialog(context, Task task, AppLocalizations l10n) async {
@@ -3775,10 +4208,18 @@ Future<void> _showSmartReminderDialog(context, Task task, AppLocalizations l10n)
 }
 
 Future<void> _setSmartReminderWithDateTime(context, DateTime reminderDateTime, String customMessage, Task task, AppLocalizations l10n) async {
+  // Prevent setting reminders on completed tasks
+  if (task.isCompleted) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Cannot set reminder on completed task'), backgroundColor: Colors.orange)
+    );
+    return;
+  }
+
   final updatedTask = task.copyWith(reminderDate: reminderDateTime);
 
   // Update task
-  context.read<TaskDetailsBloc>().add(UpdateTaskDetails(updatedTask));
+  _taskDetailsBloc.add(UpdateTaskDetails(updatedTask));
 
   // Schedule notification
   final notificationService = NotificationService();
@@ -3802,6 +4243,7 @@ Future<void> _setSmartReminderWithDateTime(context, DateTime reminderDateTime, S
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Reminder set for $timeText'), backgroundColor: Colors.green, duration: const Duration(seconds: 2)));
 }
 
+ */
 Color _getSessionTypeColor(String type) {
   switch (type.toLowerCase()) {
     case 'work':
@@ -3966,4 +4408,133 @@ String _getTaskStatusDescriptionHelper(Task task, AppLocalizations l10n) {
   }
 
   return l10n.noDueDateSet;
+}
+
+/// Expandable FAB widget with quick actions menu
+class _QuickActionsFab extends StatefulWidget {
+  final List<QuickAction> actions;
+  final VoidCallback onFabPressed;
+
+  const _QuickActionsFab({required this.actions, required this.onFabPressed});
+
+  @override
+  State<_QuickActionsFab> createState() => _QuickActionsFabState();
+}
+
+class _QuickActionsFabState extends State<_QuickActionsFab> with TickerProviderStateMixin {
+  late AnimationController _fabAnimationController;
+  late AnimationController _menuAnimationController;
+  late Animation<double> _fabRotation;
+  late Animation<double> _menuScale;
+  late Animation<double> _menuOpacity;
+  late List<Animation<double>> _itemAnimations;
+
+  bool _isMenuOpen = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _fabAnimationController = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
+
+    _menuAnimationController = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
+
+    _fabRotation = Tween<double>(
+      begin: 0.0,
+      end: 0.785398, // 45 degrees in radians
+    ).animate(CurvedAnimation(parent: _fabAnimationController, curve: Curves.easeInOut));
+
+    _menuScale = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _menuAnimationController, curve: Curves.elasticOut));
+
+    _menuOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _menuAnimationController, curve: Curves.easeInOut));
+
+    _itemAnimations = List.generate(
+      widget.actions.length,
+      (index) => Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+          parent: _menuAnimationController,
+          curve: Interval(index * 0.1, 0.5 + index * 0.1, curve: Curves.elasticOut),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _fabAnimationController.dispose();
+    _menuAnimationController.dispose();
+    super.dispose();
+  }
+
+  void _toggleMenu() {
+    setState(() {
+      _isMenuOpen = !_isMenuOpen;
+      if (_isMenuOpen) {
+        _fabAnimationController.forward();
+        _menuAnimationController.forward();
+      } else {
+        _fabAnimationController.reverse();
+        _menuAnimationController.reverse();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.bottomRight,
+      children: [
+        // Quick action buttons
+        if (_isMenuOpen)
+          ...widget.actions.asMap().entries.map((entry) {
+            final index = entry.key;
+            final action = entry.value;
+            return AnimatedBuilder(
+              animation: _itemAnimations[index],
+              builder: (context, child) {
+                return Transform.scale(
+                  scale: _itemAnimations[index].value,
+                  child: Transform.translate(
+                    offset: Offset(0, -(index + 1) * 70.0 * (1 - _itemAnimations[index].value)),
+                    child: Opacity(
+                      opacity: _itemAnimations[index].value,
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        child: FloatingActionButton.extended(
+                          onPressed: action.isEnabled
+                              ? () {
+                                  _toggleMenu();
+                                  action.onTap();
+                                }
+                              : null,
+                          icon: Icon(action.icon, size: 20),
+                          label: Text(action.label, style: const TextStyle(fontSize: 12)),
+                          backgroundColor: action.isEnabled ? action.color : Colors.grey,
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          }).toList(),
+
+        // Main FAB
+        AnimatedBuilder(
+          animation: _fabRotation,
+          builder: (context, child) {
+            return Transform.rotate(
+              angle: _fabRotation.value,
+              child: FloatingActionButton(
+                onPressed: widget.actions.isNotEmpty ? _toggleMenu : widget.onFabPressed,
+                backgroundColor: _isMenuOpen ? Colors.red : Theme.of(context).colorScheme.primary,
+                child: Icon(_isMenuOpen ? Icons.close : (widget.actions.isNotEmpty ? Icons.more_vert : Icons.check), color: Colors.white),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
 }

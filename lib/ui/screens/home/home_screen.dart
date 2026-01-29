@@ -18,21 +18,24 @@ import 'package:tazbeet/ui/design_system/ds_border_radius.dart';
 import 'package:tazbeet/ui/design_system/ds_elevation.dart';
 import 'package:tazbeet/ui/design_system/ds_components.dart';
 import 'package:tazbeet/ui/widgets/edit_task_dialog.dart';
+import '../../widgets/floating_quick_actions.dart';
+import '../../widgets/recurring_task_manager.dart';
+import '../../widgets/floating_quick_actions.dart' as fab;
 import '../add_task_screen.dart';
 import '../../screens/task_details_screen.dart';
 import 'package:tazbeet/ui/widgets/optimized_filter_chips.dart';
 
 import 'package:tazbeet/ui/widgets/selection_toolbar.dart';
 import 'package:tazbeet/ui/widgets/quick_task_input.dart';
-import 'package:tazbeet/ui/widgets/common/quick_actions_fab.dart';
 
 /// Complete Redesigned Home Screen
 /// Following WCAG AA standards and design system tokens
 class HomeScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldGlobalKey;
   final Function(int)? onTabSwitchRequested;
+  final Function(bool)? onSelectionModeChanged;
 
-  const HomeScreen({super.key, required this.scaffoldGlobalKey, this.onTabSwitchRequested});
+  const HomeScreen({super.key, required this.scaffoldGlobalKey, this.onTabSwitchRequested, this.onSelectionModeChanged});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -44,9 +47,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = HomeScreenController();
+    _controller = HomeScreenController(onSelectionModeChanged: widget.onSelectionModeChanged);
     // Load persisted calendar view mode
     _controller.loadCalendarViewMode();
+
+    // Prevent keyboard auto-opening on app launch
+    /*  WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        FocusScope.of(context).unfocus();
+      }
+    }); */
   }
 
   @override
@@ -57,11 +67,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final actions = [
+      fab.QuickAction(id: 'add_task', label: AppLocalizations.of(context)!.addTaskTitle, icon: Icons.note_add, color: Colors.green, onTap: () => _showAddTaskDialog(context), tooltip: AppLocalizations.of(context)!.addTaskTitle),
+      fab.QuickAction(id: 'log_mood', label: AppLocalizations.of(context)!.logMood, icon: Icons.mood, color: Colors.purple, onTap: () => widget.onTabSwitchRequested?.call(4), tooltip: AppLocalizations.of(context)!.logMood),
+      fab.QuickAction(id: 'add_category', label: AppLocalizations.of(context)!.addCategory, icon: Icons.category, color: Colors.orange, onTap: () => widget.onTabSwitchRequested?.call(3), tooltip: AppLocalizations.of(context)!.addCategory),
+    ];
+
     return ValueListenableBuilder<bool>(
       valueListenable: _controller.isSelectionMode,
       builder: (context, isSelectionMode, _) {
         return Scaffold(
-          body: Stack(children: [_buildBackgroundGradient(context), _buildMainContent(context)]),
+          body: Stack(
+            children: [
+              _buildBackgroundGradient(context),
+              FloatingQuickActionsMenu(actions: actions, useStandardFabPosition: true, child: _buildMainContent(context)),
+            ],
+          ),
           bottomNavigationBar: isSelectionMode
               ? ValueListenableBuilder<Set<String>>(
                   valueListenable: _controller.selectedTaskIds,
@@ -208,27 +229,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 )
               : null,
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-          floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-          floatingActionButton: isSelectionMode ? null : _buildEnhancedFAB(context),
+          // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          // floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+          // floatingActionButton: isSelectionMode ? null : _buildEnhancedFAB(context),
         );
       },
     );
   }
 
+  /* 
   Widget _buildEnhancedFAB(BuildContext context) {
-    return QuickActionsFAB(
-      actions: AppQuickActions.forHomeScreen(
-        context,
-        onLogMood: () => widget.onTabSwitchRequested?.call(4),
-        onQuickAddTask: () => _showQuickAddTaskDialog(context),
-        onAddDetailedTask: () => _showAddTaskDialog(context),
-        onAddCategory: () => widget.onTabSwitchRequested?.call(3),
-      ),
-      primaryColor: Theme.of(context).colorScheme.primary,
+    // Create actions directly for FloatingQuickActionsMenu
+   
+    return 
     );
-  }
-
+  } */
   void _showQuickAddTaskDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -236,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text(AppLocalizations.of(context)!.addTaskTitle),
         content: TextField(
           decoration: InputDecoration(hintText: AppLocalizations.of(context)!.addTaskTitle),
-          autofocus: true,
+          autofocus: false, // Prevent keyboard auto-opening
           onSubmitted: (value) {
             if (value.isNotEmpty) {
               final task = Task(id: DateTime.now().millisecondsSinceEpoch.toString(), title: value, createdAt: DateTime.now(), updatedAt: DateTime.now(), priority: TaskPriority.medium);
@@ -388,7 +403,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         context: context,
                         builder: (context) => AlertDialog(
                           title: Text(AppLocalizations.of(context)!.deleteTask),
-                          content: Text(AppLocalizations.of(context)!.deleteTaskConfirmation(task.title,'')),
+                          content: Text(AppLocalizations.of(context)!.deleteTaskConfirmation(task.title, '')),
                           actions: [
                             TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancelButton)),
                             TextButton(
@@ -458,11 +473,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isDark ? [const Color(0xFF0F172A), const Color(0xFF1E293B), const Color(0xFF334155)] : [const Color(0xFFF8FAFC), const Color(0xFFE2E8F0), const Color(0xFFCBD5E1)],
-        ),
+        gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: isDark ? [const Color(0xFF0F172A), const Color(0xFF1E293B), const Color(0xFF334155)] : [const Color(0xFFF8FAFC), const Color(0xFFE2E8F0), const Color(0xFFCBD5E1)]),
       ),
     );
   }
@@ -484,8 +495,8 @@ class _HomeScreenState extends State<HomeScreen> {
               slivers: [
                 // App Bar
                 _buildAppBar(context),
-
                 // Today's Progress Header
+              //  SliverToBoxAdapter(child: RecurringTaskManager()),
                 SliverToBoxAdapter(child: _buildTodayHeader(context)),
                 SliverToBoxAdapter(child: _buildCategoryFilter(context)),
                 SliverToBoxAdapter(child: _buildQuickStats(context)),
@@ -619,11 +630,7 @@ class _HomeScreenState extends State<HomeScreen> {
             margin: const EdgeInsets.fromLTRB(DSSpacing.md, DSSpacing.md, DSSpacing.md, DSSpacing.sm),
             padding: const EdgeInsets.all(DSSpacing.md),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.6), Theme.of(context).colorScheme.secondaryContainer.withValues(alpha: 0.6)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.6), Theme.of(context).colorScheme.secondaryContainer.withValues(alpha: 0.6)], begin: Alignment.topLeft, end: Alignment.bottomRight),
               borderRadius: DSBorderRadius.lgRadius,
               boxShadow: DSElevation.getBoxShadow(context, DSElevation.level2),
             ),
@@ -695,17 +702,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(horizontal: DSSpacing.md, vertical: DSSpacing.sm),
                     children: [
-                      DSCategoryChip(
-                        id: null,
-                        label: AppLocalizations.of(context)!.allCategories,
-                        icon: Icons.apps_rounded,
-                        color: Theme.of(context).colorScheme.primary,
-                        isSelected: selectedCategoryId == null,
-                        onTap: () => _controller.setCategory(null),
-                      ),
-                      ...state.categories.map(
-                        (c) => DSCategoryChip(id: c.id, label: c.name, icon: Icons.folder_rounded, color: c.color, isSelected: selectedCategoryId == c.id, onTap: () => _controller.setCategory(c.id)),
-                      ),
+                      DSCategoryChip(id: null, label: AppLocalizations.of(context)!.allCategories, icon: Icons.apps_rounded, color: Theme.of(context).colorScheme.primary, isSelected: selectedCategoryId == null, onTap: () => _controller.setCategory(null)),
+                      ...state.categories.map((c) => DSCategoryChip(id: c.id, label: c.name, icon: Icons.folder_rounded, color: c.color, isSelected: selectedCategoryId == c.id, onTap: () => _controller.setCategory(c.id))),
                     ],
                   ),
                 ),
@@ -748,34 +746,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (!(constraints.maxWidth < 156156200)) {
                   return Column(
                     children: [
-                      DSStatCard(
-                        icon: Icons.warning_amber_rounded,
-                        value: '$overdueCount',
-                        label: AppLocalizations.of(context)!.overdue,
-                        color: DSColors.getOverdueColor(context),
-                        onTap: () => _controller.setOverdueFilter(),
-                      ),
+                      DSStatCard(icon: Icons.warning_amber_rounded, value: '$overdueCount', label: AppLocalizations.of(context)!.overdue, color: DSColors.getOverdueColor(context), onTap: () => _controller.setOverdueFilter()),
                       const SizedBox(height: DSSpacing.sm),
                       Row(
                         children: [
                           Expanded(
-                            child: DSStatCard(
-                              icon: Icons.priority_high_rounded,
-                              value: '$highPriorityCount',
-                              label: AppLocalizations.of(context)!.highPriority,
-                              color: DSColors.getHighPriorityColor(context),
-                              onTap: () => _controller.setPriorityFilter(TaskPriority.high),
-                            ),
+                            child: DSStatCard(icon: Icons.priority_high_rounded, value: '$highPriorityCount', label: AppLocalizations.of(context)!.highPriority, color: DSColors.getHighPriorityColor(context), onTap: () => _controller.setPriorityFilter(TaskPriority.high)),
                           ),
                           const SizedBox(width: DSSpacing.sm),
                           Expanded(
-                            child: DSStatCard(
-                              icon: Icons.event_busy_rounded,
-                              value: '$undatedCount',
-                              label: AppLocalizations.of(context)!.noDueDate,
-                              color: DSColors.getUndatedColor(context),
-                              onTap: () => _controller.setUndatedFilter(),
-                            ),
+                            child: DSStatCard(icon: Icons.event_busy_rounded, value: '$undatedCount', label: AppLocalizations.of(context)!.noDueDate, color: DSColors.getUndatedColor(context), onTap: () => _controller.setUndatedFilter()),
                           ),
                         ],
                       ),
@@ -798,34 +778,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       if (overdueCount != 0) ...[
                         Expanded(
-                          child: DSStatCard(
-                            icon: Icons.warning_amber_rounded,
-                            value: '$overdueCount',
-                            label: AppLocalizations.of(context)!.overdue,
-                            color: DSColors.getOverdueColor(context),
-                            onTap: () => _controller.setOverdueFilter(),
-                          ),
+                          child: DSStatCard(icon: Icons.warning_amber_rounded, value: '$overdueCount', label: AppLocalizations.of(context)!.overdue, color: DSColors.getOverdueColor(context), onTap: () => _controller.setOverdueFilter()),
                         ),
                         const SizedBox(width: DSSpacing.sm),
                       ],
                       Expanded(
-                        child: DSStatCard(
-                          icon: Icons.priority_high_rounded,
-                          value: '$highPriorityCount',
-                          label: AppLocalizations.of(context)!.highPriority,
-                          color: DSColors.getHighPriorityColor(context),
-                          onTap: () => _controller.setPriorityFilter(TaskPriority.high),
-                        ),
+                        child: DSStatCard(icon: Icons.priority_high_rounded, value: '$highPriorityCount', label: AppLocalizations.of(context)!.highPriority, color: DSColors.getHighPriorityColor(context), onTap: () => _controller.setPriorityFilter(TaskPriority.high)),
                       ),
                       const SizedBox(width: DSSpacing.sm),
                       Expanded(
-                        child: DSStatCard(
-                          icon: Icons.event_busy_rounded,
-                          value: '$undatedCount',
-                          label: AppLocalizations.of(context)!.noDueDate,
-                          color: DSColors.getUndatedColor(context),
-                          onTap: () => _controller.setUndatedFilter(),
-                        ),
+                        child: DSStatCard(icon: Icons.event_busy_rounded, value: '$undatedCount', label: AppLocalizations.of(context)!.noDueDate, color: DSColors.getUndatedColor(context), onTap: () => _controller.setUndatedFilter()),
                       ),
                     ],
                   );
@@ -990,15 +952,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         delegate: SliverChildBuilderDelegate((context, index) {
                                           if (index == 0) {
                                             return QuickTaskInput(
+                                              autofocus: false, // Disable keyboard activation when HomeScreen opens
                                               onSubmitted: (title) {
-                                                final newTask = Task(
-                                                  id: DateTime.now().millisecondsSinceEpoch.toString(),
-                                                  title: title,
-                                                  createdAt: DateTime.now(),
-                                                  updatedAt: DateTime.now(),
-                                                  dueDate: selectedDate,
-                                                  categoryId: selectedCategoryId ?? 'default',
-                                                );
+                                                final newTask = Task(id: DateTime.now().millisecondsSinceEpoch.toString(), title: title, createdAt: DateTime.now(), updatedAt: DateTime.now(), dueDate: selectedDate, categoryId: selectedCategoryId ?? 'default');
                                                 context.read<TaskListBloc>().add(AddTask(newTask));
                                                 HapticFeedback.lightImpact();
                                               },
@@ -1335,7 +1291,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Text(AppLocalizations.of(context)!.deleteTask),
           ],
         ),
-        content: Text(AppLocalizations.of(context)!.deleteTaskConfirmation(task.title,'')),
+        content: Text(AppLocalizations.of(context)!.deleteTaskConfirmation(task.title, '')),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancelButton)),
           ElevatedButton(
@@ -1476,7 +1432,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 // Search field
                 TextField(
                   controller: searchController,
-                  autofocus: true,
+                  //   autofocus: true,
                   decoration: InputDecoration(
                     hintText: l10n.searchHint,
                     prefixIcon: const Icon(Icons.search),
@@ -1914,7 +1870,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> with SingleTickerPr
               ),
               background: Container(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.primary.withOpacity(0.8)]),
+                  gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.primary.withValues(alpha: 0.8)]),
                 ),
               ),
             ),
@@ -2016,7 +1972,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> with SingleTickerPr
                       showTodayButton: true,
                       todayHighlightColor: Theme.of(context).colorScheme.primary,
                       selectionDecoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
+                        color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
                         border: Border.all(color: Theme.of(context).colorScheme.primary, width: 2),
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -2032,9 +1988,9 @@ class _CalendarViewPageState extends State<CalendarViewPage> with SingleTickerPr
                         numberOfWeeksInView: 5,
                         monthCellStyle: MonthCellStyle(
                           backgroundColor: Theme.of(context).colorScheme.surface,
-                          todayBackgroundColor: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.2),
-                          trailingDatesBackgroundColor: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
-                          leadingDatesBackgroundColor: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+                          todayBackgroundColor: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.2),
+                          trailingDatesBackgroundColor: Theme.of(context).colorScheme.surfaceVariant.withValues(alpha: 0.3),
+                          leadingDatesBackgroundColor: Theme.of(context).colorScheme.surfaceVariant.withValues(alpha: 0.3),
                         ),
                       ),
                       headerStyle: CalendarHeaderStyle(
@@ -2070,7 +2026,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> with SingleTickerPr
           margin: const EdgeInsets.symmetric(horizontal: DSSpacing.md, vertical: DSSpacing.sm),
           padding: const EdgeInsets.all(DSSpacing.md),
           decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primaryContainer, Theme.of(context).colorScheme.primaryContainer.withOpacity(0.7)]),
+            gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primaryContainer, Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.7)]),
             borderRadius: DSBorderRadius.lgRadius,
             boxShadow: DSElevation.getBoxShadow(context, DSElevation.level1),
           ),
@@ -2090,7 +2046,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> with SingleTickerPr
                       isToday ? AppLocalizations.of(context)!.today : formattedDate,
                       style: DSTypography.subtitle(context).copyWith(color: Theme.of(context).colorScheme.onPrimaryContainer, fontWeight: FontWeight.bold),
                     ),
-                    if (!isToday) Text(_getRelativeDate(selectedDate), style: DSTypography.caption(context).copyWith(color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7))),
+                    if (!isToday) Text(_getRelativeDate(selectedDate), style: DSTypography.caption(context).copyWith(color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.7))),
                   ],
                 ),
               ),
@@ -2145,7 +2101,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> with SingleTickerPr
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.event_available_rounded, size: 80, color: Theme.of(context).colorScheme.primary.withOpacity(0.3)),
+                        Icon(Icons.event_available_rounded, size: 80, color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)),
                         const SizedBox(height: DSSpacing.md),
                         Text(
                           selectedDate != null ? AppLocalizations.of(context)!.noTasksForThisDay : AppLocalizations.of(context)!.noTasksYet,
@@ -2155,7 +2111,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> with SingleTickerPr
                         const SizedBox(height: DSSpacing.sm),
                         Text(
                           AppLocalizations.of(context)!.addTaskToGetStarted,
-                          style: DSTypography.body(context).copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.7)),
+                          style: DSTypography.body(context).copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.7)),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: DSSpacing.lg),
@@ -2237,7 +2193,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> with SingleTickerPr
             Text(AppLocalizations.of(context)!.deleteTask),
           ],
         ),
-        content: Text(AppLocalizations.of(context)!.deleteTaskConfirmation(task.title,'')),
+        content: Text(AppLocalizations.of(context)!.deleteTaskConfirmation(task.title, '')),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancelButton)),
           ElevatedButton(

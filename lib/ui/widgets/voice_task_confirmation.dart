@@ -58,7 +58,7 @@ class _VoiceTaskConfirmationState extends State<VoiceTaskConfirmation> {
             // Confidence indicator
             Container(
               padding: const EdgeInsets.all(AppSpacing.md),
-              decoration: BoxDecoration(color: _getConfidenceColor().withOpacity(0.1), borderRadius: BorderRadius.circular(AppRadius.md)),
+              decoration: BoxDecoration(color: _getConfidenceColor().withValues(alpha: 0.1), borderRadius: BorderRadius.circular(AppRadius.md)),
               child: Row(
                 children: [
                   Icon(_getConfidenceIcon(), color: _getConfidenceColor(), size: 20),
@@ -79,7 +79,7 @@ class _VoiceTaskConfirmationState extends State<VoiceTaskConfirmation> {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(AppRadius.lg),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,7 +140,7 @@ class _VoiceTaskConfirmationState extends State<VoiceTaskConfirmation> {
     return Container(
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
       decoration: BoxDecoration(
-        border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
+        border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
         borderRadius: BorderRadius.circular(AppRadius.md),
       ),
       child: Slidable(
@@ -148,13 +148,7 @@ class _VoiceTaskConfirmationState extends State<VoiceTaskConfirmation> {
         endActionPane: ActionPane(
           motion: const ScrollMotion(),
           children: [
-            SlidableAction(
-              onPressed: (_) => _toggleTaskSelection(index),
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.white,
-              icon: _selectedTasks.contains(task) ? Icons.check_circle : Icons.check_circle_outline,
-              label: _selectedTasks.contains(task) ? 'Selected' : 'Select',
-            ),
+            SlidableAction(onPressed: (_) => _toggleTaskSelection(index), backgroundColor: Colors.blue, foregroundColor: Colors.white, icon: _selectedTasks.contains(task) ? Icons.check_circle : Icons.check_circle_outline, label: _selectedTasks.contains(task) ? 'Selected' : 'Select'),
             SlidableAction(onPressed: (_) => _removeTask(index), backgroundColor: Colors.red, foregroundColor: Colors.white, icon: Icons.delete, label: 'Remove'),
           ],
         ),

@@ -22,27 +22,11 @@ class RepeatRule extends Equatable {
   const RepeatRule({required this.frequency, this.repeatType = RepeatType.forever, this.daysOfWeek = const [], this.endDate, this.repeatCount, required this.startDate, this.includeTime = false});
 
   RepeatRule copyWith({RepeatFrequency? frequency, RepeatType? repeatType, List<int>? daysOfWeek, DateTime? endDate, int? repeatCount, DateTime? startDate, bool? includeTime}) {
-    return RepeatRule(
-      frequency: frequency ?? this.frequency,
-      repeatType: repeatType ?? this.repeatType,
-      daysOfWeek: daysOfWeek ?? this.daysOfWeek,
-      endDate: endDate ?? this.endDate,
-      repeatCount: repeatCount ?? this.repeatCount,
-      startDate: startDate ?? this.startDate,
-      includeTime: includeTime ?? this.includeTime,
-    );
+    return RepeatRule(frequency: frequency ?? this.frequency, repeatType: repeatType ?? this.repeatType, daysOfWeek: daysOfWeek ?? this.daysOfWeek, endDate: endDate ?? this.endDate, repeatCount: repeatCount ?? this.repeatCount, startDate: startDate ?? this.startDate, includeTime: includeTime ?? this.includeTime);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'frequency': frequency.index,
-      'repeatType': repeatType.index,
-      'daysOfWeek': daysOfWeek,
-      'endDate': endDate?.toIso8601String(),
-      'repeatCount': repeatCount,
-      'startDate': startDate.toIso8601String(),
-      'includeTime': includeTime,
-    };
+    return {'frequency': frequency.index, 'repeatType': repeatType.index, 'daysOfWeek': daysOfWeek, 'endDate': endDate?.toIso8601String(), 'repeatCount': repeatCount, 'startDate': startDate.toIso8601String(), 'includeTime': includeTime};
   }
 
   factory RepeatRule.fromJson(Map<String, dynamic> json) {
@@ -69,7 +53,10 @@ class RepeatRule extends Equatable {
     }
   }
 
-  DateTime? getNextOccurrence(DateTime fromDate) {
+  DateTime? getNextOccurrence(DateTime fromDate, [int depth = 0]) {
+    // Prevent infinite recursion
+    if (depth > 100) return null;
+
     if (!isActive) return null;
 
     final now = DateTime.now();
@@ -125,7 +112,13 @@ class RepeatRule extends Equatable {
       return null;
     }
 
-    return nextDate.isAfter(now) ? nextDate : null;
+    // Return nextDate if it's in the future, otherwise calculate the next valid occurrence
+    if (!nextDate.isAfter(now)) {
+      // If the calculated date is not in the future, calculate the next one
+      return getNextOccurrence(nextDate, depth + 1);
+    }
+
+    return nextDate;
   }
 
   String getDisplayText([BuildContext? context]) {

@@ -24,13 +24,7 @@ class _EmojiMoodSelectorState extends State<EmojiMoodSelector> with SingleTicker
 
   final Map<MoodLevel, String> _moodLabels = {MoodLevel.very_bad: 'Very Bad', MoodLevel.bad: 'Bad', MoodLevel.neutral: 'Okay', MoodLevel.good: 'Good', MoodLevel.very_good: 'Great'};
 
-  final Map<MoodLevel, Color> _moodColors = {
-    MoodLevel.very_bad: const Color(0xFFFF5252),
-    MoodLevel.bad: const Color(0xFFFF9800),
-    MoodLevel.neutral: const Color(0xFF9E9E9E),
-    MoodLevel.good: const Color(0xFF8BC34A),
-    MoodLevel.very_good: const Color(0xFF4CAF50),
-  };
+  final Map<MoodLevel, Color> _moodColors = {MoodLevel.very_bad: const Color(0xFFFF5252), MoodLevel.bad: const Color(0xFFFF9800), MoodLevel.neutral: const Color(0xFF9E9E9E), MoodLevel.good: const Color(0xFF8BC34A), MoodLevel.very_good: const Color(0xFF4CAF50)};
 
   @override
   void initState() {
@@ -85,10 +79,10 @@ class _EmojiMoodSelectorState extends State<EmojiMoodSelector> with SingleTicker
               width: widget.size + 24,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                gradient: isSelected ? LinearGradient(colors: [color.withOpacity(0.2), color.withOpacity(0.1)], begin: Alignment.topLeft, end: Alignment.bottomRight) : null,
+                gradient: isSelected ? LinearGradient(colors: [color.withValues(alpha: 0.2), color.withValues(alpha: 0.1)], begin: Alignment.topLeft, end: Alignment.bottomRight) : null,
                 border: Border.all(color: isSelected ? color : Colors.grey.shade300, width: isSelected ? 3 : 1.5),
                 borderRadius: BorderRadius.circular(20),
-                boxShadow: isSelected ? [BoxShadow(color: color.withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 4))] : null,
+                boxShadow: isSelected ? [BoxShadow(color: color.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))] : null,
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,

@@ -44,14 +44,10 @@ class _MoodCalendarWidgetState extends State<MoodCalendarWidget> with TickerProv
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [theme.colorScheme.primaryContainer.withOpacity(0.2), theme.colorScheme.secondaryContainer.withOpacity(0.1), theme.colorScheme.surface],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: LinearGradient(colors: [theme.colorScheme.primaryContainer.withValues(alpha: 0.2), theme.colorScheme.secondaryContainer.withValues(alpha: 0.1), theme.colorScheme.surface], begin: Alignment.topLeft, end: Alignment.bottomRight),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: theme.colorScheme.outline.withOpacity(0.1)),
-        boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withOpacity(0.1), blurRadius: 30, offset: const Offset(0, 15))],
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.1)),
+        boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withValues(alpha: 0.1), blurRadius: 30, offset: const Offset(0, 15))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +85,7 @@ class _MoodCalendarWidgetState extends State<MoodCalendarWidget> with TickerProv
           decoration: BoxDecoration(
             gradient: LinearGradient(colors: [theme.colorScheme.primary, theme.colorScheme.secondary]),
             shape: BoxShape.circle,
-            boxShadow: [BoxShadow(color: theme.colorScheme.primary.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4))],
+            boxShadow: [BoxShadow(color: theme.colorScheme.primary.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4))],
           ),
           child: const Icon(Icons.calendar_month, color: Colors.white, size: 20),
         ),
@@ -105,7 +101,7 @@ class _MoodCalendarWidgetState extends State<MoodCalendarWidget> with TickerProv
                 style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
               ),
               const SizedBox(height: 4),
-              Text('Tap any day to see details', style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
+              Text('Tap any day to see details', style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
             ],
           ),
         ),
@@ -125,9 +121,9 @@ class _MoodCalendarWidgetState extends State<MoodCalendarWidget> with TickerProv
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surface.withOpacity(0.8),
+                color: theme.colorScheme.surface.withValues(alpha: 0.8),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: theme.colorScheme.outline.withOpacity(0.2)),
+                border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
               ),
               child: Text(
                 '${monthNames[widget.selectedMonth.month - 1]} ${widget.selectedMonth.year}',
@@ -158,10 +154,10 @@ class _MoodCalendarWidgetState extends State<MoodCalendarWidget> with TickerProv
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface.withOpacity(0.8),
+          color: theme.colorScheme.surface.withValues(alpha: 0.8),
           shape: BoxShape.circle,
-          border: Border.all(color: theme.colorScheme.outline.withOpacity(0.2)),
-          boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withOpacity(0.1), blurRadius: 8, offset: const Offset(0, 2))],
+          border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+          boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withValues(alpha: 0.1), blurRadius: 8, offset: const Offset(0, 2))],
         ),
         child: Icon(icon, size: 20, color: theme.colorScheme.onSurface),
       ),
@@ -184,7 +180,7 @@ class _MoodCalendarWidgetState extends State<MoodCalendarWidget> with TickerProv
               child: Center(
                 child: Text(
                   day,
-                  style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withOpacity(0.6)),
+                  style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                 ),
               ),
             );
@@ -245,7 +241,7 @@ class _MoodCalendarWidgetState extends State<MoodCalendarWidget> with TickerProv
                   color: _getMoodColor(theme, averageMood),
                   borderRadius: BorderRadius.circular(8),
                   border: isToday ? Border.all(color: theme.colorScheme.primary, width: 2) : null,
-                  boxShadow: dayMoods.isNotEmpty ? [BoxShadow(color: _getMoodColor(theme, averageMood).withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 2))] : null,
+                  boxShadow: dayMoods.isNotEmpty ? [BoxShadow(color: _getMoodColor(theme, averageMood).withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 2))] : null,
                 ),
                 child: Center(
                   child: Column(
@@ -253,7 +249,7 @@ class _MoodCalendarWidgetState extends State<MoodCalendarWidget> with TickerProv
                     children: [
                       Text(
                         dayNumber.toString(),
-                        style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600, color: dayMoods.isEmpty ? theme.colorScheme.onSurface.withOpacity(0.6) : Colors.white),
+                        style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600, color: dayMoods.isEmpty ? theme.colorScheme.onSurface.withValues(alpha: 0.6) : Colors.white),
                       ),
                       if (dayMoods.length > 1)
                         Container(
@@ -276,19 +272,19 @@ class _MoodCalendarWidgetState extends State<MoodCalendarWidget> with TickerProv
   Widget _buildLegend(ThemeData theme) {
     return Row(
       children: [
-        Text('Mood intensity: ', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
+        Text('Mood intensity: ', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
 
         const SizedBox(width: 8),
 
         Row(
           children: [
-            _buildLegendItem(theme, 'Low', Colors.red.withOpacity(0.3)),
+            _buildLegendItem(theme, 'Low', Colors.red.withValues(alpha: 0.3)),
             const SizedBox(width: 4),
-            _buildLegendItem(theme, '', Colors.orange.withOpacity(0.5)),
+            _buildLegendItem(theme, '', Colors.orange.withValues(alpha: 0.5)),
             const SizedBox(width: 4),
-            _buildLegendItem(theme, '', Colors.yellow.withOpacity(0.7)),
+            _buildLegendItem(theme, '', Colors.yellow.withValues(alpha: 0.7)),
             const SizedBox(width: 4),
-            _buildLegendItem(theme, '', Colors.lightGreen.withOpacity(0.8)),
+            _buildLegendItem(theme, '', Colors.lightGreen.withValues(alpha: 0.8)),
             const SizedBox(width: 4),
             _buildLegendItem(theme, 'High', Colors.green),
           ],
@@ -298,7 +294,7 @@ class _MoodCalendarWidgetState extends State<MoodCalendarWidget> with TickerProv
 
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(color: theme.colorScheme.primaryContainer.withOpacity(0.3), borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(8)),
           child: Text(
             '${widget.moods.length} entries',
             style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.primary),
@@ -316,22 +312,22 @@ class _MoodCalendarWidgetState extends State<MoodCalendarWidget> with TickerProv
           height: 12,
           decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2)),
         ),
-        if (label.isNotEmpty) ...[const SizedBox(height: 2), Text(label, style: theme.textTheme.bodySmall?.copyWith(fontSize: 10, color: theme.colorScheme.onSurface.withOpacity(0.6)))],
+        if (label.isNotEmpty) ...[const SizedBox(height: 2), Text(label, style: theme.textTheme.bodySmall?.copyWith(fontSize: 10, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)))],
       ],
     );
   }
 
   Color _getMoodColor(ThemeData theme, double? averageMood) {
     if (averageMood == null) {
-      return theme.colorScheme.outline.withOpacity(0.1);
+      return theme.colorScheme.outline.withValues(alpha: 0.1);
     }
 
     // Map mood levels (0-4) to colors
     final colors = [
-      Colors.red.withOpacity(0.7), // Very bad
-      Colors.orange.withOpacity(0.7), // Bad
-      Colors.yellow.withOpacity(0.7), // Neutral
-      Colors.lightGreen.withOpacity(0.8), // Good
+      Colors.red.withValues(alpha: 0.7), // Very bad
+      Colors.orange.withValues(alpha: 0.7), // Bad
+      Colors.yellow.withValues(alpha: 0.7), // Neutral
+      Colors.lightGreen.withValues(alpha: 0.8), // Good
       Colors.green, // Very good
     ];
 

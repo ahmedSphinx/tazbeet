@@ -49,10 +49,7 @@ class _MultiActionFABState extends State<MultiActionFAB> with TickerProviderStat
 
     _rotationAnimation = Tween<double>(begin: 0.0, end: 0.75).animate(CurvedAnimation(parent: _rotationController, curve: Curves.easeInOut));
 
-    _slideAnimations = List.generate(
-      widget.actions.length,
-      (index) => Tween<Offset>(begin: const Offset(0, 0), end: Offset(0, -(1.2 + index * 0.8))).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutBack)),
-    );
+    _slideAnimations = List.generate(widget.actions.length, (index) => Tween<Offset>(begin: const Offset(0, 0), end: Offset(0, -(1.2 + index * 0.8))).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutBack)));
 
     _fadeAnimations = List.generate(
       widget.actions.length,
@@ -153,7 +150,7 @@ class _MultiActionFABState extends State<MultiActionFAB> with TickerProviderStat
             decoration: BoxDecoration(
               color: action.backgroundColor,
               shape: BoxShape.circle,
-              boxShadow: [BoxShadow(color: action.backgroundColor.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 4))],
+              boxShadow: [BoxShadow(color: action.backgroundColor.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 4))],
             ),
             child: Material(
               color: Colors.transparent,
@@ -183,9 +180,9 @@ class _MultiActionFABState extends State<MultiActionFAB> with TickerProviderStat
             angle: _rotationAnimation.value * 2 * 3.14159,
             child: Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [widget.backgroundColor, widget.backgroundColor.withOpacity(0.8)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                gradient: LinearGradient(colors: [widget.backgroundColor, widget.backgroundColor.withValues(alpha: 0.8)], begin: Alignment.topLeft, end: Alignment.bottomRight),
                 shape: BoxShape.circle,
-                boxShadow: [BoxShadow(color: widget.backgroundColor.withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 6))],
+                boxShadow: [BoxShadow(color: widget.backgroundColor.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 6))],
               ),
               child: FloatingActionButton(
                 heroTag: widget.heroTag,

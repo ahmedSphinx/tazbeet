@@ -243,6 +243,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get allDataClearedAndResyncedSuccessfully => 'All data cleared and resynced successfully!';
 
   @override
+  String get allDone => 'Tout terminé !';
+
+  @override
   String get allLabel => 'Toutes';
 
   @override
@@ -594,6 +597,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get cannotSetReminderForPastDate => 'Impossible de définir un rappel pour une date passée';
+
+  @override
+  String get cannotSetReminderOnCompletedTask => 'Cannot set reminder on completed task';
 
   @override
   String get cannotSetReminderWithoutPermission => 'Cannot set reminder without notification permission';
@@ -1203,6 +1209,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get downloadingUpdate => 'Téléchargement de la Mise à Jour...';
 
   @override
+  String get dragToReorderSubtasks => 'Glisser pour réorganiser les sous-tâches';
+
+  @override
   String get dueDate => 'Date d\'échéance';
 
   @override
@@ -1434,8 +1443,18 @@ class AppLocalizationsFr extends AppLocalizations {
   String get enterTaskTitle => 'Entrez le titre de la tâche';
 
   @override
+  String errorAddingSubtask(Object error) {
+    return 'Error adding subtask: $error';
+  }
+
+  @override
   String errorApplyingSettings(Object error) {
     return 'Error applying settings: $error';
+  }
+
+  @override
+  String errorCancellingReminder(Object error) {
+    return 'Error cancelling reminder: $error';
   }
 
   @override
@@ -1472,6 +1491,11 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String errorDuplicatingTask(Object error) {
+    return 'Error duplicating task: $error';
+  }
+
+  @override
   String get errorExportingLogs => 'Error exporting logs';
 
   @override
@@ -1489,10 +1513,21 @@ class AppLocalizationsFr extends AppLocalizations {
   String get errorLoadingTasks => 'Error loading tasks';
 
   @override
+  String get errorReorderingSubtasks => 'Erreur lors de la réorganisation des sous-tâches';
+
+  @override
   String get errorSavingColorSettings => 'Error saving color settings';
 
   @override
   String get errorSavingMaintenanceSettings => 'Error saving maintenance settings';
+
+  @override
+  String get errorSettingQuickReminder => 'Error setting reminder';
+
+  @override
+  String errorSettingReminder(Object error) {
+    return 'Error setting reminder: $error';
+  }
 
   @override
   String get errorTitle => 'Oops! Something went wrong';
@@ -1619,8 +1654,18 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String failedToCompleteTask(Object error) {
+    return 'Failed to complete task: $error';
+  }
+
+  @override
   String failedToGetSuggestions(Object error) {
     return 'Failed to get suggestions: $error';
+  }
+
+  @override
+  String failedToOpenPomodoroTemplates(Object error) {
+    return 'Failed to open Pomodoro templates: $error';
   }
 
   @override
@@ -1634,6 +1679,11 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String failedToUncompleteTask(Object error) {
+    return 'Failed to uncomplete task: $error';
+  }
+
+  @override
   String get failedToUploadImage => 'Failed to upload image';
 
   @override
@@ -1644,6 +1694,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get fifteenMinPause => '15 Min Pause';
+
+  @override
+  String get fifteenMinutes => '15 minutes';
 
   @override
   String get filter => 'Filtrer';
@@ -1671,6 +1724,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get fireplace => 'Fireplace';
+
+  @override
+  String get fiveMinutes => '5 minutes';
 
   @override
   String get focus => 'concentration';
@@ -1915,6 +1971,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get hours2 => '2h';
+
+  @override
+  String get hours6 => '6 heures';
 
   @override
   String get howAreYou => 'Comment allez-vous ?';
@@ -2626,6 +2685,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get next => 'Suivant';
 
   @override
+  String get nextWeek => 'Semaine Prochaine';
+
+  @override
   String get nightReflection => 'Réflexion nocturne 🌟';
 
   @override
@@ -2909,7 +2971,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get oneDayBeforeDue => '';
 
   @override
-  String get oneHour => '1 Hour';
+  String get oneHour => '1 heure';
 
   @override
   String get oneHourBeforeDue => '';
@@ -3072,6 +3134,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get pleaseFixErrors => 'Veuillez corriger les erreurs ci-dessus';
+
+  @override
+  String get pleaseSelectBothDateAndTime => 'Please select both date and time';
 
   @override
   String get pleaseTryAgain => 'Please try again';
@@ -3379,6 +3444,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get recurringInstancesGenerated => 'Instances récurrentes générées avec succès !';
 
   @override
+  String get recurringOptions => 'Options Récurrentes';
+
+  @override
+  String recurringReminderSet(Object frequency) {
+    return 'Recurring reminder set: $frequency';
+  }
+
+  @override
   String get recurringTaskAutomation => '• Recurring task automation';
 
   @override
@@ -3440,6 +3513,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get reminderHistory => 'Historique des Rappels';
+
+  @override
+  String get reminderMustBeInFuture => 'Reminder must be in the future';
 
   @override
   String get reminderRetryScheduled => 'Reminder retry scheduled';
@@ -3763,10 +3839,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get setPriority => 'Set Priority';
 
   @override
-  String get setRealisticSessionGoals => 'Fixez des objectifs de session réalistes';
-
-  @override
-  String get setReminder => 'Définir un Rappel';
+  String get setRealisticSessionGoals => 'Définir des objectifs de session réalistes';
 
   @override
   String get setReminderButton => 'Définir un Rappel';
@@ -3895,6 +3968,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get smartView => 'Intelligent';
+
+  @override
+  String get snooze => 'Répéter';
 
   @override
   String get snooze15min => 'Reporter 15min';
@@ -4066,6 +4142,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get subtasks => 'Sous-tâches';
+
+  @override
+  String get subtasksReordered => 'Sous-tâches réorganisées';
 
   @override
   String get subtaskTitle => 'Titre de la Sous-tâche';
@@ -4346,6 +4425,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get templateName => 'Template Name';
 
   @override
+  String get tenMinutes => '10 minutes';
+
+  @override
   String get termsAndPrivacy => 'En vous connectant, vous acceptez nos Conditions d\'utilisation et notre Politique de confidentialité';
 
   @override
@@ -4440,6 +4522,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get themeSettingsResetToDefaults => 'Theme settings reset to defaults';
+
+  @override
+  String get thirtyMinutes => '30 minutes';
 
   @override
   String get thirtySeconds => '30 seconds';

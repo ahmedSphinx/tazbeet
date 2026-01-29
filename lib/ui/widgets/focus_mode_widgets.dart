@@ -31,7 +31,7 @@ class _FocusModeIndicatorState extends State<FocusModeIndicator> {
       decoration: BoxDecoration(
         color: Colors.green,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.green.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 2))],
+        boxShadow: [BoxShadow(color: Colors.green.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 2))],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -66,7 +66,7 @@ class FocusModeOverlay extends StatelessWidget {
             child: Container(
               height: 4,
               decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [Colors.green.withOpacity(0.8), Colors.green.withOpacity(0.4), Colors.transparent], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+                gradient: LinearGradient(colors: [Colors.green.withValues(alpha: 0.8), Colors.green.withValues(alpha: 0.4), Colors.transparent], begin: Alignment.topCenter, end: Alignment.bottomCenter),
               ),
             ),
           ),
@@ -108,13 +108,7 @@ class _QuickFocusModeButtonState extends State<QuickFocusModeButton> {
       );
     }
 
-    return FloatingActionButton.extended(
-      onPressed: () => _showFocusModeOptions(context),
-      backgroundColor: Colors.green,
-      foregroundColor: Colors.white,
-      icon: const Icon(Icons.play_arrow),
-      label: const Text('Start Focus'),
-    );
+    return FloatingActionButton.extended(onPressed: () => _showFocusModeOptions(context), backgroundColor: Colors.red, foregroundColor: Colors.white, icon: const Icon(Icons.play_arrow), label: const Text('Start Focus'));
   }
 
   void _showFocusModeOptions(BuildContext context) {

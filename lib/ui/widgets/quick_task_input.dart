@@ -6,8 +6,9 @@ import '../design_system/ds_border_radius.dart';
 class QuickTaskInput extends StatefulWidget {
   final Function(String) onSubmitted;
   final String hintText;
+  final bool autofocus;
 
-  const QuickTaskInput({super.key, required this.onSubmitted, this.hintText = 'Add a quick task...'});
+  const QuickTaskInput({super.key, required this.onSubmitted, this.hintText = 'Add a quick task...', this.autofocus = false});
 
   @override
   State<QuickTaskInput> createState() => _QuickTaskInputState();
@@ -59,6 +60,7 @@ class _QuickTaskInputState extends State<QuickTaskInput> {
         controller: _controller,
         focusNode: _focusNode,
         style: DSTypography.body(context),
+        autofocus: widget.autofocus,
         decoration: InputDecoration(
           hintText: widget.hintText,
           hintStyle: DSTypography.body(context).copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),

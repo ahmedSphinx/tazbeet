@@ -38,7 +38,7 @@ class EmojiSlider extends StatelessWidget {
             Text(title, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
               child: Text(
                 getValueLabel(),
                 style: theme.textTheme.bodyMedium?.copyWith(color: color, fontWeight: FontWeight.w600),
@@ -60,9 +60,9 @@ class EmojiSlider extends StatelessWidget {
               child: SliderTheme(
                 data: SliderThemeData(
                   activeTrackColor: color,
-                  inactiveTrackColor: color.withOpacity(0.2),
+                  inactiveTrackColor: color.withValues(alpha: 0.2),
                   thumbColor: color,
-                  overlayColor: color.withOpacity(0.2),
+                  overlayColor: color.withValues(alpha: 0.2),
                   thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12),
                   overlayShape: const RoundSliderOverlayShape(overlayRadius: 24),
                   trackHeight: 6,

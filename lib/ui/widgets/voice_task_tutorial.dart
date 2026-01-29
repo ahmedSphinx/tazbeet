@@ -90,7 +90,7 @@ class _VoiceTaskTutorialState extends State<VoiceTaskTutorial> with TickerProvid
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(AppRadius.lg),
-        boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.1), blurRadius: 20, offset: const Offset(0, 10))],
+        boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.surfaceVariant.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, 10))],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -102,7 +102,7 @@ class _VoiceTaskTutorialState extends State<VoiceTaskTutorial> with TickerProvid
                 child: LinearProgressIndicator(value: (_currentStep + 1) / _steps.length, backgroundColor: Theme.of(context).colorScheme.surfaceVariant, valueColor: AlwaysStoppedAnimation<Color>(step.color)),
               ),
               const SizedBox(width: AppSpacing.sm),
-              Text('${_currentStep + 1}/${_steps.length}', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7))),
+              Text('${_currentStep + 1}/${_steps.length}', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
             ],
           ),
           const SizedBox(height: AppSpacing.lg),
@@ -118,7 +118,7 @@ class _VoiceTaskTutorialState extends State<VoiceTaskTutorial> with TickerProvid
                   Container(
                     width: 80,
                     height: 80,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: step.color.withOpacity(0.1)),
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: step.color.withValues(alpha: 0.1)),
                     child: Icon(step.icon, color: step.color, size: 40),
                   ),
                   const SizedBox(height: AppSpacing.lg),
@@ -135,7 +135,7 @@ class _VoiceTaskTutorialState extends State<VoiceTaskTutorial> with TickerProvid
                   Text(
                     step.description,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8)),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8)),
                   ),
                 ],
               ),
@@ -196,7 +196,7 @@ class VoiceTaskQuickTips extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3), borderRadius: BorderRadius.circular(AppRadius.md)),
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(AppRadius.md)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

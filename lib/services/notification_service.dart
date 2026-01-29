@@ -30,6 +30,32 @@ class NotificationService {
   /// Flag to suppress error messages during bulk operations
   bool _suppressErrors = false;
 
+  // Helper method to safely get localizations with fallback
+  AppLocalizations? _getSafeLocalizations([BuildContext? context]) {
+    try {
+      final safeContext = context ?? NavigationService.navigatorKey.currentContext;
+      if (safeContext != null) {
+        return AppLocalizations.of(safeContext);
+      }
+    } catch (e) {
+      AppLogging.logError('Error getting localizations: $e', name: 'NotificationService');
+    }
+    return null;
+  }
+
+  // Helper method to get localized string with fallback
+  String _getLocalizedString(String fallback, String Function(AppLocalizations) getter, [BuildContext? context]) {
+    final l10n = _getSafeLocalizations(context);
+    if (l10n != null) {
+      try {
+        return getter(l10n);
+      } catch (e) {
+        AppLogging.logError('Error getting localized string: $e', name: 'NotificationService');
+      }
+    }
+    return fallback;
+  }
+
   Future<void> initialize() async {
     // Initialize timezone
     tz_data.initializeTimeZones();
@@ -113,12 +139,12 @@ class NotificationService {
     } else {
       AppLogging.logWarning('Notification permission not granted', name: 'NotificationService');
       final context = buildContext ?? NavigationService.navigatorKey.currentContext;
-      if (context == null) {
-        AppLogging.logError('No context available for localization', name: 'NotificationService');
-        return;
+      if (context != null) {
+        final l10n = _getSafeLocalizations(context);
+        if (l10n != null) {
+          ErrorNotificationService().showError(context, l10n.notificationPermissionDenied, isWarning: true);
+        }
       }
-      final l10n = AppLocalizations.of(context)!;
-      ErrorNotificationService().showError(context, l10n.notificationPermissionDenied, isWarning: true);
     }
 
     // Request to ignore battery optimizations for reliable notifications
@@ -182,23 +208,25 @@ class NotificationService {
       AppLogging.logWarning('Cannot schedule reminder for past date: ${task.reminderDate}', name: 'NotificationService-${task.title}');
       // Only show error if not in bulk operation mode
       if (!_suppressErrors) {
-        final context = NavigationService.navigatorKey.currentContext;
-        if (context == null) {
-          AppLogging.logError('No context available for localization', name: 'NotificationService');
-          return;
+        final l10n = _getSafeLocalizations();
+        if (l10n != null) {
+          final context = NavigationService.navigatorKey.currentContext;
+          if (context != null) {
+            ErrorNotificationService().showError(context, '${l10n.cannotSetReminderForPastDate}: ${task.title}', isWarning: true);
+          }
+        } else {
+          AppLogging.logWarning('Cannot show error notification: No context available', name: 'NotificationService');
         }
-        final l10n = AppLocalizations.of(context)!;
-        ErrorNotificationService().showError(context, '${l10n.cannotSetReminderForPastDate}: ${task.title}', isWarning: true);
       }
       return;
     }
 
-    final context = NavigationService.navigatorKey.currentContext; // Move context fetch up
-    if (context == null) {
-      AppLogging.logError('No context available for localization', name: 'NotificationService');
+    final context = NavigationService.navigatorKey.currentContext;
+    final l10n = _getSafeLocalizations(context);
+    if (l10n == null) {
+      AppLogging.logWarning('Cannot schedule reminder: No context available for localization', name: 'NotificationService');
       return;
     }
-    final l10n = AppLocalizations.of(context)!;
 
     AppLogging.logInfo('Scheduling task reminder for task: ${task.id} - ${task.title} at ${task.reminderDate}', name: 'NotificationService');
 
@@ -336,12 +364,11 @@ class NotificationService {
  */
 
   Future<void> scheduleMoodCheckInNotifications(List<String> times, {AppLocalizations? l10n}) async {
-    final context = NavigationService.navigatorKey.currentContext;
-    if (context == null) {
-      AppLogging.logError('No context available for localization', name: 'NotificationService');
+    final localizations = l10n ?? _getSafeLocalizations();
+    if (localizations == null) {
+      AppLogging.logWarning('Cannot schedule mood check-ins: No context available for localization', name: 'NotificationService');
       return;
     }
-    final localizations = l10n ?? AppLocalizations.of(context)!;
     try {
       AppLogging.logInfo('Preparing to schedule mood check-in notifications for ${times.length} times...', name: 'NotificationService');
 
@@ -391,15 +418,7 @@ class NotificationService {
 
         AppLogging.logInfo('Scheduling mood check-in notification ID $notificationId at $scheduledTime (repeats daily)', name: 'NotificationService');
 
-        final AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-          moodNotificationChannelId,
-          localizations.moodCheckInsChannelName,
-          channelDescription: localizations.moodCheckInsChannelDesc,
-          importance: Importance.max,
-          priority: Priority.max,
-          playSound: true,
-          enableVibration: true,
-        );
+        final AndroidNotificationDetails androidDetails = AndroidNotificationDetails(moodNotificationChannelId, localizations.moodCheckInsChannelName, channelDescription: localizations.moodCheckInsChannelDesc, importance: Importance.max, priority: Priority.max, playSound: true, enableVibration: true);
 
         const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true);
 
@@ -456,20 +475,13 @@ class NotificationService {
     AppLogging.logInfo('Showing task due notification for task: ${task.id} - ${task.title}', name: 'NotificationService');
 
     final context = NavigationService.navigatorKey.currentContext;
-    if (context == null) {
-      AppLogging.logError('No context available for localization', name: 'NotificationService');
+    final l10n = _getSafeLocalizations(context);
+    if (l10n == null) {
+      AppLogging.logWarning('Cannot show task due notification: No context available for localization', name: 'NotificationService');
       return;
     }
-    final l10n = AppLocalizations.of(context)!;
 
-    final AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'task_due',
-      l10n.taskDueChannelName,
-      channelDescription: l10n.taskDueChannelDesc,
-      importance: Importance.max,
-      priority: Priority.high,
-      showWhen: true,
-    );
+    final AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails('task_due', l10n.taskDueChannelName, channelDescription: l10n.taskDueChannelDesc, importance: Importance.max, priority: Priority.high, showWhen: true);
 
     const DarwinNotificationDetails iOSPlatformChannelSpecifics = DarwinNotificationDetails();
 
@@ -488,20 +500,13 @@ class NotificationService {
     AppLogging.logInfo('Showing task completed notification for task: ${task.id} - ${task.title}', name: 'NotificationService');
 
     final context = NavigationService.navigatorKey.currentContext;
-    if (context == null) {
-      AppLogging.logError('No context available for localization', name: 'NotificationService');
+    final l10n = _getSafeLocalizations(context);
+    if (l10n == null) {
+      AppLogging.logWarning('Cannot show task completed notification: No context available for localization', name: 'NotificationService');
       return;
     }
-    final l10n = AppLocalizations.of(context)!;
 
-    final AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'task_completed',
-      l10n.taskCompletedChannelName,
-      channelDescription: l10n.taskCompletedChannelDesc,
-      importance: Importance.defaultImportance,
-      priority: Priority.defaultPriority,
-      showWhen: true,
-    );
+    final AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails('task_completed', l10n.taskCompletedChannelName, channelDescription: l10n.taskCompletedChannelDesc, importance: Importance.defaultImportance, priority: Priority.defaultPriority, showWhen: true);
 
     const DarwinNotificationDetails iOSPlatformChannelSpecifics = DarwinNotificationDetails();
 
@@ -559,11 +564,11 @@ class NotificationService {
       }
 
       final context = NavigationService.navigatorKey.currentContext;
-      if (context == null) {
-        AppLogging.logError('No context available for localization', name: 'NotificationService');
+      final l10n = _getSafeLocalizations(context);
+      if (l10n == null) {
+        AppLogging.logWarning('Cannot show notification: No context available for localization', name: 'NotificationService');
         return;
       }
-      final l10n = AppLocalizations.of(context)!;
       // Schedule the notification
       await _flutterLocalNotificationsPlugin.zonedSchedule(
         notificationId,
@@ -571,15 +576,7 @@ class NotificationService {
         l10n.testNotificationDescription,
         testTime,
         NotificationDetails(
-          android: AndroidNotificationDetails(
-            'task_reminders',
-            l10n.taskRemindersChannelName,
-            channelDescription: l10n.taskRemindersChannelDesc,
-            importance: Importance.max,
-            priority: Priority.high,
-            playSound: true,
-            enableVibration: true,
-          ),
+          android: AndroidNotificationDetails('task_reminders', l10n.taskRemindersChannelName, channelDescription: l10n.taskRemindersChannelDesc, importance: Importance.max, priority: Priority.high, playSound: true, enableVibration: true),
           iOS: const DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
@@ -597,25 +594,17 @@ class NotificationService {
       const notificationId = 1000; // Fixed ID for immediate test
 
       final context = NavigationService.navigatorKey.currentContext;
-      if (context == null) {
-        AppLogging.logError('No context available for localization', name: 'NotificationService');
+      final l10n = _getSafeLocalizations(context);
+      if (l10n == null) {
+        AppLogging.logWarning('Cannot show notification: No context available for localization', name: 'NotificationService');
         return;
       }
-      final l10n = AppLocalizations.of(context)!;
       await _flutterLocalNotificationsPlugin.show(
         notificationId,
         l10n.immediateTestNotification,
         l10n.immediateTestNotificationDescription,
         NotificationDetails(
-          android: AndroidNotificationDetails(
-            'task_reminders',
-            l10n.taskRemindersChannelName,
-            channelDescription: l10n.taskRemindersChannelDesc,
-            importance: Importance.max,
-            priority: Priority.high,
-            playSound: true,
-            enableVibration: true,
-          ),
+          android: AndroidNotificationDetails('task_reminders', l10n.taskRemindersChannelName, channelDescription: l10n.taskRemindersChannelDesc, importance: Importance.max, priority: Priority.high, playSound: true, enableVibration: true),
           iOS: const DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
         ),
       );
@@ -632,11 +621,11 @@ class NotificationService {
       const notificationId = 9999; // Fixed ID for admin notifications
 
       final context = NavigationService.navigatorKey.currentContext;
-      if (context == null) {
-        AppLogging.logError('No context available for localization', name: 'NotificationService');
+      final l10n = _getSafeLocalizations(context);
+      if (l10n == null) {
+        AppLogging.logWarning('Cannot show notification: No context available for localization', name: 'NotificationService');
         return;
       }
-      final l10n = AppLocalizations.of(context)!;
 
       final AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'admin_notifications',
@@ -677,15 +666,7 @@ class NotificationService {
         localizations.testMoodNotificationTitle, // Use key
         localizations.testMoodNotificationBody, // Use key
         NotificationDetails(
-          android: AndroidNotificationDetails(
-            moodNotificationChannelId,
-            localizations.moodCheckInsChannelName,
-            channelDescription: localizations.moodCheckInsChannelDesc,
-            importance: Importance.max,
-            priority: Priority.max,
-            playSound: true,
-            enableVibration: true,
-          ),
+          android: AndroidNotificationDetails(moodNotificationChannelId, localizations.moodCheckInsChannelName, channelDescription: localizations.moodCheckInsChannelDesc, importance: Importance.max, priority: Priority.max, playSound: true, enableVibration: true),
           iOS: const DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
         ),
         payload: 'mood_check_in',
@@ -712,15 +693,7 @@ class NotificationService {
         localizations.scheduledTestMoodNotificationBody,
         testTime,
         NotificationDetails(
-          android: AndroidNotificationDetails(
-            moodNotificationChannelId,
-            localizations.moodCheckInsChannelName,
-            channelDescription: localizations.moodCheckInsChannelDesc,
-            importance: Importance.max,
-            priority: Priority.max,
-            playSound: true,
-            enableVibration: true,
-          ),
+          android: AndroidNotificationDetails(moodNotificationChannelId, localizations.moodCheckInsChannelName, channelDescription: localizations.moodCheckInsChannelDesc, importance: Importance.max, priority: Priority.max, playSound: true, enableVibration: true),
           iOS: const DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,

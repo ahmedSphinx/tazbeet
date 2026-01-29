@@ -28,7 +28,7 @@ class _PomodoroHomeScreenState extends State<PomodoroHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      //  backgroundColor: const Color(0xFFF8F9FA),
       body: showTimer
           ? PomodoroScreen(
               initialTask: widget.initialTask,
@@ -52,10 +52,7 @@ class _PomodoroHomeScreenState extends State<PomodoroHomeScreen> {
             child: Icon(Icons.timer, color: Colors.blue[600], size: 60),
           ),
           const SizedBox(height: 24),
-          Text(
-            AppLocalizations.of(context)!.pomodoroTimer,
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black87),
-          ),
+          Text(AppLocalizations.of(context)!.pomodoroTimer, style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold /*  color: Colors.black87 */)),
           const SizedBox(height: 12),
           Text(AppLocalizations.of(context)!.startAFocusedWorkSession, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
           const SizedBox(height: 48),
@@ -65,7 +62,7 @@ class _PomodoroHomeScreenState extends State<PomodoroHomeScreen> {
             decoration: BoxDecoration(
               gradient: const LinearGradient(colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)]),
               borderRadius: BorderRadius.circular(28),
-              boxShadow: [BoxShadow(color: const Color(0xFF6366F1).withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 4))],
+              boxShadow: [BoxShadow(color: const Color(0xFF6366F1).withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))],
             ),
             child: Material(
               color: Colors.transparent,

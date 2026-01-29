@@ -38,14 +38,7 @@ class NotificationQuickActions extends StatelessWidget {
                 Wrap(
                   spacing: 12,
                   runSpacing: 12,
-                  children: [
-                    if (showDNDToggle) _buildDNDButton(context, state),
-                    if (showTestButton) _buildTestButton(context),
-                    if (showClearButton) _buildClearButton(context, state),
-                    if (showSettingsButton) _buildSettingsButton(context),
-                    _buildHistoryButton(context, state),
-                    _buildPermissionsButton(context, state),
-                  ],
+                  children: [if (showDNDToggle) _buildDNDButton(context, state), if (showTestButton) _buildTestButton(context), if (showClearButton) _buildClearButton(context, state), if (showSettingsButton) _buildSettingsButton(context), _buildHistoryButton(context, state), _buildPermissionsButton(context, state)],
                 ),
               ],
             ),
@@ -61,7 +54,7 @@ class NotificationQuickActions extends StatelessWidget {
     return ActionChip(
       avatar: Icon(isDNDActive ? Icons.do_not_disturb_on : Icons.do_not_disturb_off, size: 20),
       label: Text(isDNDActive ? 'DND On' : 'DND Off'),
-      backgroundColor: isDNDActive ? Colors.red.withOpacity(0.1) : null,
+      backgroundColor: isDNDActive ? Colors.red.withValues(alpha: 0.1) : null,
       side: BorderSide(color: isDNDActive ? Colors.red : Theme.of(context).colorScheme.outline),
       onPressed: () {
         context.read<NotificationBloc>().add(ToggleDoNotDisturb(!isDNDActive));
@@ -120,7 +113,7 @@ class NotificationQuickActions extends StatelessWidget {
     return ActionChip(
       avatar: Icon(granted ? Icons.check_circle : Icons.error, size: 20),
       label: Text(granted ? 'Permissions OK' : 'Grant Permissions'),
-      backgroundColor: granted ? Colors.green.withOpacity(0.1) : Colors.orange.withOpacity(0.1),
+      backgroundColor: granted ? Colors.green.withValues(alpha: 0.1) : Colors.orange.withValues(alpha: 0.1),
       side: BorderSide(color: granted ? Colors.green : Colors.orange),
       onPressed: () {
         if (granted) {

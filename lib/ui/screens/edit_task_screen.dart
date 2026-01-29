@@ -64,7 +64,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                   hintText: AppLocalizations.of(context)!.taskTitleLabel,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                autofocus: true,
+               // autofocus: false, // Prevent keyboard auto-opening
                 inputFormatters: [LengthLimitingTextInputFormatter(100)],
               ),
               const SizedBox(height: 16),
@@ -107,9 +107,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                   if (pickedDate != null) {
                     // For today, ensure time is at least 1 minute in the future
                     final now = DateTime.now();
-                    final initialTime = (pickedDate.year == now.year && pickedDate.month == now.month && pickedDate.day == now.day)
-                        ? TimeOfDay.fromDateTime(now.add(const Duration(minutes: 1)))
-                        : TimeOfDay.fromDateTime(pickedDate);
+                    final initialTime = (pickedDate.year == now.year && pickedDate.month == now.month && pickedDate.day == now.day) ? TimeOfDay.fromDateTime(now.add(const Duration(minutes: 1))) : TimeOfDay.fromDateTime(pickedDate);
 
                     final pickedTime = await showTimePicker(context: context, initialTime: initialTime);
 
@@ -247,15 +245,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
       return;
     }
 
-    final updatedTask = widget.task.copyWith(
-      title: _titleController.text.trim(),
-      description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
-      priority: selectedPriority,
-      dueDate: selectedDueDate,
-      repeatRule: selectedRepeatRule,
-      subtasks: _subtasks,
-      updatedAt: DateTime.now(),
-    );
+    final updatedTask = widget.task.copyWith(title: _titleController.text.trim(), description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(), priority: selectedPriority, dueDate: selectedDueDate, repeatRule: selectedRepeatRule, subtasks: _subtasks, updatedAt: DateTime.now());
 
     widget.onTaskUpdated(updatedTask);
     Navigator.of(context).pop();
@@ -323,7 +313,7 @@ class _AddSubtaskDialogState extends State<_AddSubtaskDialog> {
                 labelText: l10n.taskTitleLabel,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
               ),
-              autofocus: true,
+              autofocus: true, // User-initiated dialog should focus for good UX
             ),
             const SizedBox(height: 16),
             TextField(

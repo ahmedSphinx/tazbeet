@@ -22,18 +22,7 @@ class SubtaskWidget extends StatefulWidget {
   final bool strictMode;
   final bool isParentCompleted;
 
-  const SubtaskWidget({
-    super.key,
-    required this.subtask,
-    required this.depth,
-    required this.maxDepth,
-    required this.onToggle,
-    required this.onEdit,
-    required this.onDelete,
-    this.onAddNested,
-    this.strictMode = true,
-    this.isParentCompleted = false,
-  });
+  const SubtaskWidget({super.key, required this.subtask, required this.depth, required this.maxDepth, required this.onToggle, required this.onEdit, required this.onDelete, this.onAddNested, this.strictMode = true, this.isParentCompleted = false});
 
   @override
   State<SubtaskWidget> createState() => _SubtaskWidgetState();
@@ -245,7 +234,7 @@ class _SubtaskWidgetState extends State<SubtaskWidget> with TickerProviderStateM
                         const SizedBox(height: 12),
                         LinearProgressIndicator(value: progress, backgroundColor: Colors.grey.withValues(alpha: 0.2), valueColor: AlwaysStoppedAnimation<Color>(progress == 1.0 ? Colors.green : Colors.blue)),
                         const SizedBox(height: 4),
-                        Text('${(progress * 100).round()}% complete', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                        Text('${(progress * 100).round()}% ${l10n.complete}', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
                       ],
                     ],
                   ),

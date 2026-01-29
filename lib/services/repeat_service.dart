@@ -3,6 +3,7 @@ import 'dart:async';
 import '../models/task.dart';
 import '../models/repeat_rule.dart';
 import '../repositories/task_repository.dart';
+import '../services/app_logging_service.dart';
 
 class RepeatService {
   static final RepeatService _instance = RepeatService._internal();
@@ -32,14 +33,32 @@ class RepeatService {
 
   /// Generate next recurring instance of a task
   Future<Task?> generateNextRecurringTask(Task originalTask) async {
+    AppLogging.logInfo('Generating recurring instance for task: ${originalTask.title} (ID: ${originalTask.id})');
+
     if (originalTask.repeatRule == null || !originalTask.repeatRule!.isActive) {
+      AppLogging.logInfo('Task ${originalTask.title} has no active repeat rule, skipping');
       return null;
+    }
+
+    // Check if we've reached the repeat count limit
+    if (originalTask.repeatRule!.repeatType == RepeatType.count) {
+      final currentCount = await _getCurrentInstanceCount(originalTask.id);
+      final maxCount = originalTask.repeatRule!.repeatCount ?? 0;
+      AppLogging.logInfo('Task ${originalTask.title} repeat count: $currentCount/$maxCount');
+
+      if (currentCount >= maxCount) {
+        AppLogging.logInfo('Task ${originalTask.title} has reached repeat count limit, skipping');
+        return null; // Already generated the required number of instances
+      }
     }
 
     final nextDate = originalTask.repeatRule!.getNextOccurrence(originalTask.dueDate ?? DateTime.now());
     if (nextDate == null) {
+      AppLogging.logInfo('No next occurrence calculated for task: ${originalTask.title}');
       return null;
     }
+
+    AppLogging.logInfo('Next occurrence for task ${originalTask.title}: ${nextDate.toIso8601String()}');
 
     // Create new recurring instance
     final newTask = Task(
@@ -64,7 +83,14 @@ class RepeatService {
       voiceNotes: originalTask.voiceNotes,
     );
 
+    AppLogging.logInfo('Successfully created recurring instance: ${newTask.id} for task: ${originalTask.title}');
     return newTask;
+  }
+
+  /// Get the current number of generated instances for a task
+  Future<int> _getCurrentInstanceCount(String originalTaskId) async {
+    final allTasks = await _taskRepository.getAllTasks();
+    return allTasks.where((task) => task.originalTaskId == originalTaskId && task.isRecurringInstance).length;
   }
 
   /// Process completed recurring tasks and generate next instances
@@ -218,10 +244,6 @@ class RepeatService {
     final recurringTasks = allTasks.where((task) => task.repeatRule != null).toList();
     final recurringInstances = allTasks.where((task) => task.isRecurringInstance).toList();
 
-    return {
-      'totalRecurringTasks': recurringTasks.length,
-      'totalRecurringInstances': recurringInstances.length,
-      'activeRecurringTasks': recurringTasks.where((task) => task.repeatRule != null && task.repeatRule!.isActive).length,
-    };
+    return {'totalRecurringTasks': recurringTasks.length, 'totalRecurringInstances': recurringInstances.length, 'activeRecurringTasks': recurringTasks.where((task) => task.repeatRule != null && task.repeatRule!.isActive).length};
   }
 }

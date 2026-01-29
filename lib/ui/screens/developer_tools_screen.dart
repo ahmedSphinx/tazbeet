@@ -219,7 +219,7 @@ class _DeveloperToolsScreenState extends State<DeveloperToolsScreen> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: scoreColor),
                 ),
                 const SizedBox(width: 16),
-                Chip(label: Text(health), backgroundColor: scoreColor.withOpacity(0.2)),
+                Chip(label: Text(health), backgroundColor: scoreColor.withValues(alpha: 0.2)),
               ],
             ),
             const SizedBox(height: 8),

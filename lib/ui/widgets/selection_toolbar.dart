@@ -14,16 +14,7 @@ class SelectionToolbar extends StatelessWidget {
   final VoidCallback onSetPrioritySelected;
   final VoidCallback onDeleteSelected;
 
-  const SelectionToolbar({
-    super.key,
-    required this.selectedCount,
-    required this.onClearSelection,
-    required this.onCompleteSelected,
-    required this.onRescheduleSelected,
-    required this.onSetCategorySelected,
-    required this.onSetPrioritySelected,
-    required this.onDeleteSelected,
-  });
+  const SelectionToolbar({super.key, required this.selectedCount, required this.onClearSelection, required this.onCompleteSelected, required this.onRescheduleSelected, required this.onSetCategorySelected, required this.onSetPrioritySelected, required this.onDeleteSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +29,7 @@ class SelectionToolbar extends StatelessWidget {
         decoration: BoxDecoration(
           color: colorScheme.surface,
           boxShadow: DSElevation.getBoxShadow(context, DSElevation.level3),
-          border: Border(top: BorderSide(color: colorScheme.outline.withOpacity(0.1))),
+          border: Border(top: BorderSide(color: colorScheme.outline.withValues(alpha: 0.1))),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

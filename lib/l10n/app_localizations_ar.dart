@@ -243,6 +243,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get allDataClearedAndResyncedSuccessfully => 'تم مسح جميع البيانات وإعادة المزامنة بنجاح!';
 
   @override
+  String get allDone => 'تم كل شيء!';
+
+  @override
   String get allLabel => 'الكل';
 
   @override
@@ -596,6 +599,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cannotSetReminderForPastDate => 'لا يمكن ضبط تذكير لتاريخ سابق';
 
   @override
+  String get cannotSetReminderOnCompletedTask => 'Cannot set reminder on completed task';
+
+  @override
   String get cannotSetReminderWithoutPermission => 'لا يمكن تعيين التذكير بدون إذن';
 
   @override
@@ -703,7 +709,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get choosePrimaryColor => 'اختر اللون الأساسي';
 
   @override
-  String get chooseYourFocusSession => 'اختر جلسة التركيز';
+  String get chooseYourFocusSession => 'اختر جلسة التركيز🥕';
 
   @override
   String get classicPreset => 'كلاسيكي';
@@ -1203,6 +1209,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get downloadingUpdate => 'جاري تحميل التحديث...';
 
   @override
+  String get dragToReorderSubtasks => 'اسحب لإعادة ترتيب المهام الفرعية';
+
+  @override
   String get dueDate => 'تاريخ الاستحقاق';
 
   @override
@@ -1434,8 +1443,18 @@ class AppLocalizationsAr extends AppLocalizations {
   String get enterTaskTitle => 'أدخل عنوان المهمة';
 
   @override
+  String errorAddingSubtask(Object error) {
+    return 'Error adding subtask: $error';
+  }
+
+  @override
   String errorApplyingSettings(Object error) {
     return 'خطأ في تطبيق الإعدادات: $error';
+  }
+
+  @override
+  String errorCancellingReminder(Object error) {
+    return 'Error cancelling reminder: $error';
   }
 
   @override
@@ -1472,6 +1491,11 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String errorDuplicatingTask(Object error) {
+    return 'Error duplicating task: $error';
+  }
+
+  @override
   String get errorExportingLogs => 'خطأ في تصدير السجلات';
 
   @override
@@ -1489,10 +1513,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get errorLoadingTasks => 'خطأ في تحميل المهام';
 
   @override
+  String get errorReorderingSubtasks => 'خطأ في إعادة ترتيب المهام الفرعية';
+
+  @override
   String get errorSavingColorSettings => 'خطأ في حفظ إعدادات الألوان';
 
   @override
   String get errorSavingMaintenanceSettings => 'خطأ في حفظ إعدادات الصيانة';
+
+  @override
+  String get errorSettingQuickReminder => 'Error setting reminder';
+
+  @override
+  String errorSettingReminder(Object error) {
+    return 'Error setting reminder: $error';
+  }
 
   @override
   String get errorTitle => 'أوبس! حدث خطأ ما';
@@ -1619,8 +1654,18 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String failedToCompleteTask(Object error) {
+    return 'Failed to complete task: $error';
+  }
+
+  @override
   String failedToGetSuggestions(Object error) {
     return 'فشل في الحصول على الاقتراحات: $error';
+  }
+
+  @override
+  String failedToOpenPomodoroTemplates(Object error) {
+    return 'Failed to open Pomodoro templates: $error';
   }
 
   @override
@@ -1634,6 +1679,11 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String failedToUncompleteTask(Object error) {
+    return 'Failed to uncomplete task: $error';
+  }
+
+  @override
   String get failedToUploadImage => 'فشل في رفع الصورة';
 
   @override
@@ -1644,6 +1694,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get fifteenMinPause => 'إيقاف مؤقت 15 دقيقة';
+
+  @override
+  String get fifteenMinutes => '15 دقيقة';
 
   @override
   String get filter => 'تصفية';
@@ -1671,6 +1724,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get fireplace => 'موقد';
+
+  @override
+  String get fiveMinutes => '5 دقائق';
 
   @override
   String get focus => 'تركيز';
@@ -1915,6 +1971,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get hours2 => 'ساعتان';
+
+  @override
+  String get hours6 => '6 ساعات';
 
   @override
   String get howAreYou => 'كيف حالك؟';
@@ -2626,6 +2685,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get next => 'التالي';
 
   @override
+  String get nextWeek => 'الأسبوع القادم';
+
+  @override
   String get nightReflection => 'تأمل ليلي 🌟';
 
   @override
@@ -3074,6 +3136,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get pleaseFixErrors => 'يرجى إصلاح الأخطاء أعلاه';
 
   @override
+  String get pleaseSelectBothDateAndTime => 'Please select both date and time';
+
+  @override
   String get pleaseTryAgain => 'يرجى المحاولة مرة أخرى';
 
   @override
@@ -3379,6 +3444,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get recurringInstancesGenerated => 'تم إنشاء النسخ المتكررة بنجاح!';
 
   @override
+  String get recurringOptions => 'خيارات متكررة';
+
+  @override
+  String recurringReminderSet(Object frequency) {
+    return 'Recurring reminder set: $frequency';
+  }
+
+  @override
   String get recurringTaskAutomation => '• أتمتة المهام المتكررة';
 
   @override
@@ -3440,6 +3513,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get reminderHistory => 'تاريخ التذكيرات';
+
+  @override
+  String get reminderMustBeInFuture => 'Reminder must be in the future';
 
   @override
   String get reminderRetryScheduled => 'تم إعادة جدولة التذكير';
@@ -3766,9 +3842,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get setRealisticSessionGoals => 'ضع أهدافاً واقعية للجلسة';
 
   @override
-  String get setReminder => 'تعيين تذكير';
-
-  @override
   String get setReminderButton => 'تعيين تذكير';
 
   @override
@@ -3895,6 +3968,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get smartView => 'ذكي';
+
+  @override
+  String get snooze => 'تأجيل';
 
   @override
   String get snooze15min => 'تأجيل 15 دقيقة';
@@ -4066,6 +4142,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get subtasks => 'المهام الفرعية';
+
+  @override
+  String get subtasksReordered => 'تم إعادة ترتيب المهام الفرعية';
 
   @override
   String get subtaskTitle => 'عنوان المهمة الفرعية';
@@ -4346,6 +4425,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get templateName => 'اسم القالب';
 
   @override
+  String get tenMinutes => '10 دقائق';
+
+  @override
   String get termsAndPrivacy => 'بتسجيل الدخول، أنت توافق على شروط الخدمة وسياسة الخصوصية الخاصة بنا';
 
   @override
@@ -4440,6 +4522,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get themeSettingsResetToDefaults => 'تم إعادة تعيين إعدادات السمة إلى الافتراضي';
+
+  @override
+  String get thirtyMinutes => '30 دقيقة';
 
   @override
   String get thirtySeconds => '30 ثانية';

@@ -234,6 +234,10 @@ class AdminService {
       throw Exception('Cannot delete task: userId is null or empty');
     }
 
+    if (task.id.isEmpty) {
+      throw Exception('Cannot delete task: taskId is empty');
+    }
+
     try {
       await _firestore!.collection('users').doc(task.userId).collection('tasks').doc(task.id).delete();
       AppLogging.logInfo('Task deleted successfully: ${task.id}');

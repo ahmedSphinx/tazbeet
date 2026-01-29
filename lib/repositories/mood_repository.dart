@@ -1,5 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/mood.dart';
+import '../services/encryption_service.dart';
 
 class MoodRepository {
   static const String _boxName = 'moods';
@@ -12,7 +13,8 @@ class MoodRepository {
   /// Safe getter for the Hive box - prevents crash if called before init
   Future<Box<Mood>> _getBox() async {
     if (!Hive.isBoxOpen(_boxName)) {
-      return await Hive.openBox<Mood>(_boxName);
+      final cipher = await EncryptionService.getCipher();
+      return await Hive.openBox<Mood>(_boxName, encryptionCipher: cipher);
     }
     return Hive.box<Mood>(_boxName);
   }

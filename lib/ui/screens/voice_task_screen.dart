@@ -47,7 +47,7 @@ class _VoiceTaskScreenState extends State<VoiceTaskScreen> {
                       children: [
                         Text('Voice Task Creation', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
                         const SizedBox(height: AppSpacing.xs),
-                        Text('Create tasks naturally with your voice', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7))),
+                        Text('Create tasks naturally with your voice', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
                       ],
                     ),
                   ),
@@ -78,7 +78,7 @@ class _VoiceTaskScreenState extends State<VoiceTaskScreen> {
         Container(
           width: 200,
           height: 200,
-          decoration: BoxDecoration(color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3), borderRadius: BorderRadius.circular(100)),
+          decoration: BoxDecoration(color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(100)),
           child: Icon(Icons.mic, size: 80, color: Theme.of(context).colorScheme.primary),
         ),
         const SizedBox(height: AppSpacing.lg),
@@ -94,7 +94,7 @@ class _VoiceTaskScreenState extends State<VoiceTaskScreen> {
         Text(
           'Simply tap the microphone button and speak naturally. I\'ll understand and create tasks for you!',
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
         ),
         const SizedBox(height: AppSpacing.lg),
 
@@ -128,7 +128,7 @@ class _VoiceTaskScreenState extends State<VoiceTaskScreen> {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(AppRadius.sm),
-        border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
+        border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
@@ -173,7 +173,7 @@ class _VoiceTaskScreenState extends State<VoiceTaskScreen> {
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(AppRadius.md),
-          border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
+          border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
         ),
         child: Column(
           children: [
@@ -256,7 +256,7 @@ class _VoiceTaskScreenState extends State<VoiceTaskScreen> {
             TextField(
               controller: _titleController,
               decoration: InputDecoration(labelText: AppLocalizations.of(context)!.taskTitle, border: OutlineInputBorder()),
-              autofocus: true,
+              autofocus: true, // User-initiated dialog should focus for good UX
             ),
             const SizedBox(height: 16),
             TextField(
@@ -325,7 +325,7 @@ class _VoiceTaskScreenState extends State<VoiceTaskScreen> {
               width: 40,
               height: 4,
               margin: const EdgeInsets.symmetric(vertical: 12),
-              decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3), borderRadius: BorderRadius.circular(2)),
+              decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(2)),
             ),
 
             // Header
@@ -360,9 +360,9 @@ class _VoiceTaskScreenState extends State<VoiceTaskScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.inbox_outlined, size: 64, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3)),
+                          Icon(Icons.inbox_outlined, size: 64, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
                           const SizedBox(height: 16),
-                          Text(AppLocalizations.of(context)!.noRecentTasks, style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),
+                          Text(AppLocalizations.of(context)!.noRecentTasks, style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6))),
                         ],
                       ),
                     )
@@ -376,7 +376,7 @@ class _VoiceTaskScreenState extends State<VoiceTaskScreen> {
                           child: ListTile(
                             title: Text(task.title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
                             subtitle: task.description != null ? Text(task.description!, maxLines: 2, overflow: TextOverflow.ellipsis) : null,
-                            trailing: Icon(Icons.arrow_forward_ios, size: 16, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
+                            trailing: Icon(Icons.arrow_forward_ios, size: 16, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
                             onTap: () {
                               // Here you could navigate to task details or edit the task
                               Navigator.of(context).pop();

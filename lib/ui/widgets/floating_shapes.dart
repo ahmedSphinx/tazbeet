@@ -83,7 +83,7 @@ class _FloatingShapesState extends State<FloatingShapes> with TickerProviderStat
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(color: widget.color.withOpacity(0.1), shape: shape == ShapeType.circle ? BoxShape.circle : BoxShape.rectangle, borderRadius: shape == ShapeType.circle ? null : BorderRadius.circular(4)),
+      decoration: BoxDecoration(color: widget.color.withValues(alpha: 0.1), shape: shape == ShapeType.circle ? BoxShape.circle : BoxShape.rectangle, borderRadius: shape == ShapeType.circle ? null : BorderRadius.circular(4)),
     );
   }
 }

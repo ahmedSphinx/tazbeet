@@ -240,8 +240,8 @@ class PomodoroTimer extends ChangeNotifier {
     _state = PomodoroState.work;
     _currentSession++;
 
-    // Use adaptive duration if enabled and task is selected
-    if (_adaptiveTimingEnabled && _selectedTask != null) {
+    // Use adaptive duration if enabled and task is selected, but not for custom templates
+    if (_adaptiveTimingEnabled && _selectedTask != null && !isUsingCustomTemplate) {
       _remainingSeconds = adaptivePomodoro.calculateOptimalDuration(_selectedTask!) * 60;
     } else {
       _remainingSeconds = session.workDuration * 60;
@@ -490,15 +490,7 @@ class PomodoroTimer extends ChangeNotifier {
 
   Future<void> _saveState() async {
     final prefs = await SharedPreferences.getInstance();
-    final data = {
-      'state': _state.index,
-      'previousState': _previousState.index,
-      'currentSession': _currentSession,
-      'completedSessions': _completedSessions,
-      'remainingSeconds': _remainingSeconds,
-      'startTime': _startTime?.toIso8601String(),
-      'pauseTime': _pauseTime?.toIso8601String(),
-    };
+    final data = {'state': _state.index, 'previousState': _previousState.index, 'currentSession': _currentSession, 'completedSessions': _completedSessions, 'remainingSeconds': _remainingSeconds, 'startTime': _startTime?.toIso8601String(), 'pauseTime': _pauseTime?.toIso8601String()};
     await prefs.setString(_pomodoroDataKey, jsonEncode(data));
   }
 

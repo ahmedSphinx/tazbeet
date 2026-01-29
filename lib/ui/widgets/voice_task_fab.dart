@@ -76,14 +76,7 @@ class _VoiceTaskFabState extends State<VoiceTaskFab> with TickerProviderStateMix
                 scale: _scaleAnimation.value,
                 child: Transform.rotate(
                   angle: _rotationAnimation.value,
-                  child: FloatingActionButton.extended(
-                    onPressed: _startVoiceRecording,
-                    icon: const Icon(Icons.mic),
-                    label: Text('Voice'),
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor: Colors.white,
-                    elevation: 8,
-                  ),
+                  child: FloatingActionButton.extended(onPressed: _startVoiceRecording, icon: const Icon(Icons.mic), label: Text('Voice'), backgroundColor: Theme.of(context).colorScheme.primary, foregroundColor: Colors.white, elevation: 8),
                 ),
               );
             },
@@ -100,7 +93,7 @@ class _VoiceTaskFabState extends State<VoiceTaskFab> with TickerProviderStateMix
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(AppRadius.lg),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 20, offset: const Offset(0, 10))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 20, offset: const Offset(0, 10))],
       ),
       child: VoiceTaskRecorder(onTaskCreated: _onTaskCreated, onCancelled: _onRecordingCancelled),
     );
@@ -201,7 +194,7 @@ class VoiceTaskButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.primary,
           borderRadius: BorderRadius.circular(isCompact ? AppRadius.sm : AppRadius.md),
-          boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.primary.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 4))],
+          boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 4))],
         ),
         child: Icon(Icons.mic, color: Colors.white, size: isCompact ? 20 : 24),
       ),

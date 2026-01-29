@@ -135,10 +135,8 @@ class _PomodoroTemplateScreenState extends State<PomodoroTemplateScreen> {
           AppLogging.logInfo('PomodoroTemplateScreen: Opening custom template dialog', name: 'PomodoroNavigation');
           _showCustomTemplateDialog();
         } else {
-          AppLogging.logInfo(
-            'PomodoroTemplateScreen: Template selected - Work: ${template.workDuration}min, Rest: ${template.restDuration}min, Long Rest: ${template.longRestDuration}min, Cycles: ${template.cycles}',
-            name: 'PomodoroNavigation',
-          );
+          AppLogging.logInfo('PomodoroTemplateScreen: Template selected - Work: ${template.workDuration}min, Rest: ${template.restDuration}min, Long Rest: ${template.longRestDuration}min, Cycles: ${template.cycles}', name: 'PomodoroNavigation');
+          AppLogging.logInfo('PomodoroTemplateScreen: Template ID: ${template.id}, Name: ${template.name}, RecommendedFor: ${template.recommendedFor}', name: 'PomodoroNavigation');
           HapticFeedback.mediumImpact();
 
           // Return the selected template and close modal
@@ -166,8 +164,7 @@ class _PomodoroTemplateScreenState extends State<PomodoroTemplateScreen> {
       backgroundColor: Colors.transparent,
       builder: (context) => _CustomTemplateDialog(
         onTemplateCreated: (customTemplate) {
-          Navigator.of(context).pop(customTemplate); // Close custom dialog
-          Navigator.of(context).pop(customTemplate); // Close template selection dialog
+          Navigator.of(context).pop(customTemplate); // Close both dialogs with result
         },
       ),
     );
@@ -252,7 +249,7 @@ class _PomodoroTemplateScreenState extends State<PomodoroTemplateScreen> {
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -2))],
+              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, -2))],
             ),
             child: Container(
               width: double.infinity,
@@ -260,7 +257,7 @@ class _PomodoroTemplateScreenState extends State<PomodoroTemplateScreen> {
               decoration: BoxDecoration(
                 gradient: const LinearGradient(colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)]),
                 borderRadius: BorderRadius.circular(28),
-                boxShadow: [BoxShadow(color: const Color(0xFF6366F1).withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 4))],
+                boxShadow: [BoxShadow(color: const Color(0xFF6366F1).withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))],
               ),
               child: Material(
                 color: Colors.transparent,
@@ -290,7 +287,7 @@ class _PomodoroTemplateScreenState extends State<PomodoroTemplateScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: isSelected ? Colors.green[400]! : Colors.grey[200]!, width: isSelected ? 2 : 1),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 2))],
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 2))],
         ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),

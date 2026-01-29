@@ -18,18 +18,14 @@ class HomeUndatedSection extends StatefulWidget {
   State<HomeUndatedSection> createState() => _HomeUndatedSectionState();
 }
 
-class _HomeUndatedSectionState extends State<HomeUndatedSection>
-    with SingleTickerProviderStateMixin {
+class _HomeUndatedSectionState extends State<HomeUndatedSection> with SingleTickerProviderStateMixin {
   bool _expanded = false;
   late AnimationController _iconController;
 
   @override
   void initState() {
     super.initState();
-    _iconController = AnimationController(
-      duration: const Duration(milliseconds: 200),
-      vsync: this,
-    );
+    _iconController = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
   }
 
   @override
@@ -80,23 +76,15 @@ class _HomeUndatedSectionState extends State<HomeUndatedSection>
         tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         childrenPadding: EdgeInsets.zero,
         leading: _buildLeadingIcon(theme),
-        title: Text(
-          l10n.undatedTasks,
-          style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
-        ),
+        title: Text(l10n.undatedTasks, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
         subtitle: _buildSubtitle(context, undatedTasks.length, l10n),
         trailing: RotationTransition(
           turns: Tween(begin: 0.0, end: 0.5).animate(_iconController),
-          child: Icon(
-            Icons.expand_more,
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
+          child: Icon(Icons.expand_more, color: theme.colorScheme.onSurface),
         ),
         initiallyExpanded: _expanded,
         onExpansionChanged: _handleExpansionChanged,
-        children: [
-          _buildTaskList(context, undatedTasks),
-        ],
+        children: [_buildTaskList(context, undatedTasks)],
       ),
     );
   }
@@ -104,15 +92,8 @@ class _HomeUndatedSectionState extends State<HomeUndatedSection>
   Widget _buildLeadingIcon(ThemeData theme) {
     return Container(
       padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.secondaryContainer,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Icon(
-        Icons.event_busy,
-        color: theme.colorScheme.secondary,
-        size: 24,
-      ),
+      decoration: BoxDecoration(color: theme.colorScheme.secondaryContainer, borderRadius: BorderRadius.circular(12)),
+      child: Icon(Icons.event_busy, color: theme.colorScheme.secondary, size: 24),
     );
   }
 
@@ -124,26 +105,14 @@ class _HomeUndatedSectionState extends State<HomeUndatedSection>
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.tertiaryContainer,
-              borderRadius: BorderRadius.circular(8),
-            ),
+            decoration: BoxDecoration(color: theme.colorScheme.tertiaryContainer, borderRadius: BorderRadius.circular(8)),
             child: Text(
               '$count',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onTertiaryContainer,
-              ),
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: theme.colorScheme.onTertiaryContainer),
             ),
           ),
           const SizedBox(width: 8),
-          Text(
-            l10n.tasksCount(count),
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
+          Text(l10n.tasksCount(count), style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface)),
         ],
       ),
     );
@@ -154,10 +123,7 @@ class _HomeUndatedSectionState extends State<HomeUndatedSection>
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerLowest,
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(16),
-          bottomRight: Radius.circular(16),
-        ),
+        borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16)),
       ),
       child: TaskListSection(
         tasks: undatedTasks,
@@ -166,11 +132,9 @@ class _HomeUndatedSectionState extends State<HomeUndatedSection>
         searchQuery: '',
         filterPriority: null,
         filterCompleted: null,
-        onTaskToggle: (taskId) =>
-            context.read<TaskListBloc>().add(ToggleTaskCompletion(taskId)),
+        onTaskToggle: (taskId) => context.read<TaskListBloc>().add(ToggleTaskCompletion(taskId)),
         onTaskEdit: widget.onTaskEdit ?? (task) {},
-        onTaskDelete: (taskId) =>
-            context.read<TaskListBloc>().add(DeleteTask(taskId)),
+        onTaskDelete: (taskId) => context.read<TaskListBloc>().add(DeleteTask(taskId)),
       ),
     );
   }

@@ -77,11 +77,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           AnimatedContainer(
             duration: const Duration(milliseconds: 500),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: isDark ? [const Color(0xFF0F172A), const Color(0xFF1E293B), const Color(0xFF334155)] : [const Color(0xFFF8FAFC), const Color(0xFFE2E8F0), const Color(0xFFCBD5E1)],
-              ),
+              gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: isDark ? [const Color(0xFF0F172A), const Color(0xFF1E293B), const Color(0xFF334155)] : [const Color(0xFFF8FAFC), const Color(0xFFE2E8F0), const Color(0xFFCBD5E1)]),
             ),
           ),
 
@@ -209,9 +205,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                         children: [
                           Text(
                             AppLocalizations.of(context)!.appTitle,
-                            style: Theme.of(
-                              context,
-                            ).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold, foreground: Paint()..shader = AppThemes.getPrimaryGradient(isDark).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0))),
+                            style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold, foreground: Paint()..shader = AppThemes.getPrimaryGradient(isDark).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0))),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 16),
@@ -269,19 +263,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   duration: const Duration(milliseconds: 800),
                   child: SlideAnimation(
                     verticalOffset: 30.0,
-                    child: FadeInAnimation(
-                      child: Column(
-                        children: [
-                          _buildDivider(context),
-                          const SizedBox(height: 16),
-                          _buildGoogleSignInButton(context),
-                          const SizedBox(height: 16),
-                          _buildAppleSignInButton(context),
-                          const SizedBox(height: 16),
-                          _buildGuestModeButton(context),
-                        ],
-                      ),
-                    ),
+                    child: FadeInAnimation(child: Column(children: [_buildDivider(context), const SizedBox(height: 16), _buildGoogleSignInButton(context), const SizedBox(height: 16), _buildAppleSignInButton(context), const SizedBox(height: 16),if(false) _buildGuestModeButton(context)])),
                   ),
                 ),
                 SizedBox(height: height * 0.05),
@@ -339,7 +321,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))],
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -385,7 +367,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           decoration: BoxDecoration(
             color: Colors.black,
             borderRadius: BorderRadius.circular(16),
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))],
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -425,7 +407,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3)),
-            boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.shadow.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
+            boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))],
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -479,9 +461,9 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          gradient: LinearGradient(colors: [Theme.of(context).colorScheme.surface.withOpacity(0.7), Theme.of(context).colorScheme.surface.withOpacity(0.4)], begin: Alignment.topLeft, end: Alignment.bottomRight),
-          border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.3), width: 1.5),
-          boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.shadow.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+          gradient: LinearGradient(colors: [Theme.of(context).colorScheme.surface.withValues(alpha: 0.7), Theme.of(context).colorScheme.surface.withValues(alpha: 0.4)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+          border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3), width: 1.5),
+          boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))],
         ),
         child: TextFormField(
           controller: _emailController,
@@ -495,11 +477,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             errorText: _emailError,
             prefixIcon: AnimatedSwitcher(
               duration: const Duration(milliseconds: 200),
-              child: Icon(
-                _emailError != null ? Icons.error_outline : Icons.email_outlined,
-                color: _emailError != null ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.primary.withOpacity(0.7),
-                key: ValueKey(_emailError != null),
-              ),
+              child: Icon(_emailError != null ? Icons.error_outline : Icons.email_outlined, color: _emailError != null ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.primary.withValues(alpha: 0.7), key: ValueKey(_emailError != null)),
             ),
             border: InputBorder.none,
             contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -531,9 +509,9 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
-              gradient: LinearGradient(colors: [Theme.of(context).colorScheme.surface.withOpacity(0.7), Theme.of(context).colorScheme.surface.withOpacity(0.4)], begin: Alignment.topLeft, end: Alignment.bottomRight),
-              border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.3), width: 1.5),
-              boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.shadow.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+              gradient: LinearGradient(colors: [Theme.of(context).colorScheme.surface.withValues(alpha: 0.7), Theme.of(context).colorScheme.surface.withValues(alpha: 0.4)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+              border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3), width: 1.5),
+              boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))],
             ),
             child: TextFormField(
               controller: _passwordController,
@@ -546,16 +524,12 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 errorText: _passwordError,
                 prefixIcon: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 200),
-                  child: Icon(
-                    _passwordError != null ? Icons.error_outline : Icons.lock_outline,
-                    color: _passwordError != null ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.primary.withOpacity(0.7),
-                    key: ValueKey(_passwordError != null),
-                  ),
+                  child: Icon(_passwordError != null ? Icons.error_outline : Icons.lock_outline, color: _passwordError != null ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.primary.withValues(alpha: 0.7), key: ValueKey(_passwordError != null)),
                 ),
                 suffixIcon: IconButton(
                   icon: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 200),
-                    child: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6), key: ValueKey(_obscurePassword)),
+                    child: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), key: ValueKey(_obscurePassword)),
                   ),
                   onPressed: () {
                     setState(() => _obscurePassword = !_obscurePassword);
@@ -596,7 +570,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       height: 56,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        boxShadow: _isLoading ? [] : [BoxShadow(color: Theme.of(context).colorScheme.primary.withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 5), spreadRadius: 0)],
+        boxShadow: _isLoading ? [] : [BoxShadow(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 5), spreadRadius: 0)],
       ),
       child: Material(
         color: Colors.transparent,
@@ -612,9 +586,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               gradient: LinearGradient(
-                colors: _isLoading
-                    ? [Theme.of(context).colorScheme.onSurface.withOpacity(0.3), Theme.of(context).colorScheme.onSurface.withOpacity(0.3)]
-                    : [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.primary.withOpacity(0.8)],
+                colors: _isLoading ? [Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)] : [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.primary.withValues(alpha: 0.8)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),

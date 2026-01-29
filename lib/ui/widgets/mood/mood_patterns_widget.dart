@@ -45,10 +45,10 @@ class _MoodPatternsWidgetState extends State<MoodPatternsWidget> with TickerProv
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [Colors.purple.withOpacity(0.1), Colors.pink.withOpacity(0.08), theme.colorScheme.surface], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        gradient: LinearGradient(colors: [Colors.purple.withValues(alpha: 0.1), Colors.pink.withValues(alpha: 0.08), theme.colorScheme.surface], begin: Alignment.topLeft, end: Alignment.bottomRight),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: theme.colorScheme.outline.withOpacity(0.1)),
-        boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withOpacity(0.1), blurRadius: 30, offset: const Offset(0, 15))],
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.1)),
+        boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withValues(alpha: 0.1), blurRadius: 30, offset: const Offset(0, 15))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +99,7 @@ class _MoodPatternsWidgetState extends State<MoodPatternsWidget> with TickerProv
           decoration: BoxDecoration(
             gradient: LinearGradient(colors: [Colors.purple, Colors.pink]),
             shape: BoxShape.circle,
-            boxShadow: [BoxShadow(color: Colors.purple.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4))],
+            boxShadow: [BoxShadow(color: Colors.purple.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4))],
           ),
           child: const Icon(Icons.psychology, color: Colors.white, size: 20),
         ),
@@ -115,7 +115,7 @@ class _MoodPatternsWidgetState extends State<MoodPatternsWidget> with TickerProv
                 style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
               ),
               const SizedBox(height: 4),
-              Text(AppLocalizations.of(context)!.moodPatternsSubtitle, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
+              Text(AppLocalizations.of(context)!.moodPatternsSubtitle, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
             ],
           ),
         ),
@@ -124,9 +124,9 @@ class _MoodPatternsWidgetState extends State<MoodPatternsWidget> with TickerProv
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [Colors.green.withOpacity(0.2), Colors.teal.withOpacity(0.2)]),
+            gradient: LinearGradient(colors: [Colors.green.withValues(alpha: 0.2), Colors.teal.withValues(alpha: 0.2)]),
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.green.withOpacity(0.3)),
+            border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
           ),
           child: Text(
             '${_getConfidenceLevel()}%',
@@ -146,17 +146,17 @@ class _MoodPatternsWidgetState extends State<MoodPatternsWidget> with TickerProv
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface.withOpacity(0.8),
+          color: theme.colorScheme.surface.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: pattern.color.withOpacity(0.2)),
-          boxShadow: [BoxShadow(color: pattern.color.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+          border: Border.all(color: pattern.color.withValues(alpha: 0.2)),
+          boxShadow: [BoxShadow(color: pattern.color.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))],
         ),
         child: Row(
           children: [
             // Pattern icon
             Container(
               padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(color: pattern.color.withOpacity(0.2), shape: BoxShape.circle),
+              decoration: BoxDecoration(color: pattern.color.withValues(alpha: 0.2), shape: BoxShape.circle),
               child: Text(pattern.emoji, style: const TextStyle(fontSize: 20)),
             ),
 
@@ -177,7 +177,7 @@ class _MoodPatternsWidgetState extends State<MoodPatternsWidget> with TickerProv
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(color: pattern.color.withOpacity(0.2), borderRadius: BorderRadius.circular(8)),
+                        decoration: BoxDecoration(color: pattern.color.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(8)),
                         child: Text(
                           '${pattern.strength}%',
                           style: theme.textTheme.bodySmall?.copyWith(fontSize: 10, fontWeight: FontWeight.bold, color: pattern.color),
@@ -188,7 +188,7 @@ class _MoodPatternsWidgetState extends State<MoodPatternsWidget> with TickerProv
                   const SizedBox(height: 4),
                   Text(
                     pattern.description,
-                    style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7)),
+                    style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -213,9 +213,9 @@ class _MoodPatternsWidgetState extends State<MoodPatternsWidget> with TickerProv
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [theme.colorScheme.primaryContainer.withOpacity(0.3), theme.colorScheme.secondaryContainer.withOpacity(0.2)]),
+        gradient: LinearGradient(colors: [theme.colorScheme.primaryContainer.withValues(alpha: 0.3), theme.colorScheme.secondaryContainer.withValues(alpha: 0.2)]),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: theme.colorScheme.outline.withOpacity(0.1)),
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.1)),
       ),
       child: Row(
         children: [
@@ -230,13 +230,13 @@ class _MoodPatternsWidgetState extends State<MoodPatternsWidget> with TickerProv
                   style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
                 ),
                 const SizedBox(height: 4),
-                Text('Found $strongPatterns strong patterns from $totalPatterns mood entries', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7))),
+                Text('Found $strongPatterns strong patterns from $totalPatterns mood entries', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7))),
               ],
             ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(color: theme.colorScheme.primary.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
             child: Text(
               'View All',
               style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.primary),
@@ -416,16 +416,7 @@ class _MoodPatternsWidgetState extends State<MoodPatternsWidget> with TickerProv
   }
 
   List<MoodPattern> _getDefaultPatterns() {
-    return [
-      MoodPattern(
-        title: 'Getting Started',
-        description: 'Log more moods to discover your unique patterns',
-        emoji: '🌱',
-        color: Colors.green,
-        strength: 0,
-        details: 'We need at least 5 mood entries to start identifying patterns',
-      ),
-    ];
+    return [MoodPattern(title: 'Getting Started', description: 'Log more moods to discover your unique patterns', emoji: '🌱', color: Colors.green, strength: 0, details: 'We need at least 5 mood entries to start identifying patterns')];
   }
 
   double _calculateCorrelation(List<double> x, List<double> y) {
@@ -482,7 +473,7 @@ class _MoodPatternsWidgetState extends State<MoodPatternsWidget> with TickerProv
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-        boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withOpacity(0.2), blurRadius: 20, offset: const Offset(0, -10))],
+        boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withValues(alpha: 0.2), blurRadius: 20, offset: const Offset(0, -10))],
       ),
       child: Column(
         children: [
@@ -491,7 +482,7 @@ class _MoodPatternsWidgetState extends State<MoodPatternsWidget> with TickerProv
             width: 40,
             height: 4,
             margin: const EdgeInsets.symmetric(vertical: 12),
-            decoration: BoxDecoration(color: theme.colorScheme.outline.withOpacity(0.3), borderRadius: BorderRadius.circular(2)),
+            decoration: BoxDecoration(color: theme.colorScheme.outline.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(2)),
           ),
 
           // Header
@@ -531,7 +522,7 @@ class _MoodPatternsWidgetState extends State<MoodPatternsWidget> with TickerProv
                   const SizedBox(height: 16),
                   Text('Details', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
-                  Text(pattern.details, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7))),
+                  Text(pattern.details, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7))),
                 ],
               ),
             ),

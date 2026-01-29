@@ -22,7 +22,7 @@ class StreakWidget extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(colors: [Colors.orange.shade400, Colors.orange.shade600], begin: Alignment.topLeft, end: Alignment.bottomRight),
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.orange.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: Colors.orange.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 4))],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -37,7 +37,7 @@ class StreakWidget extends StatelessWidget {
                 '${streak.currentStreak} Day Streak',
                 style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              if (streak.nextMilestone != null) Text('${streak.daysToNextMilestone} days to ${streak.nextMilestone}', style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 12)),
+              if (streak.nextMilestone != null) Text('${streak.daysToNextMilestone} days to ${streak.nextMilestone}', style: TextStyle(color: Colors.white.withValues(alpha: 0.9), fontSize: 12)),
             ],
           ),
         ],
@@ -139,7 +139,7 @@ class StreakWidget extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
       child: Column(
         children: [
           Icon(icon, color: color, size: 28),

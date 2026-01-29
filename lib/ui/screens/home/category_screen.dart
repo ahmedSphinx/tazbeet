@@ -129,7 +129,7 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
                       _searchQuery = value;
                     });
                   },
-                  autofocus: true,
+                  autofocus: false, // Prevent keyboard auto-opening
                   decoration: InputDecoration(
                     hintText: AppLocalizations.of(context)!.searchCategories,
                     prefixIcon: const Icon(Icons.search),
@@ -553,10 +553,7 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
                       ),
                       const SizedBox(width: 16),
                       Expanded(
-                        child: Text(
-                          category == null ? AppLocalizations.of(context)!.addCategory : AppLocalizations.of(context)!.editCategory,
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-                        ),
+                        child: Text(category == null ? AppLocalizations.of(context)!.addCategory : AppLocalizations.of(context)!.editCategory, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),
@@ -579,7 +576,7 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                           prefixIcon: const Icon(Icons.label),
                         ),
-                        autofocus: true,
+                        autofocus: false, // Prevent keyboard auto-opening
                       ),
 
                       const SizedBox(height: 16),
@@ -735,13 +732,7 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
                             if (nameController.text.trim().isNotEmpty) {
                               if (category == null) {
                                 // Add new category
-                                final newCategory = Category(
-                                  id: DateTime.now().millisecondsSinceEpoch.toString(),
-                                  name: nameController.text.trim(),
-                                  color: selectedColor,
-                                  icon: selectedIcon.codePoint.toString(),
-                                  createdAt: DateTime.now(),
-                                );
+                                final newCategory = Category(id: DateTime.now().millisecondsSinceEpoch.toString(), name: nameController.text.trim(), color: selectedColor, icon: selectedIcon.codePoint.toString(), createdAt: DateTime.now());
                                 context.read<CategoryBloc>().add(AddCategory(newCategory));
                               } else {
                                 // Update existing category

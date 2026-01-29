@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/user.dart';
 import '../services/firebase_service_wrapper.dart';
+import '../services/encryption_service.dart';
 
 class UserRepository {
   static const String _boxName = 'user';
@@ -14,7 +15,8 @@ class UserRepository {
   FirebaseFirestore? get _firestore => FirebaseServiceWrapper.firestore;
 
   Future<void> init() async {
-    _box = await Hive.openBox<User>(_boxName);
+    final cipher = await EncryptionService.getCipher();
+    _box = await Hive.openBox<User>(_boxName, encryptionCipher: cipher);
   }
 
   Future<User?> getUser(String userId, {bool forceRefresh = false}) async {

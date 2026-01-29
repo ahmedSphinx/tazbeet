@@ -87,9 +87,9 @@ class _MoodInsightsScreenState extends State<MoodInsightsScreen> with TickerProv
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      theme.colorScheme.primary.withOpacity(0.08 + _floatingAnimation.value * 0.04),
-                      theme.colorScheme.secondary.withOpacity(0.06 + _floatingAnimation.value * 0.03),
-                      theme.colorScheme.tertiary.withOpacity(0.04 + _floatingAnimation.value * 0.02),
+                      theme.colorScheme.primary.withValues(alpha: 0.08 + _floatingAnimation.value * 0.04),
+                      theme.colorScheme.secondary.withValues(alpha: 0.06 + _floatingAnimation.value * 0.03),
+                      theme.colorScheme.tertiary.withValues(alpha: 0.04 + _floatingAnimation.value * 0.02),
                       theme.colorScheme.surface,
                     ],
                     stops: const [0.0, 0.3, 0.6, 1.0],
@@ -242,14 +242,10 @@ class _MoodInsightsScreenState extends State<MoodInsightsScreen> with TickerProv
     return Container(
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [theme.colorScheme.primaryContainer.withOpacity(0.4), theme.colorScheme.secondaryContainer.withOpacity(0.3), theme.colorScheme.tertiaryContainer.withOpacity(0.2)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: LinearGradient(colors: [theme.colorScheme.primaryContainer.withValues(alpha: 0.4), theme.colorScheme.secondaryContainer.withValues(alpha: 0.3), theme.colorScheme.tertiaryContainer.withValues(alpha: 0.2)], begin: Alignment.topLeft, end: Alignment.bottomRight),
         borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: theme.colorScheme.outline.withOpacity(0.1)),
-        boxShadow: [BoxShadow(color: theme.colorScheme.primary.withOpacity(0.1), blurRadius: 30, offset: const Offset(0, 15), spreadRadius: 5)],
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.1)),
+        boxShadow: [BoxShadow(color: theme.colorScheme.primary.withValues(alpha: 0.1), blurRadius: 30, offset: const Offset(0, 15), spreadRadius: 5)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -267,7 +263,7 @@ class _MoodInsightsScreenState extends State<MoodInsightsScreen> with TickerProv
                       decoration: BoxDecoration(
                         gradient: LinearGradient(colors: [theme.colorScheme.primary, theme.colorScheme.secondary]),
                         shape: BoxShape.circle,
-                        boxShadow: [BoxShadow(color: theme.colorScheme.primary.withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 8))],
+                        boxShadow: [BoxShadow(color: theme.colorScheme.primary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 8))],
                       ),
                       child: const Icon(Icons.insights, size: 32, color: Colors.white),
                     ),
@@ -286,7 +282,7 @@ class _MoodInsightsScreenState extends State<MoodInsightsScreen> with TickerProv
                       style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
                     ),
                     const SizedBox(height: 8),
-                    Text(AppLocalizations.of(context)!.moodInsightsSubtitle, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7))),
+                    Text(AppLocalizations.of(context)!.moodInsightsSubtitle, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7))),
                   ],
                 ),
               ),
@@ -296,15 +292,7 @@ class _MoodInsightsScreenState extends State<MoodInsightsScreen> with TickerProv
           const SizedBox(height: 20),
 
           // Quick stats
-          Row(
-            children: [
-              _buildQuickStat(theme, '${_moods.length}', 'Total Entries'),
-              const SizedBox(width: 16),
-              _buildQuickStat(theme, '${_getCurrentStreak()}', 'Day Streak'),
-              const SizedBox(width: 16),
-              _buildQuickStat(theme, _getAverageMood(), 'Avg Mood'),
-            ],
-          ),
+          Row(children: [_buildQuickStat(theme, '${_moods.length}', 'Total Entries'), const SizedBox(width: 16), _buildQuickStat(theme, '${_getCurrentStreak()}', 'Day Streak'), const SizedBox(width: 16), _buildQuickStat(theme, _getAverageMood(), 'Avg Mood')]),
         ],
       ),
     );
@@ -315,9 +303,9 @@ class _MoodInsightsScreenState extends State<MoodInsightsScreen> with TickerProv
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface.withOpacity(0.8),
+          color: theme.colorScheme.surface.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: theme.colorScheme.outline.withOpacity(0.2)),
+          border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
         ),
         child: Column(
           children: [
@@ -328,7 +316,7 @@ class _MoodInsightsScreenState extends State<MoodInsightsScreen> with TickerProv
             const SizedBox(height: 4),
             Text(
               label,
-              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6)),
+              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
               textAlign: TextAlign.center,
             ),
           ],
@@ -344,10 +332,10 @@ class _MoodInsightsScreenState extends State<MoodInsightsScreen> with TickerProv
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface.withOpacity(0.9),
+        color: theme.colorScheme.surface.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: theme.colorScheme.outline.withOpacity(0.2)),
-        boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withOpacity(0.1), blurRadius: 15, offset: const Offset(0, 5))],
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+        boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withValues(alpha: 0.1), blurRadius: 15, offset: const Offset(0, 5))],
       ),
       child: Row(
         children: options.asMap().entries.map((entry) {
@@ -369,12 +357,12 @@ class _MoodInsightsScreenState extends State<MoodInsightsScreen> with TickerProv
                 decoration: BoxDecoration(
                   gradient: isSelected ? LinearGradient(colors: [theme.colorScheme.primary, theme.colorScheme.secondary]) : null,
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: isSelected ? [BoxShadow(color: theme.colorScheme.primary.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4))] : null,
+                  boxShadow: isSelected ? [BoxShadow(color: theme.colorScheme.primary.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4))] : null,
                 ),
                 child: Text(
                   label,
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyMedium?.copyWith(fontWeight: isSelected ? FontWeight.bold : FontWeight.w500, color: isSelected ? Colors.white : theme.colorScheme.onSurface.withOpacity(0.7)),
+                  style: theme.textTheme.bodyMedium?.copyWith(fontWeight: isSelected ? FontWeight.bold : FontWeight.w500, color: isSelected ? Colors.white : theme.colorScheme.onSurface.withValues(alpha: 0.7)),
                 ),
               ),
             ),
@@ -410,10 +398,10 @@ class _MoodInsightsScreenState extends State<MoodInsightsScreen> with TickerProv
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [accentColor.withOpacity(0.1), accentColor.withOpacity(0.05), theme.colorScheme.surface], begin: Alignment.topLeft, end: Alignment.bottomRight),
+              gradient: LinearGradient(colors: [accentColor.withValues(alpha: 0.1), accentColor.withValues(alpha: 0.05), theme.colorScheme.surface], begin: Alignment.topLeft, end: Alignment.bottomRight),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: accentColor.withOpacity(0.2)),
-              boxShadow: [BoxShadow(color: accentColor.withOpacity(0.1), blurRadius: 20, offset: const Offset(0, 10))],
+              border: Border.all(color: accentColor.withValues(alpha: 0.2)),
+              boxShadow: [BoxShadow(color: accentColor.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, 10))],
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -423,7 +411,7 @@ class _MoodInsightsScreenState extends State<MoodInsightsScreen> with TickerProv
                 const SizedBox(height: 6),
                 Text(
                   title,
-                  style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7), fontWeight: FontWeight.w600, fontSize: 11),
+                  style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7), fontWeight: FontWeight.w600, fontSize: 11),
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -446,7 +434,7 @@ class _MoodInsightsScreenState extends State<MoodInsightsScreen> with TickerProv
 
   Widget _buildFloatingParticle(int index) {
     final theme = Theme.of(context);
-    final colors = [theme.colorScheme.primary.withOpacity(0.1), theme.colorScheme.secondary.withOpacity(0.08), theme.colorScheme.tertiary.withOpacity(0.06), Colors.amber.withOpacity(0.05), Colors.pink.withOpacity(0.04)];
+    final colors = [theme.colorScheme.primary.withValues(alpha: 0.1), theme.colorScheme.secondary.withValues(alpha: 0.08), theme.colorScheme.tertiary.withValues(alpha: 0.06), Colors.amber.withValues(alpha: 0.05), Colors.pink.withValues(alpha: 0.04)];
 
     return AnimatedBuilder(
       animation: _floatingAnimation,
@@ -479,7 +467,7 @@ class _MoodInsightsScreenState extends State<MoodInsightsScreen> with TickerProv
         children: [
           CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(theme.colorScheme.primary)),
           const SizedBox(height: 16),
-          Text('Loading insights...', style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7))),
+          Text('Loading insights...', style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7))),
         ],
       ),
     );
@@ -496,7 +484,7 @@ class _MoodInsightsScreenState extends State<MoodInsightsScreen> with TickerProv
           const SizedBox(height: 8),
           Text(
             message,
-            style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7)),
+            style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
             textAlign: TextAlign.center,
           ),
         ],
@@ -509,13 +497,13 @@ class _MoodInsightsScreenState extends State<MoodInsightsScreen> with TickerProv
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.insights, size: 64, color: theme.colorScheme.primary.withOpacity(0.5)),
+          Icon(Icons.insights, size: 64, color: theme.colorScheme.primary.withValues(alpha: 0.5)),
           const SizedBox(height: 16),
           Text('No mood data yet', style: theme.textTheme.headlineSmall?.copyWith(color: theme.colorScheme.onSurface)),
           const SizedBox(height: 8),
           Text(
             'Start logging your moods to see insights',
-            style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7)),
+            style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
             textAlign: TextAlign.center,
           ),
         ],
@@ -579,7 +567,7 @@ class _MoodInsightsScreenState extends State<MoodInsightsScreen> with TickerProv
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-        boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withOpacity(0.2), blurRadius: 20, offset: const Offset(0, -10))],
+        boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withValues(alpha: 0.2), blurRadius: 20, offset: const Offset(0, -10))],
       ),
       child: Column(
         children: [
@@ -588,7 +576,7 @@ class _MoodInsightsScreenState extends State<MoodInsightsScreen> with TickerProv
             width: 40,
             height: 4,
             margin: const EdgeInsets.symmetric(vertical: 12),
-            decoration: BoxDecoration(color: theme.colorScheme.outline.withOpacity(0.3), borderRadius: BorderRadius.circular(2)),
+            decoration: BoxDecoration(color: theme.colorScheme.outline.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(2)),
           ),
 
           // Header
@@ -601,7 +589,7 @@ class _MoodInsightsScreenState extends State<MoodInsightsScreen> with TickerProv
           Expanded(
             child: dayMoods.isEmpty
                 ? Center(
-                    child: Text('No moods logged for this day', style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6))),
+                    child: Text('No moods logged for this day', style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
                   )
                 : ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 20),

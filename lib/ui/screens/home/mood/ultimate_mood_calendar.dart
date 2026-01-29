@@ -57,14 +57,10 @@ class _UltimateMoodCalendarState extends State<UltimateMoodCalendar> with Ticker
     return Container(
       margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [theme.colorScheme.primaryContainer.withOpacity(0.2), theme.colorScheme.secondaryContainer.withOpacity(0.1), theme.colorScheme.surface],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: LinearGradient(colors: [theme.colorScheme.primaryContainer.withValues(alpha: 0.2), theme.colorScheme.secondaryContainer.withValues(alpha: 0.1), theme.colorScheme.surface], begin: Alignment.topLeft, end: Alignment.bottomRight),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: theme.colorScheme.outline.withOpacity(0.1)),
-        boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withOpacity(0.1), blurRadius: 30, offset: const Offset(0, 15))],
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.1)),
+        boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withValues(alpha: 0.1), blurRadius: 30, offset: const Offset(0, 15))],
       ),
       child: SingleChildScrollView(
         child: Column(
@@ -109,7 +105,7 @@ class _UltimateMoodCalendarState extends State<UltimateMoodCalendar> with Ticker
             child: Container(
               width: 40,
               height: 40,
-              decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(0.1), shape: BoxShape.circle),
+              decoration: BoxDecoration(color: theme.colorScheme.primary.withValues(alpha: 0.1), shape: BoxShape.circle),
               child: Icon(Icons.chevron_left, color: theme.colorScheme.primary),
             ),
           ),
@@ -126,7 +122,7 @@ class _UltimateMoodCalendarState extends State<UltimateMoodCalendar> with Ticker
                       _formatMonth(_selectedMonth),
                       style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
                     ),
-                    Text(_formatYear(_selectedMonth), style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7))),
+                    Text(_formatYear(_selectedMonth), style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7))),
                   ],
                 ),
               );
@@ -139,7 +135,7 @@ class _UltimateMoodCalendarState extends State<UltimateMoodCalendar> with Ticker
             child: Container(
               width: 40,
               height: 40,
-              decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(0.1), shape: BoxShape.circle),
+              decoration: BoxDecoration(color: theme.colorScheme.primary.withValues(alpha: 0.1), shape: BoxShape.circle),
               child: Icon(Icons.chevron_right, color: theme.colorScheme.primary),
             ),
           ),
@@ -164,7 +160,7 @@ class _UltimateMoodCalendarState extends State<UltimateMoodCalendar> with Ticker
               alignment: Alignment.center,
               child: Text(
                 day,
-                style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withOpacity(0.6)),
+                style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
               ),
             );
           }).toList(),
@@ -208,7 +204,7 @@ class _UltimateMoodCalendarState extends State<UltimateMoodCalendar> with Ticker
           color: mood != null ? _getMoodColor(mood.level) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: isSelected ? Border.all(color: theme.colorScheme.primary, width: 2) : null,
-          boxShadow: mood != null ? [BoxShadow(color: _getMoodColor(mood.level).withOpacity(0.3), blurRadius: 4, offset: const Offset(0, 2))] : null,
+          boxShadow: mood != null ? [BoxShadow(color: _getMoodColor(mood.level).withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2))] : null,
         ),
         child: Stack(
           children: [

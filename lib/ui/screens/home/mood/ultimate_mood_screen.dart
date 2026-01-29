@@ -118,8 +118,8 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: isDark
-                  ? [colorScheme.surface.withOpacity(0.3 + _backgroundAnimation.value * 0.2), colorScheme.surfaceContainer.withOpacity(0.2 + _backgroundAnimation.value * 0.1), colorScheme.surface]
-                  : [Colors.blue.shade50.withOpacity(0.3 + _backgroundAnimation.value * 0.2), Colors.purple.shade50.withOpacity(0.2 + _backgroundAnimation.value * 0.1), Colors.white],
+                  ? [colorScheme.surface.withValues(alpha: 0.3 + _backgroundAnimation.value * 0.2), colorScheme.surfaceContainer.withValues(alpha: 0.2 + _backgroundAnimation.value * 0.1), colorScheme.surface]
+                  : [Colors.blue.shade50.withValues(alpha: 0.3 + _backgroundAnimation.value * 0.2), Colors.purple.shade50.withValues(alpha: 0.2 + _backgroundAnimation.value * 0.1), Colors.white],
             ),
           ),
           child: AnimatedBuilder(
@@ -241,10 +241,10 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
             curve: Curves.easeOutCubic,
             padding: const EdgeInsets.all(32),
             decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [_getMoodColor(latestMood.level).withOpacity(0.1), Colors.white], begin: Alignment.topLeft, end: Alignment.bottomRight),
+              gradient: LinearGradient(colors: [_getMoodColor(latestMood.level).withValues(alpha: 0.1), Colors.white], begin: Alignment.topLeft, end: Alignment.bottomRight),
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: _getMoodColor(latestMood.level).withOpacity(0.3), width: 2),
-              boxShadow: [BoxShadow(color: _getMoodColor(latestMood.level).withOpacity(0.2), blurRadius: 20, offset: const Offset(0, 10))],
+              border: Border.all(color: _getMoodColor(latestMood.level).withValues(alpha: 0.3), width: 2),
+              boxShadow: [BoxShadow(color: _getMoodColor(latestMood.level).withValues(alpha: 0.2), blurRadius: 20, offset: const Offset(0, 10))],
             ),
             child: Column(
               children: [
@@ -379,8 +379,8 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
         decoration: BoxDecoration(
           color: isDark ? colorScheme.surface : Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: isDark ? colorScheme.outline.withOpacity(0.3) : Colors.grey.shade200),
-          boxShadow: [BoxShadow(color: isDark ? Colors.black.withOpacity(0.3) : Colors.black.withOpacity(0.05), blurRadius: 15, offset: const Offset(0, 5))],
+          border: Border.all(color: isDark ? colorScheme.outline.withValues(alpha: 0.3) : Colors.grey.shade200),
+          boxShadow: [BoxShadow(color: isDark ? Colors.black.withValues(alpha: 0.3) : Colors.black.withValues(alpha: 0.05), blurRadius: 15, offset: const Offset(0, 5))],
         ),
         child: Row(
           children: [
@@ -392,7 +392,7 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: isDark ? colorScheme.onSurface : Colors.black87),
               ),
             ),
-            Icon(Icons.arrow_forward_ios, color: isDark ? colorScheme.onSurface.withOpacity(0.6) : Colors.grey.shade400, size: 16),
+            Icon(Icons.arrow_forward_ios, color: isDark ? colorScheme.onSurface.withValues(alpha: 0.6) : Colors.grey.shade400, size: 16),
           ],
         ),
       ),
@@ -409,7 +409,7 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
       decoration: BoxDecoration(
         color: isDark ? colorScheme.surfaceContainer : Colors.blue.shade50,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: isDark ? colorScheme.outline.withOpacity(0.3) : Colors.blue.shade200),
+        border: Border.all(color: isDark ? colorScheme.outline.withValues(alpha: 0.3) : Colors.blue.shade200),
       ),
       child: Column(
         children: [
@@ -460,8 +460,8 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
       decoration: BoxDecoration(
         color: isDark ? colorScheme.surface : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: isDark ? colorScheme.outline.withOpacity(0.3) : Colors.grey.shade200),
-        boxShadow: [BoxShadow(color: isDark ? Colors.black.withOpacity(0.2) : Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 2))],
+        border: Border.all(color: isDark ? colorScheme.outline.withValues(alpha: 0.3) : Colors.grey.shade200),
+        boxShadow: [BoxShadow(color: isDark ? Colors.black.withValues(alpha: 0.2) : Colors.black.withValues(alpha: 0.03), blurRadius: 10, offset: const Offset(0, 2))],
       ),
       child: Row(
         children: [
@@ -475,11 +475,11 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
                   _getMoodText(mood.level),
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: isDark ? colorScheme.onSurface : Colors.black87),
                 ),
-                Text(_formatTime(mood.date), style: TextStyle(fontSize: 12, color: isDark ? colorScheme.onSurface.withOpacity(0.6) : Colors.grey.shade600)),
+                Text(_formatTime(mood.date), style: TextStyle(fontSize: 12, color: isDark ? colorScheme.onSurface.withValues(alpha: 0.6) : Colors.grey.shade600)),
               ],
             ),
           ),
-          Icon(Icons.chevron_right, color: isDark ? colorScheme.onSurface.withOpacity(0.6) : Colors.grey.shade400, size: 20),
+          Icon(Icons.chevron_right, color: isDark ? colorScheme.onSurface.withValues(alpha: 0.6) : Colors.grey.shade400, size: 20),
         ],
       ),
     );
@@ -533,16 +533,9 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Colors.grey.shade200),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 2))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 2))],
       ),
-      child: Row(
-        children: [
-          _buildViewButton('smart', '🧠', l10n.smartView),
-          _buildViewButton('timeline', '⏱️', l10n.timelineView),
-          _buildViewButton('calendar', '📆', l10n.calendarView),
-          _buildViewButton('patterns', '📊', l10n.patternsView),
-        ],
-      ),
+      child: Row(children: [_buildViewButton('smart', '🧠', l10n.smartView), _buildViewButton('timeline', '⏱️', l10n.timelineView), _buildViewButton('calendar', '📆', l10n.calendarView), _buildViewButton('patterns', '📊', l10n.patternsView)]),
     );
   }
 
@@ -613,13 +606,7 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
         final mood = sortedMoods[index];
         final isToday = _isToday(mood.date);
 
-        return Column(
-          children: [
-            if (index == 0 || !_isSameDay(sortedMoods[index - 1].date, mood.date)) _buildDateHeader(mood.date, isToday),
-            _buildTimelineMoodCard(mood, isToday),
-            if (index < sortedMoods.length - 1) const SizedBox(height: 8),
-          ],
-        );
+        return Column(children: [if (index == 0 || !_isSameDay(sortedMoods[index - 1].date, mood.date)) _buildDateHeader(mood.date, isToday), _buildTimelineMoodCard(mood, isToday), if (index < sortedMoods.length - 1) const SizedBox(height: 8)]);
       },
     );
   }
@@ -834,7 +821,7 @@ class _UltimateMoodScreenState extends State<UltimateMoodScreen> with TickerProv
               decoration: BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.circle,
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, 2))],
+                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 8, offset: const Offset(0, 2))],
               ),
               child: Center(child: Text(_getMoodEmoji(mood.level), style: const TextStyle(fontSize: 24))),
             ),
@@ -1093,8 +1080,8 @@ class ParticlePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = isDark
-          ? Colors.white.withOpacity(0.05) // Subtle white particles for dark mode
-          : Colors.blue.withOpacity(0.1) // Blue particles for light mode
+          ? Colors.white.withValues(alpha: 0.05) // Subtle white particles for dark mode
+          : Colors.blue.withValues(alpha: 0.1) // Blue particles for light mode
       ..style = PaintingStyle.fill;
 
     // Draw floating particles

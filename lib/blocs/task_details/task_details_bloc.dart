@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../models/task.dart';
 import '../../repositories/task_repository.dart';
 import '../../services/data_sync_service.dart';
+import '../../services/notification_service.dart';
 import 'task_details_event.dart';
 import 'task_details_state.dart';
 
@@ -217,12 +218,35 @@ class TaskDetailsBloc extends Bloc<TaskDetailsEvent, TaskDetailsState> {
   Future<void> _onCompleteTask(CompleteTask event, Emitter<TaskDetailsState> emit) async {
     if (state is TaskDetailsLoaded) {
       final current = state as TaskDetailsLoaded;
-      final updatedTask = current.task.copyWith(isCompleted: true, updatedAt: DateTime.now());
+
+      AppLogging.logInfo('Completing task: ${current.task.id}, hasReminder: ${current.task.reminderDate != null}');
+
+      // Cancel notification if task has a reminder
+      if (current.task.reminderDate != null) {
+        try {
+          final notificationService = NotificationService();
+          await notificationService.cancelTaskReminder(current.task.id);
+          AppLogging.logInfo('Cancelled notification for completed task: ${current.task.id}');
+        } catch (e) {
+          AppLogging.logError('Failed to cancel notification for completed task: $e');
+        }
+      }
+
+      AppLogging.logInfo('Before copyWith - completed: ${current.task.isCompleted}, reminderDate: ${current.task.reminderDate}');
+      final updatedTask = current.task.copyWith(
+        isCompleted: true,
+        reminderDate: null, // Clear reminder when task is completed
+        updatedAt: DateTime.now(),
+      );
+      AppLogging.logInfo('After copyWith - completed: ${updatedTask.isCompleted}, reminderDate: ${updatedTask.reminderDate}');
+
       await taskRepository.updateTask(updatedTask);
       // Handle repeats if applicable
       final progress = _calculateProgress(updatedTask);
       final canComplete = _canComplete(updatedTask);
       emit(TaskDetailsLoaded(updatedTask, progress, canComplete));
+
+      AppLogging.logInfo('Emitted new state for completed task: ${updatedTask.id}');
 
       // Sync to Firestore if user is signed in
       final user = FirebaseAuth.instance.currentUser;

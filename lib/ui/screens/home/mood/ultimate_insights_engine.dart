@@ -148,7 +148,7 @@ class _UltimateInsightsEngineState extends State<UltimateInsightsEngine> with Ti
         gradient: LinearGradient(colors: [Colors.blue.shade50, Colors.white], begin: Alignment.topLeft, end: Alignment.bottomRight),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Colors.blue.shade200),
-        boxShadow: [BoxShadow(color: Colors.blue.shade100.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 10))],
+        boxShadow: [BoxShadow(color: Colors.blue.shade100.withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, 10))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,28 +167,12 @@ class _UltimateInsightsEngineState extends State<UltimateInsightsEngine> with Ti
           const SizedBox(height: 20),
 
           // Mood distribution
-          Row(
-            children: [
-              _buildMoodStat(l10n.goodDays, summary['goodDays'], Colors.green),
-              const SizedBox(width: 16),
-              _buildMoodStat(l10n.neutralDays, summary['neutralDays'], Colors.grey),
-              const SizedBox(width: 16),
-              _buildMoodStat(l10n.challengingDays, summary['badDays'], Colors.orange),
-            ],
-          ),
+          Row(children: [_buildMoodStat(l10n.goodDays, summary['goodDays'], Colors.green), const SizedBox(width: 16), _buildMoodStat(l10n.neutralDays, summary['neutralDays'], Colors.grey), const SizedBox(width: 16), _buildMoodStat(l10n.challengingDays, summary['badDays'], Colors.orange)]),
 
           const SizedBox(height: 20),
 
           // Energy, Focus, Stress averages
-          Row(
-            children: [
-              _buildMetricStat(l10n.averageEnergy, summary['avgEnergy']),
-              const SizedBox(width: 16),
-              _buildMetricStat(l10n.averageFocus, summary['avgFocus']),
-              const SizedBox(width: 16),
-              _buildMetricStat(l10n.averageStress, summary['avgStress']),
-            ],
-          ),
+          Row(children: [_buildMetricStat(l10n.averageEnergy, summary['avgEnergy']), const SizedBox(width: 16), _buildMetricStat(l10n.averageFocus, summary['avgFocus']), const SizedBox(width: 16), _buildMetricStat(l10n.averageStress, summary['avgStress'])]),
 
           if (summary['dominantMood'] != null) ...[
             const SizedBox(height: 20),
@@ -221,9 +205,9 @@ class _UltimateInsightsEngineState extends State<UltimateInsightsEngine> with Ti
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.3)),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
         child: Column(
           children: [
@@ -234,7 +218,7 @@ class _UltimateInsightsEngineState extends State<UltimateInsightsEngine> with Ti
             const SizedBox(height: 4),
             Text(
               label,
-              style: TextStyle(fontSize: 12, color: color.withOpacity(0.8), fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 12, color: color.withValues(alpha: 0.8), fontWeight: FontWeight.w500),
             ),
           ],
         ),
@@ -288,14 +272,14 @@ class _UltimateInsightsEngineState extends State<UltimateInsightsEngine> with Ti
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.grey.shade200),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 2))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10, offset: const Offset(0, 2))],
       ),
       child: Row(
         children: [
           Container(
             width: 48,
             height: 48,
-            decoration: BoxDecoration(color: insight['color'].withOpacity(0.1), shape: BoxShape.circle),
+            decoration: BoxDecoration(color: insight['color'].withValues(alpha: 0.1), shape: BoxShape.circle),
             child: Center(child: Text(insight['emoji'], style: const TextStyle(fontSize: 24))),
           ),
           const SizedBox(width: 16),
@@ -337,9 +321,9 @@ class _UltimateInsightsEngineState extends State<UltimateInsightsEngine> with Ti
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [pattern['color'].withOpacity(0.1), Colors.white], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        gradient: LinearGradient(colors: [pattern['color'].withValues(alpha: 0.1), Colors.white], begin: Alignment.topLeft, end: Alignment.bottomRight),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: pattern['color'].withOpacity(0.3)),
+        border: Border.all(color: pattern['color'].withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -531,13 +515,7 @@ class _UltimateInsightsEngineState extends State<UltimateInsightsEngine> with Ti
 
     final mostCommon = moodCounts.entries.reduce((a, b) => a.value > b.value ? a : b).key;
 
-    patterns.add({
-      'title': l10n.mostCommonMood,
-      'description': _getMoodText(mostCommon),
-      'emoji': _getMoodEmoji(mostCommon),
-      'color': _getMoodColor(mostCommon),
-      'details': 'You\'ve felt this way ${moodCounts[mostCommon]} times',
-    });
+    patterns.add({'title': l10n.mostCommonMood, 'description': _getMoodText(mostCommon), 'emoji': _getMoodEmoji(mostCommon), 'color': _getMoodColor(mostCommon), 'details': 'You\'ve felt this way ${moodCounts[mostCommon]} times'});
 
     // Recent trend
     final recentMoods = widget.moods.take(7).toList();

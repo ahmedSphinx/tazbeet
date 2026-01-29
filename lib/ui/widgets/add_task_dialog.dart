@@ -12,8 +12,9 @@ import 'repeat_config_widget.dart';
 class AddTaskDialog extends StatefulWidget {
   final Function(Task) onTaskAdded;
   final bool isSubtask;
+  final String? parentTaskId;
 
-  const AddTaskDialog({super.key, required this.onTaskAdded, this.isSubtask = false});
+  const AddTaskDialog({super.key, required this.onTaskAdded, this.isSubtask = false, this.parentTaskId});
 
   @override
   State<AddTaskDialog> createState() => _AddTaskDialogState();
@@ -22,6 +23,7 @@ class AddTaskDialog extends StatefulWidget {
 class _AddTaskDialogState extends State<AddTaskDialog> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _focusNode = FocusNode();
   String? selectedCategoryId;
   TaskPriority selectedPriority = TaskPriority.medium;
   DateTime? selectedDueDate;
@@ -29,9 +31,25 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
   bool _showRepeatSettings = false;
 
   @override
+  void initState() {
+    super.initState();
+    // Request focus after the dialog is fully built and rendered
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        Future.delayed(const Duration(milliseconds: 100), () {
+          if (mounted) {
+            _focusNode.requestFocus();
+          }
+        });
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -39,151 +57,154 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
   Widget build(BuildContext context) {
     return BlocBuilder<CategoryBloc, CategoryState>(
       builder: (context, state) {
-        return Padding(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-
-          child: Container(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.8, // Limit height to 80% of screen
-            ),
-            padding: const EdgeInsets.all(24),
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(widget.isSubtask ? AppLocalizations.of(context)!.addSubtask : AppLocalizations.of(context)!.addTaskTitle, style: Theme.of(context).textTheme.titleLarge),
-                  const SizedBox(height: 24),
-                  TextField(
-                    controller: _titleController,
-                    decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.taskTitleLabel,
-                      hintText: AppLocalizations.of(context)!.taskTitleLabel,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                    autofocus: true,
-                    inputFormatters: [LengthLimitingTextInputFormatter(100)],
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: _descriptionController,
-                    decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.taskDescriptionLabel,
-                      hintText: AppLocalizations.of(context)!.taskDescriptionLabel,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                    maxLines: 3,
-                    inputFormatters: [LengthLimitingTextInputFormatter(500)],
-                  ),
-                  if (!widget.isSubtask) ...[
-                    const SizedBox(height: 16),
-                    DropdownButtonFormField<TaskPriority>(
-                      value: selectedPriority,
+        return Material(
+          // Wrap in Material to provide Material context for Material Design widgets
+          child: Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.8, // Limit height to 80% of screen
+              ),
+              padding: const EdgeInsets.all(24),
+              child: SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
+                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(widget.isSubtask ? AppLocalizations.of(context)!.addSubtask : AppLocalizations.of(context)!.addTaskTitle, style: Theme.of(context).textTheme.titleLarge),
+                    const SizedBox(height: 24),
+                    TextField(
+                      controller: _titleController,
+                      focusNode: _focusNode,
                       decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.priority,
+                        labelText: AppLocalizations.of(context)!.taskTitleLabel,
+                        hintText: AppLocalizations.of(context)!.taskTitleLabel,
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       ),
-                      items: TaskPriority.values.map((priority) {
-                        return DropdownMenuItem(
-                          value: priority,
-                          child: Text(
-                            _getPriorityLabel(priority, context),
-                            style: TextStyle(color: _getPriorityColor(priority), fontWeight: FontWeight.w600),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        if (value != null) {
-                          setState(() => selectedPriority = value);
-                        }
-                      },
+                      inputFormatters: [LengthLimitingTextInputFormatter(100)],
                     ),
-                  ],
-                  if (!widget.isSubtask) ...[
                     const SizedBox(height: 16),
-
-                    InkWell(
-                      onTap: () async {
-                        final pickedDate = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 365)));
-
-                        if (pickedDate != null) {
-                          setState(() => selectedDueDate = pickedDate);
-                        }
-                      },
-
-                      child: InputDecorator(
+                    TextField(
+                      controller: _descriptionController,
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.taskDescriptionLabel,
+                        hintText: AppLocalizations.of(context)!.taskDescriptionLabel,
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      maxLines: 3,
+                      inputFormatters: [LengthLimitingTextInputFormatter(500)],
+                    ),
+                    if (!widget.isSubtask) ...[
+                      const SizedBox(height: 16),
+                      DropdownButtonFormField<TaskPriority>(
+                        value: selectedPriority,
                         decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.dueDateLabel,
-
-                          suffixIcon: const Icon(Icons.calendar_today),
-
+                          labelText: AppLocalizations.of(context)!.priority,
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                         ),
-
-                        child: Text(
-                          selectedDueDate != null ? '${selectedDueDate!.day}/${selectedDueDate!.month}/${selectedDueDate!.year}' : AppLocalizations.of(context)!.selectDueDate,
-
-                          style: TextStyle(color: selectedDueDate != null ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 16),
-                  ],
-                  if (!widget.isSubtask)
-                    if (state is CategoryLoaded && state.categories.isNotEmpty)
-                      DropdownButtonFormField<String?>(
-                        value: selectedCategoryId,
-                        decoration: InputDecoration(labelText: AppLocalizations.of(context)!.categoryLabel),
-                        items: [
-                          DropdownMenuItem<String?>(value: null, child: Text(AppLocalizations.of(context)!.noCategory)),
-                          ...state.categories.map((category) => DropdownMenuItem<String?>(value: category.id, child: Text(category.name))),
-                        ],
+                        items: TaskPriority.values.map((priority) {
+                          return DropdownMenuItem(
+                            value: priority,
+                            child: Text(
+                              _getPriorityLabel(priority, context),
+                              style: TextStyle(color: _getPriorityColor(priority), fontWeight: FontWeight.w600),
+                            ),
+                          );
+                        }).toList(),
                         onChanged: (value) {
-                          selectedCategoryId = value;
+                          if (value != null) {
+                            setState(() => selectedPriority = value);
+                          }
                         },
                       ),
+                    ],
+                    if (!widget.isSubtask) ...[
+                      const SizedBox(height: 16),
 
-                  // Repeat Settings Section
-                  const SizedBox(height: 16),
-                  if (!widget.isSubtask) const Divider(),
-                  if (!widget.isSubtask) const SizedBox(height: 16),
-                  if (!widget.isSubtask)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(AppLocalizations.of(context)!.repeatSettings, style: Theme.of(context).textTheme.titleMedium),
-                        IconButton(
-                          onPressed: () => setState(() {
-                            _showRepeatSettings = !_showRepeatSettings;
-                          }),
-                          icon: Icon(_showRepeatSettings ? Icons.expand_less : Icons.expand_more),
+                      InkWell(
+                        onTap: () async {
+                          final pickedDate = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 365)));
+
+                          if (pickedDate != null) {
+                            setState(() => selectedDueDate = pickedDate);
+                          }
+                        },
+
+                        child: InputDecorator(
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)!.dueDateLabel,
+
+                            suffixIcon: const Icon(Icons.calendar_today),
+
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+
+                          child: Text(
+                            selectedDueDate != null ? '${selectedDueDate!.day}/${selectedDueDate!.month}/${selectedDueDate!.year}' : AppLocalizations.of(context)!.selectDueDate,
+
+                            style: TextStyle(color: selectedDueDate != null ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
+                          ),
                         ),
+                      ),
+
+                      const SizedBox(height: 16),
+                    ],
+                    if (!widget.isSubtask)
+                      if (state is CategoryLoaded && state.categories.isNotEmpty)
+                        DropdownButtonFormField<String?>(
+                          value: selectedCategoryId,
+                          decoration: InputDecoration(labelText: AppLocalizations.of(context)!.categoryLabel),
+                          items: [
+                            DropdownMenuItem<String?>(value: null, child: Text(AppLocalizations.of(context)!.noCategory)),
+                            ...state.categories.map((category) => DropdownMenuItem<String?>(value: category.id, child: Text(category.name))),
+                          ],
+                          onChanged: (value) {
+                            selectedCategoryId = value;
+                          },
+                        ),
+
+                    // Repeat Settings Section
+                    const SizedBox(height: 16),
+                    if (!widget.isSubtask) const Divider(),
+                    if (!widget.isSubtask) const SizedBox(height: 16),
+                    if (!widget.isSubtask)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(AppLocalizations.of(context)!.repeatSettings, style: Theme.of(context).textTheme.titleMedium),
+                          IconButton(
+                            onPressed: () => setState(() {
+                              _showRepeatSettings = !_showRepeatSettings;
+                            }),
+                            icon: Icon(_showRepeatSettings ? Icons.expand_less : Icons.expand_more),
+                          ),
+                        ],
+                      ),
+                    if (_showRepeatSettings) ...[
+                      const SizedBox(height: 16),
+                      RepeatConfigWidget(
+                        initialRepeatRule: selectedRepeatRule,
+                        onRepeatRuleChanged: (repeatRule) {
+                          setState(() {
+                            selectedRepeatRule = repeatRule;
+                          });
+                        },
+                      ),
+                    ],
+
+                    const SizedBox(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancelButton)),
+                        const SizedBox(width: 8),
+                        ElevatedButton(onPressed: _handleAddTask, child: Text(AppLocalizations.of(context)!.addTaskButton)),
                       ],
                     ),
-                  if (_showRepeatSettings) ...[
-                    const SizedBox(height: 16),
-                    RepeatConfigWidget(
-                      initialRepeatRule: selectedRepeatRule,
-                      onRepeatRuleChanged: (repeatRule) {
-                        setState(() {
-                          selectedRepeatRule = repeatRule;
-                        });
-                      },
-                    ),
                   ],
-
-                  const SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.cancelButton)),
-                      const SizedBox(width: 8),
-                      ElevatedButton(onPressed: _handleAddTask, child: Text(AppLocalizations.of(context)!.addTaskButton)),
-                    ],
-                  ),
-                ],
+                ),
               ),
             ),
           ),
@@ -212,11 +233,10 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
       isCompleted: false,
       createdAt: now,
       updatedAt: now,
+      parentId: widget.parentTaskId, // Set parent ID if this is a subtask
     );
     widget.onTaskAdded(task);
-    if (!widget.isSubtask) {
-      Navigator.of(context).pop();
-    }
+    Navigator.of(context).pop();
   }
 
   String _getPriorityLabel(TaskPriority priority, BuildContext context) {

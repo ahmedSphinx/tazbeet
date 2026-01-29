@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../../l10n/app_localizations.dart';
 import '../../services/focus_mode.dart';
 import '../../services/settings_service.dart';
-import '../../models/task.dart';
 
 class FocusModeSettingsScreen extends StatefulWidget {
   const FocusModeSettingsScreen({super.key});
@@ -317,7 +315,7 @@ class _FocusModeSettingsScreenState extends State<FocusModeSettingsScreen> {
           // Status Card
           if (FocusMode.isActive)
             Card(
-              color: Colors.green.withOpacity(0.1),
+              color: Colors.green.withValues(alpha: 0.1),
               child: ListTile(
                 leading: Icon(Icons.center_focus_strong, color: Colors.green),
                 title: Text('Focus Mode Active'),

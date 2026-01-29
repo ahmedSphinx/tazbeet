@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 import '../models/task.dart';
 import '../services/performance_monitor_service.dart';
+import '../services/encryption_service.dart';
 
 class TaskRepository with PerformanceMonitored {
   static const String _boxName = 'tasks';
@@ -13,7 +14,8 @@ class TaskRepository with PerformanceMonitored {
 
   Future<Box<Task>> _getBox() async {
     if (!Hive.isBoxOpen(_boxName)) {
-      return await Hive.openBox<Task>(_boxName);
+      final cipher = await EncryptionService.getCipher();
+      return await Hive.openBox<Task>(_boxName, encryptionCipher: cipher);
     }
     return Hive.box<Task>(_boxName);
   }

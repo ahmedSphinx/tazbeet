@@ -148,6 +148,14 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
       await taskRepository.updateTask(toggledTask);
       emit(TaskListLoaded(updatedTasks));
 
+      // Handle recurring task completion
+      if (toggledTask.isCompleted && toggledTask.isRecurringInstance) {
+        await _repeatService.processCompletedRecurringTask(toggledTask);
+        // Reload tasks to reflect any new recurring instances
+        final tasks = await taskRepository.getAllTasks();
+        emit(TaskListLoaded(tasks));
+      }
+
       // Play completion sound if task was just completed (not uncompleted)
       if (toggledTask.isCompleted) {
         await _taskSoundService.playTaskCompletionSound();
